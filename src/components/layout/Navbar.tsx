@@ -6,14 +6,15 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/Button";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Logo from "../../assets/vidacure_png.png";
-import { darkTealText } from "@/constants";
-import { LoginPage } from "@/pages";
-import { Navigate } from "react-router-dom";
+import { darkTealText, ROUTES } from "@/constants";
+
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -24,7 +25,8 @@ export const Navbar = () => {
             <img
               src={Logo}
               alt="VIDACURE"
-              className="h-4 w-auto sm:h-5 flex-shrink-0"
+              className="h-4 w-auto sm:h-5 flex-shrink-0 cursor-pointer"
+              onClick={() => navigate(ROUTES.HOME)}
             />
 
             {/* Desktop Navigation */}
@@ -84,23 +86,18 @@ export const Navbar = () => {
             </NavigationMenu>
 
             {/* Desktop Auth Buttons */}
-            <div
-              className="hidden lg:flex items-center space-x-4 flex-shrink-0"
-              onClick={() => (
-                <>
-                  <LoginPage
-                    onLogin={function (): void {
-                      throw new Error("Function not implemented.");
-                    }}
-                    loading={false}
-                  />
-                </>
-              )}
-            >
-              <Button variant="ghost" className={`text-dark-teal font-normal`}>
+            <div className="hidden lg:flex items-center space-x-4 flex-shrink-0">
+              <Button 
+                variant="ghost" 
+                className={`${darkTealText} font-normal`} 
+                onClick={() => navigate(ROUTES.LOGIN)}
+              >
                 Login
               </Button>
-              <button className="h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors">
+              <button 
+                className="h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
+                onClick={() => navigate(ROUTES.LOGIN)}
+              >
                 <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
                   Get Started
                 </span>
@@ -209,21 +206,20 @@ export const Navbar = () => {
                     </NavigationMenuLink>
                   </NavigationMenuItem>
 
-                  <div className="flex flex-row space-y-2 pt-4 border-t">
+                  <div className="flex flex-row space-x-2 pt-4 border-t">
                     <Button
                       variant="ghost"
-                      className="bg-teal-500 hover:bg-teal-600 rounded-full justify-evenly"
+                      className="bg-teal-500 hover:bg-teal-600 rounded-full text-white"
+                      onClick={() => navigate(ROUTES.LOGIN)}
                     >
-                      Login 2
+                      Login
                     </Button>
                     <button
                       className="h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
-                      onClick={() => {
-                        Navigate({ to: "/login" });
-                      }}
+                      onClick={() => navigate(ROUTES.LOGIN)}
                     >
                       <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
-                        Get Started 2
+                        Get Started
                       </span>
                     </button>
                   </div>

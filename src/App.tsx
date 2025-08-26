@@ -5,68 +5,58 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useAuth } from "./hooks";
-import { getClientType } from "./utils";
-import { MainLayout, LoadingSpinner, Alert } from "./components";
-import { LoginPage, DashboardPage } from "./pages";
-import LandingPage from "./pages/LandingPage";
+// import { getClientType } from "./utils";
+import { ROUTES } from "./constants";
+import { LoginPage, DashboardPage, LandingPage, NotFoundPage } from "./pages";
 
 function App() {
   const {
     isAuthenticated,
     user,
     loading,
-    error,
-    showSuccessMessage,
+    // error,
+    // showSuccessMessage,
     login,
     logout,
-    clearError,
-    checkAuthAndHideSuccess,
+    // clearError,
+    // checkAuthAndHideSuccess,
   } = useAuth();
-  console.log("object: ", isAuthenticated);
 
-  const clientType = getClientType();
+
+  // const clientType = getClientType();
 
   return (
     <Router>
       <Routes>
         {/* Landing Page Route */}
-        <Route path="/" element={<LandingPage />} />
+        <Route path={ROUTES.HOME} element={<LandingPage />} />
 
         {/* Login Route */}
         <Route
-          path="/login"
+          path={ROUTES.LOGIN}
           element={
             !isAuthenticated ? (
-              // <MainLayout>
-              //   {error && (
-              //     <Alert
-              //       type="error"
-              //       message={error}
-              //       onClose={clearError}
-              //     />
-              //   )}
               <LoginPage onLogin={login} loading={loading} />
             ) : (
-              // </MainLayout>
-              <Navigate to="/dashboard" replace />
+              <Navigate to={ROUTES.DASHBOARD} replace />
             )
           }
         />
 
         {/* Dashboard Route - Protected */}
         <Route
-          path="/dashboard"
+          path={ROUTES.DASHBOARD}
           element={
             isAuthenticated ? (
               <DashboardPage user={user} onLogout={logout} loading={loading} />
             ) : (
-              <Navigate to="/login" replace />
+              <Navigate to={ROUTES.LOGIN} replace />
             )
           }
         />
 
-        {/* Catch all route - redirect to landing */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* 404 Not Found Page */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

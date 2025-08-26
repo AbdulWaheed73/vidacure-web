@@ -1,5 +1,6 @@
 // Re-export config as constants for better organization
 export { default as config } from '../config';
+export * from './routes';
 
 export const whiteText = "text-[#FFFFFF]";
 export const NearBlackText = "text-[#282828]";
