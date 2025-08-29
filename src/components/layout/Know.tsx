@@ -1,22 +1,25 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { useTranslation } from 'react-i18next';
 
 export default function StatisticsComponent() {
+  const { t } = useTranslation();
+  
   const statistics = [
     {
       number: "1",
       unit: "in",
       number2: "2",
-      description: "In Sweden, 1 in 2 adults is now classified as overweight or living with obesity."
+      description: t('know.statistics.stat1')
     },
     {
       number: "95",
       unit: "%",
-      description: "of people who lose weight through traditional dieting alone regain it within a few years."
+      description: t('know.statistics.stat2')
     },
     {
       number: "15",
       unit: "%", 
-      description: "A 15% average weight loss with our program dramatically improves heart health and lowers diabetes risk."
+      description: t('know.statistics.stat3')
     }
   ];
 
@@ -28,7 +31,7 @@ export default function StatisticsComponent() {
             <div className="flex flex-col justify-center items-center gap-8 lg:gap-16">
               {/* Title */}
               <h2 className="text-zinc-800 text-3xl sm:text-4xl font-bold font-['Sora'] leading-10 text-center">
-                Do You Know
+                {t('know.title')}
               </h2>
 
               {/* Desktop Layout */}

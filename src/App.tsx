@@ -1,5 +1,5 @@
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
   Routes,
   Route,
   Navigate,
@@ -8,6 +8,7 @@ import { useAuth } from "./hooks";
 // import { getClientType } from "./utils";
 import { ROUTES } from "./constants";
 import { LoginPage, DashboardPage, LandingPage, NotFoundPage } from "./pages";
+
 
 function App() {
   const {
@@ -21,15 +22,22 @@ function App() {
     // clearError,
     // checkAuthAndHideSuccess,
   } = useAuth();
+  // const [auth, setAuth] = useState<boolean>(isAuthenticated);
 
-
+  // console.log("is authnticated: ", isAuthenticated);
   // const clientType = getClientType();
 
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         {/* Landing Page Route */}
-        <Route path={ROUTES.HOME} element={<LandingPage />} />
+        <Route path={ROUTES.HOME} element={
+            !isAuthenticated ? (
+              <LandingPage />
+            ) : (
+              <Navigate to={ROUTES.DASHBOARD as string} replace />
+            )
+          } />
 
         {/* Login Route */}
         <Route
@@ -38,14 +46,14 @@ function App() {
             !isAuthenticated ? (
               <LoginPage onLogin={login} loading={loading} />
             ) : (
-              <Navigate to={ROUTES.DASHBOARD} replace />
+              <Navigate to={ROUTES.DASHBOARD as string} replace />
             )
           }
         />
 
         {/* Dashboard Route - Protected */}
         <Route
-          path={ROUTES.DASHBOARD}
+          path={ROUTES.DASHBOARD as string}
           element={
             isAuthenticated ? (
               <DashboardPage user={user} onLogout={logout} loading={loading} />
@@ -58,7 +66,7 @@ function App() {
         {/* 404 Not Found Page */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

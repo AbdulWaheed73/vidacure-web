@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Minus, Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const BMI = () => {
+  const { t } = useTranslation();
   const [age, setAge] = useState(28);
   const [weight, setWeight] = useState(175);
   const [height, setHeight] = useState(182);
@@ -16,10 +18,10 @@ export const BMI = () => {
   };
 
   const getBMICategory = (bmi: number) => {
-    if (bmi < 18.5) return "underweight";
-    if (bmi < 25) return "normal weight";
-    if (bmi < 30) return "overweight";
-    return "obese";
+    if (bmi < 18.5) return t("bmi.categories.underweight");
+    if (bmi < 25) return t("bmi.categories.normal");
+    if (bmi < 30) return t("bmi.categories.overweight");
+    return t("bmi.categories.obese");
   };
 
   const bmi = calculateBMI();
@@ -46,25 +48,25 @@ export const BMI = () => {
           <CardContent className="p-0 flex flex-col justify-center items-center gap-8">
             {/* Title */}
             <h1 className="text-white text-3xl sm:text-4xl lg:text-5xl font-bold font-['Sora'] text-center leading-tight">
-              Find out your BMI
+              {t('bmi.title')}
             </h1>
 
             {/* Desktop Layout */}
             <div className="hidden lg:flex w-full justify-start items-center gap-10">
-              {/* Age and Weight Cards */}
+              {/* {t('bmi.age')} and {t('bmi.weight')} Cards */}
               <div className="flex-1 flex justify-start items-center gap-10">
-                {/* Age Card */}
+                {/* {t('bmi.age')} Card */}
                 <Card className="flex-1 bg-white rounded-3xl border-none">
                   <CardContent className="p-8 flex flex-col justify-center items-center gap-8">
                     <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
-                      Age
+                      {t('bmi.age')}
                     </h3>
                     <div className="relative flex justify-center items-center gap-4">
                       <span className="text-teal-700 text-4xl font-bold font-['Sora']">
                         {age}
                       </span>
                       <span className="absolute left-full ml-2 top-3 text-teal-700 text-sm font-semibold font-['Sora']">
-                        yrs*
+                        {t('bmi.ageUnit')}
                       </span>
                     </div>
                     <div className="flex justify-center items-center gap-8">
@@ -84,18 +86,18 @@ export const BMI = () => {
                   </CardContent>
                 </Card>
 
-                {/* Weight Card */}
+                {/* {t('bmi.weight')} Card */}
                 <Card className="flex-1 bg-white rounded-3xl border-none">
                   <CardContent className="p-8 flex flex-col justify-center items-center gap-8">
                     <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
-                      Weight
+                      {t('bmi.weight')}
                     </h3>
                     <div className="relative flex justify-center items-center gap-4">
                       <span className="text-teal-700 text-4xl font-bold font-['Sora']">
                         {weight}
                       </span>
                       <span className="absolute left-full ml-2 top-3 text-teal-700 text-sm font-semibold font-['Sora']">
-                        lbs*
+                        {t('bmi.weightUnit')}
                       </span>
                     </div>
                     <div className="flex justify-center items-center gap-8">
@@ -116,18 +118,18 @@ export const BMI = () => {
                 </Card>
               </div>
 
-              {/* Height Card */}
+              {/* {t('bmi.height')} Card */}
               <Card className="flex-1 bg-white rounded-3xl border-none">
                 <CardContent className="p-8 flex flex-col justify-center items-center gap-8">
                   <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
-                    Height
+                    {t('bmi.height')}
                   </h3>
                   <div className="relative flex justify-center items-center gap-4">
                     <span className="text-teal-700 text-4xl font-bold font-['Sora']">
                       {height}
                     </span>
                     <span className="absolute left-full ml-2 top-3 text-teal-700 text-sm font-semibold font-['Sora']">
-                      cm*
+                      {t('bmi.heightUnit')}
                     </span>
                   </div>
                   <div className="w-full px-2">
@@ -156,13 +158,13 @@ export const BMI = () => {
 
             {/* Mobile Layout */}
             <div className="lg:hidden w-full max-w-sm flex flex-col justify-center items-start gap-4">
-              {/* Age and Weight Row */}
+              {/* {t('bmi.age')} and {t('bmi.weight')} Row */}
               <div className="w-full flex justify-start items-center gap-4">
-                {/* Age Card */}
+                {/* {t('bmi.age')} Card */}
                 <Card className="flex-1 bg-white rounded-3xl border-none">
                   <CardContent className="p-6 flex flex-col justify-center items-center gap-6">
                     <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
-                      Age
+                      {t('bmi.age')}
                     </h3>
                     <div className="w-full flex justify-center items-start gap-2">
                       <div className="flex-1 flex justify-end items-center">
@@ -172,7 +174,7 @@ export const BMI = () => {
                       </div>
                       <div className="w-10 flex justify-start items-center">
                         <span className="text-teal-700 text-sm font-semibold font-['Sora']">
-                          yrs*
+                          {t('bmi.ageUnit')}
                         </span>
                       </div>
                     </div>
@@ -193,11 +195,11 @@ export const BMI = () => {
                   </CardContent>
                 </Card>
 
-                {/* Weight Card */}
+                {/* {t('bmi.weight')} Card */}
                 <Card className="flex-1 bg-white rounded-3xl border-none">
                   <CardContent className="p-6 flex flex-col justify-center items-center gap-6">
                     <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
-                      Weight
+                      {t('bmi.weight')}
                     </h3>
                     <div className="w-full flex justify-center items-start gap-2">
                       <div className="flex-1 flex justify-end items-center">
@@ -207,7 +209,7 @@ export const BMI = () => {
                       </div>
                       <div className="w-10 flex justify-start items-center">
                         <span className="text-teal-700 text-sm font-semibold font-['Sora']">
-                          lbs*
+                          {t('bmi.weightUnit')}
                         </span>
                       </div>
                     </div>
@@ -229,18 +231,18 @@ export const BMI = () => {
                 </Card>
               </div>
 
-              {/* Height Card */}
+              {/* {t('bmi.height')} Card */}
               <Card className="w-full bg-white rounded-3xl border-none">
                 <CardContent className="p-6 flex flex-col justify-center items-center gap-6">
                   <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
-                    Height
+                    {t('bmi.height')}
                   </h3>
                   <div className="relative flex justify-center items-center gap-4">
                     <span className="text-teal-700 text-4xl font-bold font-['Sora']">
                       {height}
                     </span>
                     <span className="absolute left-full ml-2 top-3 text-teal-700 text-sm font-semibold font-['Sora']">
-                      cm*
+                      {t('bmi.heightUnit')}
                     </span>
                   </div>
                   <div className="w-full px-2">
@@ -260,16 +262,14 @@ export const BMI = () => {
             {/* BMI Result */}
             <div className="pt-4 flex flex-col justify-start items-center gap-4">
               <h2 className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold font-['Sora'] text-center">
-                Your BMI: {bmi} ({category})
+                {t('bmi.result')} {bmi} ({category})
               </h2>
               <div className="max-w-2xl text-center">
                 <span className="text-emerald-50 text-base font-normal font-['Manrope'] leading-snug">
-                  *This is a starting point for understanding your health. If
-                  you are concerned about your weight, the next step is to speak
-                  with a medical professional.{" "}
+                  {t('bmi.disclaimer')}{" "}
                 </span>
                 <button className="text-emerald-50 text-base font-bold font-['Manrope'] underline leading-snug hover:text-white transition-colors">
-                  Book a Free Doctor's Consultation
+                  {t('bmi.ctaButton')}
                 </button>
               </div>
             </div>

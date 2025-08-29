@@ -1,0 +1,203 @@
+{
+  "navbar": {
+    "howItWorks": "How it works",
+    "ourStory": "Our Story",
+    "understandingObesity": "Understanding Obesity",
+    "insightsTips": "Insights & Tips",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "login": "Login",
+    "getStarted": "Get Started"
+  },
+  "hero": {
+    "newWay": "A new way to lose weight",
+    "title": "Sustainable weight loss backed by medical science.",
+    "description": "Our program combines FDA-approved medication with 1-on-1 coaching from a dedicated care team to help you achieve and sustain a healthy weight.",
+    "getStarted": "Get Started",
+    "feature1": "Lose up to 1.3kg per week with real results",
+    "feature2": "Advanced medication – feel full, not frustrated",
+    "feature3": "One-on-one support from your doctor and health coach",
+    "feature4": "Patients report top satisfaction and lasting change"
+  },
+  "obesity": {
+    "title": "Understanding obesity:",
+    "titleHighlight": "It's a complex medical condition, not a choice.",
+    "description": "For too long, the story around weight has been about willpower. But modern medicine shows that obesity is a complex disease, deeply influenced by your genetics, hormones, and environment. We now understand the biology behind the struggle, and with that understanding comes new, effective medical treatments that can finally help.",
+    "bodyBiologyTitle": "Your Body's Biology",
+    "bodyBiologyDescription": "Your body's natural \"set point\" is controlled by hormones. When you diet, your body often fights back by increasing hunger and slowing your metabolism, making lasting results difficult on your own.",
+    "modernMedicineTitle": "How Modern Medicine Helps",
+    "modernMedicineDescription": "Clinically-proven medications like GLP-1s work with your body's biology. Under a doctor's guidance, they help adjust your set point and reduce hunger signals, making sustainable health possible."
+  },
+  "pricing": {
+    "subtitle": "An Investment In Your Long-Term Health",
+    "title": "Simple,",
+    "titleHighlight": "Transparent Pricing",
+    "description": "We believe in being completely open about the cost of our program. There are no hidden fees or long-term commitments. Your monthly membership gives you complete access to our medical team and the support you need to succeed on your journey.",
+    "doctorFeature": "Receive ongoing care from a board-certified doctor who creates your plan, manages your prescriptions, and safely guides your progress.",
+    "medicationFeature": "We manage the entire prescription process, with your approved medication delivered discreetly to your home from a certified pharmacy.",
+    "messagingFeature": "Enjoy unlimited messaging with your personal care team for continuous support, coaching, and answers to all your questions.",
+    "lifestyleBadge": "Lifestyle Program Membership",
+    "lifestylePrice": "795",
+    "lifestyleCurrency": "SEK/mo",
+    "lifestyleDescription": "Your access to expert coaching and support for a healthier lifestyle.",
+    "medicalBadge": "Medical Program Membership",
+    "medicalPrice": "1495",
+    "medicalCurrency": "SEK/mo",
+    "medicalDescription": "Your all-in-one access to our medical team, coaching, and support.",
+    "includes": "Includes:",
+    "getStarted": "Get Started",
+    "features": {
+      "initialAssessment": "Initial Health Assessment",
+      "personalizedPlan": "Personalized Lifestyle Plan",
+      "medicalCheckins": "Regular Medical Check-ins",
+      "unlimitedMessaging": "Unlimited Care Team Messaging",
+      "progressTracking": "Ongoing Progress Tracking",
+      "nutritionCoaching": "Nutrition & Habit Coaching",
+      "doctorConsultation": "Initial Doctor Consultation",
+      "treatmentPlan": "Personalized Treatment Plan",
+      "glp1Medication": "GLP-1 Medication Prescription",
+      "discreetDelivery": "Discreet Delivery Management"
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "helpButton": "Still need help? Get in touch",
+    "questions": {
+      "safety": {
+        "question": "Is this program safe?",
+        "answer": "Yes, our program is completely safe. All treatments are overseen by board-certified physicians who specialize in weight management. We conduct thorough medical evaluations before starting any treatment and provide ongoing monitoring throughout your journey."
+      },
+      "sideEffects": {
+        "question": "What are the side effects of the medication?",
+        "answer": "Common side effects may include mild nausea, decreased appetite, and occasional digestive discomfort, especially during the initial weeks. These effects typically diminish as your body adjusts. Our medical team closely monitors all patients and adjusts treatment plans as needed to minimize any discomfort."
+      },
+      "foodRestrictions": {
+        "question": "Do I have to stop eating the foods I love?",
+        "answer": "Not at all! Our approach focuses on sustainable lifestyle changes rather than restrictive dieting. You'll learn to enjoy your favorite foods in moderation while developing healthier eating patterns. Our nutrition coaching helps you make informed choices without feeling deprived."
+      },
+      "treatmentDuration": {
+        "question": "How long is the treatment?",
+        "answer": "Treatment duration varies by individual, but most patients see significant results within 3-6 months. Some continue treatment for 12-18 months for optimal results. Your doctor will work with you to determine the right timeline based on your goals, progress, and medical needs."
+      },
+      "financing": {
+        "question": "Are there any financing options available?",
+        "answer": "Yes, we offer flexible payment plans to make our program accessible. We work with several financing partners to provide monthly payment options that fit your budget. Contact our team to discuss the best financing solution for your situation."
+      }
+    }
+  },
+  "bmi": {
+    "title": "Find out your BMI",
+    "age": "Age",
+    "weight": "Weight",
+    "height": "Height",
+    "ageUnit": "yrs*",
+    "weightUnit": "lbs*",
+    "heightUnit": "cm*",
+    "result": "Your BMI:",
+    "categories": {
+      "underweight": "underweight",
+      "normal": "normal weight",
+      "overweight": "overweight",
+      "obese": "obese"
+    },
+    "disclaimer": "*This is a starting point for understanding your health. If you are concerned about your weight, the next step is to speak with a medical professional.",
+    "ctaButton": "Book a Free Doctor's Consultation"
+  },
+  "journey": {
+    "subtitle": "How It Works",
+    "title": "3 Steps to your",
+    "titleWeight": "weight loss",
+    "titleJourney": "journey",
+    "step1": {
+      "title": "Your Free Online Consult",
+      "description": "Tell us about your health history in a short online form. You'll then have a private consultation with a board-certified doctor to see if you're a candidate."
+    },
+    "step2": {
+      "title": "Get Your Custom Plan",
+      "description": "Your doctor reviews your health profile to design a personalized treatment plan. This plan is tailored to your unique biology and weight loss goals."
+    },
+    "step3": {
+      "title": "Receive Treatment & Support",
+      "description": "Your medication is delivered discreetly to your home. From there, your dedicated care team provides ongoing support to guide you, adjust your plan, and celebrate your success."
+    },
+    "ctaButton": "See if you qualify"
+  },
+  "know": {
+    "title": "Do You Know",
+    "statistics": {
+      "stat1": "In Sweden, 1 in 2 adults is now classified as overweight or living with obesity.",
+      "stat2": "of people who lose weight through traditional dieting alone regain it within a few years.",
+      "stat3": "A 15% average weight loss with our program dramatically improves heart health and lowers diabetes risk."
+    }
+  },
+  "partner": {
+    "title": "Your",
+    "titleHighlight": "Swedish Health Partner",
+    "description": "We were founded in Stockholm by a team of dedicated doctors and specialists who saw a need for a more modern, accessible, and empathetic approach to obesity care. Our mission is simple: to provide safe, effective, and science-backed medical treatment to help our patients live healthier, fuller lives. Your health and privacy are our highest priorities.",
+    "ctaButton": "Find Out More"
+  },
+  "testimonial": {
+    "title": "Real People,",
+    "titleHighlight": "Lasting Results",
+    "testimonials": {
+      "testimonial1": "For the first time, I don't think about food all day. The medication quieted the noise in my head, and the support from my doctor has been fantastic. I've lost 18kg and feel in control.",
+      "testimonial2": "The transformation has been incredible. Not just physically, but mentally too. I finally have the tools and support I needed to make lasting changes.",
+      "testimonial3": "After years of struggling, I found a program that actually works. The personalized approach made all the difference in my journey."
+    },
+    "names": {
+      "name1": "Markus, 48",
+      "name2": "Sarah, 34",
+      "name3": "David, 52"
+    }
+  },
+  "journal": {
+    "title": "From Our",
+    "titleHighlight": "Health Journal",
+    "articles": {
+      "article1": {
+        "title": "The Science of GLP-1s: How They Really Work",
+        "readTime": "5 min read"
+      },
+      "article2": {
+        "title": "A Patient's Story: My First 3 Months on the Program",
+        "readTime": "12 min read"
+      },
+      "article3": {
+        "title": "5 Healthy Swedish Habits for a Balanced Life",
+        "readTime": "3 min read"
+      }
+    },
+    "authors": {
+      "author1": {
+        "name": "Dr Markus Sterl",
+        "credentials": "PhD. Nutrition"
+      },
+      "author2": {
+        "name": "Dr Sarah Anderson",
+        "credentials": "MD. Endocrinology"
+      },
+      "author3": {
+        "name": "Dr Erik Lindqvist",
+        "credentials": "PhD. Behavioral Science"
+      }
+    }
+  },
+  "footer": {
+    "company": "Company",
+    "aboutUs": "About Us",
+    "ourDoctors": "Our Doctors",
+    "blogs": "Blogs",
+    "careers": "Careers",
+    "platform": "Platform",
+    "forDoctors": "For Doctors",
+    "forPatients": "For Patients",
+    "program": "Program",
+    "howItWorks": "How it works",
+    "pricing": "Pricing",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "cookiePolicy": "Cookie Policy",
+    "copyright": "© 2025 Vidacure, Inc. All rights reserved"
+  }
+}

@@ -1,9 +1,12 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { useTranslation } from 'react-i18next';
 import Injections from "../../assets/image13.png";
 // Placeholder image - replace with your actual image import
 // const Injections = "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop&crop=center";
 
 export const Obesity = () => {
+  const { t } = useTranslation();
+  
   return (
     <div className="w-full px-4 sm:px-8 lg:px-14 py-12 lg:py-20 flex flex-col justify-start items-center">
       <div className="w-full max-w-7xl">
@@ -16,19 +19,14 @@ export const Obesity = () => {
                 <div className="flex flex-col justify-center items-start gap-4 mb-8">
                   <div className="justify-start">
                     <span className="text-zinc-800 text-4xl font-bold font-['Sora'] leading-10">
-                      Understanding obesity:{" "}
+                      {t('obesity.title')}{" "}
                     </span>
                     <span className="text-teal-600 text-4xl font-bold font-['Sora'] leading-10">
-                      It's a complex medical condition, not a choice.
+                      {t('obesity.titleHighlight')}
                     </span>
                   </div>
                   <div className="justify-start text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
-                    For too long, the story around weight has been about willpower.
-                    But modern medicine shows that obesity is a complex disease,
-                    deeply influenced by your genetics, hormones, and environment.
-                    We now understand the biology behind the struggle, and with that
-                    understanding comes new, effective medical treatments that can
-                    finally help.
+                    {t('obesity.description')}
                   </div>
                 </div>
                 
@@ -36,13 +34,10 @@ export const Obesity = () => {
                   <Card className="flex-1 border-none shadow-none bg-transparent">
                     <CardContent className="p-0 flex flex-col justify-center items-start gap-4">
                       <div className="justify-start text-zinc-800 text-xl font-bold font-['Sora'] leading-relaxed">
-                        Your Body's Biology
+                        {t('obesity.bodyBiologyTitle')}
                       </div>
                       <div className="justify-start text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
-                        Your body's natural "set point" is controlled by hormones.
-                        When you diet, your body often fights back by increasing
-                        hunger and slowing your metabolism, making lasting results
-                        difficult on your own.
+                        {t('obesity.bodyBiologyDescription')}
                       </div>
                     </CardContent>
                   </Card>
@@ -50,13 +45,10 @@ export const Obesity = () => {
                   <Card className="flex-1 border-none shadow-none bg-transparent">
                     <CardContent className="p-0 flex flex-col justify-center items-start gap-4">
                       <div className="justify-start text-zinc-800 text-xl font-bold font-['Sora'] leading-relaxed">
-                        How Modern Medicine Helps
+                        {t('obesity.modernMedicineTitle')}
                       </div>
                       <div className="justify-start text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
-                        Clinically-proven medications like GLP-1s work with your
-                        body's biology. Under a doctor's guidance, they help adjust
-                        your set point and reduce hunger signals, making sustainable
-                        health possible.
+                        {t('obesity.modernMedicineDescription')}
                       </div>
                     </CardContent>
                   </Card>
@@ -79,19 +71,14 @@ export const Obesity = () => {
                 <CardContent className="p-0 flex flex-col justify-center items-start gap-4">
                   <div className="justify-start">
                     <span className="text-zinc-800 text-2xl font-bold font-['Sora'] leading-loose">
-                      Understanding obesity:{" "}
+                      {t('obesity.title')}{" "}
                     </span>
                     <span className="text-teal-600 text-2xl font-bold font-['Sora'] leading-loose">
-                      It's a complex medical condition, not a choice.
+                      {t('obesity.titleHighlight')}
                     </span>
                   </div>
                   <div className="justify-start text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
-                    For too long, the story around weight has been about willpower. 
-                    But modern medicine shows that obesity is a complex disease, 
-                    deeply influenced by your genetics, hormones, and environment. 
-                    We now understand the biology behind the struggle, and with that 
-                    understanding comes new, effective medical treatments that can 
-                    finally help.
+                    {t('obesity.description')}
                   </div>
                 </CardContent>
               </Card>
@@ -106,13 +93,10 @@ export const Obesity = () => {
                 <Card className="w-full border-none shadow-none bg-transparent">
                   <CardContent className="p-0 flex flex-col justify-center items-start gap-4">
                     <div className="justify-start text-zinc-800 text-xl font-bold font-['Sora'] leading-relaxed">
-                      Your Body's Biology
+                      {t('obesity.bodyBiologyTitle')}
                     </div>
                     <div className="justify-start text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
-                      Your body's natural "set point" is controlled by hormones. 
-                      When you diet, your body often fights back by increasing 
-                      hunger and slowing your metabolism, making lasting results 
-                      difficult on your own.
+                      {t('obesity.bodyBiologyDescription')}
                     </div>
                   </CardContent>
                 </Card>
@@ -120,13 +104,10 @@ export const Obesity = () => {
                 <Card className="w-full border-none shadow-none bg-transparent">
                   <CardContent className="p-0 flex flex-col justify-center items-start gap-4">
                     <div className="justify-start text-zinc-800 text-xl font-bold font-['Sora'] leading-relaxed">
-                      How Modern Medicine Helps
+                      {t('obesity.modernMedicineTitle')}
                     </div>
                     <div className="justify-start text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
-                      Clinically-proven medications like GLP-1s work with your 
-                      body's biology. Under a doctor's guidance, they help adjust 
-                      your set point and reduce hunger signals, making sustainable 
-                      health possible.
+                      {t('obesity.modernMedicineDescription')}
                     </div>
                   </CardContent>
                 </Card>

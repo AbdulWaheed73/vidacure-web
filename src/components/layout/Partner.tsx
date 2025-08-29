@@ -1,8 +1,11 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Smartphone, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Phones from "../../assets/phones.svg";
 
 export default function Partner() {
+  const { t } = useTranslation();
+  
   return (
     <div className="w-full px-4 sm:px-8 md:px-14 py-12 md:py-20">
       <div className="max-w-7xl mx-auto">
@@ -14,27 +17,22 @@ export default function Partner() {
                 {/* Heading */}
                 <div className="space-y-4">
                   <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-['Sora'] leading-tight">
-                    <span className="text-zinc-800">Your</span>
-                    <span className="text-teal-600"> Swedish Health Partner</span>
+                    <span className="text-zinc-800">{t('partner.title')}</span>
+                    <span className="text-teal-600"> {t('partner.titleHighlight')}</span>
                   </h1>
                 </div>
                 
                 {/* Description */}
                 <div className="max-w-lg lg:max-w-[510px]">
                   <p className="text-zinc-800 text-sm sm:text-base font-normal font-['Manrope'] leading-relaxed">
-                    We were founded in Stockholm by a team of dedicated doctors and
-                    specialists who saw a need for a more modern, accessible, and
-                    empathetic approach to obesity care. Our mission is simple: to
-                    provide safe, effective, and science-backed medical treatment to
-                    help our patients live healthier, fuller lives. Your health and
-                    privacy are our highest priorities.
+                    {t('partner.description')}
                   </p>
                 </div>
                 
                 {/* CTA Button */}
                 <button className="inline-flex items-center gap-2.5 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full transition-all duration-200 hover:from-teal-700 hover:to-teal-700 hover:scale-105">
                   <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
-                    Find Out More
+                    {t('partner.ctaButton')}
                   </span>
                   <ArrowRight className="w-4 h-4 text-white" />
                 </button>

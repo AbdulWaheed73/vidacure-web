@@ -1,21 +1,24 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function WeightLossSteps() {
+  const { t } = useTranslation();
+  
   const steps = [
     {
-      title: "Your Free Online Consult",
-      description: "Tell us about your health history in a short online form. You'll then have a private consultation with a board-certified doctor to see if you're a candidate.",
+      title: t('journey.step1.title'),
+      description: t('journey.step1.description'),
       image: "https://placehold.co/624x500"
     },
     {
-      title: "Get Your Custom Plan", 
-      description: "Your doctor reviews your health profile to design a personalized treatment plan. This plan is tailored to your unique biology and weight loss goals.",
+      title: t('journey.step2.title'), 
+      description: t('journey.step2.description'),
       image: "https://placehold.co/624x500"
     },
     {
-      title: "Receive Treatment & Support",
-      description: "Your medication is delivered discreetly to your home. From there, your dedicated care team provides ongoing support to guide you, adjust your plan, and celebrate your success.",
+      title: t('journey.step3.title'),
+      description: t('journey.step3.description'),
       image: "https://placehold.co/624x500"
     }
   ];
@@ -27,17 +30,17 @@ export default function WeightLossSteps() {
         <div className="flex flex-col justify-center items-center gap-8 lg:gap-16 mb-12 lg:mb-36">
           <div className="flex flex-col justify-center items-center gap-4">
             <div className="text-dark-teal text-base font-medium font-['Manrope'] uppercase leading-tight">
-              How It Works
+              {t('journey.subtitle')}
             </div>
             <div className="text-center">
               <span className="text-teal-600 text-3xl sm:text-4xl lg:text-5xl font-bold font-['Sora'] leading-tight lg:leading-[56.40px]">
-                3 Steps to your<br className="sm:hidden" />
+                {t('journey.title')}<br className="sm:hidden" />
               </span>
               <span className="text-zinc-800 text-3xl sm:text-4xl lg:text-5xl font-bold font-['Sora'] leading-tight lg:leading-[56.40px]">
-                {" "}weight loss{" "}
+                {" "}{t('journey.titleWeight')}{" "}
               </span>
               <span className="text-teal-600 text-3xl sm:text-4xl lg:text-5xl font-bold font-['Sora'] leading-tight lg:leading-[56.40px]">
-                journey
+                {t('journey.titleJourney')}
               </span>
             </div>
           </div>
@@ -107,7 +110,7 @@ export default function WeightLossSteps() {
         <div className="flex justify-center mt-12 lg:mt-16">
           <button className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors">
             <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
-              See if you qualify
+              {t('journey.ctaButton')}
             </span>
             <ArrowRight className="w-4 h-4 text-white" />
           </button>

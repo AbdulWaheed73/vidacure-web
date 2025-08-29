@@ -10,6 +10,7 @@ import {
 // import { Button } from "@/components/ui/Button";
 
 import { ArrowRight, Scale, Pill, Calendar, Smile } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Marquee } from "@/components/magicui/marquee";
 import Img1 from "../../assets/first.png";
 import Img2 from "../../assets/second.png";
@@ -50,6 +51,8 @@ const ImageCardApp = ({ src }: { src: string }) => {
 };
 
 export const HeroSection = () => {
+  const { t } = useTranslation();
+  
   // const images = [
   //   Img1,
   //   Img2,
@@ -73,21 +76,19 @@ export const HeroSection = () => {
               <CardHeader className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4">
                   <CardDescription className="text-teal-700 text-base font-medium font-['Manrope'] uppercase leading-tight">
-                    A new way to lose weight
+                    {t('hero.newWay')}
                   </CardDescription>
                   <CardTitle className="text-zinc-800 text-3xl md:text-4xl font-bold font-['Sora'] leading-tight md:leading-10">
-                    Sustainable weight loss backed by medical science.
+                    {t('hero.title')}
                   </CardTitle>
                 </div>
                 <CardDescription className="text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
-                  Our program combines FDA-approved medication with 1-on-1
-                  coaching from a dedicated care team to help you achieve and
-                  sustain a healthy weight.
+                  {t('hero.description')}
                 </CardDescription>
                 <CardAction>
                   <button className="h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors">
                     <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
-                      Get Started
+                      {t('hero.getStarted')}
                     </span>
                   </button>
                 </CardAction>
@@ -99,13 +100,13 @@ export const HeroSection = () => {
                   <div className="flex gap-3">
                     <Scale size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
-                      Lose up to 1.3kg per week with real results
+                      {t('hero.feature1')}
                     </div>
                   </div>
                   <div className="flex gap-3">
                     <Pill size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
-                      Advanced medication – feel full, not frustrated
+                      {t('hero.feature2')}
                     </div>
                   </div>
                 </div>
@@ -113,13 +114,13 @@ export const HeroSection = () => {
                   <div className="flex gap-3">
                     <Calendar size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
-                      One-on-one support from your doctor and health coach
+                      {t('hero.feature3')}
                     </div>
                   </div>
                   <div className="flex gap-3">
                     <Smile size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
-                      Patients report top satisfaction and lasting change
+                      {t('hero.feature4')}
                     </div>
                   </div>
                 </div>
@@ -150,21 +151,19 @@ export const HeroSection = () => {
               <CardHeader className="flex flex-col gap-8">
                 <div className="flex flex-col gap-4">
                   <CardDescription className="text-teal-700 text-base font-medium font-['Manrope'] uppercase leading-tight">
-                    A new way to lose weight
+                    {t('hero.newWay')}
                   </CardDescription>
                   <CardTitle className="text-zinc-800 text-5xl font-bold font-['Sora'] leading-[56.40px]">
-                    Sustainable weight loss backed by medical science.
+                    {t('hero.title')}
                   </CardTitle>
                 </div>
                 <CardDescription className="text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
-                  Our program combines FDA-approved medication with 1-on-1
-                  coaching from a dedicated care team to help you achieve and
-                  sustain a healthy weight.
+                  {t('hero.description')}
                 </CardDescription>
                 <CardAction>
                   <button className="h-11 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors">
                     <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
-                      Get Started
+                      {t('hero.getStarted')}
                     </span>
                     <ArrowRight size={16} className="text-white" />
                   </button>
@@ -177,13 +176,13 @@ export const HeroSection = () => {
                   <div className="flex items-center gap-3">
                     <Scale size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
-                      Lose up to 1.3kg per week with real results
+                      {t('hero.feature1')}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Pill size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
-                      Advanced medication – feel full, not frustrated
+                      {t('hero.feature2')}
                     </div>
                   </div>
                 </div>
@@ -191,13 +190,13 @@ export const HeroSection = () => {
                   <div className="flex items-center gap-3">
                     <Calendar size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
-                      One-on-one support from your doctor and health coach
+                      {t('hero.feature3')}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Smile size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
-                      Patients report top satisfaction and lasting change
+                      {t('hero.feature4')}
                     </div>
                   </div>
                 </div>

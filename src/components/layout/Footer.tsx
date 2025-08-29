@@ -1,38 +1,41 @@
 import React from 'react';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import footer from "../../assets/footer_logo.png";
 
 const FooterSection = () => {
+  const { t } = useTranslation();
+  
   const footerSections = [
     {
-      title: "Company",
+      title: t('footer.company'),
       links: [
-        { name: "About Us", href: "#" },
-        { name: "Our Doctors", href: "#" },
-        { name: "Blogs", href: "#" },
-        { name: "Careers", href: "#" }
+        { name: t('footer.aboutUs'), href: "#" },
+        { name: t('footer.ourDoctors'), href: "#" },
+        { name: t('footer.blogs'), href: "#" },
+        { name: t('footer.careers'), href: "#" }
       ]
     },
     {
-      title: "Platform",
+      title: t('footer.platform'),
       links: [
-        { name: "For Doctors", href: "#" },
-        { name: "For Patients", href: "#" }
+        { name: t('footer.forDoctors'), href: "#" },
+        { name: t('footer.forPatients'), href: "#" }
       ]
     },
     {
-      title: "Program",
+      title: t('footer.program'),
       links: [
-        { name: "How it works", href: "#" },
-        { name: "Pricing", href: "#" }
+        { name: t('footer.howItWorks'), href: "#" },
+        { name: t('footer.pricing'), href: "#" }
       ]
     },
     {
-      title: "Legal",
+      title: t('footer.legal'),
       links: [
-        { name: "Privacy Policy", href: "#" },
-        { name: "Terms of Service", href: "#" },
-        { name: "Cookie Policy", href: "#" }
+        { name: t('footer.privacyPolicy'), href: "#" },
+        { name: t('footer.termsOfService'), href: "#" },
+        { name: t('footer.cookiePolicy'), href: "#" }
       ]
     }
   ];
@@ -132,7 +135,7 @@ const FooterSection = () => {
               <div className="py-8 border-t border-emerald-50 flex justify-between items-center">
                 <div className="flex flex-col gap-4">
                   <p className="text-emerald-50 text-base font-normal font-inter leading-relaxed">
-                    © 2025 Vidacure, Inc. All rights reserved
+                    {t('footer.copyright')}
                   </p>
                   <div className="flex gap-4">
                     {socialIcons.map((social, index) => (
@@ -180,7 +183,7 @@ const FooterSection = () => {
               <div className="py-8 border-t border-emerald-50 flex flex-col items-center gap-8">
                 <div className="flex flex-col items-center gap-4">
                   <p className="text-emerald-50 text-base font-normal font-inter leading-relaxed text-center">
-                    © 2025 Vidacure, Inc. All rights reserved
+                    {t('footer.copyright')}
                   </p>
                   <div className="flex gap-4">
                     {socialIcons.map((social, index) => (

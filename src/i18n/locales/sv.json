@@ -1,0 +1,203 @@
+{
+  "navbar": {
+    "howItWorks": "Så fungerar det",
+    "ourStory": "Vår historia",
+    "understandingObesity": "Förstå fetma",
+    "insightsTips": "Insikter & tips",
+    "pricing": "Priser",
+    "faq": "Vanliga frågor",
+    "login": "Logga in",
+    "getStarted": "Kom igång"
+  },
+  "hero": {
+    "newWay": "Ett nytt sätt att gå ner i vikt",
+    "title": "Hållbar viktminskning med medicinsk vetenskap som grund.",
+    "description": "Vårt program kombinerar FDA-godkända mediciner med 1-mot-1 coaching från ett dedikerat vårdteam för att hjälpa dig uppnå och bibehålla en hälsosam vikt.",
+    "getStarted": "Kom igång",
+    "feature1": "Gå ner upp till 1,3 kg per vecka med verkliga resultat",
+    "feature2": "Avancerad medicin – känn dig mätt, inte frustrerad",
+    "feature3": "Personligt stöd från din läkare och hälsocoach",
+    "feature4": "Patienter rapporterar högsta nöjdhet och varaktig förändring"
+  },
+  "obesity": {
+    "title": "Förstå fetma:",
+    "titleHighlight": "Det är ett komplext medicinskt tillstånd, inte ett val.",
+    "description": "Alltför länge har berättelsen om vikt handlat om viljestyrka. Men modern medicin visar att fetma är en komplex sjukdom, djupt påverkad av din genetik, hormoner och miljö. Vi förstår nu biologin bakom kampen, och med den förståelsen kommer nya, effektiva medicinska behandlingar som äntligen kan hjälpa.",
+    "bodyBiologyTitle": "Din kropps biologi",
+    "bodyBiologyDescription": "Din kropps naturliga \"set point\" kontrolleras av hormoner. När du bantar, slåss din kropp ofta tillbaka genom att öka hunger och sakta ner din ämnesomsättning, vilket gör varaktiga resultat svåra på egen hand.",
+    "modernMedicineTitle": "Hur modern medicin hjälper",
+    "modernMedicineDescription": "Kliniskt bevisade mediciner som GLP-1 arbetar med din kropps biologi. Under en läkares vägledning hjälper de att justera din set point och minska hungersignaler, vilket gör hållbar hälsa möjlig."
+  },
+  "pricing": {
+    "subtitle": "En investering i din långsiktiga hälsa",
+    "title": "Enkel,",
+    "titleHighlight": "transparent prissättning",
+    "description": "Vi tror på att vara helt öppna om kostnaden för vårt program. Det finns inga dolda avgifter eller långsiktiga åtaganden. Ditt månatliga medlemskap ger dig fullständig tillgång till vårt medicinska team och det stöd du behöver för att lyckas på din resa.",
+    "doctorFeature": "Få löpande vård från en legitimerad läkare som skapar din plan, hanterar dina recept och säkert vägleder dina framsteg.",
+    "medicationFeature": "Vi hanterar hela receptprocessen, med din godkända medicin levererad diskret till ditt hem från ett certifierat apotek.",
+    "messagingFeature": "Njut av obegränsade meddelanden med ditt personliga vårdteam för kontinuerligt stöd, coaching och svar på alla dina frågor.",
+    "lifestyleBadge": "Livsstilsprogram medlemskap",
+    "lifestylePrice": "795",
+    "lifestyleCurrency": "SEK/mån",
+    "lifestyleDescription": "Din tillgång till expertcoaching och stöd för en hälsosammare livsstil.",
+    "medicalBadge": "Medicinskt program medlemskap",
+    "medicalPrice": "1495",
+    "medicalCurrency": "SEK/mån",
+    "medicalDescription": "Din allt-i-ett tillgång till vårt medicinska team, coaching och stöd.",
+    "includes": "Inkluderar:",
+    "getStarted": "Kom igång",
+    "features": {
+      "initialAssessment": "Initial hälsobedömning",
+      "personalizedPlan": "Personlig livsstilsplan",
+      "medicalCheckins": "Regelbundna medicinska kontroller",
+      "unlimitedMessaging": "Obegränsade vårdteamsmeddelanden",
+      "progressTracking": "Pågående framstegsuppföljning",
+      "nutritionCoaching": "Närings- och vancoaching",
+      "doctorConsultation": "Initial läkarkonsultation",
+      "treatmentPlan": "Personlig behandlingsplan",
+      "glp1Medication": "GLP-1 medicinrecept",
+      "discreetDelivery": "Diskret leveranshantering"
+    }
+  },
+  "faq": {
+    "title": "Vanliga frågor",
+    "helpButton": "Behöver du fortfarande hjälp? Kontakta oss",
+    "questions": {
+      "safety": {
+        "question": "Är detta program säkert?",
+        "answer": "Ja, vårt program är helt säkert. Alla behandlingar övervakas av legitimerade läkare som specialiserar sig på vikthantering. Vi genomför grundliga medicinska utvärderingar innan vi påbörjar någon behandling och tillhandahåller löpande övervakning under hela din resa."
+      },
+      "sideEffects": {
+        "question": "Vilka är biverkningarna av medicinen?",
+        "answer": "Vanliga biverkningar kan inkludera mild illamående, minskad aptit och enstaka matsmältningsbesvär, särskilt under de första veckorna. Dessa effekter minskar vanligtvis när din kropp anpassar sig. Vårt medicinska team övervakar noga alla patienter och justerar behandlingsplaner vid behov för att minimera obehag."
+      },
+      "foodRestrictions": {
+        "question": "Måste jag sluta äta maten jag älskar?",
+        "answer": "Inte alls! Vårt tillvägagångssätt fokuserar på hållbara livsstilsförändringar snarare än restriktiv bantning. Du kommer att lära dig att njuta av din favoritmat i måttlighet samtidigt som du utvecklar hälsosammare ätmönster. Vår näringscoaching hjälper dig att fatta välgrundade val utan att känna dig berövad."
+      },
+      "treatmentDuration": {
+        "question": "Hur lång är behandlingen?",
+        "answer": "Behandlingens varaktighet varierar per individ, men de flesta patienter ser betydande resultat inom 3-6 månader. Vissa fortsätter behandlingen i 12-18 månader för optimala resultat. Din läkare kommer att arbeta med dig för att bestämma rätt tidslinje baserat på dina mål, framsteg och medicinska behov."
+      },
+      "financing": {
+        "question": "Finns det några finansieringsalternativ tillgängliga?",
+        "answer": "Ja, vi erbjuder flexibla betalningsplaner för att göra vårt program tillgängligt. Vi arbetar med flera finansieringspartners för att tillhandahålla månatliga betalningsalternativ som passar din budget. Kontakta vårt team för att diskutera den bästa finansieringslösningen för din situation."
+      }
+    }
+  },
+  "bmi": {
+    "title": "Ta reda på ditt BMI",
+    "age": "Ålder",
+    "weight": "Vikt",
+    "height": "Längd",
+    "ageUnit": "år*",
+    "weightUnit": "lbs*",
+    "heightUnit": "cm*",
+    "result": "Ditt BMI:",
+    "categories": {
+      "underweight": "undervikt",
+      "normal": "normalvikt",
+      "overweight": "övervikt",
+      "obese": "fetma"
+    },
+    "disclaimer": "*Detta är en utgångspunkt för att förstå din hälsa. Om du är orolig för din vikt är nästa steg att prata med en medicinsk expert.",
+    "ctaButton": "Boka en kostnadsfri läkarkonsultation"
+  },
+  "journey": {
+    "subtitle": "Så fungerar det",
+    "title": "3 steg till din",
+    "titleWeight": "viktminskning",
+    "titleJourney": "resa",
+    "step1": {
+      "title": "Din kostnadsfria onlinekonsultation",
+      "description": "Berätta om din hälsohistoria i ett kort onlineformulär. Du kommer sedan att ha en privat konsultation med en legitimerad läkare för att se om du är en kandidat."
+    },
+    "step2": {
+      "title": "Få din anpassade plan",
+      "description": "Din läkare granskar din hälsoprofil för att utforma en personlig behandlingsplan. Denna plan är skräddarsydd för din unika biologi och viktminsknings mål."
+    },
+    "step3": {
+      "title": "Ta emot behandling och stöd",
+      "description": "Din medicin levereras diskret till ditt hem. Därifrån ger ditt dedikerade vårdteam löpande stöd för att vägleda dig, justera din plan och fira din framgång."
+    },
+    "ctaButton": "Se om du kvalificerar dig"
+  },
+  "know": {
+    "title": "Visste du att",
+    "statistics": {
+      "stat1": "I Sverige klassificeras nu 1 av 2 vuxna som överviktiga eller levande med fetma.",
+      "stat2": "av personer som går ner i vikt genom traditionell bantning enbart återfår den inom några år.",
+      "stat3": "En genomsnittlig viktminskning på 15% med vårt program förbättrar dramatiskt hjärthälsan och minskar diabetesrisken."
+    }
+  },
+  "partner": {
+    "title": "Din",
+    "titleHighlight": "svenska hälsopartner",
+    "description": "Vi grundades i Stockholm av ett team av dedikerade läkare och specialister som såg ett behov av en mer modern, tillgänglig och empatisk approach till fetmavård. Vårt uppdrag är enkelt: att tillhandahålla säker, effektiv och vetenskapsbaserad medicinsk behandling för att hjälpa våra patienter leva hälsosammare, fylligare liv. Din hälsa och integritet är våra högsta prioriteringar.",
+    "ctaButton": "Ta reda på mer"
+  },
+  "testimonial": {
+    "title": "Riktiga personer,",
+    "titleHighlight": "varaktiga resultat",
+    "testimonials": {
+      "testimonial1": "För första gången tänker jag inte på mat hela dagen. Medicinen tystade bruset i mitt huvud, och stödet från min läkare har varit fantastiskt. Jag har gått ner 18 kg och känner mig i kontroll.",
+      "testimonial2": "Förvandlingen har varit otrolig. Inte bara fysiskt, utan mentalt också. Jag har äntligen de verktyg och det stöd jag behövde för att göra varaktiga förändringar.",
+      "testimonial3": "Efter år av kamp hittade jag ett program som faktiskt fungerar. Det personliga tillvägagångssättet gjorde hela skillnaden i min resa."
+    },
+    "names": {
+      "name1": "Markus, 48",
+      "name2": "Sarah, 34",
+      "name3": "David, 52"
+    }
+  },
+  "journal": {
+    "title": "Från vår",
+    "titleHighlight": "hälsotidning",
+    "articles": {
+      "article1": {
+        "title": "Vetenskapen om GLP-1: Hur de verkligen fungerar",
+        "readTime": "5 min läsning"
+      },
+      "article2": {
+        "title": "En patients berättelse: Mina första 3 månader i programmet",
+        "readTime": "12 min läsning"
+      },
+      "article3": {
+        "title": "5 hälsosamma svenska vanor för ett balanserat liv",
+        "readTime": "3 min läsning"
+      }
+    },
+    "authors": {
+      "author1": {
+        "name": "Dr Markus Sterl",
+        "credentials": "PhD. Nutrition"
+      },
+      "author2": {
+        "name": "Dr Sarah Anderson",
+        "credentials": "MD. Endokrinologi"
+      },
+      "author3": {
+        "name": "Dr Erik Lindqvist",
+        "credentials": "PhD. Beteendevetenskap"
+      }
+    }
+  },
+  "footer": {
+    "company": "Företag",
+    "aboutUs": "Om oss",
+    "ourDoctors": "Våra läkare",
+    "blogs": "Bloggar",
+    "careers": "Karriärer",
+    "platform": "Plattform",
+    "forDoctors": "För läkare",
+    "forPatients": "För patienter",
+    "program": "Program",
+    "howItWorks": "Så fungerar det",
+    "pricing": "Priser",
+    "legal": "Juridiskt",
+    "privacyPolicy": "Integritetspolicy",
+    "termsOfService": "Användarvillkor",
+    "cookiePolicy": "Cookie-policy",
+    "copyright": "© 2025 Vidacure, Inc. Alla rättigheter förbehållna"
+  }
+}

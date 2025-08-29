@@ -1,27 +1,29 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const TestimonialSection = () => {
+  const { t } = useTranslation();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   
   const testimonials = [
     {
       id: 1,
-      text: "For the first time, I don't think about food all day. The medication quieted the noise in my head, and the support from my doctor has been fantastic. I've lost 18kg and feel in control.",
-      name: "Markus, 48",
+      text: t('testimonial.testimonials.testimonial1'),
+      name: t('testimonial.names.name1'),
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
     },
     {
       id: 2,
-      text: "The transformation has been incredible. Not just physically, but mentally too. I finally have the tools and support I needed to make lasting changes.",
-      name: "Sarah, 34",
+      text: t('testimonial.testimonials.testimonial2'),
+      name: t('testimonial.names.name2'),
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b332c1af?w=100&h=100&fit=crop&crop=face"
     },
     {
       id: 3,
-      text: "After years of struggling, I found a program that actually works. The personalized approach made all the difference in my journey.",
-      name: "David, 52",
+      text: t('testimonial.testimonials.testimonial3'),
+      name: t('testimonial.names.name3'),
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
     }
   ];
@@ -65,8 +67,8 @@ const TestimonialSection = () => {
             {/* Header */}
             <div className="text-center mb-12 sm:mb-16">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-sora leading-tight">
-                <span className="text-zinc-800">Real People, </span>
-                <span className="text-teal-600">Lasting Results</span>
+                <span className="text-zinc-800">{t('testimonial.title')} </span>
+                <span className="text-teal-600">{t('testimonial.titleHighlight')}</span>
               </h2>
             </div>
 

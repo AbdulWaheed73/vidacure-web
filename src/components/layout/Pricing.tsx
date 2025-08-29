@@ -1,41 +1,44 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Check, Stethoscope, Pill, MessageCircle, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const PricingSection = () => {
+  const { t } = useTranslation();
+  
   const features = [
     {
       icon: <Stethoscope className="w-6 h-6 text-teal-700" />,
-      text: "Receive ongoing care from a board-certified doctor who creates your plan, manages your prescriptions, and safely guides your progress."
+      text: t('pricing.doctorFeature')
     },
     {
       icon: <Pill className="w-6 h-6 text-teal-700" />,
-      text: "We manage the entire prescription process, with your approved medication delivered discreetly to your home from a certified pharmacy."
+      text: t('pricing.medicationFeature')
     },
     {
       icon: <MessageCircle className="w-6 h-6 text-teal-700" />,
-      text: "Enjoy unlimited messaging with your personal care team for continuous support, coaching, and answers to all your questions."
+      text: t('pricing.messagingFeature')
     }
   ];
 
   const lifestyleFeatures = [
-    "Initial Health Assessment",
-    "Personalized Lifestyle Plan", 
-    "Regular Medical Check-ins",
-    "Unlimited Care Team Messaging",
-    "Ongoing Progress Tracking",
-    "Nutrition & Habit Coaching"
+    t('pricing.features.initialAssessment'),
+    t('pricing.features.personalizedPlan'), 
+    t('pricing.features.medicalCheckins'),
+    t('pricing.features.unlimitedMessaging'),
+    t('pricing.features.progressTracking'),
+    t('pricing.features.nutritionCoaching')
   ];
 
   const medicalFeatures = [
-    "Initial Doctor Consultation",
-    "Personalized Treatment Plan",
-    "Regular Medical Check-ins", 
-    "GLP-1 Medication Prescription",
-    "Unlimited Care Team Messaging",
-    "Ongoing Progress Tracking",
-    "Nutrition & Habit Coaching",
-    "Discreet Delivery Management"
+    t('pricing.features.doctorConsultation'),
+    t('pricing.features.treatmentPlan'),
+    t('pricing.features.medicalCheckins'), 
+    t('pricing.features.glp1Medication'),
+    t('pricing.features.unlimitedMessaging'),
+    t('pricing.features.progressTracking'),
+    t('pricing.features.nutritionCoaching'),
+    t('pricing.features.discreetDelivery')
   ];
 
   const PricingCard = ({ 
@@ -80,7 +83,7 @@ const PricingSection = () => {
           {/* Features */}
           <div className="flex flex-col gap-4">
             <p className={`font-bold font-manrope ${isPrimary ? 'text-emerald-50' : 'text-gray-800'}`}>
-              Includes:
+              {t('pricing.includes')}
             </p>
             <div className="flex flex-col gap-4">
               {features.map((feature, index) => (
@@ -123,11 +126,11 @@ const PricingSection = () => {
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-4">
                   <p className="text-teal-700 text-base font-medium font-manrope uppercase">
-                    An Investment In Your Long-Term Health
+                    {t('pricing.subtitle')}
                   </p>
                   <h2 className="text-4xl font-bold font-sora leading-10">
-                    <span className="text-gray-800">Simple, </span>
-                    <span className="text-teal-600">Transparent Pricing</span>
+                    <span className="text-gray-800">{t('pricing.title')} </span>
+                    <span className="text-teal-600">{t('pricing.titleHighlight')}</span>
                   </h2>
                 </div>
               </div>
@@ -152,23 +155,23 @@ const PricingSection = () => {
             {/* Right Cards */}
             <div className="flex-1">
               <PricingCard
-                badge="Lifestyle Program Membership"
-                price="795"
-                currency="SEK/mo"
-                description="Your access to expert coaching and support for a healthier lifestyle."
+                badge={t('pricing.lifestyleBadge')}
+                price={t('pricing.lifestylePrice')}
+                currency={t('pricing.lifestyleCurrency')}
+                description={t('pricing.lifestyleDescription')}
                 features={lifestyleFeatures}
-                buttonText="Get Started"
+                buttonText={t('pricing.getStarted')}
               />
             </div>
 
             <div className="flex-1">
               <PricingCard
-                badge="Medical Program Membership"
-                price="1495"
-                currency="SEK/mo"
-                description="Your all-in-one access to our medical team, coaching, and support."
+                badge={t('pricing.medicalBadge')}
+                price={t('pricing.medicalPrice')}
+                currency={t('pricing.medicalCurrency')}
+                description={t('pricing.medicalDescription')}
                 features={medicalFeatures}
-                buttonText="Get Started"
+                buttonText={t('pricing.getStarted')}
                 isPrimary={true}
               />
             </div>
@@ -179,14 +182,14 @@ const PricingSection = () => {
             {/* Header */}
             <div className="text-center mb-8 px-4">
               <p className="text-teal-700 text-base font-medium font-manrope uppercase mb-4">
-                An Investment In Your Long-Term Health
+                {t('pricing.subtitle')}
               </p>
               <h2 className="text-3xl sm:text-4xl font-bold font-sora leading-tight mb-6">
-                <span className="text-gray-800">Simple, </span>
-                <span className="text-teal-600">Transparent Pricing</span>
+                <span className="text-gray-800">{t('pricing.title')} </span>
+                <span className="text-teal-600">{t('pricing.titleHighlight')}</span>
               </h2>
               <p className="text-teal-700 text-base font-manrope leading-snug">
-                We believe in being completely open about the cost of our program. There are no hidden fees or long-term commitments. Your monthly membership gives you complete access to our medical team and the support you need to succeed on your journey.
+                {t('pricing.description')}
               </p>
             </div>
 
@@ -209,21 +212,21 @@ const PricingSection = () => {
             {/* Pricing Cards */}
             <div className="flex flex-col gap-8 px-4">
               <PricingCard
-                badge="Lifestyle Program Membership"
-                price="795"
-                currency="SEK/mo"
-                description="Your access to expert coaching and support for a healthier lifestyle."
+                badge={t('pricing.lifestyleBadge')}
+                price={t('pricing.lifestylePrice')}
+                currency={t('pricing.lifestyleCurrency')}
+                description={t('pricing.lifestyleDescription')}
                 features={lifestyleFeatures}
-                buttonText="Get Started"
+                buttonText={t('pricing.getStarted')}
               />
 
               <PricingCard
-                badge="Medical Program Membership"
-                price="1495"
-                currency="SEK/mo"
-                description="Your all-in-one access to our medical team, coaching, and support."
+                badge={t('pricing.medicalBadge')}
+                price={t('pricing.medicalPrice')}
+                currency={t('pricing.medicalCurrency')}
+                description={t('pricing.medicalDescription')}
                 features={medicalFeatures}
-                buttonText="Get Started"
+                buttonText={t('pricing.getStarted')}
                 isPrimary={true}
               />
             </div>

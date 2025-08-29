@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const FAQSection = () => {
+  const { t } = useTranslation();
   const [openItems, setOpenItems] = useState({});
 
   const toggleItem = (index) => {
@@ -14,29 +16,24 @@ const FAQSection = () => {
 
   const faqItems = [
     {
-      question: "Is this program safe?",
-      answer:
-        "Yes, our program is completely safe. All treatments are overseen by board-certified physicians who specialize in weight management. We conduct thorough medical evaluations before starting any treatment and provide ongoing monitoring throughout your journey.",
+      question: t('faq.questions.safety.question'),
+      answer: t('faq.questions.safety.answer'),
     },
     {
-      question: "What are the side effects of the medication?",
-      answer:
-        "Common side effects may include mild nausea, decreased appetite, and occasional digestive discomfort, especially during the initial weeks. These effects typically diminish as your body adjusts. Our medical team closely monitors all patients and adjusts treatment plans as needed to minimize any discomfort.",
+      question: t('faq.questions.sideEffects.question'),
+      answer: t('faq.questions.sideEffects.answer'),
     },
     {
-      question: "Do I have to stop eating the foods I love?",
-      answer:
-        "Not at all! Our approach focuses on sustainable lifestyle changes rather than restrictive dieting. You'll learn to enjoy your favorite foods in moderation while developing healthier eating patterns. Our nutrition coaching helps you make informed choices without feeling deprived.",
+      question: t('faq.questions.foodRestrictions.question'),
+      answer: t('faq.questions.foodRestrictions.answer'),
     },
     {
-      question: "How long is the treatment?",
-      answer:
-        "Treatment duration varies by individual, but most patients see significant results within 3-6 months. Some continue treatment for 12-18 months for optimal results. Your doctor will work with you to determine the right timeline based on your goals, progress, and medical needs.",
+      question: t('faq.questions.treatmentDuration.question'),
+      answer: t('faq.questions.treatmentDuration.answer'),
     },
     {
-      question: "Are there any financing options available?",
-      answer:
-        "Yes, we offer flexible payment plans to make our program accessible. We work with several financing partners to provide monthly payment options that fit your budget. Contact our team to discuss the best financing solution for your situation.",
+      question: t('faq.questions.financing.question'),
+      answer: t('faq.questions.financing.answer'),
     },
   ];
 
@@ -79,12 +76,12 @@ const FAQSection = () => {
             <div className="flex-1 py-8 flex flex-col justify-start items-start gap-12">
               <div className="flex flex-col justify-start items-start gap-4">
                 <h1 className="text-zinc-800 text-5xl font-bold font-sora leading-[56.40px]">
-                  Frequently Asked Questions
+                  {t('faq.title')}
                 </h1>
               </div>
               <button className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors duration-200 group">
                 <span className="text-white text-sm font-semibold font-sora leading-tight">
-                  Still need help? Get in touch
+                  {t('faq.helpButton')}
                 </span>
                 <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform duration-200" />
               </button>
@@ -118,12 +115,12 @@ const FAQSection = () => {
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-4">
                 <h1 className="text-zinc-800 text-3xl sm:text-4xl font-bold font-sora leading-10 text-center">
-                  Frequently Asked Questions
+                  {t('faq.title')}
                 </h1>
               </div>
               <button className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors duration-200 group self-center">
                 <span className="text-white text-sm font-semibold font-sora leading-tight">
-                  Still need help? Get in touch
+                  {t('faq.helpButton')}
                 </span>
                 <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform duration-200" />
               </button>

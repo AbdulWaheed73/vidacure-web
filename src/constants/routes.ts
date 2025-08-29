@@ -7,6 +7,7 @@ export const ROUTES = {
   SETTINGS: '/settings',
   ABOUT: '/about',
   CONTACT: '/contact',
+  ONBOARDING: '/onboarding'
 } as const;
 
 export type RouteKeys = keyof typeof ROUTES;

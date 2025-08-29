@@ -1,42 +1,45 @@
-import React from 'react';
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Clock, ArrowUpRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const HealthJournalSection = () => {
+  const { t } = useTranslation();
+  
   const articles = [
     {
       id: 1,
       author: {
-        name: "Dr Markus Sterl",
-        credentials: "PhD. Nutrition",
+        name: t('journal.authors.author1.name'),
+        credentials: t('journal.authors.author1.credentials'),
         avatar: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop&crop=face"
       },
-      title: "The Science of GLP-1s: How They Really Work",
-      readTime: "5 min read"
+      title: t('journal.articles.article1.title'),
+      readTime: t('journal.articles.article1.readTime')
     },
     {
       id: 2,
       author: {
-        name: "Dr Sarah Anderson",
-        credentials: "MD. Endocrinology",
+        name: t('journal.authors.author2.name'),
+        credentials: t('journal.authors.author2.credentials'),
         avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop&crop=face"
       },
-      title: "A Patient's Story: My First 3 Months on the Program",
-      readTime: "12 min read"
+      title: t('journal.articles.article2.title'),
+      readTime: t('journal.articles.article2.readTime')
     },
     {
       id: 3,
       author: {
-        name: "Dr Erik Lindqvist",
-        credentials: "PhD. Behavioral Science",
+        name: t('journal.authors.author3.name'),
+        credentials: t('journal.authors.author3.credentials'),
         avatar: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=100&h=100&fit=crop&crop=face"
       },
-      title: "5 Healthy Swedish Habits for a Balanced Life",
-      readTime: "3 min read"
+      title: t('journal.articles.article3.title'),
+      readTime: t('journal.articles.article3.readTime')
     }
   ];
 
-  const ArticleCard = ({ article, className = "" }) => (
+  const ArticleCard = ({ article, className = "" }: { article: any; className?: string }) => (
     <Card className={`bg-white rounded-[20px] shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group ${className}`}>
       <CardContent className="p-0 h-full flex flex-col">
         {/* Author Section */}
@@ -89,8 +92,8 @@ const HealthJournalSection = () => {
           {/* Header */}
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-sora leading-tight lg:leading-[56.40px]">
-              <span className="text-zinc-800">From Our </span>
-              <span className="text-teal-600">Health Journal</span>
+              <span className="text-zinc-800">{t('journal.title')} </span>
+              <span className="text-teal-600">{t('journal.titleHighlight')}</span>
             </h1>
           </div>
 
