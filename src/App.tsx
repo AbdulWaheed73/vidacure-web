@@ -8,6 +8,7 @@ import { useAuth } from "./hooks";
 // import { getClientType } from "./utils";
 import { ROUTES } from "./constants";
 import { LoginPage, DashboardPage, LandingPage, NotFoundPage } from "./pages";
+import OnboardingFlow from "./pages/OnBoarding";
 
 
 function App() {
@@ -62,6 +63,8 @@ function App() {
             )
           }
         />
+
+        <Route path={ROUTES.ONBOARDING} element={<OnboardingFlow />} />
 
         {/* 404 Not Found Page */}
         <Route path="*" element={<NotFoundPage />} />
