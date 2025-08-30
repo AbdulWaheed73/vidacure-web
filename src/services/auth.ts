@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api, updateCsrfToken } from './api';
 import { config } from '../constants';
 import type { User } from '../types';
 
@@ -32,6 +32,8 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
     if (csrfToken) {
       localStorage.setItem('csrfToken', csrfToken);
+      // Update API headers with new token
+      updateCsrfToken(csrfToken);
     }
   }
 
@@ -41,6 +43,8 @@ export class AuthService {
   static clearUserData() {
     localStorage.removeItem('user');
     localStorage.removeItem('csrfToken');
+    // Clear API headers
+    updateCsrfToken('');
   }
 
   /**

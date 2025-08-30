@@ -1,12 +1,5 @@
-import React from "react";
+import type { FormFieldProps } from '../../types';
 
-interface FormFieldProps {
-  label: string;
-  required?: boolean;
-  children: React.ReactNode;
-  className?: string;
-  error?: boolean;
-}
 
 export const FormField = ({
   label,
@@ -14,6 +7,7 @@ export const FormField = ({
   children,
   className = "",
   error = false,
+  helperText,
 }: FormFieldProps) => (
   <div className={`flex flex-col gap-4 ${className}`}>
     <label className={`font-manrope font-bold text-[16px] ${
@@ -25,5 +19,10 @@ export const FormField = ({
     <div className={error ? "[&>*]:border-red-300 [&>*]:focus:border-red-500" : ""}>
       {children}
     </div>
+    {helperText && (
+      <p className="text-[12px] text-[#00a38a] font-medium">
+        ✓ {helperText}
+      </p>
+    )}
   </div>
 );

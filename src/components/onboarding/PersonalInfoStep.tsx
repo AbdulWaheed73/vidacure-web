@@ -9,20 +9,33 @@ export const PersonalInfoStep = () => {
   const context = useContext(OnboardingContext);
   if (!context) return null;
 
-  const { data, updateData } = context;
+  const { data, updateData, user } = context;
   const { personalInfo } = data;
 
   const handleChange = (field: keyof PersonalInfo, value: string) => {
+    // Prevent changing fullName if it comes from BankID
+    if (field === "fullName" && user?.name && personalInfo.fullName === user.name) {
+      return;
+    }
     updateData("personalInfo", { ...personalInfo, [field]: value });
   };
 
+  // Check if the name comes from BankID (readonly)
+  const isNameFromBankID = user?.name && personalInfo.fullName === user.name;
+
   return (
     <div className="flex flex-col gap-8 w-full">
-      <FormField label="Full Name" required>
+      <FormField 
+        label="Full Name" 
+        required
+        helperText={isNameFromBankID ? "Verified with BankID" : undefined}
+      >
         <Input
           placeholder="Thomas Kosmala"
           value={personalInfo.fullName}
           onChange={(e) => handleChange("fullName", e.target.value)}
+          readOnly={!!isNameFromBankID}
+          className={isNameFromBankID ? "bg-gray-50 cursor-not-allowed" : ""}
         />
       </FormField>
 

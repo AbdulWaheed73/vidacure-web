@@ -1,33 +1,6 @@
 import { create } from 'zustand';
+import type { UserStore, UserProfile } from '../types';
 
-interface UserProfile {
-  id: string;
-  email: string;
-  name: string;
-  avatar?: string;
-  bio?: string;
-  preferences: {
-    theme: 'light' | 'dark';
-    notifications: boolean;
-    language: string;
-  };
-}
-
-interface UserState {
-  profile: UserProfile | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
-interface UserActions {
-  fetchProfile: (userId: string) => Promise<void>;
-  updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
-  updatePreferences: (preferences: Partial<UserProfile['preferences']>) => void;
-  clearUserData: () => void;
-  setLoading: (loading: boolean) => void;
-}
-
-type UserStore = UserState & UserActions;
 
 export const useUserStore = create<UserStore>()((set, get) => ({
   // State

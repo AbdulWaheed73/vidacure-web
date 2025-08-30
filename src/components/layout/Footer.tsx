@@ -1,4 +1,3 @@
-import React from 'react';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import footer from "../../assets/footer_logo.png";
@@ -65,7 +64,13 @@ const FooterSection = () => {
     }
   ];
 
-  const FooterLink = ({ href, children, className = "" }) => (
+  type FooterLinkProps = {
+    href: string;
+    children: React.ReactNode;
+    className?: string;
+  };
+  
+  const FooterLink = ({ href, children, className = "" }: FooterLinkProps) => (
     <a
       href={href}
       className={`text-emerald-50 text-base font-normal font-inter leading-normal hover:text-white transition-colors duration-200 ${className}`}
@@ -74,7 +79,13 @@ const FooterSection = () => {
     </a>
   );
 
-  const SocialIcon = ({ icon: Icon, href, label }) => (
+  type SocialIconProps = {
+    icon: React.ComponentType<{ className?: string }>;
+    href: string;
+    label: string;
+  };
+  
+  const SocialIcon = ({ icon: Icon, href, label }: SocialIconProps) => (
     <a
       href={href}
       aria-label={label}

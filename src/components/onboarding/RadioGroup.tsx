@@ -1,22 +1,8 @@
-import React from "react";
-
-interface RadioGroupProps {
-  value: string;
-  onValueChange: (value: string) => void;
-  children: React.ReactNode;
-}
+import type { RadioGroupProps, RadioItemProps } from '../../types';
 
 export const RadioGroup = ({ children }: RadioGroupProps) => (
   <div className="flex gap-16">{children}</div>
 );
-
-interface RadioItemProps {
-  value: string;
-  id: string;
-  checked: boolean;
-  onChange: (value: string) => void;
-  children: React.ReactNode;
-}
 
 export const RadioItem = ({
   value,

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const FAQSection = () => {
   const { t } = useTranslation();
-  const [openItems, setOpenItems] = useState({});
+  const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
 
-  const toggleItem = (index) => {
+  const toggleItem = (index: number) => {
     setOpenItems((prev) => ({
       ...prev,
       [index]: !prev[index],
@@ -37,7 +37,14 @@ const FAQSection = () => {
     },
   ];
 
-  const FAQItem = ({ item, index, isOpen, onToggle }) => (
+  type FAQItemProps = {
+  item: { question: string; answer: string };
+  index: number;
+  isOpen: boolean;
+  onToggle: (index: number) => void;
+};
+
+  const FAQItem = ({ item, index, isOpen, onToggle }: FAQItemProps) => (
     <div className="py-4 border-b-2 border-stone-50 last:border-b-0">
       <button
         onClick={() => onToggle(index)}

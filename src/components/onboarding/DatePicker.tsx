@@ -1,15 +1,7 @@
-import React from "react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import type { DatePickerProps } from '../../types';
 
-interface DatePickerProps {
-  value: string;
-  onChange: (date: string) => void;
-  placeholder?: string;
-  className?: string;
-  maxDate?: Date;
-  minDate?: Date;
-}
 
 export const DatePicker = ({
   value,

@@ -11,6 +11,8 @@ import {
 
 import { ArrowRight, Scale, Pill, Calendar, Smile } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants";
 import { Marquee } from "@/components/magicui/marquee";
 import Img1 from "../../assets/first.png";
 import Img2 from "../../assets/second.png";
@@ -52,6 +54,7 @@ const ImageCardApp = ({ src }: { src: string }) => {
 
 export const HeroSection = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   
   // const images = [
   //   Img1,
@@ -86,7 +89,10 @@ export const HeroSection = () => {
                   {t('hero.description')}
                 </CardDescription>
                 <CardAction>
-                  <button className="h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors">
+                  <button 
+                    className="h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
+                    onClick={() => navigate(ROUTES.LOGIN)}
+                  >
                     <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
                       {t('hero.getStarted')}
                     </span>
@@ -161,7 +167,10 @@ export const HeroSection = () => {
                   {t('hero.description')}
                 </CardDescription>
                 <CardAction>
-                  <button className="h-11 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors">
+                  <button 
+                    className="h-11 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
+                    onClick={() => navigate(ROUTES.LOGIN)}
+                  >
                     <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
                       {t('hero.getStarted')}
                     </span>

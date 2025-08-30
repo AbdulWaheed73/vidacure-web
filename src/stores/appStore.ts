@@ -1,32 +1,8 @@
 import { create } from 'zustand';
+import type { AppStore } from '../types';
 
-interface AppState {
-  theme: 'light' | 'dark';
-  sidebarOpen: boolean;
-  notifications: Array<{
-    id: string;
-    type: 'success' | 'error' | 'warning' | 'info';
-    message: string;
-    timestamp: Date;
-  }>;
-  isOnline: boolean;
-  currentPage: string;
-}
 
-interface AppActions {
-  setTheme: (theme: 'light' | 'dark') => void;
-  toggleSidebar: () => void;
-  setSidebarOpen: (open: boolean) => void;
-  addNotification: (notification: Omit<AppState['notifications'][0], 'id' | 'timestamp'>) => void;
-  removeNotification: (id: string) => void;
-  clearNotifications: () => void;
-  setOnlineStatus: (status: boolean) => void;
-  setCurrentPage: (page: string) => void;
-}
-
-type AppStore = AppState & AppActions;
-
-export const useAppStore = create<AppStore>()((set, get) => ({
+export const useAppStore = create<AppStore>()((set) => ({
   // State
   theme: 'light',
   sidebarOpen: false,

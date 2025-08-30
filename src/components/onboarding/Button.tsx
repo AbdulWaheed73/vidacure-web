@@ -1,11 +1,5 @@
-import React from "react";
+import type { ButtonProps } from '../../types';
 
-interface ButtonProps {
-  variant?: "default" | "outline";
-  onClick?: () => void;
-  children: React.ReactNode;
-  className?: string;
-}
 
 export const Button = ({
   variant = "default",

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Button } from "./Button";
 import { OnboardingContext } from "./types";
 

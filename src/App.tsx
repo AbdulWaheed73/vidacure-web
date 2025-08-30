@@ -31,14 +31,21 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Landing Page Route */}
-        <Route path={ROUTES.HOME} element={
-            !isAuthenticated ? (
-              <LandingPage />
+        {/* Landing Page Route - Redirect if authenticated */}
+        <Route 
+          path={ROUTES.HOME} 
+          element={
+            isAuthenticated ? (
+              user?.hasCompletedOnboarding ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : (
+                <Navigate to={ROUTES.ONBOARDING as string} replace />
+              )
             ) : (
-              <Navigate to={ROUTES.DASHBOARD as string} replace />
+              <LandingPage />
             )
-          } />
+          } 
+        />
 
         {/* Login Route */}
         <Route
@@ -47,7 +54,7 @@ function App() {
             !isAuthenticated ? (
               <LoginPage onLogin={login} loading={loading} />
             ) : (
-              <Navigate to={ROUTES.DASHBOARD as string} replace />
+              <Navigate to={ROUTES.ONBOARDING as string} replace />
             )
           }
         />
@@ -64,7 +71,17 @@ function App() {
           }
         />
 
-        <Route path={ROUTES.ONBOARDING} element={<OnboardingFlow />} />
+        {/* Onboarding Route - Protected */}
+        <Route 
+          path={ROUTES.ONBOARDING} 
+          element={
+            isAuthenticated ? (
+              <OnboardingFlow />
+            ) : (
+              <Navigate to={ROUTES.LOGIN} replace />
+            )
+          } 
+        />
 
         {/* 404 Not Found Page */}
         <Route path="*" element={<NotFoundPage />} />

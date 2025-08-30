@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   OnboardingContext,
   type OnboardingData,
@@ -15,24 +15,32 @@ import {
   type HealthBackground,
   type MedicalHistory,
 } from "@/components/onboarding";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants";
 import {
   validatePersonalInfo,
   validatePhysicalDetails,
   validateHealthBackground,
   validateMedicalHistory,
   getValidationErrors,
-} from "@/components/onboarding/validation";
+  transformFormDataToQuestionnaire,
+} from "@/components/onboarding";
+import { submitQuestionnaire } from "@/services/questionnaire";
 
 
 
 // Main Onboarding Flow Component
 const OnboardingFlow = () => {
+  const { user, checkAuthStatus } = useAuth();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showErrors, setShowErrors] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<OnboardingData>({
     personalInfo: {
-      fullName: "",
+      fullName: user?.name || "",
       dateOfBirth: "",
       gender: "",
     },
@@ -66,12 +74,30 @@ const OnboardingFlow = () => {
     },
   });
 
+  // Initialize form with BankID data when user becomes available
+  useEffect(() => {
+    if (user && user.name && !data.personalInfo.fullName) {
+      setData(prev => ({
+        ...prev,
+        personalInfo: {
+          ...prev.personalInfo,
+          fullName: user.name
+        }
+      }));
+    }
+    setIsLoading(false);
+  }, [user, data.personalInfo.fullName]);
+
   const updateData = (step: keyof OnboardingData, newData: PersonalInfo | PhysicalDetails | HealthBackground | MedicalHistory) => {
     setData((prev) => ({
       ...prev,
       [step]: newData,
     }));
+
+    // Remove auto-save - only submit when form is complete
   };
+
+  // Remove auto-save functionality - not needed
 
   const validateCurrentStep = (): boolean => {
     let isValid = false;
@@ -123,10 +149,33 @@ const OnboardingFlow = () => {
         setShowErrors(false);
         setValidationErrors([]);
       } else {
-        // Handle form submission
-        console.log("Form submitted:", data);
-        alert("Form submitted successfully!");
+        // Handle final form submission
+        handleFinalSubmission();
       }
+    }
+  };
+
+  // Final submission handler
+  const handleFinalSubmission = async () => {
+    try {
+      setIsLoading(true);
+      const questionnaire = transformFormDataToQuestionnaire(data);
+      
+      await submitQuestionnaire(questionnaire);
+      
+      // Refresh auth status to get updated hasCompletedOnboarding flag
+      await checkAuthStatus();
+      
+      alert(`Questionnaire submitted successfully! Thank you for completing your health assessment.`);
+      
+      // Navigate to dashboard
+      navigate(ROUTES.DASHBOARD);
+      
+    } catch (error: any) {
+      console.error('Submission error:', error);
+      alert(`Submission failed: ${error.message}. Please try again.`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -169,7 +218,7 @@ const OnboardingFlow = () => {
 
   return (
     <OnboardingContext.Provider
-      value={{ data, updateData, currentStep, setCurrentStep, validationErrors, showErrors }}
+      value={{ data, updateData, currentStep, setCurrentStep, validationErrors, showErrors, user }}
     >
       <div className="min-h-screen bg-[#e6f9f6]">
         <Header />
@@ -188,7 +237,16 @@ const OnboardingFlow = () => {
               )}
 
               {/* Step Content */}
-              <div className="flex-1">{renderStep()}</div>
+              <div className="flex-1">
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00a38a]"></div>
+                    <span className="ml-3 text-[#282828]">Loading...</span>
+                  </div>
+                ) : (
+                  renderStep()
+                )}
+              </div>
 
               {/* Validation Errors */}
               {showErrors && validationErrors.length > 0 && (
@@ -213,16 +271,29 @@ const OnboardingFlow = () => {
 
                   <div className="flex items-center justify-between">
                     {currentStep > 1 ? (
-                      <Button variant="outline" onClick={handleBack}>
+                      <Button variant="outline" onClick={handleBack} className={isLoading ? "opacity-50 cursor-not-allowed" : ""}>
                         ← Back
                       </Button>
                     ) : (
                       <div />
                     )}
 
-                    <Button onClick={handleNext}>
-                      {currentStep === 4 ? "Complete" : "Next"}
-                    </Button>
+                    <div className="flex items-center gap-3">
+                      <Button 
+                        onClick={handleNext} 
+                        className={isLoading ? "opacity-50 cursor-not-allowed" : ""}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            {currentStep === 4 ? "Submitting..." : "Loading..."}
+                          </>
+                        ) : (
+                          currentStep === 4 ? "Complete" : "Next"
+                        )}
+                      </Button>
+                    </div>
                   </div>
 
                   {/* <Alert>

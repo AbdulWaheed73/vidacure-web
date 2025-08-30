@@ -1,4 +1,3 @@
-import React from "react";
 
 export const Header = () => (
   <div className="bg-white shadow-sm w-full">

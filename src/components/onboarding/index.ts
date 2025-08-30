@@ -16,3 +16,5 @@ export { Checkbox } from "./Checkbox";
 export { ActivityLevelButton } from "./ActivityLevelButton";
 export * from "./types";
 export * from "./validation";
+export * from "./questionMapping";
+export * from "./dataTransform";

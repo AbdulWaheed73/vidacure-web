@@ -1,12 +1,13 @@
 import { createContext } from "react";
+import type { User } from "../../types";
 
-export interface PersonalInfo {
+export type PersonalInfo = {
   fullName: string;
   dateOfBirth: string;
   gender: "male" | "female" | "other" | "";
 }
 
-export interface PhysicalDetails {
+export type PhysicalDetails = {
   height: string;
   currentWeight: string;
   goalWeight: string;
@@ -17,7 +18,7 @@ export interface PhysicalDetails {
   bmi: string;
 }
 
-export interface HealthBackground {
+export type HealthBackground = {
   smokingStatus: "yes" | "no" | "";
   smokingAlcoholDetails: string;
   physicalActivity: string;
@@ -30,14 +31,14 @@ export interface HealthBackground {
   weightLossDuration: string;
 }
 
-export interface MedicalHistory {
+export type MedicalHistory = {
   illnesses: string;
   medications: string;
   conditions: string[];
   familyHistory: string[];
 }
 
-export interface OnboardingData {
+export type OnboardingData = {
   personalInfo: PersonalInfo;
   physicalDetails: PhysicalDetails;
   healthBackground: HealthBackground;
@@ -51,4 +52,5 @@ export const OnboardingContext = createContext<{
   setCurrentStep: (step: number) => void;
   validationErrors: string[];
   showErrors: boolean;
+  user: User | null;
 } | null>(null);

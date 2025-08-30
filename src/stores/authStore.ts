@@ -1,69 +1,67 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { api } from '../services/api';
+import type { AuthStore } from '../types';
 
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-}
-
-interface AuthState {
-  isAuthenticated: boolean;
-  user: User | null;
-  token: string | null;
-  isLoading: boolean;
-  error: string | null;
-}
-
-interface AuthActions {
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-  setUser: (user: User) => void;
-  setToken: (token: string) => void;
-  clearError: () => void;
-  setLoading: (loading: boolean) => void;
-}
-
-type AuthStore = AuthState & AuthActions;
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       // State
       isAuthenticated: false,
       user: null,
-      token: null,
+      csrfToken: null,
       isLoading: false,
       error: null,
 
       // Actions
-      login: async (email: string, password: string) => {
+      checkAuthStatus: async () => {
         set({ isLoading: true, error: null });
         try {
-          // Your login API call here
-          const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-          });
+          const response = await api.get('/api/me');
+          const data = response.data;
+          console.log("data: ", data);
           
-          const data = await response.json();
-          
-          if (response.ok) {
+          if (data.authenticated) {
+            localStorage.setItem("csrfToken", data.csrfToken);
             set({
               isAuthenticated: true,
               user: data.user,
-              token: data.token,
+              csrfToken: data.csrfToken,
               isLoading: false,
             });
           } else {
-            set({ error: data.message, isLoading: false });
+            set({
+              isAuthenticated: false,
+              user: null,
+              csrfToken: null,
+              isLoading: false,
+            });
           }
         } catch (error) {
           set({ 
-            error: error instanceof Error ? error.message : 'Login failed', 
-            isLoading: false 
+            error: error instanceof Error ? error.message : 'Auth check failed', 
+            isLoading: false,
+            isAuthenticated: false,
+            user: null,
+            csrfToken: null,
+          });
+        }
+      },
+
+      setAuthData: (response) => {
+        if (response.authenticated && response.user) {
+          set({
+            isAuthenticated: true,
+            user: response.user,
+            csrfToken: response.csrfToken || null,
+            error: null,
+          });
+        } else {
+          set({
+            isAuthenticated: false,
+            user: null,
+            csrfToken: null,
           });
         }
       },
@@ -72,14 +70,10 @@ export const useAuthStore = create<AuthStore>()(
         set({
           isAuthenticated: false,
           user: null,
-          token: null,
+          csrfToken: null,
           error: null,
         });
       },
-
-      setUser: (user: User) => set({ user }),
-      
-      setToken: (token: string) => set({ token }),
       
       clearError: () => set({ error: null }),
       
@@ -88,9 +82,7 @@ export const useAuthStore = create<AuthStore>()(
     {
       name: 'auth-storage',
       partialize: (state) => ({
-        isAuthenticated: state.isAuthenticated,
-        user: state.user,
-        token: state.token,
+        csrfToken: state.csrfToken,
       }),
     }
   )

@@ -1,11 +1,5 @@
-import React from "react";
+import type { CheckboxProps } from '../../types';
 
-interface CheckboxProps {
-  checked: boolean;
-  onCheckedChange: (checked: boolean) => void;
-  id: string;
-  children: React.ReactNode;
-}
 
 export const Checkbox = ({
   checked,

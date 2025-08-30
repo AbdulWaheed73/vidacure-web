@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Check, Stethoscope, Pill, MessageCircle, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -41,8 +40,17 @@ const PricingSection = () => {
     t('pricing.features.discreetDelivery')
   ];
 
+  type PricingCardProps = {
+    price: string;
+    currency: string;
+    description: string;
+    features: string[];
+    buttonText: string;
+    isPrimary?: boolean;
+    badge: string;
+  };
+
   const PricingCard = ({ 
-    title, 
     price, 
     currency, 
     description, 
@@ -50,7 +58,7 @@ const PricingSection = () => {
     buttonText, 
     isPrimary = false,
     badge
-  }) => (
+  }: PricingCardProps) => (
     <Card className={`${isPrimary ? 'bg-teal-800 text-white border-teal-700' : 'bg-white'} rounded-2xl shadow-lg h-full`}>
       <CardContent className="p-8 flex flex-col gap-8 h-full">
         <div className="flex flex-col gap-8">
@@ -138,7 +146,7 @@ const PricingSection = () => {
               {/* Features */}
               <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-14">
-                  {features.map((feature, index) => (
+                  {features.map((feature: { icon: React.ReactNode; text: string }, index: number) => (
                     <div key={index} className="flex items-start gap-3">
                       <div className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-1">
                         {feature.icon}
@@ -196,7 +204,7 @@ const PricingSection = () => {
             {/* Features */}
             <div className="mb-8 px-4">
               <div className="flex flex-col gap-6">
-                {features.map((feature, index) => (
+                {features.map((feature: { icon: React.ReactNode; text: string }, index: number) => (
                   <div key={index} className="flex items-start gap-3">
                     <div className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-1">
                       {feature.icon}

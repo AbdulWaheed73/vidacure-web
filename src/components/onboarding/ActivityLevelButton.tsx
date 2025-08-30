@@ -1,11 +1,4 @@
-import React from "react";
-
-interface ActivityLevelButtonProps {
-  value: string;
-  label: string;
-  isSelected: boolean;
-  onClick: () => void;
-}
+import type { ActivityLevelButtonProps } from '../../types';
 
 export const ActivityLevelButton = ({
   label,

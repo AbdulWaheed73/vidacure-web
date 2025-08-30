@@ -1,15 +1,6 @@
 import React from "react";
+import type { NumericInputProps } from '../../types';
 
-interface NumericInputProps {
-  placeholder?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  className?: string;
-  min?: number;
-  max?: number;
-  step?: number;
-  allowDecimal?: boolean;
-}
 
 export const NumericInput = ({
   placeholder,

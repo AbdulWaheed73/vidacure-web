@@ -1,12 +1,7 @@
 import React from 'react';
 import { Button } from '../components/ui';
-import type { User } from '../types';
+import type { DashboardPageProps } from '../types';
 
-interface DashboardPageProps {
-  user: User | null;
-  onLogout: () => void;
-  loading: boolean;
-}
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ user, onLogout, loading }) => {
   const dashboardActions = [
@@ -62,7 +57,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ user, onLogout, lo
         <Button 
           onClick={onLogout}
           disabled={loading}
-          variant="danger"
+          variant="destructive"
           size="lg"
         >
           {loading ? 'Logging out...' : '🚪 Logout'}

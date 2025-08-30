@@ -1,9 +1,6 @@
-import React from "react";
 import { Progress } from "@/components/ui/progress";
+import type { OnboardingProgressBarProps } from '../../types';
 
-interface OnboardingProgressBarProps {
-  currentStep: number;
-}
 
 export const OnboardingProgressBar = ({ currentStep }: OnboardingProgressBarProps) => {
   const steps = [

@@ -1,11 +1,5 @@
-import React from "react";
+import type { TextareaProps } from '../../types';
 
-interface TextareaProps {
-  placeholder?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  className?: string;
-}
 
 export const Textarea = ({
   placeholder,
