@@ -76,7 +76,11 @@ function App() {
           path={ROUTES.ONBOARDING} 
           element={
             isAuthenticated ? (
-              <OnboardingFlow />
+              user?.hasCompletedOnboarding ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : (
+                <OnboardingFlow />
+              )
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />
             )
