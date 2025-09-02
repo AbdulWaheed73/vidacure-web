@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from '../ui/Button';
 import { PaymentService } from '../../services';
+import { ArrowRight, Check } from 'lucide-react';
 
 interface SubscriptionCardProps {
   planType: 'lifestyle' | 'medical';
@@ -38,60 +38,126 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
   };
 
   const isLifestyle = planType === 'lifestyle';
-  const cardBgClass = isLifestyle ? 'bg-green-50 border-green-200' : 'bg-blue-50 border-blue-200';
-  const headerBgClass = isLifestyle ? 'bg-green-100' : 'bg-blue-100';
-  const buttonVariant = isLifestyle ? 'default' : 'default';
-  const accentColor = isLifestyle ? 'text-green-600' : 'text-blue-600';
-  const buttonBgClass = isLifestyle ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700';
-
-  return (
-    <div className={`rounded-xl border-2 ${cardBgClass} p-6 shadow-lg hover:shadow-xl transition-shadow duration-300 ${isCurrentPlan ? 'ring-2 ring-yellow-400' : ''} relative`}>
-      {isCurrentPlan && (
-        <div className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">
-          Current Plan
+  
+  if (isLifestyle) {
+    return (
+      <div className="flex-1 self-stretch p-8 bg-white rounded-2xl shadow-[0px_2px_3px_0px_rgba(0,0,0,0.17)] shadow-[0px_0px_3px_0px_rgba(0,0,0,0.08)] inline-flex flex-col justify-start items-start gap-16 relative">
+        {isCurrentPlan && (
+          <div className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">
+            Current Plan
+          </div>
+        )}
+        
+        <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-8">
+          <div className="self-stretch pb-4 border-b border-zinc-400 flex flex-col justify-start items-start gap-2.5">
+            <div className="px-3 py-1 rounded-full outline outline-1 outline-offset-[-1px] outline-zinc-400 flex flex-col justify-start items-start">
+              <div className="justify-center text-zinc-800 text-sm font-semibold font-['Sora'] leading-tight">{planDetails.name}</div>
+            </div>
+          </div>
+          
+          <div className="self-stretch flex flex-col justify-start items-start gap-8">
+            <div className="justify-center">
+              <span className="text-zinc-800 text-5xl font-bold font-['Sora'] leading-[56.40px]">{planDetails.price} </span>
+              <span className="text-zinc-800 text-2xl font-bold font-['Sora'] leading-loose">{planDetails.currency}/mo</span>
+            </div>
+            <div className="self-stretch justify-center text-zinc-800 text-xl font-bold font-['Sora'] leading-relaxed">{planDetails.description}</div>
+          </div>
+          
+          <div className="self-stretch flex flex-col justify-start items-start gap-4">
+            <div className="self-stretch justify-center text-zinc-800 text-base font-bold font-['Manrope'] leading-snug">Includes:</div>
+            <div className="self-stretch flex flex-col justify-start items-start gap-4">
+              {planDetails.features.map((feature, index) => (
+                <div key={index} className="self-stretch inline-flex justify-start items-center gap-6">
+                  <div className="size-6 relative overflow-hidden">
+                    <Check className="size-5 absolute left-[2px] top-[2px] text-zinc-400" />
+                  </div>
+                  <div className="flex-1 justify-center text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">{feature}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      )}
-      
-      <div className={`${headerBgClass} -mx-6 -mt-6 mb-4 p-4 rounded-t-xl`}>
-        <h3 className={`text-xl font-bold ${accentColor}`}>
-          {planDetails.name}
-        </h3>
-        <div className="flex items-baseline mt-2">
-          <span className={`text-3xl font-bold ${accentColor}`}>
-            {PaymentService.formatPrice(planDetails.price, planDetails.currency)}
-          </span>
-          <span className="text-gray-600 ml-2">/{planDetails.interval}</span>
+        
+        <button
+          onClick={handleSubscribe}
+          disabled={disabled || isLoading || isCurrentPlan}
+          className="h-11 px-6 py-2.5 bg-emerald-50 rounded-full inline-flex justify-center items-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-100 transition-colors"
+        >
+          {isLoading ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-zinc-800 border-t-transparent"></div>
+              <div className="justify-center text-zinc-800 text-sm font-semibold font-['Sora'] leading-tight">Processing...</div>
+            </>
+          ) : isCurrentPlan ? (
+            <div className="justify-center text-zinc-800 text-sm font-semibold font-['Sora'] leading-tight">Current Plan</div>
+          ) : (
+            <>
+              <div className="justify-center text-zinc-800 text-sm font-semibold font-['Sora'] leading-tight">Get Started</div>
+              <ArrowRight className="size-4 text-zinc-800" />
+            </>
+          )}
+        </button>
+      </div>
+    );
+  } else {
+    return (
+      <div className="w-[474.50px] p-8 rounded-2xl shadow-[0px_2px_3px_0px_rgba(0,0,0,0.17)] inline-flex flex-col justify-start items-start gap-16 relative" style={{ backgroundColor: '#005044' }}>
+        {isCurrentPlan && (
+          <div className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">
+            Current Plan
+          </div>
+        )}
+        
+        <div className="self-stretch flex flex-col justify-start items-start gap-8">
+          <div className="self-stretch pb-4 border-b border-stone-50 flex flex-col justify-start items-start gap-2.5">
+            <div className="px-3 py-1 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full flex flex-col justify-start items-start">
+              <div className="justify-center text-emerald-50 text-sm font-semibold font-['Sora'] leading-tight">{planDetails.name}</div>
+            </div>
+          </div>
+          
+          <div className="self-stretch flex flex-col justify-start items-start gap-8">
+            <div className="justify-center">
+              <span className="text-white text-5xl font-bold font-['Sora'] leading-[56.40px]">{planDetails.price} </span>
+              <span className="text-white text-2xl font-bold font-['Sora'] leading-loose">{planDetails.currency}/mo</span>
+            </div>
+            <div className="self-stretch justify-center text-white text-xl font-bold font-['Sora'] leading-relaxed">{planDetails.description}</div>
+          </div>
+          
+          <div className="self-stretch flex flex-col justify-start items-start gap-4">
+            <div className="self-stretch justify-center text-emerald-50 text-base font-bold font-['Manrope'] leading-snug">Includes:</div>
+            <div className="self-stretch flex flex-col justify-start items-start gap-4">
+              {planDetails.features.map((feature, index) => (
+                <div key={index} className="self-stretch inline-flex justify-start items-center gap-6">
+                  <div className="size-6 relative overflow-hidden">
+                    <Check className="size-5 absolute left-[2px] top-[2px] text-emerald-50" />
+                  </div>
+                  <div className="flex-1 justify-center text-emerald-50 text-base font-normal font-['Manrope'] leading-snug">{feature}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <button
+            onClick={handleSubscribe}
+            disabled={disabled || isLoading || isCurrentPlan}
+            className="h-11 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed hover:from-teal-700 hover:to-teal-700 transition-colors"
+          >
+            {isLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                <div className="justify-center text-white text-sm font-semibold font-['Sora'] leading-tight">Processing...</div>
+              </>
+            ) : isCurrentPlan ? (
+              <div className="justify-center text-white text-sm font-semibold font-['Sora'] leading-tight">Current Plan</div>
+            ) : (
+              <>
+                <div className="justify-center text-white text-sm font-semibold font-['Sora'] leading-tight">Get Started</div>
+                <ArrowRight className="size-4 text-white" />
+              </>
+            )}
+          </button>
         </div>
       </div>
-
-      <p className="text-gray-700 mb-4">{planDetails.description}</p>
-
-      <ul className="space-y-2 mb-6">
-        {planDetails.features.map((feature, index) => (
-          <li key={index} className="flex items-start">
-            <span className={`${accentColor} mr-2 mt-0.5`}>✓</span>
-            <span className="text-gray-700">{feature}</span>
-          </li>
-        ))}
-      </ul>
-
-      <Button
-        onClick={handleSubscribe}
-        disabled={disabled || isLoading || isCurrentPlan}
-        className={`w-full ${buttonBgClass} text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200`}
-        size="lg"
-      >
-        {isLoading ? (
-          <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
-            Processing...
-          </div>
-        ) : isCurrentPlan ? (
-          'Current Plan'
-        ) : (
-          `Subscribe to ${planDetails.name}`
-        )}
-      </Button>
-    </div>
-  );
+    );
+  }
 };

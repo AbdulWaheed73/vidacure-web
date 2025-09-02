@@ -66,31 +66,36 @@ export class PaymentService {
   static getPlanDetails(planType: 'lifestyle' | 'medical') {
     if (planType === 'lifestyle') {
       return {
-        name: 'Lifestyle Program',
+        name: 'Lifestyle Program Membership',
         price: 795,
         currency: 'SEK',
         interval: 'month',
-        description: 'Expert coaching and support for a healthier lifestyle.',
+        description: 'Your access to expert coaching and support for a healthier lifestyle.',
         features: [
-          'Personal health coaching',
-          'Lifestyle tracking and analytics',
-          'Community support',
-          'Weekly progress reviews'
+          'Initial Health Assessment',
+          'Personalized Lifestyle Plan',
+          'Regular Medical Check-ins',
+          'Unlimited Care Team Messaging',
+          'Ongoing Progress Tracking',
+          'Nutrition & Habit Coaching'
         ]
       };
     } else {
       return {
-        name: 'Medical Program',
+        name: 'Medical Program Membership',
         price: 1495,
         currency: 'SEK',
         interval: 'month',
-        description: 'All-in-one access to our medical team, coaching, and support.',
+        description: 'Your all-in-one access to our medical team, coaching, and support.',
         features: [
-          'All Lifestyle Program features',
-          'Medical team access',
-          'Prescription management',
-          'Priority support',
-          'Advanced health monitoring'
+          ' Initial Doctor Consultation',
+          'Personalized Treatment Plan',
+          'Regular Medical Check-ins',
+          'GLP-1 Medication Prescription',
+          'Unlimited Care Team Messaging',
+          'Ongoing Progress Tracking',
+          'Nutrition & Habit Coaching',
+          'Discreet Delivery Management'
         ]
       };
     }

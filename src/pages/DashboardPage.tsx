@@ -9,12 +9,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ user, onLogout, lo
   const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);
 
-  const dashboardActions = [
-    { title: '📋 View Medical Records', description: 'Access your medical history and records' },
-    { title: '📅 Schedule Appointments', description: 'Book appointments with healthcare providers' },
-    { title: '💊 Manage Prescriptions', description: 'View and manage your prescriptions' },
-    { title: '📊 Health Analytics', description: 'View your health data and analytics' },
-  ];
+
 
   useEffect(() => {
     fetchSubscriptionStatus();
@@ -94,27 +89,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ user, onLogout, lo
         </div>
       )}
 
-      {/* Dashboard Actions */}
-      <div className="mb-8">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          🚀 Available Actions
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {dashboardActions.map((action, index) => (
-            <button 
-              key={index}
-              className="bg-white border-2 border-blue-200 p-6 rounded-xl hover:border-blue-500 hover:-translate-y-1 transition-all duration-300 shadow-md hover:shadow-lg text-left"
-            >
-              <div className="text-lg font-medium mb-2">
-                {action.title}
-              </div>
-              <div className="text-sm text-gray-600">
-                {action.description}
-              </div>
-            </button>
-          ))}
-        </div>
-      </div>
+
       
       {/* Logout Button */}
       <div className="text-center">

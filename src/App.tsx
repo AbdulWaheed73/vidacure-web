@@ -7,7 +7,7 @@ import {
 import { useAuth } from "./hooks";
 // import { getClientType } from "./utils";
 import { ROUTES } from "./constants";
-import { LoginPage, DashboardPage, LandingPage, NotFoundPage } from "./pages";
+import { LoginPage, DashboardPage, LandingPage, NotFoundPage, SubscriptionSuccess } from "./pages";
 import OnboardingFlow from "./pages/OnBoarding";
 
 
@@ -85,6 +85,12 @@ function App() {
               <Navigate to={ROUTES.LOGIN} replace />
             )
           } 
+        />
+
+        {/* Subscription Success Route */}
+        <Route 
+          path={ROUTES.SUBSCRIPTION_SUCCESS} 
+          element={<SubscriptionSuccess />} 
         />
 
         {/* 404 Not Found Page */}
