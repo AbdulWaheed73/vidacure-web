@@ -17,7 +17,7 @@ export interface QuestionnaireUpdateRequest {
  */
 export const submitQuestionnaire = async (questionnaire: QuestionnaireAnswer[]): Promise<QuestionnaireResponse> => {
   try {
-    const response = await api.post('/patient/questionnaire', {
+    const response = await api.post('/api/patient/questionnaire', {
       questionnaire
     });
     
@@ -33,7 +33,7 @@ export const submitQuestionnaire = async (questionnaire: QuestionnaireAnswer[]):
  */
 export const getQuestionnaire = async (): Promise<QuestionnaireAnswer[]> => {
   try {
-    const response = await api.get('/patient/questionnaire');
+    const response = await api.get('/api/patient/questionnaire');
     return response.data.questionnaire || [];
   } catch (error: any) {
     console.error('Error fetching questionnaire:', error);
@@ -52,7 +52,7 @@ export const getQuestionnaire = async (): Promise<QuestionnaireAnswer[]> => {
  */
 export const updateQuestionnaire = async (updates: QuestionnaireAnswer[]): Promise<QuestionnaireResponse> => {
   try {
-    const response = await api.patch('/patient/questionnaire', {
+    const response = await api.patch('/api/patient/questionnaire', {
       updates
     });
     
