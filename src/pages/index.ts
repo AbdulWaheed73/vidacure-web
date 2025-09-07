@@ -1,5 +1,10 @@
 export * from './LoginPage';
 export * from './DashboardPage';
+export * from './AppointmentsPage';
+export * from './PrescriptionsPage';
+export * from './ProgressPage';
+export * from './ResourcesPage';
+export * from './AccountPage';
 export * from './SubscriptionSuccess';
 export * from './SubscriptionCancel';
 export { default as LandingPage } from './LandingPage';

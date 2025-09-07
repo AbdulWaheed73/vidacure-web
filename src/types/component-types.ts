@@ -1,6 +1,7 @@
 // Component prop types for all reusable components
 
 import React from "react";
+import type { User } from "./user-types";
 
 // Onboarding component props
 export type InputProps = {
@@ -85,4 +86,13 @@ export type DatePickerProps = {
   className?: string;
   maxDate?: Date;
   minDate?: Date;
+}
+
+// TopBar component props
+export type TopBarProps = {
+  user: User | null;
+  onBookAppointment?: () => void;
+  onProfileClick?: () => void;
+  onAccountClick?: () => void;
+  onLogout?: () => void;
 }
