@@ -4,6 +4,9 @@ import { api } from '../services/api';
 import type { AuthStore } from '../types';
 
 
+// Guard to prevent multiple simultaneous auth checks
+let isCheckingAuth = false;
+
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set) => ({
@@ -16,11 +19,18 @@ export const useAuthStore = create<AuthStore>()(
 
       // Actions
       checkAuthStatus: async () => {
+        // Prevent multiple simultaneous auth checks
+        if (isCheckingAuth) {
+          console.log("Auth check already in progress, skipping...");
+          return;
+        }
+        
+        isCheckingAuth = true;
         set({ isLoading: true, error: null });
         try {
           const response = await api.get('/api/me');
           const data = response.data;
-          console.log("data: ", data);
+          console.log("Auth check response:", data);
           
           if (data.authenticated) {
             localStorage.setItem("csrfToken", data.csrfToken);
@@ -46,6 +56,8 @@ export const useAuthStore = create<AuthStore>()(
             user: null,
             csrfToken: null,
           });
+        } finally {
+          isCheckingAuth = false; // Reset guard
         }
       },
 

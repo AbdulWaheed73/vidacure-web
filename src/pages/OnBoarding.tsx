@@ -15,9 +15,9 @@ import {
   type HealthBackground,
   type MedicalHistory,
 } from "@/components/onboarding";
-import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants";
+import type { User } from "@/types";
 import {
   validatePersonalInfo,
   validatePhysicalDetails,
@@ -31,8 +31,7 @@ import { submitQuestionnaire } from "@/services/questionnaire";
 
 
 // Main Onboarding Flow Component
-const OnboardingFlow = () => {
-  const { user, checkAuthStatus } = useAuth();
+const OnboardingFlow = ({ user }: { user: User | null }) => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -164,7 +163,7 @@ const OnboardingFlow = () => {
       await submitQuestionnaire(questionnaire);
       
       // Refresh auth status to get updated hasCompletedOnboarding flag
-      await checkAuthStatus();
+      // await checkAuthStatus();
       
       alert(`Questionnaire submitted successfully! Thank you for completing your health assessment.`);
       

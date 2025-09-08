@@ -106,32 +106,28 @@ export const useAuth = () => {
     }, 500);
   };
 
-  // Effect to check auth status on mount
-  useEffect(() => {
-    checkAuthStatus();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Effect to handle URL parameters
+  // Only check auth status once on app startup, and handle URL parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const state = urlParams.get('state');
     const auth = urlParams.get('auth');
-    console.log("im here: ", );
     
     if (code && state) {
       // User just came back from authentication with code/state
+      console.log("Handling auth callback with code/state");
       handleAuthCallback();
-    console.log("im here: handleAuthCallback", );
-
     } else if (auth === 'success') {
       // User was redirected back from successful authentication
+      console.log("Handling successful auth redirect");
       handleSuccessfulAuth();
-      console.log("im here: handleSuccessfulAuth", );
+    } else {
+      // Normal app startup - check auth status once
+      console.log("App startup - checking auth status");
+      checkAuthStatus();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // Empty dependency array - only run once on mount
 
   return {
     isAuthenticated,

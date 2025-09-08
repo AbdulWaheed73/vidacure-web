@@ -8,8 +8,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ }) => {
   const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);
 
-
-
   useEffect(() => {
     fetchSubscriptionStatus();
   }, []);

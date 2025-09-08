@@ -4,7 +4,6 @@ import { useAuth } from "./hooks";
 import { ROUTES } from "./constants";
 import {
   LoginPage,
-  DashboardPage,
   AppointmentsPage,
   PrescriptionsPage,
   ProgressPage,
@@ -15,6 +14,7 @@ import {
   SubscriptionSuccess,
 } from "./pages";
 import OnboardingFlow from "./pages/OnBoarding";
+import DashboardRouter from "./pages/dashboard/DashboardRouter";
 import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { TopBar } from "./components/TopBar";
@@ -55,7 +55,7 @@ function App() {
 
     return (
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar user={user} />
         <SidebarInset className="bg-[#F0F7F4] ml-64">
           <TopBar 
             user={user}
@@ -78,7 +78,9 @@ function App() {
           path={ROUTES.HOME}
           element={
             isAuthenticated ? (
-              user?.hasCompletedOnboarding ? (
+              user?.role === 'doctor' ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : (
                 <Navigate to={ROUTES.ONBOARDING as string} replace />
@@ -96,21 +98,27 @@ function App() {
             !isAuthenticated ? (
               <LoginPage onLogin={login} loading={loading} />
             ) : (
-              <Navigate to={ROUTES.ONBOARDING as string} replace />
+              user?.role === 'doctor' ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : user?.hasCompletedOnboarding ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : (
+                <Navigate to={ROUTES.ONBOARDING as string} replace />
+              )
             )
           }
         />
 
-        {/* Dashboard Route - Protected with Sidebar */}
+        {/* Dashboard Routes - Protected with Sidebar */}
         <Route
-          path={ROUTES.DASHBOARD as string}
+          path="/dashboard/*"
           element={
             isAuthenticated ? (
               <SidebarLayout>
-                <DashboardPage
-                  user={user}
-                  onLogout={logout}
-                  loading={loading}
+                <DashboardRouter 
+                  user={user} 
+                  onLogout={logout} 
+                  loading={loading} 
                 />
               </SidebarLayout>
             ) : (
@@ -190,10 +198,12 @@ function App() {
           path={ROUTES.ONBOARDING}
           element={
             isAuthenticated ? (
-              user?.hasCompletedOnboarding ? (
+              user?.role === 'doctor' ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : (
-                <OnboardingFlow />
+                <OnboardingFlow user={user} />
               )
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />

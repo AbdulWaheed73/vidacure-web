@@ -5,7 +5,8 @@ import {
   Pill,
   TrendingUp,
   BookOpen,
-  User,
+  User as UserIcon,
+  Inbox,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -17,9 +18,36 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
+import { ROUTES } from '../constants';
+import type { User } from '../types';
 import Vidacure from "../assets/vidacure_png.png";
 
-const menuItems = [
+// Doctor sidebar items
+const doctorMenuItems = [
+  {
+    title: 'Dashboard',
+    url: '/dashboard',
+    icon: Home,
+  },
+  {
+    title: 'Inbox',
+    url: ROUTES.DOCTOR_INBOX,
+    icon: Inbox,
+  },
+  {
+    title: 'Prescriptions',
+    url: ROUTES.DOCTOR_PRESCRIPTIONS,
+    icon: Pill,
+  },
+  {
+    title: 'Account',
+    url: ROUTES.DOCTOR_ACCOUNT,
+    icon: UserIcon,
+  },
+];
+
+// Patient sidebar items (existing)
+const patientMenuItems = [
   {
     title: 'Home',
     url: '/dashboard',
@@ -48,12 +76,15 @@ const menuItems = [
   {
     title: 'Account',
     url: '/account',
-    icon: User,
+    icon: UserIcon,
   },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ user }: { user: User | null }) {
   const location = useLocation();
+  
+  // Choose menu items based on user role
+  const menuItems = user?.role === 'doctor' ? doctorMenuItems : patientMenuItems;
 
   return (
     <Sidebar 
