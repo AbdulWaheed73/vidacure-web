@@ -1,5 +1,3 @@
-"use client"
-
 import React from 'react';
 import { TrendingUp } from 'lucide-react';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
@@ -10,20 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/Button';
 import { Label } from '@/components/ui/label';
+import { addWeightHistory, getWeightHistory, type WeightHistoryEntry } from '@/services/weightHistory';
 
-// Static dummy data for weight tracking
-const allWeightData = [
-  { date: "2025-07-14", weight: 106.0, week: "Week 1" },
-  { date: "2025-07-21", weight: 105.2, week: "Week 2" },
-  { date: "2025-07-28", weight: 104.8, week: "Week 3" },
-  { date: "2025-08-04", weight: 104.1, week: "Week 4" },
-  { date: "2025-08-05", weight: 134.1, week: "Week 4" },
-  { date: "2025-08-06", weight: 114.1, week: "Week 4" },
-  { date: "2025-08-11", weight: 103.5, week: "Week 5" },
-  { date: "2025-08-18", weight: 103.0, week: "Week 6" },
-  { date: "2025-08-25", weight: 102.8, week: "Week 7" },
-  { date: "2025-09-01", weight: 102.0, week: "Week 8" },
-];
 
 const chartConfig = {
   weight: {
@@ -32,8 +18,74 @@ const chartConfig = {
   }
 } satisfies ChartConfig;
 
+
+// Helper function to calculate BMI
+const calculateBMI = (weightKg: number, heightInches: number = 65) => {
+  // Height: 5'5" = 65 inches
+  const heightM = heightInches * 0.0254;
+  const bmi = weightKg / (heightM * heightM);
+  return Math.round(bmi * 10) / 10;
+};
+
 export const ProgressPage: React.FC = () => {
   const [timeRange, setTimeRange] = React.useState("8w");
+  const [weightHistory, setWeightHistory] = React.useState<WeightHistoryEntry[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [saving, setSaving] = React.useState(false);
+  
+  // Form state
+  const [formData, setFormData] = React.useState({
+    weight: '',
+    sideEffects: '',
+    notes: ''
+  });
+
+  // Load weight history on component mount
+  React.useEffect(() => {
+    loadWeightHistory();
+  }, []);
+
+  const loadWeightHistory = async () => {
+    try {
+      setLoading(true);
+      const response = await getWeightHistory();
+      setWeightHistory(response.weightHistory);
+    } catch (error) {
+      console.error('Error loading weight history:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.weight || isNaN(Number(formData.weight))) {
+      alert('Please enter a valid weight');
+      return;
+    }
+
+    try {
+      setSaving(true);
+      // Convert lbs input to kg for backend
+      
+      await addWeightHistory({
+        weight: Number(formData.weight),
+        sideEffects: formData.sideEffects || undefined,
+        notes: formData.notes || undefined
+      });
+      
+      // Reset form and reload data
+      setFormData({ weight: '', sideEffects: '', notes: '' });
+      await loadWeightHistory();
+      alert('Weight history updated successfully!');
+    } catch (error) {
+      console.error('Error saving weight history:', error);
+      alert('Error saving weight history. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   // Filter data based on selected time range from current date
   const today = new Date();
@@ -48,10 +100,31 @@ export const ProgressPage: React.FC = () => {
   const cutoffDate = new Date(today);
   cutoffDate.setDate(cutoffDate.getDate() - daysToSubtract);
   
-  const filteredData = allWeightData.filter((item) => {
-    const itemDate = new Date(item.date);
-    return itemDate >= cutoffDate && itemDate <= today;
-  });
+  // Filter backend data based on time range and sort chronologically
+  const filteredData = weightHistory
+    .filter((entry) => {
+      const itemDate = new Date(entry.date);
+      return itemDate >= cutoffDate && itemDate <= today;
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  // Calculate dynamic values
+  const currentWeight = filteredData.length > 0 ? filteredData[filteredData.length - 1].weight : 97.5;
+  const startingWeight = filteredData.length > 0 ? filteredData[0].weight : 105.8;
+  const totalProgress = Math.round((startingWeight - currentWeight) * 10) / 10;
+  const progressPercentage = Math.round((totalProgress / startingWeight) * 100);
+  const currentBMI = calculateBMI(currentWeight);
+  const startingBMI = calculateBMI(startingWeight);
+  
+  // Calculate progress in the selected time range
+  const rangeProgress = filteredData.length > 1 
+    ? Math.round((filteredData[0].weight - filteredData[filteredData.length - 1].weight) * 10) / 10
+    : totalProgress;
+
+  // Get min and max for Y-axis domain
+  const weights = filteredData.map(d => d.weight);
+  const minWeight = weights.length > 0 ? Math.floor(Math.min(...weights) - 2) : 95;
+  const maxWeight = weights.length > 0 ? Math.ceil(Math.max(...weights) + 2) : 107;
 
   return (
     <div className="p-8">
@@ -62,9 +135,10 @@ export const ProgressPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="space-y-6">
-        {/* Main Chart Section */}
-        <Card className="bg-white/95 backdrop-blur-md shadow-lg pt-0">
+      {/* Main Content: 2-column layout */}
+      <div className="flex  gap-6 mb-6">
+        {/* Left Column: Chart Section */}
+        <Card className="bg-white/95 backdrop-blur-md shadow-lg pt-0 w-3/4">
           <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
             <div className="grid flex-1 gap-1">
               <CardTitle className="text-xl font-manrope">My Progress</CardTitle>
@@ -94,31 +168,42 @@ export const ProgressPage: React.FC = () => {
           </CardHeader>
           <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
             <div className="mb-6">
-              <ChartContainer config={chartConfig} className="aspect-auto h-[400px] w-full">
+              {loading ? (
+                <div className="h-[400px] w-full flex items-center justify-center">
+                  <p className="text-gray-500">Loading weight history...</p>
+                </div>
+              ) : (
+                <ChartContainer config={chartConfig} className="aspect-auto h-[400px] w-full">
                 <LineChart accessibilityLayer data={filteredData} margin={{ left: 12, right: 12, top: 12, bottom: 12 }}>
                   <CartesianGrid vertical={false} />
                   <XAxis
-                    dataKey="week"
+                    dataKey="date"
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
-                    tickFormatter={(value) => value.replace("Week ", "")}
+                    tickFormatter={(value) => {
+                      const date = new Date(value);
+                      return date.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric"
+                      });
+                    }}
                   />
                   <YAxis
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
-                    domain={[101, 107]}
+                    domain={[minWeight, maxWeight]}
                     tickFormatter={(value) => `${value} kg`}
                   />
                   <ChartTooltip 
                     content={<ChartTooltipContent 
                       labelFormatter={(value) => {
-                        const item = filteredData.find(d => d.week === value);
-                        return item ? new Date(item.date).toLocaleDateString("en-US", {
+                        return new Date(value).toLocaleDateString("en-US", {
                           month: "short",
-                          day: "numeric"
-                        }) : value;
+                          day: "numeric",
+                          year: "numeric"
+                        });
                       }}
                       formatter={(value) => [`${value} kg`, "Weight"]}
                     />} 
@@ -133,24 +218,31 @@ export const ProgressPage: React.FC = () => {
                   />
                 </LineChart>
               </ChartContainer>
+              )}
             </div>
             
             <div className="flex items-center text-sm text-teal-600 font-medium">
-              <span>-8.3 kg</span>
-              <span className="ml-2 text-gray-500">in the last 12 weeks</span>
+              <span>-{rangeProgress} kg</span>
+              <span className="ml-2 text-gray-500">
+                in the last {timeRange === "2w" ? "2 weeks" : timeRange === "4w" ? "4 weeks" : "12 weeks"}
+              </span>
             </div>
           </CardContent>
         </Card>
 
-        {/* Progress Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Right Column: Progress Summary Cards */}
+        <div className="space-y-6 min-w-1/4">
           {/* Total Progress Card */}
           <Card className="bg-white/95 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
-              <div className="text-right">
+              <div className='flex'>
+                <div className="text-right">
                 <div className="text-sm text-gray-600 mb-1">Total Progress</div>
-                <div className="text-sm text-gray-500 mb-2">9% of total body weight</div>
-                <div className="text-3xl font-bold text-gray-800">-8.5 kg</div>
+                <div className="text-sm text-gray-500 mb-2">{progressPercentage}% of total body weight</div>
+              </div>
+                <div className='size-lf-stretch bg-light-teal-background rounded-xl inline-flex justify-center items-center gap-2.5'>
+                  <div className="text-3xl font-bold text-gray-800">-{totalProgress} kg</div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -160,8 +252,8 @@ export const ProgressPage: React.FC = () => {
             <CardContent className="p-6">
               <div className="text-right">
                 <div className="text-sm text-gray-600 mb-1">BMI</div>
-                <div className="text-sm text-gray-500 mb-2">Down from 31.1</div>
-                <div className="text-3xl font-bold text-gray-800">28.5</div>
+                <div className="text-sm text-gray-500 mb-2">Down from {startingBMI}</div>
+                <div className="text-3xl font-bold text-gray-800">{currentBMI}</div>
               </div>
             </CardContent>
           </Card>
@@ -171,73 +263,85 @@ export const ProgressPage: React.FC = () => {
             <CardContent className="p-6">
               <div className="text-right">
                 <div className="text-sm text-gray-600 mb-1">Current Weight</div>
-                <div className="text-sm text-gray-500 mb-2">8.3 kg lost since started</div>
-                <div className="text-3xl font-bold text-gray-800">97.5 kg</div>
+                <div className="text-sm text-gray-500 mb-2">{totalProgress} kg lost since started</div>
+                <div className="text-3xl font-bold text-gray-800">{currentWeight} kg</div>
               </div>
             </CardContent>
           </Card>
         </div>
+      </div>
 
-        {/* Log Your Progress Form */}
-        <Card className="bg-white/95 backdrop-blur-md shadow-lg">
+      {/* Bottom Section: Log Your Progress Form */}
+      <Card className="bg-white/95 backdrop-blur-md shadow-lg">
           <CardContent className="p-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-6 font-manrope">Log Your Progress</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              {/* Current Weight */}
-              <div className="space-y-2">
-                <Label htmlFor="current-weight" className="text-base font-medium text-gray-700">
-                  Current Weight <span className="text-red-500">*</span>
-                </Label>
-                <div className="relative">
+            <form onSubmit={handleFormSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                {/* Current Weight */}
+                <div className="space-y-2">
+                  <Label htmlFor="current-weight" className="text-base font-medium text-gray-700">
+                    Current Weight <span className="text-red-500">*</span>
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="current-weight"
+                      type="number"
+                      step="0.1"
+                      placeholder=""
+                      className="pr-12 h-12"
+                      value={formData.weight}
+                      onChange={(e) => setFormData({...formData, weight: e.target.value})}
+                      required
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+                      Kg
+                    </span>
+                  </div>
+                </div>
+
+                {/* Side Effects */}
+                <div className="space-y-2">
+                  <Label htmlFor="side-effects" className="text-base font-medium text-gray-700">
+                    Side Effects
+                  </Label>
                   <Input
-                    id="current-weight"
-                    type="number"
+                    id="side-effects"
+                    type="text"
                     placeholder=""
-                    className="pr-12 h-12"
-                    required
+                    className="h-12"
+                    value={formData.sideEffects}
+                    onChange={(e) => setFormData({...formData, sideEffects: e.target.value})}
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
-                    lbs
-                  </span>
                 </div>
               </div>
 
-              {/* Side Effects */}
-              <div className="space-y-2">
-                <Label htmlFor="side-effects" className="text-base font-medium text-gray-700">
-                  Side Effects
+              {/* Notes */}
+              <div className="space-y-2 mb-6">
+                <Label htmlFor="notes" className="text-base font-medium text-gray-700">
+                  Notes (Optional)
                 </Label>
-                <Input
-                  id="side-effects"
-                  type="text"
-                  placeholder=""
-                  className="h-12"
+                <Textarea
+                  id="notes"
+                  placeholder="Is there anything specific you'd like to discuss? (e.g., 'I've been feeling tired lately,' or 'I have questions about my diet plan.'"
+                  className="min-h-32 resize-none"
+                  value={formData.notes}
+                  onChange={(e) => setFormData({...formData, notes: e.target.value})}
                 />
               </div>
-            </div>
 
-            {/* Notes */}
-            <div className="space-y-2 mb-6">
-              <Label htmlFor="notes" className="text-base font-medium text-gray-700">
-                Notes (Optional)
-              </Label>
-              <Textarea
-                id="notes"
-                placeholder="Is there anything specific you'd like to discuss? (e.g., 'I've been feeling tired lately,' or 'I have questions about my diet plan.'"
-                className="min-h-32 resize-none"
-              />
-            </div>
-
-            {/* Save Button */}
-            <div className="flex justify-end">
-              <Button 
-                className="bg-gray-800 hover:bg-gray-700 text-white px-8 py-3 text-base font-medium"
-                size="lg"
-              >
-                Save
-              </Button>
-            </div>
+              {/* Save Button */}
+              <div className="flex justify-end">
+                <Button 
+                  type="submit"
+                  className="bg-gray-800 hover:bg-gray-700 text-white px-8 py-3 text-base font-medium"
+                  size="lg"
+                  disabled={saving}
+                >
+                  {saving ? 'Saving...' : 'Save'}
+                </Button>
+              </div>
+            </form>
 
             {/* Privacy Notice */}
             <div className="mt-6 pt-4 border-t border-gray-200">
@@ -248,7 +352,6 @@ export const ProgressPage: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
     </div>
   );
 };
