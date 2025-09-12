@@ -12,6 +12,7 @@ import {
   LandingPage,
   NotFoundPage,
   SubscriptionSuccess,
+  ChatPage,
 } from "./pages";
 import OnboardingFlow from "./pages/OnBoarding";
 import DashboardRouter from "./pages/dashboard/DashboardRouter";
@@ -186,6 +187,19 @@ function App() {
             isAuthenticated ? (
               <SidebarLayout>
                 <AccountPage user={user} onLogout={logout} />
+              </SidebarLayout>
+            ) : (
+              <Navigate to={ROUTES.LOGIN} replace />
+            )
+          }
+        />
+
+        <Route
+          path="/chat"
+          element={
+            isAuthenticated ? (
+              <SidebarLayout>
+                <ChatPage />
               </SidebarLayout>
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />

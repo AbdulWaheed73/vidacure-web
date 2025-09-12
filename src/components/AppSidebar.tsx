@@ -7,6 +7,7 @@ import {
   BookOpen,
   User as UserIcon,
   Inbox,
+  MessageCircle,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -28,6 +29,11 @@ const doctorMenuItems = [
     title: 'Dashboard',
     url: '/dashboard',
     icon: Home,
+  },
+  {
+    title: 'Chat',
+    url: ROUTES.DOCTOR_CHAT,
+    icon: MessageCircle,
   },
   {
     title: 'Inbox',
@@ -52,6 +58,11 @@ const patientMenuItems = [
     title: 'Home',
     url: '/dashboard',
     icon: Home,
+  },
+  {
+    title: 'Chat',
+    url: ROUTES.PATIENT_CHAT,
+    icon: MessageCircle,
   },
   {
     title: 'Appointments',
