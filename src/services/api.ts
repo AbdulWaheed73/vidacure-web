@@ -2,11 +2,7 @@ import axios from 'axios';
 import { config } from '../constants';
 import { getClientType } from '../utils';
 
-// Create axios instance with appropriate headers
 const clientType = getClientType();
-// console.log('Client type detected:', clientType);
-// console.log('Server URL:', config.getServerUrl());
-// console.log('Frontend URL:', config.getFrontendUrl());
 
 const csrfHeader = localStorage.getItem("csrfToken");
 // console.log("csrf: ", csrfHeader);
