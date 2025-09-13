@@ -6,7 +6,7 @@ const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 export class ChatService {
   private static instance: ChatService;
   private client: StreamChat | null = null;
-  private currentUser: any = null;
+  private currentUser: { userId: string; name: string; role: string } | null = null;
 
   private constructor() {}
 
@@ -62,6 +62,11 @@ export class ChatService {
       throw new Error('Chat client not initialized');
     }
 
+    // Check if client is connected
+    if (!this.client.user || !this.client.wsConnection || this.client.wsConnection.isDisconnected) {
+      throw new Error('Call connectUser or connectAnonymousUser before creating a channel');
+    }
+
     try {
       const response = await api.get('/api/chat/patient/channel');
       const { channelId } = response.data;
@@ -81,6 +86,11 @@ export class ChatService {
   async getDoctorChannels() {
     if (!this.client) {
       throw new Error('Chat client not initialized');
+    }
+
+    // Check if client is connected
+    if (!this.client.user || !this.client.wsConnection || this.client.wsConnection.isDisconnected) {
+      throw new Error('Call connectUser or connectAnonymousUser before creating a channel');
     }
 
     try {
@@ -110,6 +120,11 @@ export class ChatService {
       throw new Error('Chat client not initialized');
     }
 
+    // Check if client is connected
+    if (!this.client.user || !this.client.wsConnection || this.client.wsConnection.isDisconnected) {
+      throw new Error('Call connectUser or connectAnonymousUser before creating a channel');
+    }
+
     try {
       const response = await api.get(`/api/chat/patient/${patientId}/channel`);
       const { channelId } = response.data;
@@ -127,17 +142,21 @@ export class ChatService {
    * Check if currently connected
    */
   isConnected(): boolean {
-    return this.client && this.currentUser;
+    return !!(this.client && this.currentUser && this.client.wsConnection && !this.client.wsConnection.isDisconnected);
   }
 
   /**
    * Disconnect from chat
    */
   async disconnect(): Promise<void> {
-    if (this.client) {
-      await this.client.disconnectUser();
-      this.currentUser = null;
+    if (this.client && this.client.wsConnection && !this.client.wsConnection.isDisconnected) {
+      try {
+        await this.client.disconnectUser();
+      } catch (error) {
+        console.error('Error during disconnect:', error);
+      }
     }
+    this.currentUser = null;
   }
 }
 

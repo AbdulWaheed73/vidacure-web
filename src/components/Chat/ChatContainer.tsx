@@ -31,7 +31,9 @@ const ChatContainer: React.FC = () => {
     // Cleanup: disconnect when component unmounts (user leaves chat page)
     return () => {
       if (connectionStatus === 'connected') {
-        disconnectFromChat();
+        disconnectFromChat().catch((error) => {
+          console.error('Failed to disconnect on cleanup:', error);
+        });
       }
     };
   }, [user, connectToChat, disconnectFromChat, connectionStatus]);
@@ -40,7 +42,9 @@ const ChatContainer: React.FC = () => {
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (connectionStatus === 'connected') {
-        disconnectFromChat();
+        disconnectFromChat().catch((error) => {
+          console.error('Failed to disconnect on page unload:', error);
+        });
       }
     };
     
@@ -48,10 +52,14 @@ const ChatContainer: React.FC = () => {
     const handleVisibilityChange = () => {
       if (document.hidden && connectionStatus === 'connected') {
         console.log('👁️ Tab hidden - disconnecting from chat');
-        disconnectFromChat();
+        disconnectFromChat().catch((error) => {
+          console.error('Failed to disconnect on tab hidden:', error);
+        });
       } else if (!document.hidden && connectionStatus === 'disconnected' && user) {
         console.log('👁️ Tab visible - reconnecting to chat');
-        connectToChat(user);
+        connectToChat(user).catch((error) => {
+          console.error('Failed to reconnect on tab visible:', error);
+        });
       }
     };
     

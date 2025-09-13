@@ -37,7 +37,9 @@ const DoctorChat: React.FC = () => {
     // Cleanup: disconnect when component unmounts (user leaves chat page)
     return () => {
       if (connectionStatus === 'connected') {
-        disconnectFromChat();
+        disconnectFromChat().catch((error) => {
+          console.error('Failed to disconnect on cleanup:', error);
+        });
       }
     };
   }, [user, connectToChat, disconnectFromChat, connectionStatus]);
@@ -46,7 +48,9 @@ const DoctorChat: React.FC = () => {
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (connectionStatus === 'connected') {
-        disconnectFromChat();
+        disconnectFromChat().catch((error) => {
+          console.error('Failed to disconnect on page unload:', error);
+        });
       }
     };
     
@@ -54,10 +58,14 @@ const DoctorChat: React.FC = () => {
     const handleVisibilityChange = () => {
       if (document.hidden && connectionStatus === 'connected') {
         console.log('👁️ Doctor tab hidden - disconnecting from chat');
-        disconnectFromChat();
+        disconnectFromChat().catch((error) => {
+          console.error('Failed to disconnect on tab hidden:', error);
+        });
       } else if (!document.hidden && connectionStatus === 'disconnected' && user && user.role === 'doctor') {
         console.log('👁️ Doctor tab visible - reconnecting to chat');
-        connectToChat(user);
+        connectToChat(user).catch((error) => {
+          console.error('Failed to reconnect on tab visible:', error);
+        });
       }
     };
     
@@ -175,7 +183,7 @@ const DoctorChat: React.FC = () => {
             {doctorChannels.map((channel) => {
               // Extract patient ID from channel ID (patient-{id}-medical)
               const patientId = channel.id?.replace('patient-', '')?.replace('-medical', '') || 'Unknown';
-              const lastMessage = (channel as any).state?.last_message_at;
+              const lastMessage = channel.state?.last_message_at;
               const isSelected = selectedChannelId === channel.id;
               
               return (

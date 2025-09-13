@@ -82,19 +82,20 @@ export const useChatStore = create<ChatState>()(
       },
 
       disconnectFromChat: async () => {
+        // Immediately clear state to prevent further operations
+        set({
+          client: null,
+          connectionStatus: 'disconnected',
+          currentChannel: null,
+          doctorChannels: [],
+          error: null
+        });
+
         try {
           await chatService.disconnect();
-          set({
-            client: null,
-            connectionStatus: 'disconnected',
-            currentChannel: null,
-            doctorChannels: [],
-            error: null
-          });
         } catch (error: unknown) {
-          const errorMessage = error instanceof Error ? error.message : 'Failed to disconnect from chat';
           console.error('Failed to disconnect from chat:', error);
-          set({ error: errorMessage });
+          // Don't set error after successful state clear
         }
       },
 
@@ -104,28 +105,58 @@ export const useChatStore = create<ChatState>()(
       },
 
       getPatientChannel: async () => {
+        const { connectionStatus } = get();
+
+        // Don't attempt channel operations if not connected
+        if (connectionStatus !== 'connected') {
+          console.log('Skipping getPatientChannel - not connected:', connectionStatus);
+          return;
+        }
+
         try {
           const channel = await chatService.getPatientChannel();
-          set({ currentChannel: channel, error: null });
+          // Double-check we're still connected before setting state
+          if (get().connectionStatus === 'connected') {
+            set({ currentChannel: channel, error: null });
+          }
         } catch (error: unknown) {
           const errorMessage = error instanceof Error ? error.message : 'Failed to get patient channel';
           console.error('Failed to get patient channel:', error);
-          set({ error: errorMessage });
+
+          // Only set error if we're still connected (error is relevant)
+          if (get().connectionStatus === 'connected') {
+            set({ error: errorMessage });
+          }
         }
       },
 
       getDoctorChannels: async () => {
+        const { connectionStatus } = get();
+
+        // Don't attempt channel operations if not connected
+        if (connectionStatus !== 'connected') {
+          console.log('Skipping getDoctorChannels - not connected:', connectionStatus);
+          return;
+        }
+
         try {
           const channels = await chatService.getDoctorChannels();
-          set({ 
-            doctorChannels: channels, 
-            currentChannel: channels[0] || null, // Set first channel as current
-            error: null 
-          });
+          // Double-check we're still connected before setting state
+          if (get().connectionStatus === 'connected') {
+            set({
+              doctorChannels: channels,
+              currentChannel: channels[0] || null,
+              error: null
+            });
+          }
         } catch (error: unknown) {
           const errorMessage = error instanceof Error ? error.message : 'Failed to get doctor channels';
           console.error('Failed to get doctor channels:', error);
-          set({ error: errorMessage });
+
+          // Only set error if we're still connected (error is relevant)
+          if (get().connectionStatus === 'connected') {
+            set({ error: errorMessage });
+          }
         }
       },
 
@@ -143,15 +174,17 @@ export const useChatStore = create<ChatState>()(
       },
 
       safeDisconnectFromChat: () => {
+        // Immediately clear state first
+        set({
+          client: null,
+          connectionStatus: 'disconnected',
+          currentChannel: null,
+          doctorChannels: [],
+          error: null
+        });
+
         try {
           chatService.disconnect();
-          set({
-            client: null,
-            connectionStatus: 'disconnected',
-            currentChannel: null,
-            doctorChannels: [],
-            error: null
-          });
         } catch (error: unknown) {
           console.error('Failed to safely disconnect from chat:', error);
         }
