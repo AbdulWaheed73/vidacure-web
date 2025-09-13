@@ -19,9 +19,9 @@ const ChatPage: React.FC = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 p-4">
+      <div className="bg-white border-b border-gray-200 p-4 flex-shrink-0">
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
             <div>
@@ -29,7 +29,7 @@ const ChatPage: React.FC = () => {
                 Medical Chat
               </h1>
               <p className="text-sm text-gray-600">
-                {user.role === 'patient' 
+                {user.role === 'patient'
                   ? 'Secure communication with your doctor'
                   : 'Patient communication portal'
                 }
@@ -44,7 +44,7 @@ const ChatPage: React.FC = () => {
       </div>
 
       {/* Chat Interface */}
-      <div className="flex-1 container mx-auto p-4">
+      <div className="flex-1 min-h-0 container mx-auto p-4">
         <div className="h-full bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
           {user.role === 'doctor' ? (
             <DoctorChat />

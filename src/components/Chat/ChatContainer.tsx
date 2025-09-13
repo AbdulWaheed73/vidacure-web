@@ -150,21 +150,22 @@ const ChatContainer: React.FC = () => {
     <div className="h-full">
       {/* Connection Status Indicator */}
       {connectionStatus === 'connected' && (
-        <div className="bg-green-50 border-b border-green-200 px-4 py-2">
+        <div className="bg-green-50 border-b border-green-200 px-4 py-2 flex-shrink-0">
           <div className="flex items-center gap-2 text-sm text-green-700">
             <Wifi className="h-3 w-3" />
             <span>Connected to chat</span>
           </div>
         </div>
       )}
-      
-      <Chat client={client} theme="str-chat__theme-light">
+
+      <div className="h-[calc(100vh-12rem)]">
+        <Chat client={client} theme="str-chat__theme-light">
         <Channel channel={currentChannel}>
           <Window>
             <ChannelHeader />
             <MessageList />
-            <MessageInput 
-              focus 
+            <MessageInput
+              focus
               additionalTextareaProps={{
                 placeholder: "Type your message here..."
               }}
@@ -173,6 +174,7 @@ const ChatContainer: React.FC = () => {
           <Thread />
         </Channel>
       </Chat>
+      </div>
     </div>
   );
 };
