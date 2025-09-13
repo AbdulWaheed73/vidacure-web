@@ -199,5 +199,121 @@
     "termsOfService": "Användarvillkor",
     "cookiePolicy": "Cookie-policy",
     "copyright": "© 2025 Vidacure, Inc. Alla rättigheter förbehållna"
+  },
+  "sidebar": {
+    "dashboard": "Instrumentpanel",
+    "home": "Hem",
+    "chat": "Chatt",
+    "inbox": "Inkorg",
+    "appointments": "Bokningar",
+    "prescriptions": "Recept",
+    "myProgress": "Mina framsteg",
+    "resources": "Resurser",
+    "account": "Konto"
+  },
+  "topbar": {
+    "goodMorning": "God morgon",
+    "goodAfternoon": "God eftermiddag",
+    "goodEvening": "God kväll",
+    "bookAppointment": "Boka tid",
+    "myAccount": "Mitt konto",
+    "profile": "Profil",
+    "accountSettings": "Kontoinställningar",
+    "logOut": "Logga ut"
+  },
+  "login": {
+    "title": "Fortsätt med BankID",
+    "description": "Den säkra vägen till hållbar viktminskning och bättre hälsa.",
+    "bankIdButton": "Identifiera dig med BankID",
+    "connecting": "Ansluter...",
+    "termsPrefix": "* Genom att fortsätta godkänner du våra ",
+    "termsOfService": "Användarvillkor",
+    "and": " och ",
+    "privacyPolicy": "Integritetspolicy"
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "Vi ber om ursäkt.....",
+    "description": "Hoppsan! Sidan du letar efter finns inte, har flyttats eller kan ha tagits bort",
+    "goBack": "Gå tillbaka"
+  },
+  "dashboard": {
+    "choosePlan": "💎 Välj din plan"
+  },
+  "onboarding": {
+    "welcome": "Välkommen",
+    "personalInfo": "Personlig information",
+    "physicalDetails": "Fysiska detaljer",
+    "healthBackground": "Hälsobakgrund",
+    "medicalHistory": "Medicinsk historia",
+    "next": "Nästa",
+    "previous": "Föregående",
+    "submit": "Skicka",
+    "loading": "Laddar...",
+    "fullName": "Fullständigt namn",
+    "dateOfBirth": "Födelsedatum",
+    "gender": "Kön",
+    "height": "Längd",
+    "currentWeight": "Nuvarande vikt",
+    "goalWeight": "Målvikt",
+    "lowestWeight": "Lägsta vuxenvikt"
+  },
+  "prescriptions": {
+    "title": "Recept",
+    "description": "Se och hantera dina mediciner och recept",
+    "noFound": "Inga recept hittades",
+    "emptyMessage": "Dina nuvarande och tidigare recept kommer att visas här"
+  },
+  "progress": {
+    "title": "Mina framsteg",
+    "cardTitle": "Mina framsteg",
+    "cardDescription": "Visar viktframsteg över tid",
+    "timeRangeLabel": "Välj tidsperiod",
+    "last2Months": "Senaste 2 månaderna",
+    "lastMonth": "Senaste månaden",
+    "last2Weeks": "Senaste 2 veckorna",
+    "loadingHistory": "Laddar vikthistorik...",
+    "progressInTime": "under de senaste",
+    "weeks": "veckorna",
+    "totalProgress": "Totala framsteg",
+    "ofTotalBodyWeight": "% av total kroppsvikt",
+    "bmi": "BMI",
+    "downFrom": "Ner från",
+    "currentWeight": "Nuvarande vikt",
+    "lostSinceStarted": "kg tappat sedan start",
+    "logProgress": "Logga dina framsteg",
+    "currentWeightLabel": "Nuvarande vikt",
+    "sideEffects": "Biverkningar",
+    "notes": "Anteckningar (valfritt)",
+    "notesPlaceholder": "Finns det något specifikt du skulle vilja diskutera? (t.ex. 'Jag har känt mig trött på senaste tiden' eller 'Jag har frågor om min kostplan.')",
+    "save": "Spara",
+    "saving": "Sparar...",
+    "privacyNotice": "Din data är säker och krypterad. Vi följer vårdpersonalens integritetsstandarder.",
+    "clinicalOutcome": "Stöds av legitimerad personal och verkliga kliniska resultat.",
+    "weightValidation": "Ange en giltig vikt",
+    "updateSuccess": "Vikthistorik uppdaterad framgångsrikt!",
+    "updateError": "Fel vid sparande av vikthistorik. Försök igen.",
+    "weight": "Vikt"
+  },
+  "appointments": {
+    "title": "Bokningar",
+    "description": "Hantera dina medicinska tider och konsultationer",
+    "noScheduled": "Inga bokningar schemalagda",
+    "emptyMessage": "Dina kommande tider kommer att visas här"
+  },
+  "resources": {
+    "title": "Resurser",
+    "description": "Åtkomst till hälsoartiklar, guider och utbildningsmaterial",
+    "comingSoon": "Hälsoresurser kommer snart",
+    "emptyMessage": "Utbildningsinnehåll och hälsoresurser kommer att finnas tillgängliga här"
+  },
+  "account": {
+    "title": "Konto",
+    "description": "Hantera dina kontoinställningar och profilinformation",
+    "profileInfo": "Profilinformation",
+    "name": "Namn",
+    "role": "Roll",
+    "accountActions": "Kontoåtgärder",
+    "logout": "🚪 Logga ut"
   }
 }

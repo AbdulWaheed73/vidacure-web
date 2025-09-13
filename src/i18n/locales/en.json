@@ -199,5 +199,121 @@
     "termsOfService": "Terms of Service",
     "cookiePolicy": "Cookie Policy",
     "copyright": "© 2025 Vidacure, Inc. All rights reserved"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "chat": "Chat",
+    "inbox": "Inbox",
+    "appointments": "Appointments",
+    "prescriptions": "Prescriptions",
+    "myProgress": "My Progress",
+    "resources": "Resources",
+    "account": "Account"
+  },
+  "topbar": {
+    "goodMorning": "Good Morning",
+    "goodAfternoon": "Good Afternoon",
+    "goodEvening": "Good Evening",
+    "bookAppointment": "Book an Appointment",
+    "myAccount": "My Account",
+    "profile": "Profile",
+    "accountSettings": "Account Settings",
+    "logOut": "Log out"
+  },
+  "login": {
+    "title": "Continue with BankID",
+    "description": "The safe path to sustainable weight loss and better health.",
+    "bankIdButton": "Identify with BankID",
+    "connecting": "Connecting...",
+    "termsPrefix": "* By continuing, you agree to our ",
+    "termsOfService": "Terms of Service",
+    "and": " and ",
+    "privacyPolicy": "Privacy Policy"
+  },
+  "notFound": {
+    "title": "404",
+    "subtitle": "We are Sorry.....",
+    "description": "Oops! The page you're looking for doesn't exist, was moved, or may have been deleted",
+    "goBack": "Go Back"
+  },
+  "dashboard": {
+    "choosePlan": "💎 Choose Your Plan"
+  },
+  "onboarding": {
+    "welcome": "Welcome",
+    "personalInfo": "Personal Information",
+    "physicalDetails": "Physical Details",
+    "healthBackground": "Health Background",
+    "medicalHistory": "Medical History",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "fullName": "Full Name",
+    "dateOfBirth": "Date of Birth",
+    "gender": "Gender",
+    "height": "Height",
+    "currentWeight": "Current Weight",
+    "goalWeight": "Goal Weight",
+    "lowestWeight": "Lowest Adult Weight"
+  },
+  "prescriptions": {
+    "title": "Prescriptions",
+    "description": "View and manage your medications and prescriptions",
+    "noFound": "No prescriptions found",
+    "emptyMessage": "Your current and past prescriptions will be displayed here"
+  },
+  "progress": {
+    "title": "My Progress",
+    "cardTitle": "My Progress",
+    "cardDescription": "Showing weight progress over time",
+    "timeRangeLabel": "Select time range",
+    "last2Months": "Last 2 months",
+    "lastMonth": "Last month",
+    "last2Weeks": "Last 2 weeks",
+    "loadingHistory": "Loading weight history...",
+    "progressInTime": "in the last",
+    "weeks": "weeks",
+    "totalProgress": "Total Progress",
+    "ofTotalBodyWeight": "% of total body weight",
+    "bmi": "BMI",
+    "downFrom": "Down from",
+    "currentWeight": "Current Weight",
+    "lostSinceStarted": "kg lost since started",
+    "logProgress": "Log Your Progress",
+    "currentWeightLabel": "Current Weight",
+    "sideEffects": "Side Effects",
+    "notes": "Notes (Optional)",
+    "notesPlaceholder": "Is there anything specific you'd like to discuss? (e.g., 'I've been feeling tired lately,' or 'I have questions about my diet plan.')",
+    "save": "Save",
+    "saving": "Saving...",
+    "privacyNotice": "Your data is secure and encrypted. We comply with healthcare privacy standards.",
+    "clinicalOutcome": "Backed by licensed professionals and real clinical outcomes.",
+    "weightValidation": "Please enter a valid weight",
+    "updateSuccess": "Weight history updated successfully!",
+    "updateError": "Error saving weight history. Please try again.",
+    "weight": "Weight"
+  },
+  "appointments": {
+    "title": "Appointments",
+    "description": "Manage your medical appointments and consultations",
+    "noScheduled": "No appointments scheduled",
+    "emptyMessage": "Your upcoming appointments will appear here"
+  },
+  "resources": {
+    "title": "Resources",
+    "description": "Access health articles, guides, and educational materials",
+    "comingSoon": "Health resources coming soon",
+    "emptyMessage": "Educational content and health resources will be available here"
+  },
+  "account": {
+    "title": "Account",
+    "description": "Manage your account settings and profile information",
+    "profileInfo": "Profile Information",
+    "name": "Name",
+    "role": "Role",
+    "accountActions": "Account Actions",
+    "logout": "🚪 Logout"
   }
 }

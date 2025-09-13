@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Calendar, User, Settings, LogOut } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import {
@@ -18,16 +19,18 @@ export const TopBar: React.FC<TopBarProps> = ({
   onAccountClick,
   onLogout,
 }) => {
+  const { t } = useTranslation();
+
   // Generate dynamic greeting based on time of day
   const getGreeting = () => {
     const currentHour = new Date().getHours();
-    
+
     if (currentHour >= 5 && currentHour < 12) {
-      return 'Good Morning';
+      return t('topbar.goodMorning');
     } else if (currentHour >= 12 && currentHour < 18) {
-      return 'Good Afternoon';
+      return t('topbar.goodAfternoon');
     } else {
-      return 'Good Evening';
+      return t('topbar.goodEvening');
     }
   };
 
@@ -59,7 +62,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           className="h-11 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full hover:from-teal-700 hover:to-teal-700 text-white font-semibold font-sora"
         >
           <Calendar className="size-6" />
-          Book an Appointment
+          {t('topbar.bookAppointment')}
         </Button>
         
         {/* User Profile Dropdown */}
@@ -77,20 +80,20 @@ export const TopBar: React.FC<TopBarProps> = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('topbar.myAccount')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onProfileClick}>
               <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+              <span>{t('topbar.profile')}</span>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={onAccountClick}>
               <Settings className="mr-2 h-4 w-4" />
-              <span>Account Settings</span>
+              <span>{t('topbar.accountSettings')}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onLogout}>
               <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
+              <span>{t('topbar.logOut')}</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,4 +1,5 @@
 import { useLocation, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Home,
   Calendar,
@@ -23,77 +24,77 @@ import { ROUTES } from '../constants';
 import type { User } from '../types';
 import Vidacure from "../assets/vidacure_png.png";
 
-// Doctor sidebar items
-const doctorMenuItems = [
-  {
-    title: 'Dashboard',
-    url: '/dashboard',
-    icon: Home,
-  },
-  {
-    title: 'Chat',
-    url: ROUTES.DOCTOR_CHAT,
-    icon: MessageCircle,
-  },
-  {
-    title: 'Inbox',
-    url: ROUTES.DOCTOR_INBOX,
-    icon: Inbox,
-  },
-  {
-    title: 'Prescriptions',
-    url: ROUTES.DOCTOR_PRESCRIPTIONS,
-    icon: Pill,
-  },
-  {
-    title: 'Account',
-    url: ROUTES.DOCTOR_ACCOUNT,
-    icon: UserIcon,
-  },
-];
-
-// Patient sidebar items (existing)
-const patientMenuItems = [
-  {
-    title: 'Home',
-    url: '/dashboard',
-    icon: Home,
-  },
-  {
-    title: 'Chat',
-    url: ROUTES.PATIENT_CHAT,
-    icon: MessageCircle,
-  },
-  {
-    title: 'Appointments',
-    url: '/appointments',
-    icon: Calendar,
-  },
-  {
-    title: 'Prescriptions',
-    url: '/prescriptions',
-    icon: Pill,
-  },
-  {
-    title: 'My Progress',
-    url: '/progress',
-    icon: TrendingUp,
-  },
-  {
-    title: 'Resources',
-    url: '/resources',
-    icon: BookOpen,
-  },
-  {
-    title: 'Account',
-    url: '/account',
-    icon: UserIcon,
-  },
-];
-
 export function AppSidebar({ user }: { user: User | null }) {
   const location = useLocation();
-  
+  const { t } = useTranslation();
+
+  // Create menu items with translations - moved inside component to react to language changes
+  const doctorMenuItems = [
+    {
+      title: t('sidebar.dashboard'),
+      url: '/dashboard',
+      icon: Home,
+    },
+    {
+      title: t('sidebar.chat'),
+      url: ROUTES.DOCTOR_CHAT,
+      icon: MessageCircle,
+    },
+    {
+      title: t('sidebar.inbox'),
+      url: ROUTES.DOCTOR_INBOX,
+      icon: Inbox,
+    },
+    {
+      title: t('sidebar.prescriptions'),
+      url: ROUTES.DOCTOR_PRESCRIPTIONS,
+      icon: Pill,
+    },
+    {
+      title: t('sidebar.account'),
+      url: ROUTES.DOCTOR_ACCOUNT,
+      icon: UserIcon,
+    },
+  ];
+
+  const patientMenuItems = [
+    {
+      title: t('sidebar.home'),
+      url: '/dashboard',
+      icon: Home,
+    },
+    {
+      title: t('sidebar.chat'),
+      url: ROUTES.PATIENT_CHAT,
+      icon: MessageCircle,
+    },
+    {
+      title: t('sidebar.appointments'),
+      url: '/appointments',
+      icon: Calendar,
+    },
+    {
+      title: t('sidebar.prescriptions'),
+      url: '/prescriptions',
+      icon: Pill,
+    },
+    {
+      title: t('sidebar.myProgress'),
+      url: '/progress',
+      icon: TrendingUp,
+    },
+    {
+      title: t('sidebar.resources'),
+      url: '/resources',
+      icon: BookOpen,
+    },
+    {
+      title: t('sidebar.account'),
+      url: '/account',
+      icon: UserIcon,
+    },
+  ];
+
   // Choose menu items based on user role
   const menuItems = user?.role === 'doctor' ? doctorMenuItems : patientMenuItems;
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { TrendingUp } from 'lucide-react';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
@@ -28,6 +29,7 @@ const calculateBMI = (weightKg: number, heightInches: number = 65) => {
 };
 
 export const ProgressPage: React.FC = () => {
+  const { t } = useTranslation();
   const [timeRange, setTimeRange] = React.useState("8w");
   const [weightHistory, setWeightHistory] = React.useState<WeightHistoryEntry[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -61,7 +63,7 @@ export const ProgressPage: React.FC = () => {
     e.preventDefault();
     
     if (!formData.weight || isNaN(Number(formData.weight))) {
-      alert('Please enter a valid weight');
+      alert(t('progress.weightValidation'));
       return;
     }
 
@@ -78,10 +80,10 @@ export const ProgressPage: React.FC = () => {
       // Reset form and reload data
       setFormData({ weight: '', sideEffects: '', notes: '' });
       await loadWeightHistory();
-      alert('Weight history updated successfully!');
+      alert(t('progress.updateSuccess'));
     } catch (error) {
       console.error('Error saving weight history:', error);
-      alert('Error saving weight history. Please try again.');
+      alert(t('progress.updateError'));
     } finally {
       setSaving(false);
     }
@@ -131,7 +133,7 @@ export const ProgressPage: React.FC = () => {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
           <TrendingUp className="size-8 text-teal-action" />
-          <h1 className="text-3xl font-bold text-gray-800 font-manrope">My Progress</h1>
+          <h1 className="text-3xl font-bold text-gray-800 font-manrope">{t('progress.title')}</h1>
         </div>
       </div>
 
@@ -141,27 +143,27 @@ export const ProgressPage: React.FC = () => {
         <Card className="bg-white/95 backdrop-blur-md shadow-lg pt-0 w-3/4">
           <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
             <div className="grid flex-1 gap-1">
-              <CardTitle className="text-xl font-manrope">My Progress</CardTitle>
+              <CardTitle className="text-xl font-manrope">{t('progress.cardTitle')}</CardTitle>
               <CardDescription className="text-gray-600">
-                Showing weight progress over time
+                {t('progress.cardDescription')}
               </CardDescription>
             </div>
             <Select value={timeRange} onValueChange={setTimeRange}>
               <SelectTrigger
                 className="w-[160px] rounded-lg sm:ml-auto"
-                aria-label="Select time range"
+                aria-label={t('progress.timeRangeLabel')}
               >
-                <SelectValue placeholder="Last 2 months" />
+                <SelectValue placeholder={t('progress.last2Months')} />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
                 <SelectItem value="8w" className="rounded-lg">
-                  Last 2 months
+                  {t('progress.last2Months')}
                 </SelectItem>
                 <SelectItem value="4w" className="rounded-lg">
-                  Last month
+                  {t('progress.lastMonth')}
                 </SelectItem>
                 <SelectItem value="2w" className="rounded-lg">
-                  Last 2 weeks
+                  {t('progress.last2Weeks')}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -170,7 +172,7 @@ export const ProgressPage: React.FC = () => {
             <div className="mb-6">
               {loading ? (
                 <div className="h-[400px] w-full flex items-center justify-center">
-                  <p className="text-gray-500">Loading weight history...</p>
+                  <p className="text-gray-500">{t('progress.loadingHistory')}</p>
                 </div>
               ) : (
                 <ChartContainer config={chartConfig} className="aspect-auto h-[400px] w-full">
@@ -205,7 +207,7 @@ export const ProgressPage: React.FC = () => {
                           year: "numeric"
                         });
                       }}
-                      formatter={(value) => [`${value} kg`, "Weight"]}
+                      formatter={(value) => [`${value} kg`, t('progress.weight')]}
                     />} 
                   />
                   <Line
@@ -224,7 +226,7 @@ export const ProgressPage: React.FC = () => {
             <div className="flex items-center text-sm text-teal-600 font-medium">
               <span>-{rangeProgress} kg</span>
               <span className="ml-2 text-gray-500">
-                in the last {timeRange === "2w" ? "2 weeks" : timeRange === "4w" ? "4 weeks" : "12 weeks"}
+                {t('progress.progressInTime')} {timeRange === "2w" ? `2 ${t('progress.weeks')}` : timeRange === "4w" ? `4 ${t('progress.weeks')}` : `12 ${t('progress.weeks')}`}
               </span>
             </div>
           </CardContent>
@@ -237,8 +239,8 @@ export const ProgressPage: React.FC = () => {
             <CardContent className="p-6">
               <div className='flex'>
                 <div className="text-right">
-                <div className="text-sm text-gray-600 mb-1">Total Progress</div>
-                <div className="text-sm text-gray-500 mb-2">{progressPercentage}% of total body weight</div>
+                <div className="text-sm text-gray-600 mb-1">{t('progress.totalProgress')}</div>
+                <div className="text-sm text-gray-500 mb-2">{progressPercentage}{t('progress.ofTotalBodyWeight')}</div>
               </div>
                 <div className='size-lf-stretch bg-light-teal-background rounded-xl inline-flex justify-center items-center gap-2.5'>
                   <div className="text-3xl font-bold text-gray-800">-{totalProgress} kg</div>
@@ -251,8 +253,8 @@ export const ProgressPage: React.FC = () => {
           <Card className="bg-white/95 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
               <div className="text-right">
-                <div className="text-sm text-gray-600 mb-1">BMI</div>
-                <div className="text-sm text-gray-500 mb-2">Down from {startingBMI}</div>
+                <div className="text-sm text-gray-600 mb-1">{t('progress.bmi')}</div>
+                <div className="text-sm text-gray-500 mb-2">{t('progress.downFrom')} {startingBMI}</div>
                 <div className="text-3xl font-bold text-gray-800">{currentBMI}</div>
               </div>
             </CardContent>
@@ -262,8 +264,8 @@ export const ProgressPage: React.FC = () => {
           <Card className="bg-white/95 backdrop-blur-md shadow-lg">
             <CardContent className="p-6">
               <div className="text-right">
-                <div className="text-sm text-gray-600 mb-1">Current Weight</div>
-                <div className="text-sm text-gray-500 mb-2">{totalProgress} kg lost since started</div>
+                <div className="text-sm text-gray-600 mb-1">{t('progress.currentWeight')}</div>
+                <div className="text-sm text-gray-500 mb-2">{totalProgress} {t('progress.lostSinceStarted')}</div>
                 <div className="text-3xl font-bold text-gray-800">{currentWeight} kg</div>
               </div>
             </CardContent>
@@ -274,14 +276,14 @@ export const ProgressPage: React.FC = () => {
       {/* Bottom Section: Log Your Progress Form */}
       <Card className="bg-white/95 backdrop-blur-md shadow-lg">
           <CardContent className="p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 font-manrope">Log Your Progress</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 font-manrope">{t('progress.logProgress')}</h2>
             
             <form onSubmit={handleFormSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 {/* Current Weight */}
                 <div className="space-y-2">
                   <Label htmlFor="current-weight" className="text-base font-medium text-gray-700">
-                    Current Weight <span className="text-red-500">*</span>
+                    {t('progress.currentWeightLabel')} <span className="text-red-500">*</span>
                   </Label>
                   <div className="relative">
                     <Input
@@ -303,7 +305,7 @@ export const ProgressPage: React.FC = () => {
                 {/* Side Effects */}
                 <div className="space-y-2">
                   <Label htmlFor="side-effects" className="text-base font-medium text-gray-700">
-                    Side Effects
+                    {t('progress.sideEffects')}
                   </Label>
                   <Input
                     id="side-effects"
@@ -319,11 +321,11 @@ export const ProgressPage: React.FC = () => {
               {/* Notes */}
               <div className="space-y-2 mb-6">
                 <Label htmlFor="notes" className="text-base font-medium text-gray-700">
-                  Notes (Optional)
+                  {t('progress.notes')}
                 </Label>
                 <Textarea
                   id="notes"
-                  placeholder="Is there anything specific you'd like to discuss? (e.g., 'I've been feeling tired lately,' or 'I have questions about my diet plan.'"
+                  placeholder={t('progress.notesPlaceholder')}
                   className="min-h-32 resize-none"
                   value={formData.notes}
                   onChange={(e) => setFormData({...formData, notes: e.target.value})}
@@ -338,7 +340,7 @@ export const ProgressPage: React.FC = () => {
                   size="lg"
                   disabled={saving}
                 >
-                  {saving ? 'Saving...' : 'Save'}
+                  {saving ? t('progress.saving') : t('progress.save')}
                 </Button>
               </div>
             </form>
@@ -346,8 +348,8 @@ export const ProgressPage: React.FC = () => {
             {/* Privacy Notice */}
             <div className="mt-6 pt-4 border-t border-gray-200">
               <p className="text-sm text-gray-600 text-center leading-relaxed">
-                <span className="font-medium">*</span> Your data is secure and encrypted. We comply with healthcare privacy standards.<br />
-                Backed by licensed professionals and real clinical outcomes.
+                <span className="font-medium">*</span> {t('progress.privacyNotice')}<br />
+                {t('progress.clinicalOutcome')}
               </p>
             </div>
           </CardContent>

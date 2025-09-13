@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import bankId from "../assets/bankId.png";
 import vidaCure from "../assets/vidacure_png.png";
@@ -8,6 +9,7 @@ import type { LoginPageProps } from '../types';
 
 export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, loading }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div className="w-full h-screen relative bg-emerald-50 overflow-hidden">
@@ -43,10 +45,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, loading }) => {
         {/* Header Text */}
         <div className="self-stretch flex flex-col justify-center items-center gap-4">
           <div className="self-stretch text-center text-zinc-800 text-4xl font-bold leading-10">
-            Continue with BankID
+            {t('login.title')}
           </div>
           <div className="self-stretch text-center text-zinc-800 text-base font-normal leading-snug">
-            The safe path to sustainable weight loss and better health.
+            {t('login.description')}
           </div>
         </div>
 
@@ -59,7 +61,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, loading }) => {
           >
             <img className="w-10 h-9" src={bankId} alt="BankID" />
             <div className="text-black/50 text-xl font-medium">
-              {loading ? "Connecting..." : "Identify with BankID"}
+              {loading ? t('login.connecting') : t('login.bankIdButton')}
             </div>
           </button>
         </div>
@@ -68,17 +70,16 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, loading }) => {
 
         <div className="w-72 text-center">
           <span className="text-black text-xs font-normal leading-none">
-            * By continuing, you agree to our{" "}
+            {t('login.termsPrefix')}
           </span>
           <button className="text-black text-xs font-bold underline leading-none hover:text-zinc-700 transition-colors">
-            Terms of Service
+            {t('login.termsOfService')}
           </button>
           <span className="text-black text-xs font-normal leading-none">
-            {" "}
-            and{" "}
+            {t('login.and')}
           </span>
           <button className="text-black text-xs font-bold underline leading-none hover:text-zinc-700 transition-colors">
-            Privacy Policy
+            {t('login.privacyPolicy')}
           </button>
           <span className="text-black text-xs font-normal leading-none">.</span>
         </div>
