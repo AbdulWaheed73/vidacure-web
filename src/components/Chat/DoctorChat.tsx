@@ -139,7 +139,10 @@ const DoctorChat: React.FC = () => {
   if (!client) {
     return (
       <Card className="p-8 text-center">
-        <p>Unable to connect to chat service</p>
+        <div className="flex items-center justify-center gap-2">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <p>Initializing chat...</p>
+        </div>
       </Card>
     );
   }
@@ -147,7 +150,14 @@ const DoctorChat: React.FC = () => {
   if (doctorChannels.length === 0) {
     return (
       <Card className="p-8 text-center">
-        <p>No patients assigned yet.</p>
+        {connectionStatus === 'connected' ? (
+          <p>No patients assigned yet.</p>
+        ) : (
+          <div className="flex items-center justify-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <p>Loading patient channels...</p>
+          </div>
+        )}
       </Card>
     );
   }

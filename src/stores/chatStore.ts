@@ -54,27 +54,49 @@ export const useChatStore = create<ChatState>()(
 
       connectToChat: async (user: User) => {
         set({ error: null, connectionStatus: 'connecting' });
-        
+
         try {
           const client = await chatService.initialize(user);
-          
-          set({ 
+
+          set({
             client,
             connectionStatus: 'connected',
             error: null
           });
 
-          // Auto-load channels based on user role
+          // Auto-load channels based on user role with retry logic
           if (user.role === 'patient') {
-            await get().getPatientChannel();
+            // Retry channel loading if it fails due to connection timing
+            const retryPatientChannel = async (attempts = 3) => {
+              try {
+                await get().getPatientChannel();
+              } catch (error) {
+                if (attempts > 1 && get().connectionStatus === 'connected') {
+                  console.log('Retrying patient channel loading...');
+                  setTimeout(() => retryPatientChannel(attempts - 1), 1000);
+                }
+              }
+            };
+            await retryPatientChannel();
           } else if (user.role === 'doctor') {
-            await get().getDoctorChannels();
+            // Retry channel loading if it fails due to connection timing
+            const retryDoctorChannels = async (attempts = 3) => {
+              try {
+                await get().getDoctorChannels();
+              } catch (error) {
+                if (attempts > 1 && get().connectionStatus === 'connected') {
+                  console.log('Retrying doctor channels loading...');
+                  setTimeout(() => retryDoctorChannels(attempts - 1), 1000);
+                }
+              }
+            };
+            await retryDoctorChannels();
           }
 
         } catch (error: unknown) {
           const errorMessage = error instanceof Error ? error.message : 'Failed to connect to chat';
           console.error('Failed to connect to chat:', error);
-          set({ 
+          set({
             connectionStatus: 'error',
             error: errorMessage
           });
@@ -123,8 +145,11 @@ export const useChatStore = create<ChatState>()(
           const errorMessage = error instanceof Error ? error.message : 'Failed to get patient channel';
           console.error('Failed to get patient channel:', error);
 
-          // Only set error if we're still connected (error is relevant)
-          if (get().connectionStatus === 'connected') {
+          // Don't show connection errors to users - these are expected during connect/disconnect cycles
+          const isConnectionError = errorMessage.includes('connectUser') || errorMessage.includes('connectAnonymousUser');
+
+          // Only set error if we're still connected and it's not a connection error
+          if (get().connectionStatus === 'connected' && !isConnectionError) {
             set({ error: errorMessage });
           }
         }
@@ -153,8 +178,11 @@ export const useChatStore = create<ChatState>()(
           const errorMessage = error instanceof Error ? error.message : 'Failed to get doctor channels';
           console.error('Failed to get doctor channels:', error);
 
-          // Only set error if we're still connected (error is relevant)
-          if (get().connectionStatus === 'connected') {
+          // Don't show connection errors to users - these are expected during connect/disconnect cycles
+          const isConnectionError = errorMessage.includes('connectUser') || errorMessage.includes('connectAnonymousUser');
+
+          // Only set error if we're still connected and it's not a connection error
+          if (get().connectionStatus === 'connected' && !isConnectionError) {
             set({ error: errorMessage });
           }
         }

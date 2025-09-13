@@ -106,8 +106,8 @@ const ChatContainer: React.FC = () => {
   if (error) {
     return (
       <Card className="p-8">
-        <Alert 
-          type="error" 
+        <Alert
+          type="error"
           message={error}
           onClose={clearError}
         />
@@ -115,15 +115,33 @@ const ChatContainer: React.FC = () => {
     );
   }
 
-  if (!client || !currentChannel) {
+  if (!client) {
     return (
       <Card className="p-8 text-center">
-        <p>
-          {user.role === 'patient' 
-            ? 'No doctor assigned yet. Please wait for a doctor to be assigned to your case.'
-            : 'No patient channels available.'
-          }
-        </p>
+        <div className="flex items-center justify-center gap-2">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <p>Initializing chat...</p>
+        </div>
+      </Card>
+    );
+  }
+
+  if (!currentChannel) {
+    return (
+      <Card className="p-8 text-center">
+        {connectionStatus === 'connected' ? (
+          <p>
+            {user.role === 'patient'
+              ? 'No doctor assigned yet. Please wait for a doctor to be assigned to your case.'
+              : 'No patient channels available.'
+            }
+          </p>
+        ) : (
+          <div className="flex items-center justify-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <p>Loading channels...</p>
+          </div>
+        )}
       </Card>
     );
   }
