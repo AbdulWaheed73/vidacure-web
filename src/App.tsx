@@ -13,6 +13,7 @@ import {
   NotFoundPage,
   SubscriptionSuccess,
   ChatPage,
+  BMICheck,
 } from "./pages";
 import OnboardingFlow from "./pages/OnBoarding";
 import DashboardRouter from "./pages/dashboard/DashboardRouter";
@@ -84,7 +85,7 @@ function App() {
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : (
-                <Navigate to={ROUTES.ONBOARDING as string} replace />
+                <Navigate to={ROUTES.BMI_CHECK as string} replace />
               )
             ) : (
               <LandingPage />
@@ -104,7 +105,7 @@ function App() {
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : (
-                <Navigate to={ROUTES.ONBOARDING as string} replace />
+                <Navigate to={ROUTES.BMI_CHECK as string} replace />
               )
             )
           }
@@ -201,6 +202,24 @@ function App() {
               <SidebarLayout>
                 <ChatPage />
               </SidebarLayout>
+            ) : (
+              <Navigate to={ROUTES.LOGIN} replace />
+            )
+          }
+        />
+
+        {/* BMI Check Route - Protected (without sidebar) */}
+        <Route
+          path={ROUTES.BMI_CHECK}
+          element={
+            isAuthenticated ? (
+              user?.role === 'doctor' ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : user?.hasCompletedOnboarding ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : (
+                <BMICheck />
+              )
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />
             )

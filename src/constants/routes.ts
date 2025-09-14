@@ -20,6 +20,7 @@ export const ROUTES = {
   SETTINGS: '/settings',
   ABOUT: '/about',
   CONTACT: '/contact',
+  BMI_CHECK: '/bmi-check',
   ONBOARDING: '/onboarding',
   SUBSCRIPTION_SUCCESS: '/subscription/success'
 } as const;
