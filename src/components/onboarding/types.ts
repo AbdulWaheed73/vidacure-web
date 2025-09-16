@@ -5,6 +5,7 @@ export type PersonalInfo = {
   fullName: string;
   dateOfBirth: string;
   gender: "male" | "female" | "other" | "";
+  email: string;
 }
 
 export type PhysicalDetails = {

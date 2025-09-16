@@ -1,10 +1,17 @@
 import type { PersonalInfo, PhysicalDetails, HealthBackground, MedicalHistory } from "./types";
 
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 export const validatePersonalInfo = (data: PersonalInfo): boolean => {
   return !!(
     data.fullName.trim() &&
     data.dateOfBirth.trim() &&
-    data.gender.trim()
+    data.gender.trim() &&
+    data.email.trim() &&
+    isValidEmail(data.email)
   );
 };
 
@@ -54,6 +61,8 @@ export const getValidationErrors = (step: number, data: PersonalInfo | PhysicalD
       if (!personalInfo.fullName.trim()) errors.push("Full Name is required");
       if (!personalInfo.dateOfBirth.trim()) errors.push("Date of birth is required");
       if (!personalInfo.gender.trim()) errors.push("Gender is required");
+      if (!personalInfo.email.trim()) errors.push("Email is required");
+      else if (!isValidEmail(personalInfo.email)) errors.push("Please enter a valid email address");
       break;
     }
       

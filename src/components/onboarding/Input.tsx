@@ -7,9 +7,10 @@ export const Input = ({
   onChange,
   className = "",
   readOnly = false,
+  type = "text",
 }: InputProps) => (
   <input
-    type="text"
+    type={type}
     placeholder={placeholder}
     value={value}
     onChange={onChange}

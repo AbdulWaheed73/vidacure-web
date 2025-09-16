@@ -10,6 +10,7 @@ export type InputProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   readOnly?: boolean;
+  type?: string;
 }
 
 export type TextareaProps = {

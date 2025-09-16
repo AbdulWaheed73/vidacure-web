@@ -76,6 +76,15 @@ export const PersonalInfoStep = () => {
           </div>
         </FormField>
       </div>
+
+      <FormField label="Email" required>
+        <Input
+          type="email"
+          placeholder="your.email@example.com"
+          value={personalInfo.email}
+          onChange={(e) => handleChange("email", e.target.value)}
+        />
+      </FormField>
     </div>
   );
 };

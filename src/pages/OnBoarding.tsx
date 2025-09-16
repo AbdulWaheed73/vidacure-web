@@ -27,6 +27,7 @@ import {
   transformFormDataToQuestionnaire,
 } from "@/components/onboarding";
 import { submitQuestionnaire } from "@/services/questionnaire";
+import { api } from "@/services/api";
 
 
 
@@ -42,6 +43,7 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
       fullName: user?.name || "",
       dateOfBirth: "",
       gender: "",
+      email: "",
     },
     physicalDetails: {
       height: "",
@@ -158,18 +160,33 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
   const handleFinalSubmission = async () => {
     try {
       setIsLoading(true);
-      const questionnaire = transformFormDataToQuestionnaire(data);
-      
-      await submitQuestionnaire(questionnaire);
-      
+
+      // Separate email from questionnaire data
+      const { email, ...personalInfoWithoutEmail } = data.personalInfo;
+      const dataWithoutEmail: OnboardingData = {
+        ...data,
+        personalInfo: {
+          ...personalInfoWithoutEmail,
+          email: "" // Exclude email from questionnaire
+        }
+      };
+
+      const questionnaire = transformFormDataToQuestionnaire(dataWithoutEmail);
+
+      // Submit questionnaire and email separately
+      await Promise.all([
+        submitQuestionnaire(questionnaire),
+        api.patch('/api/patient/profile', { email })
+      ]);
+
       // Refresh auth status to get updated hasCompletedOnboarding flag
       // await checkAuthStatus();
-      
+
       alert(`Questionnaire submitted successfully! Thank you for completing your health assessment.`);
-      
+
       // Navigate to dashboard
       navigate(ROUTES.DASHBOARD);
-      
+
     } catch (error: any) {
       console.error('Submission error:', error);
       alert(`Submission failed: ${error.message}. Please try again.`);
