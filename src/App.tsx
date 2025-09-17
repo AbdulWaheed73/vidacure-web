@@ -20,6 +20,8 @@ import DashboardRouter from "./pages/dashboard/DashboardRouter";
 import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { TopBar } from "./components/TopBar";
+import { AppointmentBooking } from "./components/AppointmentBooking";
+import { useState } from "react";
 
 function App() {
   const {
@@ -34,11 +36,12 @@ function App() {
     // checkAuthAndHideSuccess,
   } = useAuth();
 
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
   // Layout wrapper for authenticated routes with sidebar
   const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
     const handleBookAppointment = () => {
-      // TODO: Implement appointment booking
-      console.log('Book appointment clicked');
+      setIsBookingModalOpen(true);
     };
 
     const handleProfileClick = () => {
@@ -59,7 +62,7 @@ function App() {
       <SidebarProvider>
         <AppSidebar user={user} />
         <SidebarInset className="bg-[#F0F7F4] ml-64">
-          <TopBar 
+          <TopBar
             user={user}
             onBookAppointment={handleBookAppointment}
             onProfileClick={handleProfileClick}
@@ -68,6 +71,16 @@ function App() {
           />
           {children}
         </SidebarInset>
+        {/* Global Booking Modal */}
+        <AppointmentBooking
+          isOpen={isBookingModalOpen}
+          onClose={() => setIsBookingModalOpen(false)}
+          onSuccess={() => {
+            setIsBookingModalOpen(false);
+            // Optionally navigate to appointments page
+            // navigate('/appointments');
+          }}
+        />
       </SidebarProvider>
     );
   };

@@ -3,7 +3,7 @@ import { Chat, Channel, ChannelHeader, MessageList, MessageInput, Thread, Window
 import { useChatStore } from '../../stores/chatStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Card } from '../ui/card';
-import { Alert } from '../ui/Alert';
+import { Alert, AlertDescription } from '../ui/alert';
 import { Loader2, Wifi, WifiOff } from 'lucide-react';
 
 import 'stream-chat-react/dist/css/v2/index.css';
@@ -16,8 +16,7 @@ const ChatContainer: React.FC = () => {
     connectionStatus,
     error,
     connectToChat,
-    disconnectFromChat,
-    clearError
+    disconnectFromChat
   } = useChatStore();
 
   // Connect when component mounts (user is on chat page)
@@ -106,11 +105,9 @@ const ChatContainer: React.FC = () => {
   if (error) {
     return (
       <Card className="p-8">
-        <Alert
-          type="error"
-          message={error}
-          onClose={clearError}
-        />
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       </Card>
     );
   }

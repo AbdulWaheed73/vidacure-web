@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ROUTES } from '../../constants';
 import { DashboardPage } from '../DashboardPage';
+import { DoctorDashboardPage } from '../DoctorDashboardPage';
 import type { User } from '../../types';
 
 const DoctorPrescriptions = lazy(() => import('./doctor/DoctorPrescriptions'));
@@ -29,7 +30,7 @@ const DashboardRouter: React.FC<DashboardRouterProps> = ({ user, onLogout, loadi
         index 
         element={
           user?.role === 'doctor' ? (
-            <DashboardPage user={user} onLogout={onLogout} loading={loading} />
+            <DoctorDashboardPage user={user} onLogout={onLogout} loading={loading} />
           ) : user?.role === 'patient' ? (
             <DashboardPage user={user} onLogout={onLogout} loading={loading} />
           ) : (

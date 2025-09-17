@@ -5,7 +5,7 @@ import { PaymentService, type SubscriptionStatus } from '../services';
 import type { DashboardPageProps } from '../types';
 
 
-export const DashboardPage: React.FC<DashboardPageProps> = ({ }) => {
+export const DashboardPage: React.FC<DashboardPageProps> = () => {
   const { t } = useTranslation();
   const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);

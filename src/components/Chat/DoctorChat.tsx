@@ -4,7 +4,7 @@ import type { Channel as StreamChannel } from 'stream-chat';
 import { useChatStore } from '../../stores/chatStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Card } from '../ui/card';
-import { Alert } from '../ui/Alert';
+import { Alert, AlertDescription } from '../ui/alert';
 import { Loader2, Wifi, WifiOff, Users } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
@@ -20,8 +20,7 @@ const DoctorChat: React.FC = () => {
     error,
     connectToChat,
     disconnectFromChat,
-    setCurrentChannel,
-    clearError
+    setCurrentChannel
   } = useChatStore();
 
   const [selectedChannelId, setSelectedChannelId] = useState<string | null>(null);
@@ -127,11 +126,9 @@ const DoctorChat: React.FC = () => {
   if (error) {
     return (
       <Card className="p-8">
-        <Alert 
-          type="error" 
-          message={error}
-          onClose={clearError}
-        />
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       </Card>
     );
   }

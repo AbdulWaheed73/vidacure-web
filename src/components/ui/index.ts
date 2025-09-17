@@ -1,3 +1,3 @@
 export * from './LoadingSpinner';
-export * from './Alert';
+export * from './alert';
 export * from './Button';
