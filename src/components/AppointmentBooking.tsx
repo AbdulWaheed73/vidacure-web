@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Calendar, Clock, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Calendar, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { PopupWidget } from 'react-calendly';
 import { Button } from './ui/Button';
 import {
@@ -13,7 +12,8 @@ import {
 } from './ui/dialog';
 import { Alert, AlertDescription } from './ui/alert';
 import { Badge } from './ui/badge';
-import { calendlyService, type EventTypeOption } from '../services/calendlyService';
+import { calendlyService } from '../services/calendlyService';
+import type { EventTypeOption } from '../types/calendly-types';
 
 type AppointmentBookingProps = {
   isOpen: boolean;
@@ -26,7 +26,7 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   onClose,
   onSuccess
 }) => {
-  const { t } = useTranslation();
+
   const [availableEventType, setAvailableEventType] = useState<EventTypeOption | null>(null);
   const [subscription, setSubscription] = useState<{planType: string | null, status: string | null} | null>(null);
   const [isLoadingTypes, setIsLoadingTypes] = useState(false);
@@ -227,11 +227,11 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
           url={schedulingLink}
           rootElement={document.getElementById('root')!}
           text="Book Appointment"
-          onEventScheduled={() => {
-            setSchedulingLink(null);
-            handleClose();
-            onSuccess?.();
-          }}
+          // onEventScheduled={() => {
+          //   setSchedulingLink(null);
+          //   handleClose();
+          //   onSuccess?.();
+          // }}
         />
       )}
     </>

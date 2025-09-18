@@ -1,47 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { StreamChat, Channel } from 'stream-chat';
 import { chatService } from '../services/chatService';
-import type { User } from '../types/user-types';
-
-
-export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
-
-type ChatState = {
-  // Stream Chat client
-  client: StreamChat | null;
-  connectionStatus: ConnectionStatus;
-  
-  // Current channel
-  currentChannel: Channel | null;
-  
-  // Doctor channels (for doctor users)
-  doctorChannels: Channel[];
-  
-  // Error handling
-  error: string | null;
-  
-  // Tab-based connection actions
-  connectToChat: (user: User) => Promise<void>;
-  disconnectFromChat: () => Promise<void>;
-  safeDisconnectFromChat: () => void; // Non-async version for cleanup functions
-  
-  // Channel actions
-  loadPatientChannel: () => Promise<void>;
-  loadDoctorChannels: () => Promise<void>;
-  
-  // Legacy methods (for compatibility)
-  getPatientChannel: () => Promise<void>;
-  getDoctorChannels: () => Promise<void>;
-  setCurrentChannel: (channel: Channel) => void;
-  
-  // Utility actions
-  clearError: () => void;
-  
-  // Legacy actions (for compatibility)
-  initializeChat: (user: User) => Promise<void>;
-  disconnect: () => Promise<void>;
-};
+import type { ConnectionStatus, ChatState } from '../types/chat-types';
+import type { User } from '@/types';
+import type { Channel } from 'stream-chat';
 
 export const useChatStore = create<ChatState>()(
   persist(
@@ -70,7 +32,7 @@ export const useChatStore = create<ChatState>()(
             const retryPatientChannel = async (attempts = 3) => {
               try {
                 await get().getPatientChannel();
-              } catch (error) {
+              } catch {
                 if (attempts > 1 && get().connectionStatus === 'connected') {
                   console.log('Retrying patient channel loading...');
                   setTimeout(() => retryPatientChannel(attempts - 1), 1000);
@@ -83,7 +45,7 @@ export const useChatStore = create<ChatState>()(
             const retryDoctorChannels = async (attempts = 3) => {
               try {
                 await get().getDoctorChannels();
-              } catch (error) {
+              } catch {
                 if (attempts > 1 && get().connectionStatus === 'connected') {
                   console.log('Retrying doctor channels loading...');
                   setTimeout(() => retryDoctorChannels(attempts - 1), 1000);

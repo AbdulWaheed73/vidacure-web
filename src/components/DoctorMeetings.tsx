@@ -4,7 +4,8 @@ import { Button } from './ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Alert, AlertDescription } from './ui/alert';
-import { calendlyService, type PatientMeeting } from '../services/calendlyService';
+import { calendlyService } from '../services/calendlyService';
+import type { PatientMeeting } from '../types/calendly-types';
 
 export const DoctorMeetings: React.FC = () => {
   const [meetings, setMeetings] = useState<PatientMeeting[]>([]);

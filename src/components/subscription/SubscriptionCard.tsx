@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PaymentService } from '../../services';
 import { ArrowRight, Check } from 'lucide-react';
 
-interface SubscriptionCardProps {
+type SubscriptionCardProps = {
   planType: 'lifestyle' | 'medical';
   onSubscribeClick?: (planType: 'lifestyle' | 'medical') => void;
   disabled?: boolean;

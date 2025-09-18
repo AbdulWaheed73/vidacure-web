@@ -1,32 +1,9 @@
 import { api } from './api';
-
-export interface CreateCheckoutSessionRequest {
-  planType: 'lifestyle' | 'medical';
-}
-
-export interface CreateCheckoutSessionResponse {
-  sessionId: string;
-  url: string;
-  customerId: string;
-}
-
-export interface SubscriptionStatus {
-  hasSubscription: boolean;
-  subscriptionStatus: string | null;
-  planType: 'lifestyle' | 'medical' | null;
-  subscription: {
-    id: string;
-    status: string;
-    planType: string;
-    currentPeriodStart: Date;
-    currentPeriodEnd: Date;
-    cancelAtPeriodEnd: boolean;
-  } | null;
-}
-
-export interface CreatePortalSessionResponse {
-  url: string;
-}
+import type {
+  CreateCheckoutSessionResponse,
+  SubscriptionStatus,
+  CreatePortalSessionResponse
+} from '../types/payment-types';
 
 export class PaymentService {
   /**

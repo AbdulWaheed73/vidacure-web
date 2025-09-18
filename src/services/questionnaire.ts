@@ -2,15 +2,9 @@
 
 import { api } from './api';
 import type { QuestionnaireAnswer } from '@/components/onboarding/questionMapping';
-
-export interface QuestionnaireResponse {
-  message?: string;
-  questionnaire: QuestionnaireAnswer[];
-}
-
-export interface QuestionnaireUpdateRequest {
-  updates: QuestionnaireAnswer[];
-}
+import type {
+  QuestionnaireResponse,
+} from '../types/questionnaire-types';
 
 /**
  * Submit complete questionnaire to backend

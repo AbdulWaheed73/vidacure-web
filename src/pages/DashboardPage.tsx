@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SubscriptionCard, SubscriptionStatusComponent } from '../components/subscription';
-import { PaymentService, type SubscriptionStatus } from '../services';
+import { PaymentService } from '../services';
 import type { DashboardPageProps } from '../types';
+import type { SubscriptionStatus } from '../types';
 
 
 export const DashboardPage: React.FC<DashboardPageProps> = () => {

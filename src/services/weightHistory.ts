@@ -1,26 +1,9 @@
 import { api } from './api';
-
-export type WeightHistoryEntry = {
-  weight: number;
-  date: string; // yyyy-mm-dd format
-  sideEffects?: string;
-  notes?: string;
-};
-
-export type AddWeightHistoryRequest = {
-  weight: number;
-  sideEffects?: string;
-  notes?: string;
-};
-
-export type WeightHistoryResponse = {
-  weightHistory: WeightHistoryEntry[];
-};
-
-export type AddWeightHistoryResponse = {
-  message: string;
-  entry: WeightHistoryEntry;
-};
+import type {
+  AddWeightHistoryRequest,
+  WeightHistoryResponse,
+  AddWeightHistoryResponse
+} from '../types/weight-types';
 
 // Add weight history entry
 export const addWeightHistory = async (data: AddWeightHistoryRequest): Promise<AddWeightHistoryResponse> => {

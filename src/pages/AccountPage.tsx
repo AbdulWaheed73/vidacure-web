@@ -4,7 +4,7 @@ import { User } from 'lucide-react';
 import { Button } from '../components/ui';
 import type { User as UserType } from '../types';
 
-interface AccountPageProps {
+type AccountPageProps = {
   user: UserType | null;
   onLogout: () => void;
 }

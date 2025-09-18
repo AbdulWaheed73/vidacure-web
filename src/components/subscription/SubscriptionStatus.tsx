@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/Button';
-import { PaymentService, type SubscriptionStatus } from '../../services';
+import { PaymentService } from '../../services';
+import type { SubscriptionStatus } from '../../types/payment-types';
 
-interface SubscriptionStatusProps {
+type SubscriptionStatusProps = {
   onStatusChange?: () => void;
 }
 

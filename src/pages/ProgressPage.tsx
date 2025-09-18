@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/Button';
 import { Label } from '@/components/ui/label';
-import { addWeightHistory, getWeightHistory, type WeightHistoryEntry } from '@/services/weightHistory';
+import { addWeightHistory, getWeightHistory } from '@/services/weightHistory';
+import type { WeightHistoryEntry } from '@/types/weight-types';
 
 
 const chartConfig = {
