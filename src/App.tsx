@@ -20,8 +20,9 @@ import DashboardRouter from "./pages/dashboard/DashboardRouter";
 import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { TopBar } from "./components/TopBar";
-import { AppointmentBooking } from "./components/AppointmentBooking";
+import { PopupModal } from 'react-calendly';
 import { useState } from "react";
+import { calendlyService } from "./services/calendlyService";
 
 function App() {
   const {
@@ -36,12 +37,35 @@ function App() {
     // checkAuthAndHideSuccess,
   } = useAuth();
 
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  // const [isBookingLoading, setIsBookingLoading] = useState(false);
+  const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
+
+  const handleDirectBooking = async () => {
+    // setIsBookingLoading(true);
+
+    try {
+      // First get available event types
+      const eventTypesResponse = await calendlyService.getAvailableEventTypes();
+
+      if (eventTypesResponse.success && eventTypesResponse.eventType) {
+        // Then create booking link
+        const bookingResponse = await calendlyService.createPatientBookingLink(eventTypesResponse.eventType.type);
+
+        if (bookingResponse.success) {
+          setSchedulingLink(bookingResponse.schedulingLink);
+        }
+      }
+    } catch (err) {
+      console.error('Booking error:', err);
+    } finally {
+      // setIsBookingLoading(false);
+    }
+  };
 
   // Layout wrapper for authenticated routes with sidebar
   const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
     const handleBookAppointment = () => {
-      setIsBookingModalOpen(true);
+      handleDirectBooking();
     };
 
     const handleProfileClick = () => {
@@ -71,15 +95,14 @@ function App() {
           />
           {children}
         </SidebarInset>
-        {/* Global Booking Modal */}
-        <AppointmentBooking
-          isOpen={isBookingModalOpen}
-          onClose={() => setIsBookingModalOpen(false)}
-          onSuccess={() => {
-            setIsBookingModalOpen(false);
-            // Optionally navigate to appointments page
-            // navigate('/appointments');
+        {/* Global Calendly Popup Modal */}
+        <PopupModal
+          url={schedulingLink || ''}
+          open={!!schedulingLink}
+          onModalClose={() => {
+            setSchedulingLink(null);
           }}
+          rootElement={document.getElementById('root')!}
         />
       </SidebarProvider>
     );

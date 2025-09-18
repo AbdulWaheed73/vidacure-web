@@ -14,7 +14,7 @@ import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Alert, AlertDescription } from '../components/ui/alert';
-import { AppointmentBooking } from '../components/AppointmentBooking';
+import { PopupModal } from 'react-calendly';
 import { calendlyService } from '../services/calendlyService';
 import type { PatientMeeting } from '../types/calendly-types';
 
@@ -24,7 +24,8 @@ export const AppointmentsPage: React.FC = () => {
   const [doctorName, setDoctorName] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isBookingLoading, setIsBookingLoading] = useState(false);
+  const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
 
   const loadMeetings = async () => {
     setIsLoading(true);
@@ -61,6 +62,34 @@ export const AppointmentsPage: React.FC = () => {
     setTimeout(() => {
       loadMeetings();
     }, 2000);
+  };
+
+  const handleDirectBooking = async () => {
+    setIsBookingLoading(true);
+    setError(null);
+
+    try {
+      // First get available event types
+      const eventTypesResponse = await calendlyService.getAvailableEventTypes();
+
+      if (eventTypesResponse.success && eventTypesResponse.eventType) {
+        // Then create booking link
+        const bookingResponse = await calendlyService.createPatientBookingLink(eventTypesResponse.eventType.type);
+
+        if (bookingResponse.success) {
+          setSchedulingLink(bookingResponse.schedulingLink);
+        } else {
+          setError('Failed to generate booking link');
+        }
+      } else {
+        setError('No appointment types available');
+      }
+    } catch (err: any) {
+      console.error('Booking error:', err);
+      setError(err.response?.data?.error || err.response?.data?.message || 'Failed to generate booking link');
+    } finally {
+      setIsBookingLoading(false);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -141,11 +170,16 @@ export const AppointmentsPage: React.FC = () => {
               {t('common.refresh')}
             </Button>
             <Button
-              onClick={() => setIsBookingOpen(true)}
+              onClick={handleDirectBooking}
+              disabled={isBookingLoading}
               className="bg-teal-600 hover:bg-teal-700 flex items-center gap-2"
             >
-              <Plus className="w-4 h-4" />
-              {t('appointments.bookNew')}
+              {isBookingLoading ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Plus className="w-4 h-4" />
+              )}
+              {isBookingLoading ? 'Loading...' : t('appointments.bookNew')}
             </Button>
           </div>
         </div>
@@ -182,11 +216,16 @@ export const AppointmentsPage: React.FC = () => {
               {t('appointments.emptyMessage')}
             </p>
             <Button
-              onClick={() => setIsBookingOpen(true)}
+              onClick={handleDirectBooking}
+              disabled={isBookingLoading}
               className="bg-teal-600 hover:bg-teal-700"
             >
-              <Plus className="w-4 h-4 mr-2" />
-              {t('appointments.bookFirst')}
+              {isBookingLoading ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+              ) : (
+                <Plus className="w-4 h-4 mr-2" />
+              )}
+              {isBookingLoading ? 'Loading...' : t('appointments.bookFirst')}
             </Button>
           </div>
         </div>
@@ -278,11 +317,15 @@ export const AppointmentsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Booking Modal */}
-      <AppointmentBooking
-        isOpen={isBookingOpen}
-        onClose={() => setIsBookingOpen(false)}
-        onSuccess={handleBookingSuccess}
+      {/* Calendly Popup Modal */}
+      <PopupModal
+        url={schedulingLink || ''}
+        open={!!schedulingLink}
+        onModalClose={() => {
+          setSchedulingLink(null);
+          handleBookingSuccess();
+        }}
+        rootElement={document.getElementById('root')!}
       />
     </div>
   );

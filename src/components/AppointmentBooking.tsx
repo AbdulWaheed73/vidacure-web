@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { PopupWidget } from 'react-calendly';
+import { PopupModal } from 'react-calendly';
 import { Button } from './ui/Button';
 import {
   Dialog,
@@ -36,31 +36,12 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
   const [doctorName, setDoctorName] = useState<string>('');
 
-  // Load available event types when modal opens
+  // Load available event types and auto-generate booking link when modal opens
   useEffect(() => {
     if (isOpen) {
       loadAvailableEventTypes();
     }
   }, [isOpen]);
-
-  const loadAvailableEventTypes = async () => {
-    setIsLoadingTypes(true);
-    setError(null);
-
-    try {
-      const response = await calendlyService.getAvailableEventTypes();
-      if (response.success) {
-        setAvailableEventType(response.eventType);
-        setDoctorName(response.doctor.name);
-        setSubscription(response.subscription);
-      }
-    } catch (err: any) {
-      console.error('Error loading event types:', err);
-      setError(err.response?.data?.error || 'Failed to load appointment types');
-    } finally {
-      setIsLoadingTypes(false);
-    }
-  };
 
   const handleBooking = async () => {
     if (!availableEventType) {
@@ -86,6 +67,34 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
       setIsBooking(false);
     }
   };
+
+  // Auto-generate booking link after event types are loaded
+  useEffect(() => {
+    if (availableEventType && !schedulingLink && !isBooking) {
+      handleBooking();
+    }
+  }, [availableEventType, isBooking, schedulingLink]);
+
+  const loadAvailableEventTypes = async () => {
+    setIsLoadingTypes(true);
+    setError(null);
+
+    try {
+      const response = await calendlyService.getAvailableEventTypes();
+      if (response.success) {
+        setAvailableEventType(response.eventType);
+        setDoctorName(response.doctor.name);
+        setSubscription(response.subscription);
+      }
+    } catch (err: any) {
+      console.error('Error loading event types:', err);
+      setError(err.response?.data?.error || 'Failed to load appointment types');
+    } finally {
+      setIsLoadingTypes(false);
+    }
+  };
+
+  
 
   const handleClose = () => {
     setAvailableEventType(null);
@@ -125,15 +134,17 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
 
           <div className="space-y-4 py-4">
             {/* Loading State */}
-            {isLoadingTypes && (
+            {(isLoadingTypes || isBooking) && (
               <div className="text-center py-8">
                 <div className="w-6 h-6 border-2 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-                <p className="text-gray-600">Loading appointment types...</p>
+                <p className="text-gray-600">
+                  {isLoadingTypes ? 'Loading appointment types...' : 'Preparing your booking link...'}
+                </p>
               </div>
             )}
 
-            {/* Single Event Type Display */}
-            {!isLoadingTypes && availableEventType && (
+            {/* Single Event Type Display - Only show if not booking */}
+            {!isLoadingTypes && !isBooking && availableEventType && (
               <div className="space-y-4">
                 <div className="p-4 border-2 border-teal-200 bg-teal-50 rounded-lg">
                   <div className="flex items-center justify-between">
@@ -200,40 +211,21 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
             >
               Cancel
             </Button>
-            <Button
-              onClick={handleBooking}
-              disabled={isBooking || !availableEventType}
-              className="bg-teal-600 hover:bg-teal-700"
-            >
-              {isBooking ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Generating Link...
-                </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  Generate Booking Link
-                </div>
-              )}
-            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Calendly Popup Widget */}
-      {schedulingLink && (
-        <PopupWidget
-          url={schedulingLink}
-          rootElement={document.getElementById('root')!}
-          text="Book Appointment"
-          // onEventScheduled={() => {
-          //   setSchedulingLink(null);
-          //   handleClose();
-          //   onSuccess?.();
-          // }}
-        />
-      )}
+      {/* Calendly Popup Modal - Opens automatically when schedulingLink is available */}
+      <PopupModal
+        url={schedulingLink || ''}
+        open={!!schedulingLink}
+        onModalClose={() => {
+          setSchedulingLink(null);
+          handleClose();
+          if (onSuccess) onSuccess();
+        }}
+        rootElement={document.getElementById('root')!}
+      />
     </>
   );
 };
