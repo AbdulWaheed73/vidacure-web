@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "preview": "vite preview --host 0.0.0.0 --port 5173",
     "pm2:install": "npm install -g serve pm2",
     "pm2:prod": "npm run build && pm2 start ecosystem.config.js --env production",
     "pm2:stop": "pm2 stop vidacure-web",
