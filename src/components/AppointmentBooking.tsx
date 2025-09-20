@@ -10,7 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/badge';
 import { calendlyService } from '@/services/calendlyService';
 import type { EventTypeOption } from '@/types/calendly-types';

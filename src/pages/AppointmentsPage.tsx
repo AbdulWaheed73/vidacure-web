@@ -13,7 +13,7 @@ import {
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/Alert';
 import { PopupModal } from 'react-calendly';
 import { calendlyService } from '../services/calendlyService';
 import type { PatientMeeting } from '../types/calendly-types';

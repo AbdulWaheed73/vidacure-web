@@ -4,7 +4,7 @@ import type { Channel as StreamChannel } from 'stream-chat';
 import { useChatStore } from '../../stores/chatStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Card } from '../ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/Alert';
 import { Loader2, Wifi, WifiOff, Users } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
