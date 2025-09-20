@@ -7,7 +7,13 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pm2:install": "npm install -g serve pm2",
+    "pm2:prod": "npm run build && pm2 start ecosystem.config.js --env production",
+    "pm2:stop": "pm2 stop vidacure-web",
+    "pm2:restart": "pm2 restart vidacure-web",
+    "pm2:delete": "pm2 delete vidacure-web",
+    "pm2:logs": "pm2 logs vidacure-web"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
