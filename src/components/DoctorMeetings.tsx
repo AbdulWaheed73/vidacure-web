@@ -3,7 +3,7 @@ import { Calendar, Clock, Video, RefreshCw, AlertCircle, CheckCircle2 } from 'lu
 import { Button } from './ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Alert, AlertDescription } from './ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { calendlyService } from '../services/calendlyService';
 import type { PatientMeeting } from '../types/calendly-types';
 

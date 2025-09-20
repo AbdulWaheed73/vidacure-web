@@ -3,7 +3,7 @@ import { Chat, Channel, ChannelHeader, MessageList, MessageInput, Thread, Window
 import { useChatStore } from '../../stores/chatStore';
 import { useAuthStore } from '../../stores/authStore';
 import { Card } from '../ui/card';
-import { Alert, AlertDescription } from '../ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Wifi, WifiOff } from 'lucide-react';
 
 import 'stream-chat-react/dist/css/v2/index.css';

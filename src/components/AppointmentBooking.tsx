@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { PopupModal } from 'react-calendly';
-import { Button } from './ui/Button';
+import { Button } from '@/components/ui/Button';
 import {
   Dialog,
   DialogContent,
@@ -9,11 +9,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from './ui/dialog';
-import { Alert, AlertDescription } from './ui/alert';
-import { Badge } from './ui/badge';
-import { calendlyService } from '../services/calendlyService';
-import type { EventTypeOption } from '../types/calendly-types';
+} from '@/components/ui/dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { calendlyService } from '@/services/calendlyService';
+import type { EventTypeOption } from '@/types/calendly-types';
 
 type AppointmentBookingProps = {
   isOpen: boolean;
