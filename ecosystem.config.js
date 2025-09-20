@@ -1,7 +1,7 @@
 export const apps = [{
   name: 'vidacure-web',
   script: 'serve',
-  args: '-s dist -l 5173',
+  args: '-s dist -p 5173',
   instances: 1,
   autorestart: true,
   watch: false,
