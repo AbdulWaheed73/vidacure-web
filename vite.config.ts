@@ -12,7 +12,8 @@ export default defineConfig({
     allowedHosts: [
       'ec2-16-16-213-232.eu-north-1.compute.amazonaws.com',
       'localhost',
-      '127.0.0.1'
+      '127.0.0.1',
+      '0.0.0.0',
     ]
   }  ,
   resolve: {
