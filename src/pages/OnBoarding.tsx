@@ -182,10 +182,10 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
       // Refresh auth status to get updated hasCompletedOnboarding flag
       // await checkAuthStatus();
 
-      alert(`Questionnaire submitted successfully! Thank you for completing your health assessment.`);
+      // alert(`Questionnaire submitted successfully! Thank you for completing your health assessment.`);
 
-      // Navigate to dashboard
-      navigate(ROUTES.DASHBOARD);
+      // Navigate to booking page after completing onboarding
+      navigate(ROUTES.PATIENT_APPOINTMENTS);
 
     } catch (error: any) {
       console.error('Submission error:', error);
