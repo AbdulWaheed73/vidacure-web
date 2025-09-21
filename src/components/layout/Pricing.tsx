@@ -1,9 +1,12 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Check, Stethoscope, Pill, MessageCircle, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants';
 
 const PricingSection = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   
   const features = [
     {
@@ -48,16 +51,18 @@ const PricingSection = () => {
     buttonText: string;
     isPrimary?: boolean;
     badge: string;
+    onButtonClick?: () => void;
   };
 
-  const PricingCard = ({ 
-    price, 
-    currency, 
-    description, 
-    features, 
-    buttonText, 
+  const PricingCard = ({
+    price,
+    currency,
+    description,
+    features,
+    buttonText,
     isPrimary = false,
-    badge
+    badge,
+    onButtonClick
   }: PricingCardProps) => (
     <Card className={`${isPrimary ? 'bg-teal-800 text-white border-teal-700' : 'bg-white'} rounded-2xl shadow-lg h-full`}>
       <CardContent className="p-8 flex flex-col gap-8 h-full">
@@ -108,11 +113,13 @@ const PricingSection = () => {
 
         {/* Button */}
         <div className="mt-auto">
-          <button className={`w-full h-11 px-6 py-2.5 rounded-full flex items-center justify-center gap-2.5 font-semibold text-sm transition-colors duration-200 ${
-            isPrimary 
-              ? 'bg-white text-gray-800 hover:bg-gray-100' 
-              : 'bg-emerald-50 text-gray-800 hover:bg-emerald-100'
-          }`}>
+          <button
+            onClick={onButtonClick}
+            className={`w-full h-11 px-6 py-2.5 rounded-full flex items-center justify-center gap-2.5 font-semibold text-sm transition-colors duration-200 ${
+              isPrimary
+                ? 'bg-white text-gray-800 hover:bg-gray-100'
+                : 'bg-emerald-50 text-gray-800 hover:bg-emerald-100'
+            }`}>
             {buttonText}
             <ArrowRight className="w-4 h-4" />
           </button>
@@ -169,6 +176,7 @@ const PricingSection = () => {
                 description={t('pricing.lifestyleDescription')}
                 features={lifestyleFeatures}
                 buttonText={t('pricing.getStarted')}
+                onButtonClick={() => navigate(ROUTES.LOGIN)}
               />
             </div>
 
@@ -181,6 +189,7 @@ const PricingSection = () => {
                 features={medicalFeatures}
                 buttonText={t('pricing.getStarted')}
                 isPrimary={true}
+                onButtonClick={() => navigate(ROUTES.LOGIN)}
               />
             </div>
           </div>
@@ -226,6 +235,7 @@ const PricingSection = () => {
                 description={t('pricing.lifestyleDescription')}
                 features={lifestyleFeatures}
                 buttonText={t('pricing.getStarted')}
+                onButtonClick={() => navigate(ROUTES.LOGIN)}
               />
 
               <PricingCard
@@ -236,6 +246,7 @@ const PricingSection = () => {
                 features={medicalFeatures}
                 buttonText={t('pricing.getStarted')}
                 isPrimary={true}
+                onButtonClick={() => navigate(ROUTES.LOGIN)}
               />
             </div>
           </div>

@@ -3,9 +3,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Minus, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants";
 
 export const BMI = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [age, setAge] = useState(28);
   const [weight, setWeight] = useState(175);
   const [height, setHeight] = useState(182);
@@ -268,7 +271,10 @@ export const BMI = () => {
                 <span className="text-emerald-50 text-base font-normal font-['Manrope'] leading-snug">
                   {t('bmi.disclaimer')}{" "}
                 </span>
-                <button className="text-emerald-50 text-base font-bold font-['Manrope'] underline leading-snug hover:text-white transition-colors">
+                <button
+                  onClick={() => navigate(ROUTES.LOGIN)}
+                  className="text-emerald-50 text-base font-bold font-['Manrope'] underline leading-snug hover:text-white transition-colors"
+                >
                   {t('bmi.ctaButton')}
                 </button>
               </div>
