@@ -18,6 +18,14 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setIsOpen(false); // Close mobile menu after clicking
+    }
+  };
+
   return (
     <>
       <header className="w-full border-b bg-white">
@@ -38,6 +46,7 @@ export const Navbar = () => {
                   <Button
                     variant="ghost"
                     className={`${darkTealText} font-normal`}
+                    onClick={() => scrollToSection("how-it-works")}
                   >
                     {t("navbar.howItWorks")}
                   </Button>
@@ -47,6 +56,7 @@ export const Navbar = () => {
                   <Button
                     variant="ghost"
                     className={`${darkTealText} font-normal`}
+                    onClick={() => scrollToSection("our-story")}
                   >
                     {t("navbar.ourStory")}
                   </Button>
@@ -56,6 +66,7 @@ export const Navbar = () => {
                   <Button
                     variant="ghost"
                     className={`${darkTealText} font-normal`}
+                    onClick={() => scrollToSection("understanding-obesity")}
                   >
                     {t("navbar.understandingObesity")}
                   </Button>
@@ -65,13 +76,17 @@ export const Navbar = () => {
                   <Button
                     variant="ghost"
                     className={`${darkTealText} font-normal`}
+                    onClick={() => scrollToSection("insights-tips")}
                   >
                     {t("navbar.insightsTips")}
                   </Button>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <Button variant="ghost">
+                  <Button
+                    variant="ghost"
+                    onClick={() => scrollToSection("pricing")}
+                  >
                     <div className={darkTealText}>{t("navbar.pricing")}</div>
                   </Button>
                 </NavigationMenuItem>
@@ -80,6 +95,7 @@ export const Navbar = () => {
                   <Button
                     variant={"ghost"}
                     className={`${darkTealText} font-normal`}
+                    onClick={() => scrollToSection("faq")}
                   >
                     {t("navbar.faq")}
                   </Button>
@@ -152,6 +168,7 @@ export const Navbar = () => {
                       <Button
                         variant="ghost"
                         className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
+                        onClick={() => scrollToSection("how-it-works")}
                       >
                         {t("navbar.howItWorks")}
                       </Button>
@@ -163,6 +180,7 @@ export const Navbar = () => {
                       <Button
                         variant="ghost"
                         className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
+                        onClick={() => scrollToSection("our-story")}
                       >
                         {t("navbar.ourStory")}
                       </Button>
@@ -174,6 +192,7 @@ export const Navbar = () => {
                       <Button
                         variant="ghost"
                         className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
+                        onClick={() => scrollToSection("understanding-obesity")}
                       >
                         {t("navbar.understandingObesity")}
                       </Button>
@@ -185,6 +204,7 @@ export const Navbar = () => {
                       <Button
                         variant="ghost"
                         className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
+                        onClick={() => scrollToSection("insights-tips")}
                       >
                         {t("navbar.insightsTips")}
                       </Button>
@@ -196,6 +216,7 @@ export const Navbar = () => {
                       <Button
                         variant="ghost"
                         className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
+                        onClick={() => scrollToSection("pricing")}
                       >
                         {t("navbar.pricing")}
                       </Button>
@@ -207,6 +228,7 @@ export const Navbar = () => {
                       <Button
                         variant="ghost"
                         className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
+                        onClick={() => scrollToSection("faq")}
                       >
                         {t("navbar.faq")}
                       </Button>
