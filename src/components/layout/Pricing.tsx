@@ -122,7 +122,7 @@ const PricingSection = () => {
   );
 
   return (
-    <div className="min-h-screen bg-emerald-50 py-8 px-4 sm:py-12 sm:px-6 lg:py-20 lg:px-14">
+    <div className=" px-4 pt-20 sm:px-6 lg:px-14">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-3xl shadow-lg p-4 sm:p-6 lg:p-8">
           

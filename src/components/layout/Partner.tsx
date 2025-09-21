@@ -7,7 +7,7 @@ export default function Partner() {
   const { t } = useTranslation();
   
   return (
-    <div className="w-full px-4 sm:px-8 md:px-14 py-12 md:py-20">
+    <div className="w-full px-4 sm:px-8 md:px-14 py-12 md:py-20 bg-[#E6F9F6]">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-16 xl:gap-36">
           {/* Content Section */}

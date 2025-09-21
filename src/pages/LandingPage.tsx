@@ -18,7 +18,7 @@ export const LandingPage = () => {
       <div className="w-full shadow-2xs ">
         <Navbar />
       </div>
-      <div className="overflow-y-auto w-full h-screen bg-[#E6F9F6] py-2  mx-auto">
+      <div className="overflow-y-auto w-full h-full bg-[#E6F9F6] py-2  mx-auto">
         <div>
           <HeroSection />
         </div>

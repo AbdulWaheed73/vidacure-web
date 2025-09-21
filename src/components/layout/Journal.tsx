@@ -85,9 +85,9 @@ const HealthJournalSection = () => {
   );
 
   return (
-    <div className="min-h-screen bg-emerald-50 py-8 px-4 sm:py-12 sm:px-6 lg:py-20 lg:px-14">
+    <div className="py-16 px-4 sm:px-6 lg:px-14">
       <div className="max-w-7xl mx-auto">
-        <div className="p-6 sm:p-10 lg:p-14 rounded-3xl">
+        <div className="p-6 sm:p-8 lg:p-10 rounded-3xl">
           
           {/* Header */}
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">

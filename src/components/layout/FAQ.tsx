@@ -74,7 +74,7 @@ const FAQSection = () => {
   );
 
   return (
-    <div className="min-h-screen bg-emerald-50 py-8 px-4 sm:py-12 sm:px-6 lg:py-20 lg:px-14">
+    <div className=" py-8 px-4 sm:py-12 sm:px-6 lg:py-20 lg:px-14">
       <div className="max-w-7xl mx-auto">
         {/* Desktop Layout */}
         <div className="hidden lg:flex justify-start items-start max-w-6xl mx-auto">
