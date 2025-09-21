@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import Logo from "../../assets/vidacure_png.png";
 import { darkTealText, ROUTES } from "@/constants";
 
-
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -40,7 +39,7 @@ export const Navbar = () => {
                     variant="ghost"
                     className={`${darkTealText} font-normal`}
                   >
-                    {t('navbar.howItWorks')}
+                    {t("navbar.howItWorks")}
                   </Button>
                 </NavigationMenuItem>
 
@@ -49,7 +48,7 @@ export const Navbar = () => {
                     variant="ghost"
                     className={`${darkTealText} font-normal`}
                   >
-                    {t('navbar.ourStory')}
+                    {t("navbar.ourStory")}
                   </Button>
                 </NavigationMenuItem>
 
@@ -58,7 +57,7 @@ export const Navbar = () => {
                     variant="ghost"
                     className={`${darkTealText} font-normal`}
                   >
-                    {t('navbar.understandingObesity')}
+                    {t("navbar.understandingObesity")}
                   </Button>
                 </NavigationMenuItem>
 
@@ -67,13 +66,13 @@ export const Navbar = () => {
                     variant="ghost"
                     className={`${darkTealText} font-normal`}
                   >
-                    {t('navbar.insightsTips')}
+                    {t("navbar.insightsTips")}
                   </Button>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
                   <Button variant="ghost">
-                    <div className={darkTealText}>{t('navbar.pricing')}</div>
+                    <div className={darkTealText}>{t("navbar.pricing")}</div>
                   </Button>
                 </NavigationMenuItem>
 
@@ -82,7 +81,7 @@ export const Navbar = () => {
                     variant={"ghost"}
                     className={`${darkTealText} font-normal`}
                   >
-                    {t('navbar.faq')}
+                    {t("navbar.faq")}
                   </Button>
                 </NavigationMenuItem>
               </NavigationMenuList>
@@ -91,19 +90,19 @@ export const Navbar = () => {
             {/* Desktop Auth Buttons */}
             <div className="hidden lg:flex items-center space-x-4 flex-shrink-0">
               <LanguageToggle />
-              <Button 
-                variant="ghost" 
-                className={`${darkTealText} font-normal`} 
+              <Button
+                variant="ghost"
+                className={`${darkTealText} font-normal`}
                 onClick={() => navigate(ROUTES.LOGIN)}
               >
-                {t('navbar.login')}
+                {t("navbar.login")}
               </Button>
-              <button 
+              <button
                 className="h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
                 onClick={() => navigate(ROUTES.LOGIN)}
               >
                 <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
-                  {t('navbar.getStarted')}
+                  {t("navbar.getStarted")}
                 </span>
               </button>
             </div>
@@ -140,17 +139,21 @@ export const Navbar = () => {
           </div>
 
           {/* Mobile Navigation */}
-          {isOpen && (
-            <div className="lg:hidden py-4 border-t">
-              <NavigationMenu className="w-full">
-                <NavigationMenuList className="flex flex-col space-y-2 w-full">
+          <div
+            className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+              isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            <div className="py-4 border-t bg-white w-full">
+              <NavigationMenu className="min-w-full">
+                <NavigationMenuList className="flex flex-col min-w-full">
                   <NavigationMenuItem className="w-full">
                     <NavigationMenuLink className="block w-full">
                       <Button
                         variant="ghost"
-                        className="w-full justify-start text-teal-700 hover:text-teal-900"
+                        className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
                       >
-                        {t('navbar.howItWorks')}
+                        {t("navbar.howItWorks")}
                       </Button>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
@@ -159,9 +162,9 @@ export const Navbar = () => {
                     <NavigationMenuLink className="block w-full">
                       <Button
                         variant="ghost"
-                        className="w-full justify-start text-teal-700 hover:text-teal-900"
+                        className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
                       >
-                        {t('navbar.ourStory')}
+                        {t("navbar.ourStory")}
                       </Button>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
@@ -170,9 +173,9 @@ export const Navbar = () => {
                     <NavigationMenuLink className="block w-full">
                       <Button
                         variant="ghost"
-                        className="w-full justify-start text-teal-700 hover:text-teal-900"
+                        className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
                       >
-                        {t('navbar.understandingObesity')}
+                        {t("navbar.understandingObesity")}
                       </Button>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
@@ -181,9 +184,9 @@ export const Navbar = () => {
                     <NavigationMenuLink className="block w-full">
                       <Button
                         variant="ghost"
-                        className="w-full justify-start text-teal-700 hover:text-teal-900"
+                        className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
                       >
-                        {t('navbar.insightsTips')}
+                        {t("navbar.insightsTips")}
                       </Button>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
@@ -192,9 +195,9 @@ export const Navbar = () => {
                     <NavigationMenuLink className="block w-full">
                       <Button
                         variant="ghost"
-                        className="w-full justify-start text-teal-700 hover:text-teal-900"
+                        className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
                       >
-                        {t('navbar.pricing')}
+                        {t("navbar.pricing")}
                       </Button>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
@@ -203,37 +206,37 @@ export const Navbar = () => {
                     <NavigationMenuLink className="block w-full">
                       <Button
                         variant="ghost"
-                        className="w-full justify-start text-teal-700 hover:text-teal-900"
+                        className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
                       >
-                        {t('navbar.faq')}
+                        {t("navbar.faq")}
                       </Button>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
 
-                  <div className="flex flex-col space-y-2 pt-4 border-t">
+                  <div className="flex flex-col space-y-3 pt-4 border-t min-w-full">
                     <LanguageToggle />
-                    <div className="flex flex-row space-x-2">
-                    <Button
-                      variant="ghost"
-                      className="bg-teal-500 hover:bg-teal-600 rounded-full text-white"
-                      onClick={() => navigate(ROUTES.LOGIN)}
-                    >
-                      {t('navbar.login')}
-                    </Button>
-                    <button
-                      className="h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
-                      onClick={() => navigate(ROUTES.LOGIN)}
-                    >
-                      <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
-                        {t('navbar.getStarted')}
-                      </span>
-                    </button>
+                    <div className="flex flex-col space-y-4 w-full">
+                      <Button
+                        variant="ghost"
+                        className="w-full bg-emerald-50 hover:bg-emerald-100 rounded-full text-gray-800 py-2.5 px-4"
+                        onClick={() => navigate(ROUTES.LOGIN)}
+                      >
+                        {t("navbar.login")}
+                      </Button>
+                      <button
+                        className="w-full h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 hover:from-teal-700 hover:to-teal-700 transition-colors"
+                        onClick={() => navigate(ROUTES.LOGIN)}
+                      >
+                        <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
+                          {t("navbar.getStarted")}
+                        </span>
+                      </button>
                     </div>
                   </div>
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
-          )}
+          </div>
         </div>
       </header>
     </>
