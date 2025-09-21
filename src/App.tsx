@@ -133,7 +133,9 @@ function App() {
         <Route
           path={ROUTES.LOGIN}
           element={
-            !isAuthenticated ? (
+            loading ? (
+              <LoginPage onLogin={login} loading={loading} />
+            ) : !isAuthenticated ? (
               <LoginPage onLogin={login} loading={loading} />
             ) : (
               user?.role === 'doctor' ? (
