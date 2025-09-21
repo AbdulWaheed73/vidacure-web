@@ -71,9 +71,9 @@ export const HeroSection = () => {
   return (
     <>
       <div className="self-stretch mx-auto px-4 md:px-8 lg:px-14 py-8 md:py-12 lg:py-20 flex-col justify-start items-center gap-36">
-        <div className="w-full max-w-[1280px] mx-auto lg:px-10 md:p-8 bg-white rounded-3xl shadow-[0px_1px_4px_0px_rgba(12,12,13,0.05)] border-none">
+        <div className="w-full max-w-[1280px] mx-auto xl:px-10 lg:p-8 md:p-6 bg-white rounded-3xl shadow-[0px_1px_4px_0px_rgba(12,12,13,0.05)] border-none">
           {/* Mobile & Tablet Layout */}
-          <div className="lg:hidden flex flex-col gap-6 p-4 md:p-6">
+          <div className="xl:hidden flex flex-col gap-6 p-4 md:p-6 lg:p-8">
             {/* Header Section */}
             <Card className="flex flex-col gap-6 border-none shadow-none">
               <CardHeader className="flex flex-col gap-4">
@@ -134,7 +134,7 @@ export const HeroSection = () => {
             </Card>
 
             {/* Image Gallery */}
-            <Card className="h-[300px] md:h-[470px]  relative flex justify-center items-center gap-4 overflow-hidden flex-row border-none shadow-none">
+            <Card className="h-80 md:h-96 lg:h-[30rem] relative flex justify-center items-center gap-4 overflow-hidden flex-row border-none shadow-none">
               <Marquee vertical className="[--duration:20s]">
                 <ImageCardApp src={Img1} />
                 <ImageCardApp src={Img2} />
@@ -151,7 +151,7 @@ export const HeroSection = () => {
           </div>
 
           {/* Desktop Layout */}
-          <Card className="hidden lg:flex lg:flex-row justify-evenly items-center h-[640px] border-none shadow-none ">
+          <Card className="hidden xl:flex xl:flex-row justify-evenly items-center h-[40rem] border-none shadow-none">
             {/* Left Content */}
             <Card className="flex-1 flex flex-col justify-between border-none shadow-none">
               <CardHeader className="flex flex-col gap-8">
@@ -213,7 +213,7 @@ export const HeroSection = () => {
             </Card>
 
             {/* Right Side - Image Gallery */}
-            <Card className="relative flex h-[640px] w-fit flex-row items-center justify-center overflow-hidden border-none shadow-none">
+            <Card className="relative flex h-[40rem] w-fit flex-row items-center justify-center overflow-hidden border-none shadow-none">
               <Marquee vertical className="[--duration:20s]">
                 <ImageCardWeb src={Img1} />
                 <ImageCardWeb src={Img2} />
@@ -224,8 +224,8 @@ export const HeroSection = () => {
                 <ImageCardWeb src={Img5} />
                 <ImageCardWeb src={Img6} />
               </Marquee>
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white to-white/0"></div>
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-white/0 to-white"></div>
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white to-white/0"></div>
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-white/0 to-white"></div>
             </Card>
           </Card>
         </div>
