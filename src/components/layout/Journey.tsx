@@ -1,6 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import JourneyStep1 from "../../assets/journey-step1.svg";
+import JourneyStep2 from "../../assets/journey-step2.svg";
+import JourneyStep3 from "../../assets/journey-step3.svg";
 
 export default function WeightLossSteps() {
   const { t } = useTranslation();
@@ -9,17 +12,17 @@ export default function WeightLossSteps() {
     {
       title: t('journey.step1.title'),
       description: t('journey.step1.description'),
-      image: "https://placehold.co/624x500"
+      image: JourneyStep1
     },
     {
-      title: t('journey.step2.title'), 
+      title: t('journey.step2.title'),
       description: t('journey.step2.description'),
-      image: "https://placehold.co/624x500"
+      image: JourneyStep2
     },
     {
       title: t('journey.step3.title'),
       description: t('journey.step3.description'),
-      image: "https://placehold.co/624x500"
+      image: JourneyStep3
     }
   ];
 
@@ -83,9 +86,9 @@ export default function WeightLossSteps() {
             <Card key={index} className="bg-emerald-50 rounded-3xl border-0 overflow-hidden">
               <CardContent className="p-0">
                 <div className="flex flex-col">
-                  <img 
-                    className="w-full h-64 object-cover rounded-3xl" 
-                    src={step.image.replace('624x500', '400x250')}
+                  <img
+                    className="w-full h-64 object-cover rounded-3xl"
+                    src={step.image}
                     alt={step.title}
                   />
                   <div className="px-5 py-8 flex flex-col gap-4">
