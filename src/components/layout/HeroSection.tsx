@@ -70,12 +70,12 @@ export const HeroSection = () => {
 
   return (
     <>
-      <div className="self-stretch mx-auto px-14 py-20  flex-col justify-start items-center gap-36">
+      <div className="self-stretch mx-auto px-4 md:px-8 lg:px-14 py-8 md:py-12 lg:py-20 flex-col justify-start items-center gap-36">
         <div className="w-full max-w-[1280px] mx-auto lg:px-10 md:p-8 bg-white rounded-3xl shadow-[0px_1px_4px_0px_rgba(12,12,13,0.05)] border-none">
           {/* Mobile & Tablet Layout */}
-          <div className="lg:hidden flex flex-col gap-8 p-2 ">
+          <div className="lg:hidden flex flex-col gap-6 p-4 md:p-6">
             {/* Header Section */}
-            <Card className="flex flex-col gap-8 border-none shadow-none">
+            <Card className="flex flex-col gap-6 border-none shadow-none">
               <CardHeader className="flex flex-col gap-4">
                 <div className="flex flex-col gap-4">
                   <CardDescription className="text-teal-700 text-base font-medium font-['Manrope'] uppercase leading-tight">
@@ -101,8 +101,8 @@ export const HeroSection = () => {
               </CardHeader>
 
               {/* Features Section */}
-              <CardContent className="flex flex-col gap-6">
-                <div className="flex flex-col gap-6">
+              <CardContent className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4">
                   <div className="flex gap-3">
                     <Scale size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
@@ -116,7 +116,7 @@ export const HeroSection = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4">
                   <div className="flex gap-3">
                     <Calendar size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
