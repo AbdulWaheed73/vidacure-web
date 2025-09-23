@@ -1,18 +1,15 @@
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const FAQSection = () => {
   const { t } = useTranslation();
-  const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
-
-  const toggleItem = (index: number) => {
-    setOpenItems((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
-  };
 
   const faqItems = [
     {
@@ -36,42 +33,6 @@ const FAQSection = () => {
       answer: t('faq.questions.financing.answer'),
     },
   ];
-
-  type FAQItemProps = {
-  item: { question: string; answer: string };
-  index: number;
-  isOpen: boolean;
-  onToggle: (index: number) => void;
-};
-
-  const FAQItem = ({ item, index, isOpen, onToggle }: FAQItemProps) => (
-    <div className="py-4 border-b-2 border-stone-50 last:border-b-0">
-      <button
-        onClick={() => onToggle(index)}
-        className="w-full flex justify-between items-center text-left hover:text-teal-600 transition-colors duration-200"
-        aria-expanded={isOpen}
-      >
-        <span className="text-black text-base font-normal font-manrope leading-snug pr-4">
-          {item.question}
-        </span>
-        <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-          {isOpen ? (
-            <ChevronUp className="w-4 h-4 text-teal-700 transition-transform duration-200" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-teal-700 transition-transform duration-200" />
-          )}
-        </div>
-      </button>
-
-      {isOpen && (
-        <div className="mt-4 pr-10 animate-in slide-in-from-top-1 duration-200">
-          <p className="text-gray-600 text-base font-normal font-manrope leading-relaxed">
-            {item.answer}
-          </p>
-        </div>
-      )}
-    </div>
-  );
 
   return (
     <div className=" py-8 px-4 sm:py-12 sm:px-6 lg:py-20 lg:px-14">
@@ -99,17 +60,18 @@ const FAQSection = () => {
           <div className="flex-1">
             <Card className="bg-white rounded-3xl shadow-lg border-0">
               <CardContent className="px-8 py-12">
-                <div className="space-y-0">
+                <Accordion type="single" collapsible className="w-full">
                   {faqItems.map((item, index) => (
-                    <FAQItem
-                      key={index}
-                      item={item}
-                      index={index}
-                      isOpen={openItems[index]}
-                      onToggle={toggleItem}
-                    />
+                    <AccordionItem key={index} value={`item-${index}`}>
+                      <AccordionTrigger className="text-black text-base font-normal font-manrope leading-snug hover:text-teal-600 [&[data-state=open]>svg]:rotate-180">
+                        {item.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-gray-600 text-base font-normal font-manrope leading-relaxed">
+                        {item.answer}
+                      </AccordionContent>
+                    </AccordionItem>
                   ))}
-                </div>
+                </Accordion>
               </CardContent>
             </Card>
           </div>
@@ -136,17 +98,18 @@ const FAQSection = () => {
             {/* FAQ Card */}
             <Card className="bg-white rounded-3xl shadow-lg border-0">
               <CardContent className="px-5 py-8">
-                <div className="space-y-0">
+                <Accordion type="single" collapsible className="w-full">
                   {faqItems.map((item, index) => (
-                    <FAQItem
-                      key={index}
-                      item={item}
-                      index={index}
-                      isOpen={openItems[index]}
-                      onToggle={toggleItem}
-                    />
+                    <AccordionItem key={index} value={`item-${index}`}>
+                      <AccordionTrigger className="text-black text-base font-normal font-manrope leading-snug hover:text-teal-600 [&[data-state=open]>svg]:rotate-180">
+                        {item.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-gray-600 text-base font-normal font-manrope leading-relaxed">
+                        {item.answer}
+                      </AccordionContent>
+                    </AccordionItem>
                   ))}
-                </div>
+                </Accordion>
               </CardContent>
             </Card>
           </div>
