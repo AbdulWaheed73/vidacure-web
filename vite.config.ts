@@ -15,6 +15,7 @@ export default defineConfig({
       '127.0.0.1',
       '0.0.0.0',
       'vidacure.se',
+      'www.vidacure.se'
     ]
   }  ,
   resolve: {
