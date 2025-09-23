@@ -51,7 +51,7 @@ api.interceptors.response.use(
       });
       
       // Redirect to login page (only if not already there)
-      if (window.location.pathname !== '/login') {
+      if (window.location.pathname !== '/login' && window.location.pathname!=='/') {
         window.location.href = '/login';
       }
     }
