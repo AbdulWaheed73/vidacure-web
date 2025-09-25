@@ -15,7 +15,7 @@ import FooterSection from "@/components/layout/Footer";
 export const LandingPage = () => {
   return (
     <>
-      <div className="w-full shadow-2xs ">
+      <div className="w-full shadow-2xs fixed z-50">
         <Navbar />
       </div>
       <div className="overflow-y-auto w-full h-full bg-[#E6F9F6] py-2  mx-auto">
