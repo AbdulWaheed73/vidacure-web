@@ -3,6 +3,8 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/Button";
 import LanguageToggle from "@/components/ui/LanguageToggle";
@@ -40,13 +42,13 @@ export const Navbar = () => {
             />
 
             {/* Desktop Navigation */}
-            <NavigationMenu className="hidden lg:flex">
+            <NavigationMenu className="hidden lg:flex" viewport={false}>
               <NavigationMenuList className="flex items-center space-x-2">
                 <NavigationMenuItem>
                   <Button
                     variant="ghost"
                     className={`${darkTealText} font-normal`}
-                    onClick={() => scrollToSection("how-it-works")}
+                    onClick={() => scrollToSection("the-treatment")}
                   >
                     {t("navbar.howItWorks")}
                   </Button>
@@ -56,30 +58,68 @@ export const Navbar = () => {
                   <Button
                     variant="ghost"
                     className={`${darkTealText} font-normal`}
-                    onClick={() => scrollToSection("our-story")}
+                    onClick={() => scrollToSection("about-us")}
                   >
                     {t("navbar.ourStory")}
                   </Button>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <Button
-                    variant="ghost"
-                    className={`${darkTealText} font-normal`}
-                    onClick={() => scrollToSection("understanding-obesity")}
-                  >
-                    {t("navbar.understandingObesity")}
-                  </Button>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <Button
-                    variant="ghost"
-                    className={`${darkTealText} font-normal`}
-                    onClick={() => scrollToSection("insights-tips")}
-                  >
-                    {t("navbar.insightsTips")}
-                  </Button>
+                  <NavigationMenuTrigger className={`${darkTealText} font-normal bg-transparent hover:bg-transparent`}>
+                    {t("navbar.education")}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[200px] gap-1 p-2">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <button
+                            className="block w-full select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground text-left"
+                            onClick={() => scrollToSection("education")}
+                          >
+                            <div className="text-sm font-medium leading-none">
+                              {t("navbar.educationSubmenu.articles")}
+                            </div>
+                          </button>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <button
+                            className="block w-full select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground text-left"
+                            onClick={() => scrollToSection("understanding-obesity")}
+                          >
+                            <div className="text-sm font-medium leading-none">
+                              {t("navbar.educationSubmenu.aboutObesity")}
+                            </div>
+                          </button>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <button
+                            className="block w-full select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground text-left"
+                            onClick={() => scrollToSection("education")}
+                          >
+                            <div className="text-sm font-medium leading-none">
+                              {t("navbar.educationSubmenu.nutrition")}
+                            </div>
+                          </button>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <button
+                            className="block w-full select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground text-left"
+                            onClick={() => scrollToSection("education")}
+                          >
+                            <div className="text-sm font-medium leading-none">
+                              {t("navbar.educationSubmenu.workout")}
+                            </div>
+                          </button>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
@@ -168,7 +208,7 @@ export const Navbar = () => {
                       <Button
                         variant="ghost"
                         className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
-                        onClick={() => scrollToSection("how-it-works")}
+                        onClick={() => scrollToSection("the-treatment")}
                       >
                         {t("navbar.howItWorks")}
                       </Button>
@@ -180,7 +220,7 @@ export const Navbar = () => {
                       <Button
                         variant="ghost"
                         className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
-                        onClick={() => scrollToSection("our-story")}
+                        onClick={() => scrollToSection("about-us")}
                       >
                         {t("navbar.ourStory")}
                       </Button>
@@ -192,21 +232,9 @@ export const Navbar = () => {
                       <Button
                         variant="ghost"
                         className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
-                        onClick={() => scrollToSection("understanding-obesity")}
+                        onClick={() => scrollToSection("education")}
                       >
-                        {t("navbar.understandingObesity")}
-                      </Button>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-
-                  <NavigationMenuItem className="w-full">
-                    <NavigationMenuLink className="block w-full">
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4"
-                        onClick={() => scrollToSection("insights-tips")}
-                      >
-                        {t("navbar.insightsTips")}
+                        {t("navbar.education")}
                       </Button>
                     </NavigationMenuLink>
                   </NavigationMenuItem>

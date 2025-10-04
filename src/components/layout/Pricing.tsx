@@ -25,11 +25,10 @@ const PricingSection = () => {
 
   const lifestyleFeatures = [
     t('pricing.features.initialAssessment'),
-    t('pricing.features.personalizedPlan'), 
+    t('pricing.features.personalizedPlan'),
     t('pricing.features.medicalCheckins'),
     t('pricing.features.unlimitedMessaging'),
-    t('pricing.features.progressTracking'),
-    t('pricing.features.nutritionCoaching')
+    t('pricing.features.progressTracking')
   ];
 
   const medicalFeatures = [

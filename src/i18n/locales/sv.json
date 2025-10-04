@@ -1,9 +1,15 @@
 {
   "navbar": {
-    "howItWorks": "Så fungerar det",
-    "ourStory": "Vår historia",
+    "howItWorks": "Behandlingen",
+    "ourStory": "Om oss",
     "understandingObesity": "Förstå fetma",
-    "insightsTips": "Insikter & tips",
+    "education": "Utbildning",
+    "educationSubmenu": {
+      "articles": "Artiklar",
+      "aboutObesity": "Om fetma",
+      "nutrition": "Näring",
+      "workout": "Träna"
+    },
     "pricing": "Priser",
     "faq": "Vanliga frågor",
     "login": "Logga in",
@@ -12,12 +18,13 @@
   "hero": {
     "newWay": "Ett nytt sätt att gå ner i vikt",
     "title": "Hållbar viktminskning med medicinsk vetenskap som grund.",
-    "description": "Vårt program kombinerar FDA-godkända mediciner med 1-mot-1 coaching från ett dedikerat vårdteam för att hjälpa dig uppnå och bibehålla en hälsosam vikt.",
+    "description": "Vårt program kombinerar godkända mediciner med personlig coaching från ett dedikerat vårdteam för att hjälpa dig uppnå och bibehålla en hälsosam vikt.",
     "getStarted": "Kom igång",
-    "feature1": "Gå ner upp till 1,3 kg per vecka med verkliga resultat",
-    "feature2": "Avancerad medicin – känn dig mätt, inte frustrerad",
-    "feature3": "Personligt stöd från din läkare och hälsocoach",
-    "feature4": "Patienter rapporterar högsta nöjdhet och varaktig förändring"
+    "feature1": "Effektiv viktminskning upp till 25-30 kg",
+    "feature2": "Pålitlig & godkänd medicinering och toppklassad hälsocoach assistans",
+    "feature3": "Sömlös service – inga livstidsabonnemang, inga dolda kostnader",
+    "feature4": "Patienter rapporterar högsta nöjdhet och varaktig förändring",
+    "feature5": "Lätt att följa instruktioner & program för att spara tid & pengar"
   },
   "obesity": {
     "title": "Förstå fetma:",
@@ -34,25 +41,25 @@
     "titleHighlight": "transparent prissättning",
     "description": "Vi tror på att vara helt öppna om kostnaden för vårt program. Det finns inga dolda avgifter eller långsiktiga åtaganden. Ditt månatliga medlemskap ger dig fullständig tillgång till vårt medicinska team och det stöd du behöver för att lyckas på din resa.",
     "doctorFeature": "Få löpande vård från en legitimerad läkare som skapar din plan, hanterar dina recept och säkert vägleder dina framsteg.",
-    "medicationFeature": "Vi hanterar hela receptprocessen, med din godkända medicin levererad diskret till ditt hem från ett certifierat apotek.",
+    "medicationFeature": "Vi hanterar hela receptprocessen, med din godkända medicin ordinerat till dig och ge dig en personlig hälsovårdscoaching.",
     "messagingFeature": "Njut av obegränsade meddelanden med ditt personliga vårdteam för kontinuerligt stöd, coaching och svar på alla dina frågor.",
     "lifestyleBadge": "Livsstilsprogram medlemskap",
     "lifestylePrice": "795",
     "lifestyleCurrency": "SEK/mån",
-    "lifestyleDescription": "Din tillgång till expertcoaching och stöd för en hälsosammare livsstil.",
+    "lifestyleDescription": "Din tillgång till medicinsk behandling och stöd.",
     "medicalBadge": "Medicinskt program medlemskap",
-    "medicalPrice": "1495",
+    "medicalPrice": "1195",
     "medicalCurrency": "SEK/mån",
-    "medicalDescription": "Din allt-i-ett tillgång till vårt medicinska team, coaching och stöd.",
+    "medicalDescription": "Din allt-i-ett tillgång till vår medicinska behandling och personlig livsstilscoachingsteam.",
     "includes": "Inkluderar:",
     "getStarted": "Kom igång",
     "features": {
       "initialAssessment": "Initial hälsobedömning",
-      "personalizedPlan": "Personlig livsstilsplan",
+      "personalizedPlan": "medicinrecept",
       "medicalCheckins": "Regelbundna medicinska kontroller",
       "unlimitedMessaging": "Obegränsade vårdteamsmeddelanden",
       "progressTracking": "Pågående framstegsuppföljning",
-      "nutritionCoaching": "Närings- och vancoaching",
+      "nutritionCoaching": "Närings- och vancoaching, träning",
       "doctorConsultation": "Initial läkarkonsultation",
       "treatmentPlan": "Personlig behandlingsplan",
       "glp1Medication": "GLP-1 medicinrecept",
@@ -100,7 +107,7 @@
       "overweight": "övervikt",
       "obese": "fetma"
     },
-    "disclaimer": "*Detta är en utgångspunkt för att förstå din hälsa. Om du är orolig för din vikt är nästa steg att prata med en medicinsk expert.",
+    "disclaimer": "*Detta är en utgångspunkt för att förstå din hälsa. Om du har ett BMI över 27 är nästa steg att prata med en medicinsk expert.",
     "ctaButton": "Boka en kostnadsfri läkarkonsultation"
   },
   "journey": {
@@ -109,16 +116,16 @@
     "titleWeight": "viktminskning",
     "titleJourney": "resa",
     "step1": {
-      "title": "Din kostnadsfria onlinekonsultation",
-      "description": "Berätta om din hälsohistoria i ett kort onlineformulär. Du kommer sedan att ha en privat konsultation med en legitimerad läkare för att se om du är en kandidat."
+      "title": "Onlinekonsultation",
+      "description": "Berätta om din hälsohistoria i ett kort onlineformulär. Du kommer sedan att ha en privat konsultation med en legitimerad läkare för att se om du är en kandidat. Ibland ber vi dig att lämna blodprover för att göra utvärderingen korrekt."
     },
     "step2": {
       "title": "Få din anpassade plan",
-      "description": "Din läkare granskar din hälsoprofil för att utforma en personlig behandlingsplan. Denna plan är skräddarsydd för din unika biologi och viktminsknings mål."
+      "description": "Din läkare granskar din hälsoprofil. Du har två alternativ att välja mellan:\n\n• Medicinsk behandlingsprogram - Månatliga konsultationer med din läkare\n• Livsstilsprogram - Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning"
     },
     "step3": {
-      "title": "Ta emot behandling och stöd",
-      "description": "Din medicin levereras diskret till ditt hem. Därifrån ger ditt dedikerade vårdteam löpande stöd för att vägleda dig, justera din plan och fira din framgång."
+      "title": "Ta emot behandling och stöd - Hela vägen",
+      "description": "Din medicin levereras diskret till ditt hem. Därifrån ger ditt dedikerade vårdteam löpande stöd för att vägleda dig, justera din plan och fira din framgång. Vi strävar efter att behandla dig, ge dig det nödvändiga stödet med livsstilsförändringar och utbilda dig om att övervinna fetma och ha en hälsosam livsstil. Att vara en del av detta projekt - njut av din resa med viktminskning och förbättrad hälsa."
     },
     "ctaButton": "Se om du kvalificerar dig"
   },

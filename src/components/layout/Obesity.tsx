@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
-import Injections from "../../assets/image13.png";
+import Injections from "../../assets/injections.svg";
 // Placeholder image - replace with your actual image import
 // const Injections = "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop&crop=center";
 

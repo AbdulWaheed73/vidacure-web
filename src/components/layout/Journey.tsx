@@ -69,9 +69,24 @@ export default function WeightLossSteps() {
                       </h3>
                     </div>
                     <div className="pr-6">
-                      <p className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
-                        {step.description}
-                      </p>
+                      {step.description.includes('•') ? (
+                        <div className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
+                          {step.description.split('\n').map((line, idx) => (
+                            line.trim().startsWith('•') ? (
+                              <div key={idx} className="flex gap-2 mt-2">
+                                <span className="flex-shrink-0">•</span>
+                                <span>{line.trim().substring(1).trim()}</span>
+                              </div>
+                            ) : (
+                              <p key={idx} className={line.trim() ? '' : 'h-2'}>{line}</p>
+                            )
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug whitespace-pre-line">
+                          {step.description}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -98,9 +113,24 @@ export default function WeightLossSteps() {
                       </h3>
                     </div>
                     <div className="pr-6">
-                      <p className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
-                        {step.description}
-                      </p>
+                      {step.description.includes('•') ? (
+                        <div className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
+                          {step.description.split('\n').map((line, idx) => (
+                            line.trim().startsWith('•') ? (
+                              <div key={idx} className="flex gap-2 mt-2">
+                                <span className="flex-shrink-0">•</span>
+                                <span>{line.trim().substring(1).trim()}</span>
+                              </div>
+                            ) : (
+                              <p key={idx} className={line.trim() ? '' : 'h-2'}>{line}</p>
+                            )
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug whitespace-pre-line">
+                          {step.description}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

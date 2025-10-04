@@ -9,14 +9,14 @@ import {
 } from "@/components/ui/card";
 // import { Button } from "@/components/ui/Button";
 
-import { ArrowRight, Scale, Pill, Calendar, Smile } from "lucide-react";
+import { ArrowRight, Scale, Pill, Smile, ShieldCheck, BookOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants";
 import { Marquee } from "@/components/magicui/marquee";
-import Img1 from "../../assets/first.png";
+import Img1 from "../../assets/first.svg";
 import Img2 from "../../assets/second.png";
-import Img3 from "../../assets/third.png";
+import Img3 from "../../assets/third.svg";
 import Img4 from "../../assets/fourth.png";
 import Img5 from "../../assets/fifth.png";
 import Img6 from "../../assets/sixth.png";
@@ -115,18 +115,24 @@ export const HeroSection = () => {
                       {t('hero.feature2')}
                     </div>
                   </div>
-                </div>
-                <div className="flex flex-col gap-4">
                   <div className="flex gap-3">
-                    <Calendar size={32} className="text-teal-700" />
+                    <ShieldCheck size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
                       {t('hero.feature3')}
                     </div>
                   </div>
+                </div>
+                <div className="flex flex-col gap-4">
                   <div className="flex gap-3">
                     <Smile size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
                       {t('hero.feature4')}
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <BookOpen size={32} className="text-teal-700" />
+                    <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
+                      {t('hero.feature5')}
                     </div>
                   </div>
                 </div>
@@ -194,18 +200,24 @@ export const HeroSection = () => {
                       {t('hero.feature2')}
                     </div>
                   </div>
-                </div>
-                <div className="flex-1 flex flex-col gap-12">
                   <div className="flex items-center gap-3">
-                    <Calendar size={32} className="text-teal-700" />
+                    <ShieldCheck size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
                       {t('hero.feature3')}
                     </div>
                   </div>
+                </div>
+                <div className="flex-1 flex flex-col gap-12">
                   <div className="flex items-center gap-3">
                     <Smile size={32} className="text-teal-700" />
                     <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
                       {t('hero.feature4')}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <BookOpen size={32} className="text-teal-700" />
+                    <div className="flex-1 text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
+                      {t('hero.feature5')}
                     </div>
                   </div>
                 </div>

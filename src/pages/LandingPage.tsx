@@ -22,10 +22,10 @@ export const LandingPage = () => {
         <div id="hero">
           <HeroSection />
         </div>
-        <div id="how-it-works">
+        <div id="the-treatment">
           <WeightLossSteps />
         </div>
-        <div id="our-story">
+        <div id="about-us">
           <StatisticsComponent />
         </div>
         <div id="understanding-obesity">
@@ -43,7 +43,7 @@ export const LandingPage = () => {
         <div id="pricing">
           <PricingSection />
         </div>
-        <div id="insights-tips">
+        <div id="education">
           <HealthJournalSection />
         </div>
         <div id="faq">

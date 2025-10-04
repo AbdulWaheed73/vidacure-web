@@ -1,9 +1,15 @@
 {
   "navbar": {
-    "howItWorks": "How it works",
-    "ourStory": "Our Story",
+    "howItWorks": "The Treatment",
+    "ourStory": "About us",
     "understandingObesity": "Understanding Obesity",
-    "insightsTips": "Insights & Tips",
+    "education": "Education",
+    "educationSubmenu": {
+      "articles": "Articles",
+      "aboutObesity": "About obesity",
+      "nutrition": "Nutrition",
+      "workout": "Work out"
+    },
     "pricing": "Pricing",
     "faq": "FAQ",
     "login": "Login",
@@ -12,12 +18,13 @@
   "hero": {
     "newWay": "A new way to lose weight",
     "title": "Sustainable weight loss backed by medical science.",
-    "description": "Our program combines FDA-approved medication with 1-on-1 coaching from a dedicated care team to help you achieve and sustain a healthy weight.",
+    "description": "Our program combines approved medication with personal coaching from a dedicated care team to help you achieve and sustain a healthy weight.",
     "getStarted": "Get Started",
-    "feature1": "Lose up to 1.3kg per week with real results",
-    "feature2": "Advanced medication – feel full, not frustrated",
-    "feature3": "One-on-one support from your doctor and health coach",
-    "feature4": "Patients report top satisfaction and lasting change"
+    "feature1": "Effective weight loss up to 25-30 kg",
+    "feature2": "Reliable & approved medication and top ranked health coach assistance",
+    "feature3": "Seamless service – no lifelong subscriptions, no hidden costs",
+    "feature4": "Patients report top satisfaction and lasting change",
+    "feature5": "Easy to follow instructions & program to save your time & money"
   },
   "obesity": {
     "title": "Understanding obesity:",
@@ -34,25 +41,25 @@
     "titleHighlight": "Transparent Pricing",
     "description": "We believe in being completely open about the cost of our program. There are no hidden fees or long-term commitments. Your monthly membership gives you complete access to our medical team and the support you need to succeed on your journey.",
     "doctorFeature": "Receive ongoing care from a board-certified doctor who creates your plan, manages your prescriptions, and safely guides your progress.",
-    "medicationFeature": "We manage the entire prescription process, with your approved medication delivered discreetly to your home from a certified pharmacy.",
+    "medicationFeature": "We manage the entire prescription process, with your approved medication prescribed to you and give you a personal health care coaching.",
     "messagingFeature": "Enjoy unlimited messaging with your personal care team for continuous support, coaching, and answers to all your questions.",
     "lifestyleBadge": "Lifestyle Program Membership",
     "lifestylePrice": "795",
     "lifestyleCurrency": "SEK/mo",
-    "lifestyleDescription": "Your access to expert coaching and support for a healthier lifestyle.",
+    "lifestyleDescription": "Your access to medical treatment and support.",
     "medicalBadge": "Medical Program Membership",
-    "medicalPrice": "1495",
+    "medicalPrice": "1195",
     "medicalCurrency": "SEK/mo",
-    "medicalDescription": "Your all-in-one access to our medical team, coaching, and support.",
+    "medicalDescription": "Your all-in-one access to our medical treatment and personal lifestyle coaching team based.",
     "includes": "Includes:",
     "getStarted": "Get Started",
     "features": {
       "initialAssessment": "Initial Health Assessment",
-      "personalizedPlan": "Personalized Lifestyle Plan",
+      "personalizedPlan": "medication prescription",
       "medicalCheckins": "Regular Medical Check-ins",
       "unlimitedMessaging": "Unlimited Care Team Messaging",
       "progressTracking": "Ongoing Progress Tracking",
-      "nutritionCoaching": "Nutrition & Habit Coaching",
+      "nutritionCoaching": "Nutrition & Habit Coaching, work out",
       "doctorConsultation": "Initial Doctor Consultation",
       "treatmentPlan": "Personalized Treatment Plan",
       "glp1Medication": "GLP-1 Medication Prescription",
@@ -100,7 +107,7 @@
       "overweight": "overweight",
       "obese": "obese"
     },
-    "disclaimer": "*This is a starting point for understanding your health. If you are concerned about your weight, the next step is to speak with a medical professional.",
+    "disclaimer": "*This is a starting point for understanding your health. If you have a BMI over 27, the next step is to speak with a medical professional.",
     "ctaButton": "Book a Free Doctor's Consultation"
   },
   "journey": {
@@ -109,16 +116,16 @@
     "titleWeight": "weight loss",
     "titleJourney": "journey",
     "step1": {
-      "title": "Your Free Online Consult",
-      "description": "Tell us about your health history in a short online form. You'll then have a private consultation with a board-certified doctor to see if you're a candidate."
+      "title": "Online Consult",
+      "description": "Tell us about your health history in a short online form. You'll then have a private consultation with a board-certified doctor to see if you're a candidate. Sometimes we ask you to leave blood samples to make the evaluation correct."
     },
     "step2": {
       "title": "Get Your Custom Plan",
-      "description": "Your doctor reviews your health profile to design a personalized treatment plan. This plan is tailored to your unique biology and weight loss goals."
+      "description": "Your doctor reviews your health profile. You have two options to choose:\n\n• Medical treatment program - Monthly consultations with your doctor\n• Lifestyle program - Regular follow-up and training with a health coach to guide you on nutrition and workout"
     },
     "step3": {
-      "title": "Receive Treatment & Support",
-      "description": "Your medication is delivered discreetly to your home. From there, your dedicated care team provides ongoing support to guide you, adjust your plan, and celebrate your success."
+      "title": "Receive Treatment & Support - All the way long",
+      "description": "Your medication is delivered discreetly to your home. From there, your dedicated care team provides ongoing support to guide you, adjust your plan, and celebrate your success. We aim to treat you, give you the necessary support with lifestyle changes and educate you about overcoming obesity and having a healthy lifestyle. Being a part of this project - enjoy your journey losing weight and improving your health."
     },
     "ctaButton": "See if you qualify"
   },
