@@ -14,41 +14,30 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants";
 import { Marquee } from "@/components/magicui/marquee";
-import Img1 from "../../assets/first.svg";
-import Img2 from "../../assets/second.png";
-import Img3 from "../../assets/third.svg";
-import Img4 from "../../assets/fourth.png";
-import Img5 from "../../assets/fifth.png";
-import Img6 from "../../assets/sixth.png";
+import { OptimizedImage } from "@/components/ui/OptimizedImage";
+import { CloudinaryImages } from "@/lib/cloudinaryImages";
 
-const ImageCardWeb = ({ src }: { src: string }) => {
+const ImageCardWeb = ({ publicId }: { publicId: string }) => {
   return (
-    <>
-      {/* <img
-        className="w-48 h-72 rounded-3xl shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)] self-stretch"
-        src={src}
-        alt=""
-      /> */}
-      <img
-        className="self-stretch h-72 rounded-3xl shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)]"
-        src={src}
-      />
-    </>
+    <OptimizedImage
+      publicId={publicId}
+      alt="Vidacure showcase"
+      width={288}  // h-72 = 288px
+      className="self-stretch h-72 rounded-3xl shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)]"
+      priority={false}
+    />
   );
 };
-const ImageCardApp = ({ src }: { src: string }) => {
+
+const ImageCardApp = ({ publicId }: { publicId: string }) => {
   return (
-    <>
-      {/* <img
-        className="w-52 h-52 rounded-3xl shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)] self-stretch"
-        src={src}
-        alt=""
-      /> */}
-      <img
-        className="self-stretch h-56 rounded-[19.60px] shadow-[0px_2.799999952316284px_5.599999904632568px_0px_rgba(0,0,0,0.16)]"
-        src={src}
-      />
-    </>
+    <OptimizedImage
+      publicId={publicId}
+      alt="Vidacure showcase"
+      width={224}  // h-56 = 224px
+      className="self-stretch h-56 rounded-[19.60px] shadow-[0px_2.799999952316284px_5.599999904632568px_0px_rgba(0,0,0,0.16)]"
+      priority={false}
+    />
   );
 };
 
@@ -142,14 +131,14 @@ export const HeroSection = () => {
             {/* Image Gallery */}
             <Card className="h-80 md:h-96 lg:h-[30rem] relative flex justify-center items-center gap-4 overflow-hidden flex-row border-none shadow-none">
               <Marquee vertical className="[--duration:20s]">
-                <ImageCardApp src={Img1} />
-                <ImageCardApp src={Img2} />
-                <ImageCardApp src={Img3} />
+                <ImageCardApp publicId={CloudinaryImages.first} />
+                <ImageCardApp publicId={CloudinaryImages.second} />
+                <ImageCardApp publicId={CloudinaryImages.third} />
               </Marquee>
               <Marquee reverse vertical className="[--duration:20s]">
-                <ImageCardApp src={Img4} />
-                <ImageCardApp src={Img5} />
-                <ImageCardApp src={Img6} />
+                <ImageCardApp publicId={CloudinaryImages.fourth} />
+                <ImageCardApp publicId={CloudinaryImages.fifth} />
+                <ImageCardApp publicId={CloudinaryImages.sixth} />
               </Marquee>
               <div className="w-full h-20 left-0 top-0 absolute bg-gradient-to-b from-white to-white/0" />
               <div className="w-full h-20 left-0 bottom-0 absolute bg-gradient-to-b from-white/0 to-white" />
@@ -227,14 +216,14 @@ export const HeroSection = () => {
             {/* Right Side - Image Gallery */}
             <Card className="relative flex h-[40rem] w-fit flex-row items-center justify-center overflow-hidden border-none shadow-none">
               <Marquee vertical className="[--duration:20s]">
-                <ImageCardWeb src={Img1} />
-                <ImageCardWeb src={Img2} />
-                <ImageCardWeb src={Img3} />
+                <ImageCardWeb publicId={CloudinaryImages.first} />
+                <ImageCardWeb publicId={CloudinaryImages.second} />
+                <ImageCardWeb publicId={CloudinaryImages.third} />
               </Marquee>
               <Marquee reverse vertical className="[--duration:20s]">
-                <ImageCardWeb src={Img4} />
-                <ImageCardWeb src={Img5} />
-                <ImageCardWeb src={Img6} />
+                <ImageCardWeb publicId={CloudinaryImages.fourth} />
+                <ImageCardWeb publicId={CloudinaryImages.fifth} />
+                <ImageCardWeb publicId={CloudinaryImages.sixth} />
               </Marquee>
               <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white to-white/0"></div>
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-white/0 to-white"></div>

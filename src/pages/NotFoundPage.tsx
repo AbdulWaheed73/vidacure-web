@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import img from "../assets/404.png";
+import { OptimizedImage } from "@/components/ui/OptimizedImage";
+import { CloudinaryImages } from "@/lib/cloudinaryImages";
 
 const NotFoundPage = () => {
   const { t } = useTranslation();
@@ -30,9 +31,14 @@ const NotFoundPage = () => {
         {/* Image Content */}
         <div className="w-full lg:w-[594px] flex justify-center items-center">
           <div className="w-full max-w-md lg:max-w-full">
-            {/* Placeholder for your 404 illustration */}
             <div className="w-full aspect-square rounded-lg flex items-center justify-center">
-                <img src={img} />
+              <OptimizedImage
+                publicId={CloudinaryImages.notFound}
+                alt="404 Not Found"
+                width={594}
+                className="w-full h-auto"
+                priority={true}
+              />
             </div>
           </div>
         </div>

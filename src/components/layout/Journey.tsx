@@ -1,28 +1,27 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import JourneyStep1 from "../../assets/journey-step1.svg";
-import JourneyStep2 from "../../assets/journey-step2.svg";
-import JourneyStep3 from "../../assets/journey-step3.svg";
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { CloudinaryImages } from '@/lib/cloudinaryImages';
 
 export default function WeightLossSteps() {
   const { t } = useTranslation();
-  
+
   const steps = [
     {
       title: t('journey.step1.title'),
       description: t('journey.step1.description'),
-      image: JourneyStep1
+      publicId: CloudinaryImages.journeyStep1
     },
     {
       title: t('journey.step2.title'),
       description: t('journey.step2.description'),
-      image: JourneyStep2
+      publicId: CloudinaryImages.journeyStep2
     },
     {
       title: t('journey.step3.title'),
       description: t('journey.step3.description'),
-      image: JourneyStep3
+      publicId: CloudinaryImages.journeyStep3
     }
   ];
 
@@ -56,10 +55,13 @@ export default function WeightLossSteps() {
               <CardContent className="p-0">
                 <div className={`h-[500px] flex ${index === 1 ? 'flex-row-reverse' : 'flex-row'} gap-8`}>
                   <div className="flex-1">
-                    <img 
-                      className="w-full h-full object-cover rounded-3xl" 
-                      src={step.image}
+                    <OptimizedImage
+                      publicId={step.publicId}
                       alt={step.title}
+                      width={800}
+                      height={500}
+                      className="w-full h-full object-cover rounded-3xl"
+                      priority={index === 0}
                     />
                   </div>
                   <div className="flex-1 px-8 py-16 flex flex-col justify-start gap-4">
@@ -101,10 +103,13 @@ export default function WeightLossSteps() {
             <Card key={index} className="bg-emerald-50 rounded-3xl border-0 overflow-hidden">
               <CardContent className="p-0">
                 <div className="flex flex-col">
-                  <img
-                    className="w-full h-64 object-cover rounded-3xl"
-                    src={step.image}
+                  <OptimizedImage
+                    publicId={step.publicId}
                     alt={step.title}
+                    width={600}
+                    height={256}
+                    className="w-full h-64 object-cover rounded-3xl"
+                    priority={index === 0}
                   />
                   <div className="px-5 py-8 flex flex-col gap-4">
                     <div className="pb-[0.59px]">

@@ -1,6 +1,7 @@
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import footer from "../../assets/footer_logo.png";
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { CloudinaryImages } from '@/lib/cloudinaryImages';
 
 const FooterSection = () => {
   const { t } = useTranslation();
@@ -100,10 +101,13 @@ const FooterSection = () => {
       {/* Logo - Desktop only, positioned absolutely */}
       <div className="hidden lg:block relative">
         <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-10">
-          <img 
-            className="w-36 h-6" 
-            src={footer}
+          <OptimizedImage
+            publicId={CloudinaryImages.footerLogo}
             alt="Vidacure Logo"
+            width={144}
+            height={24}
+            className="w-36 h-6"
+            priority={false}
           />
         </div>
       </div>
@@ -113,10 +117,13 @@ const FooterSection = () => {
           
           {/* Mobile Logo */}
           <div className="lg:hidden mb-8">
-            <img 
-              className="w-28 h-5" 
-              src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=120&h=21&fit=crop" 
+            <OptimizedImage
+              publicId={CloudinaryImages.footerLogo}
               alt="Vidacure Logo"
+              width={112}
+              height={20}
+              className="w-28 h-5"
+              priority={false}
             />
           </div>
 
