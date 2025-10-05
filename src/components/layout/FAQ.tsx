@@ -1,6 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/constants";
 import {
   Accordion,
   AccordionContent,
@@ -10,6 +12,7 @@ import {
 
 const FAQSection = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const faqItems = [
     {
@@ -47,7 +50,10 @@ const FAQSection = () => {
                   {t('faq.title')}
                 </h1>
               </div>
-              <button className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors duration-200 group">
+              <button
+                onClick={() => navigate(ROUTES.LOGIN)}
+                className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors duration-200 group"
+              >
                 <span className="text-white text-sm font-semibold font-sora leading-tight">
                   {t('faq.helpButton')}
                 </span>
@@ -87,7 +93,10 @@ const FAQSection = () => {
                   {t('faq.title')}
                 </h1>
               </div>
-              <button className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors duration-200 group self-center">
+              <button
+                onClick={() => navigate(ROUTES.LOGIN)}
+                className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors duration-200 group self-center"
+              >
                 <span className="text-white text-sm font-semibold font-sora leading-tight">
                   {t('faq.helpButton')}
                 </span>

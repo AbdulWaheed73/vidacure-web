@@ -158,8 +158,8 @@
     }
   },
   "journal": {
-    "title": "Från vår",
-    "titleHighlight": "hälsotidning",
+    "title": "",
+    "titleHighlight": "Utbildning & Artiklar",
     "articles": {
       "article1": {
         "title": "Vetenskapen om GLP-1: Hur de verkligen fungerar",

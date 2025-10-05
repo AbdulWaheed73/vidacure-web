@@ -1,10 +1,13 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants';
 import Phones from "../../assets/phones.svg";
 
 export default function Partner() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   
   return (
     <div className="w-full px-4 sm:px-8 md:px-14 py-12 md:py-20 bg-[#E6F9F6]">
@@ -30,7 +33,10 @@ export default function Partner() {
                 </div>
                 
                 {/* CTA Button */}
-                <button className="inline-flex items-center gap-2.5 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full transition-all duration-200 hover:from-teal-700 hover:to-teal-700 hover:scale-105">
+                <button
+                  onClick={() => navigate(ROUTES.LOGIN)}
+                  className="inline-flex items-center gap-2.5 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full transition-all duration-200 hover:from-teal-700 hover:to-teal-700 hover:scale-105"
+                >
                   <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
                     {t('partner.ctaButton')}
                   </span>

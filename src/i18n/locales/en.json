@@ -158,8 +158,8 @@
     }
   },
   "journal": {
-    "title": "From Our",
-    "titleHighlight": "Health Journal",
+    "title": "",
+    "titleHighlight": "Education & Articles",
     "articles": {
       "article1": {
         "title": "The Science of GLP-1s: How They Really Work",

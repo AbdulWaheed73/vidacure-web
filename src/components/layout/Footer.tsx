@@ -46,23 +46,23 @@ const FooterSection = () => {
     { icon: Linkedin, href: "#", label: "LinkedIn" }
   ];
 
-  const certifications = [
-    {
-      src: "https://images.unsplash.com/photo-1633409361618-c73427e4e206?w=80&h=86&fit=crop",
-      alt: "Medical Certification 1",
-      className: "w-20 h-[86px]"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=140&h=52&fit=crop",
-      alt: "Medical Certification 2", 
-      className: "w-36 h-14"
-    },
-    {
-      src: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=140&h=49&fit=crop",
-      alt: "Medical Certification 3",
-      className: "w-36 h-12"
-    }
-  ];
+  // const certifications = [
+  //   {
+  //     src: "https://images.unsplash.com/photo-1633409361618-c73427e4e206?w=80&h=86&fit=crop",
+  //     alt: "Medical Certification 1",
+  //     className: "w-20 h-[86px]"
+  //   },
+  //   {
+  //     src: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=140&h=52&fit=crop",
+  //     alt: "Medical Certification 2", 
+  //     className: "w-36 h-14"
+  //   },
+  //   {
+  //     src: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=140&h=49&fit=crop",
+  //     alt: "Medical Certification 3",
+  //     className: "w-36 h-12"
+  //   }
+  // ];
 
   type FooterLinkProps = {
     href: string;
@@ -155,14 +155,14 @@ const FooterSection = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-8">
-                  {certifications.map((cert, index) => (
+                  {/* {certifications.map((cert, index) => (
                     <img
                       key={index}
                       className={cert.className}
                       src={cert.src}
                       alt={cert.alt}
                     />
-                  ))}
+                  ))} */}
                 </div>
               </div>
             </div>

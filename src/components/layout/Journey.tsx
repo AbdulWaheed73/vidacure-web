@@ -1,12 +1,15 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants';
 import JourneyStep1 from "../../assets/journey-step1.svg";
 import JourneyStep2 from "../../assets/journey-step2.svg";
 import JourneyStep3 from "../../assets/journey-step3.svg";
 
 export default function WeightLossSteps() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   
   const steps = [
     {
@@ -141,7 +144,10 @@ export default function WeightLossSteps() {
 
         {/* CTA Button */}
         <div className="flex justify-center mt-12 lg:mt-16">
-          <button className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors">
+          <button
+            onClick={() => navigate(ROUTES.LOGIN)}
+            className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors"
+          >
             <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
               {t('journey.ctaButton')}
             </span>
