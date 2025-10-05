@@ -68,8 +68,8 @@ const HealthJournalSection = () => {
         </div>
 
         {/* Title Section */}
-        <div className="px-6 py-3 flex-1 flex items-center">
-          <h2 className="text-black text-xl lg:text-2xl font-bold font-sora leading-relaxed lg:leading-loose group-hover:text-teal-600 transition-colors duration-300 line-clamp-3">
+        <div className="px-6 py-3 flex-1 flex items-start">
+          <h2 className="text-black text-lg lg:text-xl font-bold font-sora leading-snug group-hover:text-teal-600 transition-colors duration-300 line-clamp-4">
             {article.title}
           </h2>
         </div>

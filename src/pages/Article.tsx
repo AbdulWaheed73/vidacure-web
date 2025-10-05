@@ -2,11 +2,21 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Clock } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import whatIsObesityImg from '@/assets/what-is-obesity.jpg';
+import treatingObesityImg from '@/assets/Treating-Obesity.jpg';
+import girlsImg from '@/assets/girls.jpg';
 
 export default function Article() {
   const { articleId } = useParams<{ articleId: string }>();
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  // Article image mapping
+  const articleImages: Record<string, string> = {
+    'what-is-obesity': whatIsObesityImg,
+    'treating-obesity': treatingObesityImg,
+    'women-health-obesity': girlsImg
+  };
 
   // Find the article data
   const articles = [
@@ -61,7 +71,7 @@ export default function Article() {
   // Helper function to render markdown-like content
   const renderContent = (content: string) => {
     const lines = content.split('\n');
-    const elements: JSX.Element[] = [];
+    const elements: React.ReactElement[] = [];
 
     lines.forEach((line, index) => {
       // Headers
@@ -180,10 +190,16 @@ export default function Article() {
                 </span>
               </div>
 
-              {/* Image Placeholder */}
-              <div className="w-full h-64 sm:h-96 bg-gray-200 rounded-2xl mb-8 flex items-center justify-center">
-                <p className="text-gray-500 text-lg font-manrope">Image Placeholder</p>
-              </div>
+              {/* Article Image */}
+              {articleId && articleImages[articleId] && (
+                <div className="w-full h-64 sm:h-96 rounded-2xl mb-8 overflow-hidden">
+                  <img
+                    src={articleImages[articleId]}
+                    alt={article.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
 
               {/* Article Content */}
               <div className="prose prose-lg max-w-none">
