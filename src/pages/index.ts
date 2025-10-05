@@ -12,3 +12,4 @@ export { default as NotFoundPage } from './NotFoundPage';
 export { default as ChatPage } from './ChatPage';
 export { default as BMICheck } from './BMICheck';
 export { default as AboutUs } from './AboutUs';
+export { default as Article } from './Article';

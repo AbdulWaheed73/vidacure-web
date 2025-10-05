@@ -15,6 +15,7 @@ import {
   ChatPage,
   BMICheck,
   AboutUs,
+  Article,
 } from "./pages";
 import OnboardingFlow from "./pages/OnBoarding";
 import DashboardRouter from "./pages/dashboard/DashboardRouter";
@@ -293,6 +294,12 @@ function App() {
         <Route
           path={ROUTES.ABOUT_US}
           element={<AboutUs />}
+        />
+
+        {/* Article Route - Public */}
+        <Route
+          path="/article/:articleId"
+          element={<Article />}
         />
 
         {/* 404 Not Found Page */}

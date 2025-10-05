@@ -1,14 +1,17 @@
-
 import { Card, CardContent } from '@/components/ui/card';
 import { Clock, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import img from "@/assets/injections.svg";
+import TestimonialSection from './Testimonial';
 
 const HealthJournalSection = () => {
   const { t } = useTranslation();
-  
+  const navigate = useNavigate();
+
   const articles = [
     {
-      id: 1,
+      id: t('journal.articles.article1.id'),
       author: {
         name: t('journal.authors.author1.name'),
         credentials: t('journal.authors.author1.credentials'),
@@ -18,7 +21,7 @@ const HealthJournalSection = () => {
       readTime: t('journal.articles.article1.readTime')
     },
     {
-      id: 2,
+      id: t('journal.articles.article2.id'),
       author: {
         name: t('journal.authors.author2.name'),
         credentials: t('journal.authors.author2.credentials'),
@@ -28,7 +31,7 @@ const HealthJournalSection = () => {
       readTime: t('journal.articles.article2.readTime')
     },
     {
-      id: 3,
+      id: t('journal.articles.article3.id'),
       author: {
         name: t('journal.authors.author3.name'),
         credentials: t('journal.authors.author3.credentials'),
@@ -40,7 +43,10 @@ const HealthJournalSection = () => {
   ];
 
   const ArticleCard = ({ article, className = "" }: { article: any; className?: string }) => (
-    <Card className={`bg-white rounded-[20px] shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group ${className}`}>
+    <Card
+      onClick={() => navigate(`/article/${article.id}`)}
+      className={`bg-white rounded-[20px] shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group ${className}`}
+    >
       <CardContent className="p-0 h-full flex flex-col">
         {/* Author Section */}
         <div className="p-6 flex items-center gap-3.5">
@@ -88,13 +94,60 @@ const HealthJournalSection = () => {
     <div className="py-16 px-4 sm:px-6 lg:px-14">
       <div className="max-w-7xl mx-auto">
         <div className="p-6 sm:p-8 lg:p-10 rounded-3xl">
-          
+
           {/* Header */}
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-sora leading-tight lg:leading-[56.40px]">
               <span className="text-zinc-800">{t('journal.title')} </span>
               <span className="text-teal-600">{t('journal.titleHighlight')}</span>
             </h1>
+          </div>
+
+          {/* Understanding Obesity Section */}
+          <div className="mb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              {/* Left Content */}
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-3xl sm:text-4xl font-bold font-sora leading-tight mb-4">
+                    <span className="text-zinc-800">Understanding obesity: </span>
+                    <span className="text-teal-600">It's a complex medical condition, not a choice.</span>
+                  </h2>
+                  <p className="text-zinc-800 text-base font-normal font-manrope leading-relaxed">
+                    For too long, the story around weight has been about willpower. But modern medicine shows that obesity is a complex disease, deeply influenced by your genetics, hormones, and environment. We now understand the biology behind the struggle, and with that understanding comes new, effective medical treatments that can finally help.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-xl font-bold font-sora text-zinc-800 mb-3">
+                      Your Body's Biology
+                    </h3>
+                    <p className="text-zinc-800 text-base font-normal font-manrope leading-relaxed">
+                      Your body's natural "set point" is controlled by hormones. When you diet, your body often fights back by increasing hunger and slowing your metabolism, making lasting results difficult on your own.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-xl font-bold font-sora text-zinc-800 mb-3">
+                      How Modern Medicine Helps
+                    </h3>
+                    <p className="text-zinc-800 text-base font-normal font-manrope leading-relaxed">
+                      Clinically-proven medications like GLP-1s work with your body's biology. Under a doctor's guidance, they help adjust your set point and reduce hunger signals, making sustainable health possible.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Image */}
+              <div className="flex justify-center">
+                <img
+                  src={img}
+                  alt="Healthcare professional with measuring tape"
+                  className="rounded-3xl shadow-lg max-w-full h-auto"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Desktop Layout - 3 columns */}
@@ -128,12 +181,17 @@ const HealthJournalSection = () => {
           {/* Mobile Layout - 1 column */}
           <div className="sm:hidden flex flex-col gap-6">
             {articles.map((article) => (
-              <ArticleCard 
-                key={article.id} 
+              <ArticleCard
+                key={article.id}
                 article={article}
                 className="min-h-[280px]"
               />
             ))}
+          </div>
+
+          {/* Testimonials Section */}
+          <div className="mt-16">
+            <TestimonialSection />
           </div>
 
         </div>
