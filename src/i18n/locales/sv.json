@@ -67,28 +67,78 @@
     }
   },
   "faq": {
-    "title": "Vanliga frågor",
+    "title": "Frågor och svar",
     "helpButton": "Behöver du fortfarande hjälp? Kontakta oss",
+    "introduction": "Vårt program är enkelt, transparent och stöttande. Du får medicinsk expertis, personlig coaching och kontinuerlig uppföljning — utan dolda kostnader, krångliga steg eller osäkra villkor. Vi hjälper dig att spara tid, bygga kunskap och skapa långsiktiga, hälsosamma vanor som håller över tid.",
     "questions": {
-      "safety": {
-        "question": "Är detta program säkert?",
-        "answer": "Ja, vårt program är helt säkert. Alla behandlingar övervakas av legitimerade läkare som specialiserar sig på vikthantering. Vi genomför grundliga medicinska utvärderingar innan vi påbörjar någon behandling och tillhandahåller löpande övervakning under hela din resa."
+      "aboutProgram": {
+        "title": "Om Vårt Program",
+        "different": {
+          "question": "Vad gör ert program annorlunda än andra viktminskningsplaner?",
+          "answer": "Vårt program bygger på transparens, medicinsk kompetens och personlig stöttning. Här finns inga dolda eller onödiga kostnader och ingen skyldighet kring recept. Varje plan är individanpassad — vi kombinerar medicinsk behandling vid behov med regelbunden livsstilscoaching (digitalt, personligt eller i små grupper) och kontinuerlig uppföljning. Vi gör processen enkel och tidsbesparande, så du slipper jaga tider på vårdcentralen."
+        },
+        "dietExercise": {
+          "question": "Behöver jag fortfarande tänka på kost och motion?",
+          "answer": "Ja. Medicinen ersätter inte sunda vanor — den är ett hjälpmedel som gör det lättare. Vi hjälper dig att hitta realistiska mat- och aktivitetsstrategier som passar in i din vardag, utan komplicerade program eller strikta regler."
+        },
+        "meetingFrequency": {
+          "question": "Hur ofta träffar jag teamet?",
+          "answer": "Vi erbjuder regelbundna uppföljningar digitalt. Då får du återkoppling, vi kan justera behandlingen och du får stöd i livsstilsförändringar så att du känner dig trygg hela vägen."
+        }
       },
-      "sideEffects": {
-        "question": "Vilka är biverkningarna av medicinen?",
-        "answer": "Vanliga biverkningar kan inkludera mild illamående, minskad aptit och enstaka matsmältningsbesvär, särskilt under de första veckorna. Dessa effekter minskar vanligtvis när din kropp anpassar sig. Vårt medicinska team övervakar noga alla patienter och justerar behandlingsplaner vid behov för att minimera obehag."
+      "aboutMedication": {
+        "title": "Om Medicinen",
+        "why": {
+          "question": "Varför använder ni medicin för viktminskning?",
+          "answer": "Fetma är ett medicinskt tillstånd som påverkar ämnesomsättning, hormoner och hjärnans hungersignaler. Medicin hjälper till att minska sug, stabilisera blodsockret och ge en starkare mättnadskänsla. Det gör livsstilsförändringar mer effektiva."
+        },
+        "forever": {
+          "question": "Måste jag ta medicinen för alltid?",
+          "answer": "Nej. Vissa har nytta av långsiktig behandling, andra använder medicinen under en kortare period för att bygga nya vanor. Den genomsnittliga behandlingstiden är 6 månader till 2 år. Tillsammans går vi igenom dina framsteg och anpassar planen när tiden är rätt."
+        },
+        "whoCanTake": {
+          "question": "Vem kan använda dessa mediciner?",
+          "answer": "Inte alla. Du behöver ha ett BMI över 30, eller BMI över 27 tillsammans med en riskfaktor för hjärt–kärlsjukdom (till exempel högt blodtryck, förhöjt blodsocker, blodfetter eller sömnapné). Säkerheten är viktig, därför gör vi alltid en noggrann medicinsk genomgång innan behandlingen startar."
+        },
+        "safe": {
+          "question": "Är medicinerna säkra?",
+          "answer": "Ja — när de används under medicinsk uppföljning. Vi kontrollerar din hälsa noga innan start och följer dig under hela behandlingen."
+        },
+        "alcohol": {
+          "question": "Kan jag dricka alkohol under behandlingen?",
+          "answer": "I de flesta fall är låg konsumtion av alkohol okej. Vi ger personliga råd baserat på din hälsoprofil och behandlingsplan."
+        },
+        "commonSideEffects": {
+          "question": "Vilka är de vanligaste biverkningarna?",
+          "answer": "Många får mag–tarmbesvär i början, särskilt vid dosökning:\n• Illamående eller lättare kräkningar\n• Förstoppning eller diarré\n• Mättnadskänsla snabbare än vanligt\n• Uppblåsthet eller lätt magont\n\nDessa brukar minska när kroppen vänjer sig. Vi ger råd om hur du kan hantera dem, till exempel med kosttips och gradvis dosökning."
+        },
+        "lesserCommonSideEffects": {
+          "question": "Vilka är de mer ovanliga men viktiga biverkningarna?",
+          "answer": "• Gallbesvär: Snabb viktnedgång kan ibland öka risken för gallsten.\n• Pankreatit (bukspottkörtelinflammation): Mycket ovanligt, men allvarligt. Kraftiga buksmärtor som inte går över kräver snabb vård.\n• Sköldkörtelproblem: Medicinen är inte lämplig för personer med viss ovanlig typ av sköldkörtelcancer i familjen. Vi går alltid igenom din sjukdomshistoria för att säkerställa säkerhet.\n• Minskad muskel- och benmassa: Snabb viktnedgång kan påverka muskler och skelett. Därför får du stöd med kost och träning för att skydda dem."
+        }
       },
-      "foodRestrictions": {
-        "question": "Måste jag sluta äta maten jag älskar?",
-        "answer": "Inte alls! Vårt tillvägagångssätt fokuserar på hållbara livsstilsförändringar snarare än restriktiv bantning. Du kommer att lära dig att njuta av din favoritmat i måttlighet samtidigt som du utvecklar hälsosammare ätmönster. Vår näringscoaching hjälper dig att fatta välgrundade val utan att känna dig berövad."
-      },
-      "treatmentDuration": {
-        "question": "Hur lång är behandlingen?",
-        "answer": "Behandlingens varaktighet varierar per individ, men de flesta patienter ser betydande resultat inom 3-6 månader. Vissa fortsätter behandlingen i 12-18 månader för optimala resultat. Din läkare kommer att arbeta med dig för att bestämma rätt tidslinje baserat på dina mål, framsteg och medicinska behov."
-      },
-      "financing": {
-        "question": "Finns det några finansieringsalternativ tillgängliga?",
-        "answer": "Ja, vi erbjuder flexibla betalningsplaner för att göra vårt program tillgängligt. Vi arbetar med flera finansieringspartners för att tillhandahålla månatliga betalningsalternativ som passar din budget. Kontakta vårt team för att diskutera den bästa finansieringslösningen för din situation."
+      "results": {
+        "title": "Resultat & Förväntningar",
+        "expectations": {
+          "question": "Vilka resultat kan jag förvänta mig?",
+          "answer": "Resultaten varierar, men många av våra patienter går ner 10–20 % av sin kroppsvikt, ibland upp till 25–30 kg, när medicin kombineras med livsstilsförändringar och regelbunden coaching."
+        },
+        "howSoon": {
+          "question": "Hur snabbt märker jag resultat?",
+          "answer": "De flesta känner minskad aptit inom några veckor. Viktnedgång börjar oftast inom 1–2 månader och fortsätter successivt."
+        },
+        "regain": {
+          "question": "Kommer jag gå upp i vikt igen?",
+          "answer": "Det kan hända, men med långsiktig coaching och en stegvis nedtrappning av medicin (oftast 3–6 månader) minskar risken. Målet är att bygga starka, hållbara vanor."
+        },
+        "surgery": {
+          "question": "Ersätter medicinen kirurgi?",
+          "answer": "För många räcker medicin. För andra kan det vara ett alternativ till, eller ett komplement till, kirurgi."
+        },
+        "noWeightLoss": {
+          "question": "Vad händer om jag inte går ner i vikt med medicinen?",
+          "answer": "Vi nöjer oss inte med ett alternativ. Om resultaten är begränsade kan vi justera dosen, ändra planen eller utforska andra behandlingsvägar tillsammans."
+        }
       }
     }
   },

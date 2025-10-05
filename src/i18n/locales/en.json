@@ -69,26 +69,76 @@
   "faq": {
     "title": "Frequently Asked Questions",
     "helpButton": "Still need help? Get in touch",
+    "introduction": "Our program is straightforward, transparent, and supportive. You get medical expertise, personalized coaching, and ongoing follow-up — without unnecessary costs, complicated steps, or hidden conditions. We help you save time, build knowledge, and create long-term healthy lifestyle habits that truly last.",
     "questions": {
-      "safety": {
-        "question": "Is this program safe?",
-        "answer": "Yes, our program is completely safe. All treatments are overseen by board-certified physicians who specialize in weight management. We conduct thorough medical evaluations before starting any treatment and provide ongoing monitoring throughout your journey."
+      "aboutProgram": {
+        "title": "About Our Program",
+        "different": {
+          "question": "What makes your program different from other weight loss plans?",
+          "answer": "Our program is built on transparency, medical expertise, and personal support. There are no hidden or unnecessary costs, and no obligations around prescriptions. Every plan is individualized — combining medical treatment when needed, regular lifestyle coaching (digital, personal, or in small groups), and ongoing follow-up. We focus on making the process simple and time-saving, so you don't have to chase appointments at your local healthcare center."
+        },
+        "dietExercise": {
+          "question": "Do I still need to diet and exercise?",
+          "answer": "Yes. Medication is not a replacement for healthy habits — it's a tool that makes it easier. We'll help you find realistic food and activity strategies that fit your life, without complicated steps or restrictive programs."
+        },
+        "meetingFrequency": {
+          "question": "How often will I meet with the team?",
+          "answer": "We offer regular check-ins, digitally. These sessions give you feedback, allow us to adjust your treatment, and provide lifestyle coaching so you feel supported at every step."
+        }
       },
-      "sideEffects": {
-        "question": "What are the side effects of the medication?",
-        "answer": "Common side effects may include mild nausea, decreased appetite, and occasional digestive discomfort, especially during the initial weeks. These effects typically diminish as your body adjusts. Our medical team closely monitors all patients and adjusts treatment plans as needed to minimize any discomfort."
+      "aboutMedication": {
+        "title": "About the Medication",
+        "why": {
+          "question": "Why do you use medication for weight loss?",
+          "answer": "Obesity is a medical condition that involves metabolism, hormones, and the brain's hunger signals. Medication helps by reducing cravings, balancing blood sugar, and supporting fullness. This makes lifestyle changes easier and more effective."
+        },
+        "forever": {
+          "question": "Will I have to take the medication forever?",
+          "answer": "No. Some patients benefit from long-term treatment, while others use it for a shorter time to build new habits. The average treatment time is between 6 months and 2 years. Together, we'll review your progress and adjust the plan when the time is right."
+        },
+        "whoCanTake": {
+          "question": "Who can take these medications?",
+          "answer": "Not everyone. You need to have BMI over 30, or BMI over 27 and one risk factor for developing cardiovascular disease (such as high blood pressure, high fasting blood sugar, high blood fats, apnea disease, etc). Safety is important, so we always start with a thorough medical review to make sure the treatment is right for you."
+        },
+        "safe": {
+          "question": "Are these medications safe?",
+          "answer": "Yes — when used under professional medical supervision. We check your health carefully before starting and follow you closely throughout treatment."
+        },
+        "alcohol": {
+          "question": "Can I drink alcohol while on treatment?",
+          "answer": "In most cases, low consumption of alcohol is safe. We'll give you tailored advice based on your health profile and treatment plan."
+        },
+        "commonSideEffects": {
+          "question": "What are the most common side effects of medications for weight loss?",
+          "answer": "Many people experience digestive symptoms at the start, especially when doses are increased:\n• Nausea or mild vomiting\n• Constipation or diarrhea\n• Feeling full more quickly than usual\n• Bloating or mild stomach discomfort\n\nThese usually improve as your body adjusts to the medication. We'll guide you through how to manage these effects (for example, with dietary tips and gradual dose adjustments)."
+        },
+        "lesserCommonSideEffects": {
+          "question": "What are the less common but important side effects?",
+          "answer": "• Gallbladder issues: Rapid weight loss can sometimes increase the risk of gallstones.\n• Pancreatitis (inflammation of the pancreas): Rare, but serious. Severe abdominal pain that doesn't go away needs urgent medical attention.\n• Thyroid concerns: These medications aren't suitable for people with a personal or family history of certain rare thyroid cancers — we'll review your medical history to ensure safety.\n• Muscle and bone loss: Quick weight loss can sometimes affect muscle and bone. That's why we'll support you with a nutrition and exercise plan to protect them."
+        }
       },
-      "foodRestrictions": {
-        "question": "Do I have to stop eating the foods I love?",
-        "answer": "Not at all! Our approach focuses on sustainable lifestyle changes rather than restrictive dieting. You'll learn to enjoy your favorite foods in moderation while developing healthier eating patterns. Our nutrition coaching helps you make informed choices without feeling deprived."
-      },
-      "treatmentDuration": {
-        "question": "How long is the treatment?",
-        "answer": "Treatment duration varies by individual, but most patients see significant results within 3-6 months. Some continue treatment for 12-18 months for optimal results. Your doctor will work with you to determine the right timeline based on your goals, progress, and medical needs."
-      },
-      "financing": {
-        "question": "Are there any financing options available?",
-        "answer": "Yes, we offer flexible payment plans to make our program accessible. We work with several financing partners to provide monthly payment options that fit your budget. Contact our team to discuss the best financing solution for your situation."
+      "results": {
+        "title": "Results & Expectations",
+        "expectations": {
+          "question": "What kind of results can I expect?",
+          "answer": "Results vary from person to person. Many of our patients lose 10–20% of their body weight, sometimes as much as 25–30 kg, when combining medication with lifestyle changes and regular coaching."
+        },
+        "howSoon": {
+          "question": "How soon will I notice results?",
+          "answer": "Most patients feel a reduced appetite within a few weeks. Weight loss usually starts within 1–2 months and continues gradually."
+        },
+        "regain": {
+          "question": "Will I gain the weight back?",
+          "answer": "Weight regain can happen, but our long-term coaching and step-by-step medication tapering (usually 3–6 months) help reduce that risk. The goal is to build strong, sustainable habits that keep you at your new weight."
+        },
+        "surgery": {
+          "question": "Do these medications replace surgery?",
+          "answer": "For many patients, medication is enough. For others, it can be an alternative to, or part of, a surgical weight management journey."
+        },
+        "noWeightLoss": {
+          "question": "What if I don't lose weight on the medication?",
+          "answer": "We don't stop at one option. If results are limited, we'll adjust your dose, change your plan, or explore other treatment paths together."
+        }
       }
     }
   },
