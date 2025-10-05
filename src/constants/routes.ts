@@ -19,6 +19,7 @@ export const ROUTES = {
   PROFILE: '/profile',
   SETTINGS: '/settings',
   ABOUT: '/about',
+  ABOUT_US: '/aboutus',
   CONTACT: '/contact',
   BMI_CHECK: '/bmi-check',
   ONBOARDING: '/onboarding',

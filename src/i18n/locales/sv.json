@@ -188,9 +188,29 @@
     }
   },
   "partner": {
-    "title": "",
-    "titleHighlight": "Om oss",
-    "description": "Vi grundades i Stockholm av ett team av dedikerade läkare och specialister som såg ett behov av en mer modern, tillgänglig och empatisk approach till fetmavård. Vårt uppdrag är enkelt: att tillhandahålla säker, effektiv och vetenskapsbaserad medicinsk behandling för att hjälpa våra patienter leva hälsosammare, fylligare liv. Din hälsa och integritet är våra högsta prioriteringar.",
+    "title": "Om oss!",
+    "titleHighlight": "Välkommen till Vidacure!",
+    "subtitle": "Personligt. Vetenskapsbaserat. Skapat för dig.",
+    "intro": "Att gå ner i vikt handlar inte bara om att äta mindre eller träna mer – det handlar om att förstå din kropp och ge den rätt stöd. På Vidacure hjälper vi dig att ta kontroll över din hälsa med en beprövad, medicinsk metod för viktminskning.",
+    "whyChooseTitle": "Varför välja oss?",
+    "reasons": {
+      "medical": "Leds av medicinska experter: Vårt team av läkare och hälsocoacher arbetar tillsammans för att ge dig den bästa möjliga vården.",
+      "science": "Vetenskap du kan lita på: Vi använder evidensbaserade behandlingar, inklusive de senaste läkemedlen för viktminskning, i kombination med praktiska livsstilsstrategier.",
+      "personalized": "Personlig vård: Ingen resa är den andra lik. Vi lyssnar på dig och utformar en plan som passar ditt liv, dina mål och dina behov.",
+      "longTerm": "Långsiktig framgång: Vi fokuserar inte bara på viktnedgång utan på att hjälpa dig att behålla resultaten – med kontinuerligt stöd hela vägen."
+    },
+    "promiseTitle": "Vårt löfte till dig",
+    "promiseText": "Vi vet att det kan kännas överväldigande att leva med fetma. Därför finns vi här – för att stötta dig, guida dig och fira dina framsteg. Genom läkemedel, coaching och livsstilsförändringar hjälper vi dig att nå riktiga, varaktiga resultat.\n\nDetta är inte bara ännu ett viktminskningsprogram. Det är din resa mot bättre hälsa, med ett team som bryr sig och en metod som bygger på vetenskap.\n\nVälkommen till vårt team!",
+    "teamMembers": {
+      "selma": {
+        "name": "Selma Mehr",
+        "title": "Specialistläkare inom allmänmedicin"
+      },
+      "marcus": {
+        "name": "Marcus Flink",
+        "title": "Hälsocoach"
+      }
+    },
     "ctaButton": "Ta reda på mer"
   },
   "testimonial": {

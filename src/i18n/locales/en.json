@@ -188,9 +188,29 @@
     }
   },
   "partner": {
-    "title": "",
-    "titleHighlight": "About us",
-    "description": "We were founded in Stockholm by a team of dedicated doctors and specialists who saw a need for a more modern, accessible, and empathetic approach to obesity care. Our mission is simple: to provide safe, effective, and science-backed medical treatment to help our patients live healthier, fuller lives. Your health and privacy are our highest priorities.",
+    "title": "About us!",
+    "titleHighlight": "Welcome to Vidacure!",
+    "subtitle": "Personalized. Science-based. Designed for you.",
+    "intro": "Losing weight isn't just about eating less or exercising more — it's about understanding your body and giving it the right support. At Vidacure, we help you take control of your health with a proven, medical approach to weight loss.",
+    "whyChooseTitle": "Why Choose Us?",
+    "reasons": {
+      "medical": "Led by medical experts: Our team of doctors and health coaches work together to give you the best care possible.",
+      "science": "Science you can trust: We use evidence-based treatments, including the latest weight-loss medications, combined with practical lifestyle strategies.",
+      "personalized": "Personalized care: No two journeys are the same. We listen to you and design a plan that fits your life, your goals, and your needs.",
+      "longTerm": "Long-term success: We focus not just on losing weight but on helping you keep it off — with ongoing support every step of the way."
+    },
+    "promiseTitle": "Our Promise to You",
+    "promiseText": "We know that living with obesity can be overwhelming. That's why we're here — to support you, guide you, and celebrate your progress. Whether through medication, coaching, or lifestyle changes, we'll help you achieve real, lasting results.\n\nThis isn't just another weight-loss program. It's your journey to better health, backed by a team who cares and the science that works.\n\nWelcome to join our community!\nBest Regards,",
+    "teamMembers": {
+      "selma": {
+        "name": "Selma Mehr",
+        "title": "Specialist doctor in family medicine"
+      },
+      "marcus": {
+        "name": "Marcus Flink",
+        "title": "Health Coach"
+      }
+    },
     "ctaButton": "Find Out More"
   },
   "testimonial": {

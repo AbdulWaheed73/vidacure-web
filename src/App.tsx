@@ -14,6 +14,7 @@ import {
   SubscriptionSuccess,
   ChatPage,
   BMICheck,
+  AboutUs,
 } from "./pages";
 import OnboardingFlow from "./pages/OnBoarding";
 import DashboardRouter from "./pages/dashboard/DashboardRouter";
@@ -286,6 +287,12 @@ function App() {
         <Route
           path={ROUTES.SUBSCRIPTION_SUCCESS}
           element={<SubscriptionSuccess />}
+        />
+
+        {/* About Us Route - Public */}
+        <Route
+          path={ROUTES.ABOUT_US}
+          element={<AboutUs />}
         />
 
         {/* 404 Not Found Page */}
