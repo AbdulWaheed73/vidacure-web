@@ -26,6 +26,7 @@ const PricingSection = () => {
   const lifestyleFeatures = [
     t('pricing.features.initialAssessment'),
     t('pricing.features.personalizedPlan'),
+    t('pricing.features.personalizedLifestylePlan'),
     t('pricing.features.medicalCheckins'),
     t('pricing.features.unlimitedMessaging'),
     t('pricing.features.progressTracking')
@@ -34,12 +35,11 @@ const PricingSection = () => {
   const medicalFeatures = [
     t('pricing.features.doctorConsultation'),
     t('pricing.features.treatmentPlan'),
-    t('pricing.features.medicalCheckins'), 
+    t('pricing.features.medicalCheckins'),
     t('pricing.features.glp1Medication'),
     t('pricing.features.unlimitedMessaging'),
     t('pricing.features.progressTracking'),
-    t('pricing.features.nutritionCoaching'),
-    t('pricing.features.discreetDelivery')
+    t('pricing.features.nutritionCoaching')
   ];
 
   type PricingCardProps = {

@@ -54,16 +54,16 @@
     "includes": "Inkluderar:",
     "getStarted": "Kom igång",
     "features": {
-      "initialAssessment": "Initial hälsobedömning",
+      "initialAssessment": "Initial hälsobedömning & läkarkonsultation",
       "personalizedPlan": "medicinrecept",
+      "personalizedLifestylePlan": "Personlig livsstilsplan",
       "medicalCheckins": "Regelbundna medicinska kontroller",
       "unlimitedMessaging": "Obegränsade vårdteamsmeddelanden",
       "progressTracking": "Pågående framstegsuppföljning",
-      "nutritionCoaching": "Närings- och vancoaching, träning",
+      "nutritionCoaching": "Närings- och träningscoaching",
       "doctorConsultation": "Initial läkarkonsultation",
       "treatmentPlan": "Personlig behandlingsplan",
-      "glp1Medication": "GLP-1 medicinrecept",
-      "discreetDelivery": "Diskret leveranshantering"
+      "glp1Medication": "Medicinrecept"
     }
   },
   "faq": {
@@ -148,7 +148,7 @@
     "weight": "Vikt",
     "height": "Längd",
     "ageUnit": "år*",
-    "weightUnit": "lbs*",
+    "weightUnit": "kg*",
     "heightUnit": "cm*",
     "result": "Ditt BMI:",
     "categories": {
@@ -188,8 +188,8 @@
     }
   },
   "partner": {
-    "title": "Din",
-    "titleHighlight": "svenska hälsopartner",
+    "title": "",
+    "titleHighlight": "Om oss",
     "description": "Vi grundades i Stockholm av ett team av dedikerade läkare och specialister som såg ett behov av en mer modern, tillgänglig och empatisk approach till fetmavård. Vårt uppdrag är enkelt: att tillhandahålla säker, effektiv och vetenskapsbaserad medicinsk behandling för att hjälpa våra patienter leva hälsosammare, fylligare liv. Din hälsa och integritet är våra högsta prioriteringar.",
     "ctaButton": "Ta reda på mer"
   },

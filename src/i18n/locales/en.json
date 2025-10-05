@@ -54,16 +54,16 @@
     "includes": "Includes:",
     "getStarted": "Get Started",
     "features": {
-      "initialAssessment": "Initial Health Assessment",
+      "initialAssessment": "Initial Health Assessment & doctor consultation",
       "personalizedPlan": "medication prescription",
+      "personalizedLifestylePlan": "Personalized lifestyle plan",
       "medicalCheckins": "Regular Medical Check-ins",
       "unlimitedMessaging": "Unlimited Care Team Messaging",
       "progressTracking": "Ongoing Progress Tracking",
-      "nutritionCoaching": "Nutrition & Habit Coaching, work out",
+      "nutritionCoaching": "Nutrition & workout coaching",
       "doctorConsultation": "Initial Doctor Consultation",
       "treatmentPlan": "Personalized Treatment Plan",
-      "glp1Medication": "GLP-1 Medication Prescription",
-      "discreetDelivery": "Discreet Delivery Management"
+      "glp1Medication": "Medication Prescription"
     }
   },
   "faq": {
@@ -148,7 +148,7 @@
     "weight": "Weight",
     "height": "Height",
     "ageUnit": "yrs*",
-    "weightUnit": "lbs*",
+    "weightUnit": "kg*",
     "heightUnit": "cm*",
     "result": "Your BMI:",
     "categories": {
@@ -188,8 +188,8 @@
     }
   },
   "partner": {
-    "title": "Your",
-    "titleHighlight": "Swedish Health Partner",
+    "title": "",
+    "titleHighlight": "About us",
     "description": "We were founded in Stockholm by a team of dedicated doctors and specialists who saw a need for a more modern, accessible, and empathetic approach to obesity care. Our mission is simple: to provide safe, effective, and science-backed medical treatment to help our patients live healthier, fuller lives. Your health and privacy are our highest priorities.",
     "ctaButton": "Find Out More"
   },
