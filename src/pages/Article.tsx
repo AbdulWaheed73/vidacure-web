@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 import { ArrowLeft, Clock } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import whatIsObesityImg from '@/assets/what-is-obesity.jpg';
@@ -10,6 +11,11 @@ export default function Article() {
   const { articleId } = useParams<{ articleId: string }>();
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  // Scroll to top when component mounts or articleId changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [articleId]);
 
   // Article image mapping
   const articleImages: Record<string, string> = {

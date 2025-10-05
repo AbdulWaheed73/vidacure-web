@@ -3,15 +3,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Minus, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "@/constants";
+import { PopupModal } from 'react-calendly';
 
 export const BMI = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [age, setAge] = useState(28);
   const [weight, setWeight] = useState(175);
   const [height, setHeight] = useState(182);
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 
   // Calculate BMI
   const calculateBMI = () => {
@@ -272,7 +271,7 @@ export const BMI = () => {
                   {t('bmi.disclaimer')}{" "}
                 </span>
                 <button
-                  onClick={() => navigate(ROUTES.LOGIN)}
+                  onClick={() => setIsCalendlyOpen(true)}
                   className="text-emerald-50 text-base font-bold font-['Manrope'] underline leading-snug hover:text-white transition-colors"
                 >
                   {t('bmi.ctaButton')}
@@ -282,6 +281,14 @@ export const BMI = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Calendly Popup Modal */}
+      <PopupModal
+        url="https://calendly.com/mesudh044/meeting-for-paid-users"
+        open={isCalendlyOpen}
+        onModalClose={() => setIsCalendlyOpen(false)}
+        rootElement={document.getElementById('root')!}
+      />
     </div>
   );
 };

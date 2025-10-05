@@ -1,12 +1,18 @@
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { ROUTES } from '@/constants';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function AboutUs() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const reasons = [
     t('partner.reasons.medical'),
