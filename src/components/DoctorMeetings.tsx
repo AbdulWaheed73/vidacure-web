@@ -10,17 +10,37 @@ import type { PatientMeeting } from '../types/calendly-types';
 export const DoctorMeetings: React.FC = () => {
   const [meetings, setMeetings] = useState<PatientMeeting[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [nextPageToken, setNextPageToken] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(false);
 
-  const loadMeetings = async () => {
-    setIsLoading(true);
+  const loadMeetings = async (pageToken?: string) => {
+    const isInitialLoad = !pageToken;
+
+    if (isInitialLoad) {
+      setIsLoading(true);
+    } else {
+      setIsLoadingMore(true);
+    }
+
     setError(null);
 
     try {
-      const response = await calendlyService.getDoctorOwnMeetings();
+      const response = await calendlyService.getDoctorOwnMeetings(pageToken);
 
       if (response.success) {
-        setMeetings(response.meetings);
+        if (isInitialLoad) {
+          // Initial load: replace meetings
+          setMeetings(response.meetings);
+        } else {
+          // Load more: append to existing meetings
+          setMeetings(prev => [...prev, ...response.meetings]);
+        }
+
+        // Update pagination state
+        setNextPageToken(response.pagination?.nextPageToken || null);
+        setHasMore(response.pagination?.hasMore || false);
       }
     } catch (err: any) {
       console.error('Error loading doctor meetings:', err);
@@ -34,6 +54,13 @@ export const DoctorMeetings: React.FC = () => {
       }
     } finally {
       setIsLoading(false);
+      setIsLoadingMore(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (nextPageToken && !isLoadingMore) {
+      loadMeetings(nextPageToken);
     }
   };
 
@@ -114,7 +141,7 @@ export const DoctorMeetings: React.FC = () => {
           </div>
           <Button
             variant="outline"
-            onClick={loadMeetings}
+            onClick={() => loadMeetings()}
             disabled={isLoading}
             className="flex items-center gap-2"
           >
@@ -183,9 +210,9 @@ export const DoctorMeetings: React.FC = () => {
                     <p className="text-sm font-medium text-gray-700">
                       Patient
                     </p>
-                    <p className="text-gray-900 font-medium">{meeting.patientName}</p>
+                    <p className="text-gray-900 font-medium">{meeting.inviteeName || meeting.patientName || 'Unknown'}</p>
                     <p className="text-xs text-gray-500">
-                      {meeting.patientEmail}
+                      {meeting.inviteeEmail || meeting.patientEmail || ''}
                     </p>
                   </div>
 
@@ -229,6 +256,27 @@ export const DoctorMeetings: React.FC = () => {
               </CardContent>
             </Card>
           ))}
+
+          {/* Load More Button */}
+          {hasMore && (
+            <div className="flex justify-center pt-6">
+              <Button
+                onClick={handleLoadMore}
+                disabled={isLoadingMore}
+                variant="outline"
+                className="min-w-[200px]"
+              >
+                {isLoadingMore ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  'Load More Appointments'
+                )}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

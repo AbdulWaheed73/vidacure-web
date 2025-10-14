@@ -17,8 +17,10 @@ export type AppointmentBookingResponse = {
 
 export type PatientMeeting = {
   id: string;
-  patientName: string;
-  patientEmail: string;
+  patientName?: string;
+  patientEmail?: string;
+  inviteeName?: string;
+  inviteeEmail?: string;
   startTime: string;
   endTime: string;
   status: 'active' | 'canceled';
@@ -27,18 +29,28 @@ export type PatientMeeting = {
   createdAt: string;
   cancelUrl: string | null;
   rescheduleUrl: string | null;
+  calendlyHostName?: string | null;
+  calendlyHostEmail?: string | null;
 };
 
 export type PatientMeetingsResponse = {
   success: boolean;
-  patient: {
+  patient?: {
     name: string;
     email: string;
   };
-  doctorName: string;
+  doctor?: {
+    name: string;
+    email: string;
+  };
+  doctorName?: string;
   meetings: PatientMeeting[];
   count: number;
-  filters: Record<string, any>;
+  filters?: Record<string, any>;
+  pagination?: {
+    nextPageToken: string | null;
+    hasMore: boolean;
+  };
 };
 
 export type AvailableEventTypesResponse = {

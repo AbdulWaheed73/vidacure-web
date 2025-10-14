@@ -27,8 +27,9 @@ export const calendlyService = {
   },
 
   // Get doctor's own scheduled meetings
-  async getDoctorOwnMeetings(): Promise<PatientMeetingsResponse> {
-    const response = await api.get('/api/calendly/doctor-own-meetings');
+  async getDoctorOwnMeetings(pageToken?: string): Promise<PatientMeetingsResponse> {
+    const params = pageToken ? { pageToken } : {};
+    const response = await api.get('/api/calendly/doctor-own-meetings', { params });
     return response.data;
   },
 

@@ -36,7 +36,7 @@ export const AppointmentsPage: React.FC = () => {
 
       if (response.success) {
         setMeetings(response.meetings);
-        setDoctorName(response.doctorName);
+        setDoctorName(response.doctorName || '');
       }
     } catch (err: any) {
       console.error('Error loading meetings:', err);
