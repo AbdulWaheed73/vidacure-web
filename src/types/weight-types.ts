@@ -13,6 +13,7 @@ export type AddWeightHistoryRequest = {
 
 export type WeightHistoryResponse = {
   weightHistory: WeightHistoryEntry[];
+  height: number; // Patient height in cm
 };
 
 export type AddWeightHistoryResponse = {

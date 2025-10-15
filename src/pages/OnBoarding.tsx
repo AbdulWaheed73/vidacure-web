@@ -163,6 +163,8 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
 
       // Separate email from questionnaire data
       const { email, ...personalInfoWithoutEmail } = data.personalInfo;
+      const { height } = data.physicalDetails;
+
       const dataWithoutEmail: OnboardingData = {
         ...data,
         personalInfo: {
@@ -173,10 +175,13 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
 
       const questionnaire = transformFormDataToQuestionnaire(dataWithoutEmail);
 
-      // Submit questionnaire and email separately
+      // Submit questionnaire, email, and height separately
       await Promise.all([
         submitQuestionnaire(questionnaire),
-        api.patch('/api/patient/profile', { email })
+        api.patch('/api/patient/profile', {
+          email,
+          height: height ? parseFloat(height) : undefined
+        })
       ]);
 
       // Refresh auth status to get updated hasCompletedOnboarding flag

@@ -22,20 +22,20 @@ const chartConfig = {
 
 
 // Helper function to calculate BMI
-const calculateBMI = (weightKg: number, heightInches: number = 65) => {
-  // Height: 5'5" = 65 inches
-  const heightM = heightInches * 0.0254;
-  const bmi = weightKg / (heightM * heightM);
-  return Math.round(bmi * 10) / 10;
+const calculateBMI = (weightKg: number, heightCm: number) => {
+  const bmi = (weightKg / (heightCm * heightCm)) * 10000;
+return Math.round(bmi * 10) / 10;
+
 };
 
 export const ProgressPage: React.FC = () => {
   const { t } = useTranslation();
   const [timeRange, setTimeRange] = React.useState("8w");
   const [weightHistory, setWeightHistory] = React.useState<WeightHistoryEntry[]>([]);
+  const [height, setHeight] = React.useState<number>(0);
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
-  
+
   // Form state
   const [formData, setFormData] = React.useState({
     weight: '',
@@ -53,6 +53,7 @@ export const ProgressPage: React.FC = () => {
       setLoading(true);
       const response = await getWeightHistory();
       setWeightHistory(response.weightHistory);
+      setHeight(response.height);
     } catch (error) {
       console.error('Error loading weight history:', error);
     } finally {
@@ -116,8 +117,8 @@ export const ProgressPage: React.FC = () => {
   const startingWeight = filteredData.length > 0 ? filteredData[0].weight : 105.8;
   const totalProgress = Math.round((startingWeight - currentWeight) * 10) / 10;
   const progressPercentage = Math.round((totalProgress / startingWeight) * 100);
-  const currentBMI = calculateBMI(currentWeight);
-  const startingBMI = calculateBMI(startingWeight);
+  const currentBMI = calculateBMI(currentWeight, height);
+  const startingBMI = calculateBMI(startingWeight, height);
   
   // Calculate progress in the selected time range
   const rangeProgress = filteredData.length > 1 
