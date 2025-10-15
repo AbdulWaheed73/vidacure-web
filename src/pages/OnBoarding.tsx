@@ -175,14 +175,14 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
 
       const questionnaire = transformFormDataToQuestionnaire(dataWithoutEmail);
 
-      // Submit questionnaire, email, and height separately
-      await Promise.all([
-        submitQuestionnaire(questionnaire),
-        api.patch('/api/patient/profile', {
-          email,
-          height: height ? parseFloat(height) : undefined
-        })
-      ]);
+      // First update profile with email and height (required before submitting questionnaire)
+      await api.patch('/api/patient/profile', {
+        email,
+        height: height ? parseFloat(height) : undefined
+      });
+
+      // Then submit questionnaire
+      await submitQuestionnaire(questionnaire);
 
       // Refresh auth status to get updated hasCompletedOnboarding flag
       // await checkAuthStatus();
