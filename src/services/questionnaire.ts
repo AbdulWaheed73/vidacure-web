@@ -68,3 +68,15 @@ export const saveQuestionnaireProgress = async (questionnaire: QuestionnaireAnsw
     console.warn('Auto-save failed:', error);
   }
 };
+
+
+export const saveHeightEmail = async (email: string, height: string) => {
+  try {
+    await api.patch('/api/patient/profile', {
+      email,
+      height: height ? parseFloat(height) : undefined,
+    });
+  } catch {
+    console.log('erroe saving the email or height !');
+  }
+};

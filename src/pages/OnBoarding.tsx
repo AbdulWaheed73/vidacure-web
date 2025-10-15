@@ -26,8 +26,8 @@ import {
   getValidationErrors,
   transformFormDataToQuestionnaire,
 } from "@/components/onboarding";
-import { submitQuestionnaire } from "@/services/questionnaire";
-import { api } from "@/services/api";
+import { saveHeightEmail, submitQuestionnaire } from "@/services/questionnaire";
+
 
 
 
@@ -176,11 +176,11 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
       const questionnaire = transformFormDataToQuestionnaire(dataWithoutEmail);
 
       // First update profile with email and height (required before submitting questionnaire)
-      await api.patch('/api/patient/profile', {
-        email,
-        height: height ? parseFloat(height) : undefined
-      });
-
+      // await api.patch('/api/patient/profile', {
+      //   email,
+      //   height: height ? parseFloat(height) : undefined
+      // });
+      await saveHeightEmail(email, height);
       // Then submit questionnaire
       await submitQuestionnaire(questionnaire);
 
