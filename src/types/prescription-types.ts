@@ -1,9 +1,23 @@
+export const PrescriptionRequestStatus = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  DENIED: "denied",
+  UNDER_REVIEW: "under_review"
+} as const;
+
+export type PrescriptionRequestStatusType = typeof PrescriptionRequestStatus[keyof typeof PrescriptionRequestStatus];
+
 export type PrescriptionRequest = {
   _id: string;
-  status: 'pending' | 'approved' | 'denied' | 'under_review';
+  status: PrescriptionRequestStatusType;
   currentWeight: number;
   hasSideEffects: boolean;
   sideEffectsDescription?: string;
+  medicationName?: string;
+  dosage?: string;
+  usageInstructions?: string;
+  dateIssued?: string;
+  validTill?: string;
   createdAt: string;
   updatedAt: string;
 };

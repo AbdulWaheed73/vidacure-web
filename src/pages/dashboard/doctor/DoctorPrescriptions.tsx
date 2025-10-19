@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { doctorPrescriptionService } from '@/services/doctorPrescriptionService';
 import type { DoctorPrescriptionRequest } from '@/types/doctor-prescription-types';
+import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
 import { Clock, CheckCircle, XCircle, AlertCircle, User, Scale, AlertTriangle } from 'lucide-react';
 import { PrescriptionRequestDetailModal } from '@/components/PrescriptionRequestDetailModal';
 
@@ -42,9 +43,22 @@ const DoctorPrescriptions: React.FC = () => {
     setModalOpen(true);
   };
 
-  const handleApproveRequest = async (requestId: string) => {
+  const handleApproveRequest = async (
+    requestId: string,
+    prescriptionData: {
+      medicationName: string;
+      dosage: string;
+      usageInstructions: string;
+      dateIssued: string;
+      validTill: string;
+    }
+  ) => {
     try {
-      await doctorPrescriptionService.updatePrescriptionRequestStatus(requestId, 'approved');
+      await doctorPrescriptionService.updatePrescriptionRequestStatus(
+        requestId,
+        PrescriptionRequestStatus.APPROVED,
+        prescriptionData
+      );
       // Refresh the list to show updated status
       await fetchPrescriptionRequests();
     } catch (error: unknown) {
@@ -57,25 +71,29 @@ const DoctorPrescriptions: React.FC = () => {
 
   const getStatusBadge = (status: DoctorPrescriptionRequest['status']) => {
     const statusConfig = {
-      pending: {
+      [PrescriptionRequestStatus.PENDING]: {
         variant: 'outline' as const,
         icon: Clock,
         className: 'border-yellow-500 text-yellow-700 bg-yellow-50',
+        label: 'PENDING',
       },
-      approved: {
+      [PrescriptionRequestStatus.APPROVED]: {
         variant: 'secondary' as const,
         icon: CheckCircle,
         className: 'border-green-500 text-green-700 bg-green-50',
+        label: 'APPROVED',
       },
-      denied: {
+      [PrescriptionRequestStatus.DENIED]: {
         variant: 'destructive' as const,
         icon: XCircle,
         className: 'border-red-500 text-red-700 bg-red-50',
+        label: 'DENIED',
       },
-      under_review: {
+      [PrescriptionRequestStatus.UNDER_REVIEW]: {
         variant: 'outline' as const,
         icon: AlertCircle,
         className: 'border-blue-500 text-blue-700 bg-blue-50',
+        label: 'UNDER REVIEW',
       },
     };
 
@@ -85,7 +103,7 @@ const DoctorPrescriptions: React.FC = () => {
     return (
       <Badge variant={config.variant} className={config.className}>
         <Icon className="w-3 h-3 mr-1" />
-        {status.replace('_', ' ').toUpperCase()}
+        {config.label}
       </Badge>
     );
   };
