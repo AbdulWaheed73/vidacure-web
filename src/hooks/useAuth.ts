@@ -108,11 +108,18 @@ export const useAuth = () => {
 
   // Only check auth status once on app startup, and handle URL parameters
   useEffect(() => {
+    // Skip auth check if on admin routes - admin has its own auth system
+    const isAdminRoute = window.location.pathname.startsWith('/admin');
+    if (isAdminRoute) {
+      console.log("Admin route detected - skipping regular auth check");
+      return;
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const state = urlParams.get('state');
     const auth = urlParams.get('auth');
-    
+
     if (code && state) {
       // User just came back from authentication with code/state
       console.log("Handling auth callback with code/state");

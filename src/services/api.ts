@@ -50,8 +50,9 @@ api.interceptors.response.use(
         useAuthStore.getState().logout();
       });
       
-      // Redirect to login page (only if not already there)
-      if (window.location.pathname !== '/login' && window.location.pathname!=='/') {
+      // Redirect to login page (only if not already there or on admin routes)
+      const isAdminRoute = window.location.pathname.startsWith('/admin');
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/' && !isAdminRoute) {
         window.location.href = '/login';
       }
     }

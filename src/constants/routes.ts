@@ -2,6 +2,8 @@ export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
   DASHBOARD: '/dashboard',
+  // Admin Dashboard Routes
+  ADMIN_DASHBOARD: '/admin',
   // Doctor Dashboard Routes
   DOCTOR_DASHBOARD: '/dashboard/doctor',
   DOCTOR_PRESCRIPTIONS: '/dashboard/doctor/prescriptions',

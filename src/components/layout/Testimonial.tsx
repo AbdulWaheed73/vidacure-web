@@ -11,20 +11,22 @@ const TestimonialSection = () => {
     {
       id: 1,
       text: t('testimonial.testimonials.testimonial1'),
-      name: t('testimonial.names.name1'),
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+      name: t('testimonial.names.name1')
     },
     {
       id: 2,
       text: t('testimonial.testimonials.testimonial2'),
-      name: t('testimonial.names.name2'),
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b332c1af?w=100&h=100&fit=crop&crop=face"
+      name: t('testimonial.names.name2')
     },
     {
       id: 3,
       text: t('testimonial.testimonials.testimonial3'),
-      name: t('testimonial.names.name3'),
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+      name: t('testimonial.names.name3')
+    },
+    {
+      id: 4,
+      text: t('testimonial.testimonials.testimonial4'),
+      name: t('testimonial.names.name4')
     }
   ];
 
@@ -75,30 +77,23 @@ const TestimonialSection = () => {
             {/* Desktop Layout */}
             <div className="hidden lg:flex justify-center items-center gap-16">
               <NavigationButton direction="previous" onClick={prevTestimonial} />
-              
+
               <div className="flex-1 max-w-4xl">
                 <div className="flex flex-col items-center gap-8">
                   <StarRating />
-                  
-                  <blockquote className="text-center text-zinc-800 text-xl font-bold font-sora leading-relaxed">
-                    "{testimonials[currentTestimonial].text}"
-                  </blockquote>
-                  
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200">
-                      <img 
-                        className="w-full h-full object-cover" 
-                        src={testimonials[currentTestimonial].avatar}
-                        alt={testimonials[currentTestimonial].name}
-                      />
-                    </div>
-                    <p className="text-zinc-800 text-base font-bold font-manrope">
-                      -- {testimonials[currentTestimonial].name}
-                    </p>
+
+                  <div className="max-h-[400px] overflow-y-auto px-4">
+                    <blockquote className="text-center text-zinc-800 text-base sm:text-lg font-semibold font-sora leading-relaxed">
+                      "{testimonials[currentTestimonial].text}"
+                    </blockquote>
                   </div>
+
+                  <p className="text-zinc-800 text-base font-bold font-manrope">
+                    -- {testimonials[currentTestimonial].name}
+                  </p>
                 </div>
               </div>
-              
+
               <NavigationButton direction="next" onClick={nextTestimonial} />
             </div>
 
@@ -106,30 +101,23 @@ const TestimonialSection = () => {
             <div className="lg:hidden">
               <div className="flex flex-col items-center gap-8">
                 <StarRating />
-                
-                <blockquote className="text-center text-zinc-800 text-lg sm:text-xl font-bold font-sora leading-relaxed">
-                  "{testimonials[currentTestimonial].text}"
-                </blockquote>
-                
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200">
-                    <img 
-                      className="w-full h-full object-cover" 
-                      src={testimonials[currentTestimonial].avatar}
-                      alt={testimonials[currentTestimonial].name}
-                    />
-                  </div>
-                  <p className="text-zinc-800 text-base font-bold font-manrope">
-                    -- {testimonials[currentTestimonial].name}
-                  </p>
+
+                <div className="max-h-[350px] overflow-y-auto px-4">
+                  <blockquote className="text-center text-zinc-800 text-sm sm:text-base font-semibold font-sora leading-relaxed">
+                    "{testimonials[currentTestimonial].text}"
+                  </blockquote>
                 </div>
-                
+
+                <p className="text-zinc-800 text-base font-bold font-manrope">
+                  -- {testimonials[currentTestimonial].name}
+                </p>
+
                 {/* Mobile Navigation */}
                 <div className="flex items-center gap-6 mt-4">
                   <NavigationButton direction="previous" onClick={prevTestimonial} />
                   <NavigationButton direction="next" onClick={nextTestimonial} />
                 </div>
-                
+
                 {/* Pagination Dots */}
                 <div className="flex gap-2 mt-4">
                   {testimonials.map((_, index) => (

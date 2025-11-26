@@ -17,12 +17,17 @@ import {
   AboutUs,
   Article,
 } from "./pages";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminLogin from "./pages/admin/AdminLogin";
+import { AdminProtectedRoute } from "./components/admin/AdminProtectedRoute";
+import { AdminTopBar } from "./components/admin/AdminTopBar";
+import { useAdminAuthStore } from "./stores/adminAuthStore";
 import OnboardingFlow from "./pages/OnBoarding";
 import DashboardRouter from "./pages/dashboard/DashboardRouter";
 import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { TopBar } from "./components/TopBar";
-import { PopupModal } from 'react-calendly';
+import { PopupModal } from "react-calendly";
 import { useState } from "react";
 import { calendlyService } from "./services/calendlyService";
 
@@ -51,14 +56,16 @@ function App() {
 
       if (eventTypesResponse.success && eventTypesResponse.eventType) {
         // Then create booking link
-        const bookingResponse = await calendlyService.createPatientBookingLink(eventTypesResponse.eventType.type);
+        const bookingResponse = await calendlyService.createPatientBookingLink(
+          eventTypesResponse.eventType.type
+        );
 
         if (bookingResponse.success) {
           setSchedulingLink(bookingResponse.schedulingLink);
         }
       }
     } catch (err) {
-      console.error('Booking error:', err);
+      console.error("Booking error:", err);
     } finally {
       // setIsBookingLoading(false);
     }
@@ -72,12 +79,12 @@ function App() {
 
     const handleProfileClick = () => {
       // TODO: Navigate to profile page
-      console.log('Profile clicked');
+      console.log("Profile clicked");
     };
 
     const handleAccountClick = () => {
       // TODO: Navigate to account settings
-      console.log('Account clicked');
+      console.log("Account clicked");
     };
 
     const handleLogout = () => {
@@ -99,13 +106,31 @@ function App() {
         </SidebarInset>
         {/* Global Calendly Popup Modal */}
         <PopupModal
-          url={schedulingLink || ''}
+          url={schedulingLink || ""}
           open={!!schedulingLink}
           onModalClose={() => {
             setSchedulingLink(null);
           }}
-          rootElement={document.getElementById('root')!}
+          rootElement={document.getElementById("root")!}
         />
+      </SidebarProvider>
+    );
+  };
+
+  // Admin Layout wrapper for admin routes with admin sidebar
+  const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+    const { logoutAdmin } = useAdminAuthStore();
+
+    const handleLogout = () => {
+      logoutAdmin();
+    };
+
+    return (
+      <SidebarProvider>
+        <SidebarInset className="bg-[#F0F7F4] ml-64">
+          <AdminTopBar onLogout={handleLogout} />
+          {children}
+        </SidebarInset>
       </SidebarProvider>
     );
   };
@@ -113,12 +138,25 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Admin Routes - Must be FIRST to prevent regular auth interference */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path={ROUTES.ADMIN_DASHBOARD}
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout>
+                <AdminDashboard />
+              </AdminLayout>
+            </AdminProtectedRoute>
+          }
+        />
+
         {/* Landing Page Route - Redirect if authenticated */}
         <Route
           path={ROUTES.HOME}
           element={
             isAuthenticated ? (
-              user?.role === 'doctor' ? (
+              user?.role === "doctor" ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
@@ -139,14 +177,12 @@ function App() {
               <LoginPage onLogin={login} loading={loading} />
             ) : !isAuthenticated ? (
               <LoginPage onLogin={login} loading={loading} />
+            ) : user?.role === "doctor" ? (
+              <Navigate to={ROUTES.DASHBOARD as string} replace />
+            ) : user?.hasCompletedOnboarding ? (
+              <Navigate to={ROUTES.DASHBOARD as string} replace />
             ) : (
-              user?.role === 'doctor' ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : user?.hasCompletedOnboarding ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : (
-                <Navigate to={ROUTES.BMI_CHECK as string} replace />
-              )
+              <Navigate to={ROUTES.BMI_CHECK as string} replace />
             )
           }
         />
@@ -157,10 +193,10 @@ function App() {
           element={
             isAuthenticated ? (
               <SidebarLayout>
-                <DashboardRouter 
-                  user={user} 
-                  onLogout={logout} 
-                  loading={loading} 
+                <DashboardRouter
+                  user={user}
+                  onLogout={logout}
+                  loading={loading}
                 />
               </SidebarLayout>
             ) : (
@@ -253,7 +289,7 @@ function App() {
           path={ROUTES.BMI_CHECK}
           element={
             isAuthenticated ? (
-              user?.role === 'doctor' ? (
+              user?.role === "doctor" ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
@@ -271,7 +307,7 @@ function App() {
           path={ROUTES.ONBOARDING}
           element={
             isAuthenticated ? (
-              user?.role === 'doctor' ? (
+              user?.role === "doctor" ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
@@ -291,16 +327,10 @@ function App() {
         />
 
         {/* About Us Route - Public */}
-        <Route
-          path={ROUTES.ABOUT_US}
-          element={<AboutUs />}
-        />
+        <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
 
         {/* Article Route - Public */}
-        <Route
-          path="/article/:articleId"
-          element={<Article />}
-        />
+        <Route path="/article/:articleId" element={<Article />} />
 
         {/* 404 Not Found Page */}
         <Route path="*" element={<NotFoundPage />} />

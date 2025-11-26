@@ -158,7 +158,7 @@
       "obese": "obese"
     },
     "disclaimer": "*This is a starting point for understanding your health. If you have a BMI over 27, the next step is to speak with a medical professional.",
-    "ctaButton": "Book a Free Doctor's Consultation"
+    "ctaButton": "Book a Doctor's Consultation"
   },
   "journey": {
     "subtitle": "How It Works",
@@ -175,7 +175,7 @@
     },
     "step3": {
       "title": "Receive Treatment & Support - All the way long",
-      "description": "Your medication is delivered discreetly to your home. From there, your dedicated care team provides ongoing support to guide you, adjust your plan, and celebrate your success. We aim to treat you, give you the necessary support with lifestyle changes and educate you about overcoming obesity and having a healthy lifestyle. Being a part of this project - enjoy your journey losing weight and improving your health."
+      "description": "Your dedicated care team provides ongoing support to guide you, adjust your plan, and celebrate your success.\n\nWe aim to treat you, give you the necessary support with lifestyle changes and educate you about overcoming obesity and having a healthy lifestyle. Being a part of this project - enjoy your journey losing weight and improving your health. You receive your prescription online and can start your treatment."
     },
     "ctaButton": "See if you qualify"
   },
@@ -217,14 +217,16 @@
     "title": "Real People,",
     "titleHighlight": "Lasting Results",
     "testimonials": {
-      "testimonial1": "For the first time, I don't think about food all day. The medication quieted the noise in my head, and the support from my doctor has been fantastic. I've lost 18kg and feel in control.",
-      "testimonial2": "The transformation has been incredible. Not just physically, but mentally too. I finally have the tools and support I needed to make lasting changes.",
-      "testimonial3": "After years of struggling, I found a program that actually works. The personalized approach made all the difference in my journey."
+      "testimonial1": "If there is anywhere you should turn for help, it is here!! I have now lost 28 kilos and feel fitter, stronger and the self-confidence that was at rock bottom has completely turned around. Doctor Selma is knowledgeable, empathetic and a person who cares incredibly much during your health journey. You will get an incredible amount of tips, advice and a doctor who cheers you on throughout your journey.",
+      "testimonial2": "I really appreciate the clear and easy-to-understand instructions regarding the medication, which have made it simple to follow the treatment. In addition, the valuable advice on how to change my habits around diet and exercise has given me motivation and tools to improve my health in the long term. I can highly recommend Vidacure for their great commitment and support.",
+      "testimonial3": "I truly want to recommend Vidacure and my doctor, Selma. I thought surgery was my last resort for weight loss — until she encouraged me to try the medication. I needed to lose 30 kg, and within 10 months I reached my goal. I could never have done it without this support. I always get quick responses to my questions and concerns. Eternally grateful that I found my way here!",
+      "testimonial4": "I want to express my deepest gratitude for the support I have received from Dr. Selma — an exceptional and deeply insightful physician who has truly changed my life. When I first began my medical treatment, I was uncertain and had many questions, but from the very beginning, Dr. Selma was clear about what I could expect. She carefully explained that the medication is not a final solution, but rather a tool — a starting point for making sustainable changes in my lifestyle. Throughout the entire process, she has been a constant source of support and inspiration, and with her guidance, I have managed to lose 20 kg. But it's not just the weight loss that has made a difference. Dr. Selma has given me a true understanding of what it takes to make lasting changes that will carry me forward. Now, 20 kg lighter and with a completely new outlook on my health, I no longer see the treatment as the end of my journey. Thank you for everything, Dr. Selma. Thank you for believing in me — and for helping me believe in myself."
     },
     "names": {
-      "name1": "Markus, 48",
-      "name2": "Sarah, 34",
-      "name3": "David, 52"
+      "name1": "Anonymous",
+      "name2": "Peter",
+      "name3": "Laura",
+      "name4": "Mirela"
     }
   },
   "journal": {

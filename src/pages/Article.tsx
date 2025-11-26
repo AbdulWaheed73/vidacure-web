@@ -30,28 +30,19 @@ export default function Article() {
       id: t('journal.articles.article1.id'),
       title: t('journal.articles.article1.title'),
       readTime: t('journal.articles.article1.readTime'),
-      content: t('journal.articles.article1.content'),
-      authorName: t('journal.authors.author1.name'),
-      authorCredentials: t('journal.authors.author1.credentials'),
-      authorAvatar: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop&crop=face"
+      content: t('journal.articles.article1.content')
     },
     {
       id: t('journal.articles.article2.id'),
       title: t('journal.articles.article2.title'),
       readTime: t('journal.articles.article2.readTime'),
-      content: t('journal.articles.article2.content'),
-      authorName: t('journal.authors.author2.name'),
-      authorCredentials: t('journal.authors.author2.credentials'),
-      authorAvatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop&crop=face"
+      content: t('journal.articles.article2.content')
     },
     {
       id: t('journal.articles.article3.id'),
       title: t('journal.articles.article3.title'),
       readTime: t('journal.articles.article3.readTime'),
-      content: t('journal.articles.article3.content'),
-      authorName: t('journal.authors.author3.name'),
-      authorCredentials: t('journal.authors.author3.credentials'),
-      authorAvatar: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=100&h=100&fit=crop&crop=face"
+      content: t('journal.articles.article3.content')
     }
   ];
 
@@ -164,25 +155,6 @@ export default function Article() {
           {/* Article Card */}
           <Card className="bg-white rounded-3xl shadow-lg border-0">
             <CardContent className="p-8 sm:p-12">
-              {/* Author Info */}
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-                  <img
-                    className="w-full h-full object-cover"
-                    src={article.authorAvatar}
-                    alt={article.authorName}
-                  />
-                </div>
-                <div>
-                  <h3 className="text-zinc-800 text-lg font-bold font-manrope">
-                    {article.authorName}
-                  </h3>
-                  <p className="text-zinc-600 text-base font-normal font-manrope">
-                    {article.authorCredentials}
-                  </p>
-                </div>
-              </div>
-
               {/* Title */}
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-sora text-zinc-800 leading-tight mb-6">
                 {article.title}

@@ -34,12 +34,12 @@ const PricingSection = () => {
 
   const medicalFeatures = [
     t('pricing.features.doctorConsultation'),
+    t('pricing.features.nutritionCoaching'),
     t('pricing.features.treatmentPlan'),
     t('pricing.features.medicalCheckins'),
     t('pricing.features.glp1Medication'),
     t('pricing.features.unlimitedMessaging'),
-    t('pricing.features.progressTracking'),
-    t('pricing.features.nutritionCoaching')
+    t('pricing.features.progressTracking')
   ];
 
   type PricingCardProps = {

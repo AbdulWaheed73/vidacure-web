@@ -12,31 +12,16 @@ const HealthJournalSection = () => {
   const articles = [
     {
       id: t('journal.articles.article1.id'),
-      author: {
-        name: t('journal.authors.author1.name'),
-        credentials: t('journal.authors.author1.credentials'),
-        avatar: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=100&h=100&fit=crop&crop=face"
-      },
       title: t('journal.articles.article1.title'),
       readTime: t('journal.articles.article1.readTime')
     },
     {
       id: t('journal.articles.article2.id'),
-      author: {
-        name: t('journal.authors.author2.name'),
-        credentials: t('journal.authors.author2.credentials'),
-        avatar: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=100&h=100&fit=crop&crop=face"
-      },
       title: t('journal.articles.article2.title'),
       readTime: t('journal.articles.article2.readTime')
     },
     {
       id: t('journal.articles.article3.id'),
-      author: {
-        name: t('journal.authors.author3.name'),
-        credentials: t('journal.authors.author3.credentials'),
-        avatar: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=100&h=100&fit=crop&crop=face"
-      },
       title: t('journal.articles.article3.title'),
       readTime: t('journal.articles.article3.readTime')
     }
@@ -48,34 +33,15 @@ const HealthJournalSection = () => {
       className={`bg-white rounded-[20px] shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group ${className}`}
     >
       <CardContent className="p-0 h-full flex flex-col">
-        {/* Author Section */}
-        <div className="p-6 flex items-center gap-3.5">
-          <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
-            <img 
-              className="w-full h-full object-cover" 
-              src={article.author.avatar}
-              alt={article.author.name}
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-black text-base font-bold font-manrope leading-snug truncate">
-              {article.author.name}
-            </h3>
-            <p className="text-zinc-800 text-base font-normal font-manrope leading-snug truncate">
-              {article.author.credentials}
-            </p>
-          </div>
-        </div>
-
         {/* Title Section */}
-        <div className="px-6 py-3 flex-1 flex items-start">
+        <div className="p-6 flex-1 flex items-center">
           <h2 className="text-black text-lg lg:text-xl font-bold font-sora leading-snug group-hover:text-teal-600 transition-colors duration-300 line-clamp-4">
             {article.title}
           </h2>
         </div>
 
         {/* Footer Section */}
-        <div className="p-6 flex justify-between items-center">
+        <div className="p-6 pt-0 flex justify-between items-center">
           <div className="px-3 py-1 bg-emerald-50 rounded-full flex items-center gap-2.5">
             <Clock className="w-4 h-4 text-zinc-600" />
             <span className="text-zinc-800 text-base font-normal font-manrope leading-snug">
