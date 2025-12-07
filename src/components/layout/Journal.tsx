@@ -76,30 +76,30 @@ const HealthJournalSection = () => {
               <div className="space-y-8">
                 <div>
                   <h2 className="text-3xl sm:text-4xl font-bold font-sora leading-tight mb-4">
-                    <span className="text-zinc-800">Understanding obesity: </span>
-                    <span className="text-teal-600">It's a complex medical condition, not a choice.</span>
+                    <span className="text-zinc-800">{t('obesity.title')} </span>
+                    <span className="text-teal-600">{t('obesity.titleHighlight')}</span>
                   </h2>
                   <p className="text-zinc-800 text-base font-normal font-manrope leading-relaxed">
-                    For too long, the story around weight has been about willpower. But modern medicine shows that obesity is a complex disease, deeply influenced by your genetics, hormones, and environment. We now understand the biology behind the struggle, and with that understanding comes new, effective medical treatments that can finally help.
+                    {t('obesity.description')}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <h3 className="text-xl font-bold font-sora text-zinc-800 mb-3">
-                      Your Body's Biology
+                      {t('obesity.bodyBiologyTitle')}
                     </h3>
                     <p className="text-zinc-800 text-base font-normal font-manrope leading-relaxed">
-                      Your body's natural "set point" is controlled by hormones. When you diet, your body often fights back by increasing hunger and slowing your metabolism, making lasting results difficult on your own.
+                      {t('obesity.bodyBiologyDescription')}
                     </p>
                   </div>
 
                   <div>
                     <h3 className="text-xl font-bold font-sora text-zinc-800 mb-3">
-                      How Modern Medicine Helps
+                      {t('obesity.modernMedicineTitle')}
                     </h3>
                     <p className="text-zinc-800 text-base font-normal font-manrope leading-relaxed">
-                      Clinically-proven medications like GLP-1s work with your body's biology. Under a doctor's guidance, they help adjust your set point and reduce hunger signals, making sustainable health possible.
+                      {t('obesity.modernMedicineDescription')}
                     </p>
                   </div>
                 </div>

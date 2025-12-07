@@ -15,7 +15,7 @@ export const BMI = () => {
   // Calculate BMI
   const calculateBMI = () => {
     const heightInMeters = height / 100;
-    const bmi = (weight * 0.453592) / (heightInMeters * heightInMeters);
+    const bmi = weight / (heightInMeters * heightInMeters);
     return bmi.toFixed(1);
   };
 
@@ -64,9 +64,12 @@ export const BMI = () => {
                       {t('bmi.age')}
                     </h3>
                     <div className="relative flex justify-center items-center gap-4">
-                      <span className="text-teal-700 text-4xl font-bold font-['Sora']">
-                        {age}
-                      </span>
+                      <input
+                        type="number"
+                        value={age}
+                        onChange={(e) => setAge(Math.max(1, parseInt(e.target.value) || 1))}
+                        className="text-teal-700 text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-20 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
                       <span className="absolute left-full ml-2 top-3 text-teal-700 text-sm font-semibold font-['Sora']">
                         {t('bmi.ageUnit')}
                       </span>
@@ -95,9 +98,12 @@ export const BMI = () => {
                       {t('bmi.weight')}
                     </h3>
                     <div className="relative flex justify-center items-center gap-4">
-                      <span className="text-teal-700 text-4xl font-bold font-['Sora']">
-                        {weight}
-                      </span>
+                      <input
+                        type="number"
+                        value={weight}
+                        onChange={(e) => setWeight(Math.max(1, parseInt(e.target.value) || 1))}
+                        className="text-teal-700 text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-24 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
                       <span className="absolute left-full ml-2 top-3 text-teal-700 text-sm font-semibold font-['Sora']">
                         {t('bmi.weightUnit')}
                       </span>
@@ -170,9 +176,12 @@ export const BMI = () => {
                     </h3>
                     <div className="w-full flex justify-center items-start gap-2">
                       <div className="flex-1 flex justify-end items-center">
-                        <span className="text-teal-700 text-4xl font-bold font-['Sora']">
-                          {age}
-                        </span>
+                        <input
+                          type="number"
+                          value={age}
+                          onChange={(e) => setAge(Math.max(1, parseInt(e.target.value) || 1))}
+                          className="text-teal-700 text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-20 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
                       </div>
                       <div className="w-10 flex justify-start items-center">
                         <span className="text-teal-700 text-sm font-semibold font-['Sora']">
@@ -205,9 +214,12 @@ export const BMI = () => {
                     </h3>
                     <div className="w-full flex justify-center items-start gap-2">
                       <div className="flex-1 flex justify-end items-center">
-                        <span className="text-teal-700 text-4xl font-bold font-['Sora']">
-                          {weight}
-                        </span>
+                        <input
+                          type="number"
+                          value={weight}
+                          onChange={(e) => setWeight(Math.max(1, parseInt(e.target.value) || 1))}
+                          className="text-teal-700 text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-24 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
                       </div>
                       <div className="w-10 flex justify-start items-center">
                         <span className="text-teal-700 text-sm font-semibold font-['Sora']">

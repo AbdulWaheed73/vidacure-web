@@ -43,11 +43,11 @@
     "doctorFeature": "Receive ongoing care from a board-certified doctor who creates your plan, manages your prescriptions, and safely guides your progress.",
     "medicationFeature": "We manage the entire prescription process, with your approved medication prescribed to you and give you a personal health care coaching.",
     "messagingFeature": "Enjoy unlimited messaging with your personal care team for continuous support, coaching, and answers to all your questions.",
-    "lifestyleBadge": "Lifestyle Program Membership",
+    "lifestyleBadge": "Medical Program Membership",
     "lifestylePrice": "795",
     "lifestyleCurrency": "SEK/mo",
     "lifestyleDescription": "Your access to medical treatment and support.",
-    "medicalBadge": "Medical Program Membership",
+    "medicalBadge": "Lifestyle Program Membership",
     "medicalPrice": "1195",
     "medicalCurrency": "SEK/mo",
     "medicalDescription": "Your all-in-one access to our medical treatment and personal lifestyle coaching team based.",
@@ -183,6 +183,7 @@
     "title": "Do You Know",
     "statistics": {
       "stat1": "In Sweden, 1 in 2 adults is now classified as overweight or living with obesity.",
+      "stat1Unit": "in",
       "stat2": "of people who lose weight through traditional dieting alone regain it within a few years.",
       "stat3": "A 15% average weight loss with our program dramatically improves heart health and lowers diabetes risk."
     }

@@ -7,7 +7,7 @@ export default function StatisticsComponent() {
   const statistics = [
     {
       number: "1",
-      unit: "in",
+      unit: t('know.statistics.stat1Unit'),
       number2: "2",
       description: t('know.statistics.stat1')
     },

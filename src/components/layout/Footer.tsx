@@ -110,15 +110,6 @@ const FooterSection = () => {
 
       <div className="px-5 py-8 lg:px-20 lg:pt-28 lg:pb-20">
         <div className="max-w-7xl mx-auto">
-          
-          {/* Mobile Logo */}
-          <div className="lg:hidden mb-8">
-            <img 
-              className="w-28 h-5" 
-              src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=120&h=21&fit=crop" 
-              alt="Vidacure Logo"
-            />
-          </div>
 
           {/* Desktop Layout */}
           <div className="hidden lg:block">
@@ -201,18 +192,6 @@ const FooterSection = () => {
                       <SocialIcon key={index} {...social} />
                     ))}
                   </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <img
-                    className="w-14 h-16"
-                    src="https://images.unsplash.com/photo-1633409361618-c73427e4e206?w=60&h=64&fit=crop"
-                    alt="Mobile Certification 1"
-                  />
-                  <img
-                    className="w-20 h-7"
-                    src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=80&h=30&fit=crop"
-                    alt="Mobile Certification 2"
-                  />
                 </div>
               </div>
             </div>

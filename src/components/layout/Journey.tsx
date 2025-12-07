@@ -43,7 +43,7 @@ export default function WeightLossSteps() {
                 {t('journey.title')}<br className="sm:hidden" />
               </span>
               <span className="text-zinc-800 text-3xl sm:text-4xl lg:text-5xl font-bold font-['Sora'] leading-tight lg:leading-[56.40px]">
-                {" "}{t('journey.titleWeight')}{" "}
+                {" "}{t('journey.titleWeight')}
               </span>
               <span className="text-teal-600 text-3xl sm:text-4xl lg:text-5xl font-bold font-['Sora'] leading-tight lg:leading-[56.40px]">
                 {t('journey.titleJourney')}
