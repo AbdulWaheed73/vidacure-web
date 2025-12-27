@@ -11,7 +11,7 @@ import {
 
 import { ArrowRight, Scale, Pill, Smile, ShieldCheck, BookOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ROUTES } from "@/constants";
 import { Marquee } from "@/components/magicui/marquee";
 import Img1 from "../../assets/first.svg";
@@ -21,40 +21,34 @@ import Img4 from "../../assets/fourth.png";
 import Img5 from "../../assets/fifth.png";
 import Img6 from "../../assets/sixth.png";
 
-const ImageCardWeb = ({ src }: { src: string }) => {
+type ImageCardProps = {
+  src: string;
+  alt: string;
+};
+
+const ImageCardWeb = ({ src, alt }: ImageCardProps) => {
   return (
-    <>
-      {/* <img
-        className="w-48 h-72 rounded-3xl shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)] self-stretch"
-        src={src}
-        alt=""
-      /> */}
-      <img
-        className="self-stretch h-72 rounded-3xl shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)]"
-        src={src}
-      />
-    </>
+    <img
+      className="self-stretch h-72 rounded-3xl shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)]"
+      src={src}
+      alt={alt}
+      loading="lazy"
+    />
   );
 };
-const ImageCardApp = ({ src }: { src: string }) => {
+const ImageCardApp = ({ src, alt }: ImageCardProps) => {
   return (
-    <>
-      {/* <img
-        className="w-52 h-52 rounded-3xl shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)] self-stretch"
-        src={src}
-        alt=""
-      /> */}
-      <img
-        className="self-stretch h-56 rounded-[19.60px] shadow-[0px_2.799999952316284px_5.599999904632568px_0px_rgba(0,0,0,0.16)]"
-        src={src}
-      />
-    </>
+    <img
+      className="self-stretch h-56 rounded-[19.60px] shadow-[0px_2.799999952316284px_5.599999904632568px_0px_rgba(0,0,0,0.16)]"
+      src={src}
+      alt={alt}
+      loading="lazy"
+    />
   );
 };
 
 export const HeroSection = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   
   // const images = [
   //   Img1,
@@ -89,14 +83,14 @@ export const HeroSection = () => {
                   {t('hero.description')}
                 </CardDescription>
                 <CardAction>
-                  <button 
+                  <Link
+                    to={ROUTES.LOGIN}
                     className="h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
-                    onClick={() => navigate(ROUTES.LOGIN)}
                   >
                     <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
                       {t('hero.getStarted')}
                     </span>
-                  </button>
+                  </Link>
                 </CardAction>
               </CardHeader>
 
@@ -142,14 +136,14 @@ export const HeroSection = () => {
             {/* Image Gallery */}
             <Card className="h-80 md:h-96 lg:h-[30rem] relative flex justify-center items-center gap-4 overflow-hidden flex-row border-none shadow-none">
               <Marquee vertical className="[--duration:20s]">
-                <ImageCardApp src={Img1} />
-                <ImageCardApp src={Img2} />
-                <ImageCardApp src={Img3} />
+                <ImageCardApp src={Img1} alt={t('imageAlt.heroGallery1')} />
+                <ImageCardApp src={Img2} alt={t('imageAlt.heroGallery2')} />
+                <ImageCardApp src={Img3} alt={t('imageAlt.heroGallery3')} />
               </Marquee>
               <Marquee reverse vertical className="[--duration:20s]">
-                <ImageCardApp src={Img4} />
-                <ImageCardApp src={Img5} />
-                <ImageCardApp src={Img6} />
+                <ImageCardApp src={Img4} alt={t('imageAlt.heroGallery4')} />
+                <ImageCardApp src={Img5} alt={t('imageAlt.heroGallery5')} />
+                <ImageCardApp src={Img6} alt={t('imageAlt.heroGallery6')} />
               </Marquee>
               <div className="w-full h-20 left-0 top-0 absolute bg-gradient-to-b from-white to-white/0" />
               <div className="w-full h-20 left-0 bottom-0 absolute bg-gradient-to-b from-white/0 to-white" />
@@ -173,15 +167,15 @@ export const HeroSection = () => {
                   {t('hero.description')}
                 </CardDescription>
                 <CardAction>
-                  <button 
+                  <Link
+                    to={ROUTES.LOGIN}
                     className="h-11 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
-                    onClick={() => navigate(ROUTES.LOGIN)}
                   >
                     <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
                       {t('hero.getStarted')}
                     </span>
                     <ArrowRight size={16} className="text-white" />
-                  </button>
+                  </Link>
                 </CardAction>
               </CardHeader>
 
@@ -227,14 +221,14 @@ export const HeroSection = () => {
             {/* Right Side - Image Gallery */}
             <Card className="relative flex h-[40rem] w-fit flex-row items-center justify-center overflow-hidden border-none shadow-none">
               <Marquee vertical className="[--duration:20s]">
-                <ImageCardWeb src={Img1} />
-                <ImageCardWeb src={Img2} />
-                <ImageCardWeb src={Img3} />
+                <ImageCardWeb src={Img1} alt={t('imageAlt.heroGallery1')} />
+                <ImageCardWeb src={Img2} alt={t('imageAlt.heroGallery2')} />
+                <ImageCardWeb src={Img3} alt={t('imageAlt.heroGallery3')} />
               </Marquee>
               <Marquee reverse vertical className="[--duration:20s]">
-                <ImageCardWeb src={Img4} />
-                <ImageCardWeb src={Img5} />
-                <ImageCardWeb src={Img6} />
+                <ImageCardWeb src={Img4} alt={t('imageAlt.heroGallery4')} />
+                <ImageCardWeb src={Img5} alt={t('imageAlt.heroGallery5')} />
+                <ImageCardWeb src={Img6} alt={t('imageAlt.heroGallery6')} />
               </Marquee>
               <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white to-white/0"></div>
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-white/0 to-white"></div>

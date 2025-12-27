@@ -401,5 +401,52 @@
     "role": "Roll",
     "accountActions": "Kontoåtgärder",
     "logout": "🚪 Logga ut"
+  },
+  "seo": {
+    "defaultTitle": "Vidacure - Hållbar Viktminskning med Medicinsk Vetenskap",
+    "defaultDescription": "Vidacure kombinerar godkänd medicinering med personlig coaching för att hjälpa dig uppnå hållbar viktminskning. Effektiv, vetenskapsbaserad behandling med medicinsk support.",
+    "defaultKeywords": "viktminskning, medicinsk viktminskning, GLP-1, fetmabehandling, hållbar viktminskning, hälsovård Sverige, vidacure",
+    "home": {
+      "title": "Hållbart Viktminskningsprogram - Medicinsk Support & Coaching",
+      "description": "Uppnå varaktig viktminskning med Vidacures medicinska program. FDA-godkänd medicinering, personlig coaching och dedikerat vårdteam. Starta din transformation idag."
+    },
+    "aboutUs": {
+      "title": "Om Vidacure - Din Partner för Medicinsk Viktminskning",
+      "description": "Möt Vidacure-teamet som hjälper dig uppnå hållbar viktminskning genom medicinsk vetenskap, personlig coaching och kontinuerlig support."
+    },
+    "articles": {
+      "whatIsObesity": {
+        "title": "Vad är Fetma? Förstå det Medicinska Tillståndet",
+        "description": "Lär dig om fetma som ett komplext medicinskt tillstånd, dess biologiska faktorer och hur moderna medicinska behandlingar kan hjälpa uppnå hållbar viktkontroll."
+      },
+      "treatingObesity": {
+        "title": "Behandling av Fetma - Moderna Medicinska Metoder",
+        "description": "Upptäck evidensbaserade fetmabehandlingar inklusive GLP-1-mediciner, livsstilscoaching och omfattande medicinsk support för varaktiga resultat."
+      },
+      "womenHealth": {
+        "title": "Kvinnors Hälsa och Fetma - Vad Du Behöver Veta",
+        "description": "Utforska det unika förhållandet mellan kvinnors hälsa och viktkontroll, inklusive hormonella faktorer och personliga behandlingsmetoder."
+      }
+    }
+  },
+  "imageAlt": {
+    "heroGallery1": "Patientens transformation - före och efter viktminskningsresa",
+    "heroGallery2": "Framgångsrik viktminskning med Vidacure-programmet",
+    "heroGallery3": "Medicinsk viktminskning framgångssaga - hälsosam livsstil",
+    "heroGallery4": "Patient firar viktminskningsmilstolpe",
+    "heroGallery5": "Hållbara viktkontrollresultat",
+    "heroGallery6": "Medicinsk viktminskningsprogram transformation",
+    "journeyStep1": "Steg 1: Online medicinsk konsultation med legitimerad läkare för personlig behandlingsplan",
+    "journeyStep2": "Steg 2: Ta emot anpassad behandlingsplan med GLP-1-medicinering och livsstilscoaching",
+    "journeyStep3": "Steg 3: Kontinuerligt stöd från dedikerat vårdteam under viktminskningsresan",
+    "vidacureApp": "Vidacure mobilapp för att följa viktminskningsframsteg och få support",
+    "medicalInjections": "GLP-1-medicinering för evidensbaserad viktkontroll",
+    "vidacureLogo": "Vidacure - Medicinsk viktminskningsprogram som kombinerar medicinering och coaching",
+    "bmiCalculator": "BMI-kalkylator för bedömning av vikt och hälsostatus",
+    "pricingPlan": "Vidacure prissättningsplaner för medicinska viktminskningsprogram",
+    "faqSection": "Vanliga frågor om Vidacure viktminskningsprogram",
+    "testimonial": "Patientvittnesbörd och framgångssaga",
+    "doctorSelma": "Dr. Selma Mehr - Specialistläkare i allmänmedicin på Vidacure",
+    "coachMarcus": "Marcus Flink - Hälsocoach på Vidacure"
   }
 }

@@ -226,7 +226,7 @@ const PricingSection = () => {
             </div>
 
             {/* Pricing Cards */}
-            <div className="flex flex-col gap-8 px-4">
+            <div className="flex flex-col gap-8 ">
               <PricingCard
                 badge={t('pricing.lifestyleBadge')}
                 price={t('pricing.lifestylePrice')}

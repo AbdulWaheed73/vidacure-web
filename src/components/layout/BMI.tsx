@@ -8,7 +8,7 @@ import { PopupModal } from 'react-calendly';
 export const BMI = () => {
   const { t } = useTranslation();
   const [age, setAge] = useState(28);
-  const [weight, setWeight] = useState(175);
+  const [weight, setWeight] = useState(100);
   const [height, setHeight] = useState(182);
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 
@@ -63,14 +63,14 @@ export const BMI = () => {
                     <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
                       {t('bmi.age')}
                     </h3>
-                    <div className="relative flex justify-center items-center gap-4">
+                    <div className="flex justify-center items-baseline gap-1">
                       <input
                         type="number"
                         value={age}
                         onChange={(e) => setAge(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="text-teal-700 text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-20 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="text-teal-700 text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-16 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
-                      <span className="absolute left-full ml-2 top-3 text-teal-700 text-sm font-semibold font-['Sora']">
+                      <span className="text-teal-700 text-sm font-semibold font-['Sora']">
                         {t('bmi.ageUnit')}
                       </span>
                     </div>
@@ -97,14 +97,14 @@ export const BMI = () => {
                     <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
                       {t('bmi.weight')}
                     </h3>
-                    <div className="relative flex justify-center items-center gap-4">
+                    <div className="flex justify-center items-baseline gap-1">
                       <input
                         type="number"
                         value={weight}
                         onChange={(e) => setWeight(Math.max(1, parseInt(e.target.value) || 1))}
-                        className="text-teal-700 text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-24 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="text-teal-700 text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-20 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
-                      <span className="absolute left-full ml-2 top-3 text-teal-700 text-sm font-semibold font-['Sora']">
+                      <span className="text-teal-700 text-sm font-semibold font-['Sora']">
                         {t('bmi.weightUnit')}
                       </span>
                     </div>
@@ -132,11 +132,11 @@ export const BMI = () => {
                   <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
                     {t('bmi.height')}
                   </h3>
-                  <div className="relative flex justify-center items-center gap-4">
+                  <div className="flex justify-center items-baseline gap-1">
                     <span className="text-teal-700 text-4xl font-bold font-['Sora']">
                       {height}
                     </span>
-                    <span className="absolute left-full ml-2 top-3 text-teal-700 text-sm font-semibold font-['Sora']">
+                    <span className="text-teal-700 text-sm font-semibold font-['Sora']">
                       {t('bmi.heightUnit')}
                     </span>
                   </div>
@@ -165,29 +165,25 @@ export const BMI = () => {
             </div>
 
             {/* Mobile Layout */}
-            <div className="lg:hidden w-full max-w-sm flex flex-col justify-center items-start gap-4">
+            <div className="lg:hidden w-full flex flex-col justify-center items-center gap-4">
               {/* {t('bmi.age')} and {t('bmi.weight')} Row */}
-              <div className="w-full flex justify-start items-center gap-4">
+              <div className="w-full grid grid-cols-2 gap-4">
                 {/* {t('bmi.age')} Card */}
-                <Card className="flex-1 bg-white rounded-3xl border-none">
-                  <CardContent className="p-6 flex flex-col justify-center items-center gap-6">
-                    <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
+                <Card className="bg-white rounded-3xl border-none">
+                  <CardContent className="p-4 sm:p-6 flex flex-col justify-center items-center gap-4 sm:gap-6">
+                    <h3 className="text-zinc-800 text-lg sm:text-xl font-bold font-['Sora']">
                       {t('bmi.age')}
                     </h3>
-                    <div className="w-full flex justify-center items-start gap-2">
-                      <div className="flex-1 flex justify-end items-center">
-                        <input
-                          type="number"
-                          value={age}
-                          onChange={(e) => setAge(Math.max(1, parseInt(e.target.value) || 1))}
-                          className="text-teal-700 text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-20 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
-                      </div>
-                      <div className="w-10 flex justify-start items-center">
-                        <span className="text-teal-700 text-sm font-semibold font-['Sora']">
-                          {t('bmi.ageUnit')}
-                        </span>
-                      </div>
+                    <div className="flex justify-center items-baseline gap-1">
+                      <input
+                        type="number"
+                        value={age}
+                        onChange={(e) => setAge(Math.max(1, parseInt(e.target.value) || 1))}
+                        className="text-teal-700 text-3xl sm:text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-12 sm:w-16 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                      <span className="text-teal-700 text-sm font-semibold font-['Sora']">
+                        {t('bmi.ageUnit')}
+                      </span>
                     </div>
                     <div className="flex justify-center items-center gap-8">
                       <button
@@ -207,25 +203,21 @@ export const BMI = () => {
                 </Card>
 
                 {/* {t('bmi.weight')} Card */}
-                <Card className="flex-1 bg-white rounded-3xl border-none">
-                  <CardContent className="p-6 flex flex-col justify-center items-center gap-6">
-                    <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
+                <Card className="bg-white rounded-3xl border-none">
+                  <CardContent className="p-4 sm:p-6 flex flex-col justify-center items-center gap-4 sm:gap-6">
+                    <h3 className="text-zinc-800 text-lg sm:text-xl font-bold font-['Sora']">
                       {t('bmi.weight')}
                     </h3>
-                    <div className="w-full flex justify-center items-start gap-2">
-                      <div className="flex-1 flex justify-end items-center">
-                        <input
-                          type="number"
-                          value={weight}
-                          onChange={(e) => setWeight(Math.max(1, parseInt(e.target.value) || 1))}
-                          className="text-teal-700 text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-24 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        />
-                      </div>
-                      <div className="w-10 flex justify-start items-center">
-                        <span className="text-teal-700 text-sm font-semibold font-['Sora']">
-                          {t('bmi.weightUnit')}
-                        </span>
-                      </div>
+                    <div className="flex justify-center items-baseline gap-1">
+                      <input
+                        type="number"
+                        value={weight}
+                        onChange={(e) => setWeight(Math.max(1, parseInt(e.target.value) || 1))}
+                        className="text-teal-700 text-3xl sm:text-4xl font-bold font-['Sora'] bg-transparent border-none outline-none w-14 sm:w-20 text-right [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                      <span className="text-teal-700 text-sm font-semibold font-['Sora']">
+                        {t('bmi.weightUnit')}
+                      </span>
                     </div>
                     <div className="flex justify-center items-center gap-8">
                       <button
@@ -251,11 +243,11 @@ export const BMI = () => {
                   <h3 className="text-zinc-800 text-xl font-bold font-['Sora']">
                     {t('bmi.height')}
                   </h3>
-                  <div className="relative flex justify-center items-center gap-4">
+                  <div className="flex justify-center items-baseline gap-1">
                     <span className="text-teal-700 text-4xl font-bold font-['Sora']">
                       {height}
                     </span>
-                    <span className="absolute left-full ml-2 top-3 text-teal-700 text-sm font-semibold font-['Sora']">
+                    <span className="text-teal-700 text-sm font-semibold font-['Sora']">
                       {t('bmi.heightUnit')}
                     </span>
                   </div>

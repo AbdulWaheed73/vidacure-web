@@ -1,15 +1,12 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/constants';
 import JourneyStep1 from "../../assets/journey-step1.svg";
 import JourneyStep2 from "../../assets/journey-step2.svg";
 import JourneyStep3 from "../../assets/journey-step3.svg";
 
 export default function WeightLossSteps() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   
   const steps = [
     {
@@ -57,10 +54,10 @@ export default function WeightLossSteps() {
           {steps.map((step, index) => (
             <Card key={index} className="bg-emerald-50 rounded-3xl border-0 overflow-hidden p-0">
               <CardContent className="p-0">
-                <div className={`h-[500px] flex ${index === 1 ? 'flex-row-reverse' : 'flex-row'} gap-8`}>
-                  <div className="flex-1">
-                    <img 
-                      className="w-full h-full object-cover rounded-3xl" 
+                <div className={`flex ${index === 1 ? 'flex-row-reverse' : 'flex-row'}`}>
+                  <div className="flex-1 min-h-[400px] xl:min-h-[500px]">
+                    <img
+                      className="w-full h-full object-cover rounded-3xl"
                       src={step.image}
                       alt={step.title}
                     />
@@ -101,11 +98,11 @@ export default function WeightLossSteps() {
         {/* Steps Section - Mobile Layout */}
         <div className="lg:hidden flex flex-col gap-6">
           {steps.map((step, index) => (
-            <Card key={index} className="bg-emerald-50 rounded-3xl border-0 overflow-hidden">
+            <Card key={index} className="bg-emerald-50 rounded-3xl border-0 overflow-hidden p-0">
               <CardContent className="p-0">
                 <div className="flex flex-col">
                   <img
-                    className="w-full h-64 object-cover rounded-3xl"
+                    className="w-full max-w-full h-auto object-contain rounded-t-3xl mx-auto"
                     src={step.image}
                     alt={step.title}
                   />
@@ -144,15 +141,22 @@ export default function WeightLossSteps() {
 
         {/* CTA Button */}
         <div className="flex justify-center mt-12 lg:mt-16">
-          <button
-            onClick={() => navigate(ROUTES.LOGIN)}
-            className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors"
+          <a
+            href="#bmi"
+            onClick={(e) => {
+              e.preventDefault();
+              const element = document.getElementById('bmi');
+              if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }}
+            className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors cursor-pointer"
           >
             <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
               {t('journey.ctaButton')}
             </span>
             <ArrowRight className="w-4 h-4 text-white" />
-          </button>
+          </a>
         </div>
       </div>
     </div>

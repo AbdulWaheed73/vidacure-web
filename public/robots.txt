@@ -1,0 +1,13 @@
+# Vidacure Robots Configuration
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://vidacure.se/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 10

@@ -24,7 +24,7 @@ export default function StatisticsComponent() {
   ];
 
   return (
-    <div className="w-full px-4 sm:px-8 lg:px-14 pb-12 sm:pb-16 lg:pb-20 bg-white">
+    <div className="w-full sm:px-8 lg:px-14 pb-12 sm:pb-16 lg:pb-20 bg-white">
       <div className="max-w-7xl mx-auto">
         <Card className="rounded-3xl border-0 shadow-none bg-transparent overflow-hidden">
           <CardContent className="p-6 sm:p-10 lg:p-14">

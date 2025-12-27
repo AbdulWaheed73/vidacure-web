@@ -9,36 +9,50 @@ import PricingSection from "@/components/layout/Pricing";
 import HealthJournalSection from "@/components/layout/Journal";
 import FAQSection from "@/components/layout/FAQ";
 import FooterSection from "@/components/layout/Footer";
+import { SEOHead } from "@/components/seo/SEOHead";
+import { createOrganizationSchema } from "@/utils/structuredData";
+import { useTranslation } from "react-i18next";
 
 export const LandingPage = () => {
+  const { t } = useTranslation();
+
+  // Organization schema for home page
+  const organizationSchema = createOrganizationSchema(t('seo.defaultDescription'));
+
   return (
     <>
+      <SEOHead
+        title={t('seo.home.title')}
+        description={t('seo.home.description')}
+        keywords={t('seo.defaultKeywords')}
+        structuredData={organizationSchema}
+      />
       <div className="w-full shadow-2xs fixed z-50">
         <Navbar />
       </div>
-      <div className="overflow-y-auto w-full h-full bg-[#E6F9F6] py-2  mx-auto">
-        <div id="hero">
+      <div className="overflow-y-auto overflow-x-hidden w-full h-full bg-[#E6F9F6] py-2 mx-auto pt-11 lg:pt-0">
+        <div id="hero" className="scroll-mt-16">
           <HeroSection />
         </div>
-        <div id="the-treatment">
+        <div id="the-treatment" className="scroll-mt-16">
           <WeightLossSteps />
         </div>
         <div>
           <StatisticsComponent />
         </div>
-        <div>
+        <div id="bmi" className="scroll-mt-16">
           <BMI />
         </div>
-        <div id="about-us">
+        <div id="about-us" >
           <Partner />
         </div>
-        <div id="pricing">
+        <div id="pricing" >
           <PricingSection />
         </div>
-        <div id="education">
+        <div id="education" >
           <HealthJournalSection />
         </div>
-        <div id="faq">
+        <div id="faq" className="scroll-mt-16">
           <FAQSection />
         </div>
         <div>

@@ -1,5 +1,7 @@
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '@/constants/routes';
 import footer from "../../assets/footer_logo.png";
 
 const FooterSection = () => {
@@ -9,41 +11,41 @@ const FooterSection = () => {
     {
       title: t('footer.company'),
       links: [
-        { name: t('footer.aboutUs'), href: "#" },
-        { name: t('footer.ourDoctors'), href: "#" },
-        { name: t('footer.blogs'), href: "#" },
-        { name: t('footer.careers'), href: "#" }
+        { name: t('footer.aboutUs'), href: ROUTES.ABOUT_US },
+        { name: t('footer.ourDoctors'), href: `${ROUTES.ABOUT_US}#team` },
+        { name: t('footer.blogs'), href: '#education' },
+        { name: t('footer.careers'), href: '#' } // TODO: Add careers page route when available
       ]
     },
     {
       title: t('footer.platform'),
       links: [
-        { name: t('footer.forDoctors'), href: "#" },
-        { name: t('footer.forPatients'), href: "#" }
+        { name: t('footer.forDoctors'), href: ROUTES.LOGIN },
+        { name: t('footer.forPatients'), href: ROUTES.LOGIN }
       ]
     },
     {
       title: t('footer.program'),
       links: [
-        { name: t('footer.howItWorks'), href: "#" },
-        { name: t('footer.pricing'), href: "#" }
+        { name: t('footer.howItWorks'), href: '#the-treatment' },
+        { name: t('footer.pricing'), href: '#pricing' }
       ]
     },
     {
       title: t('footer.legal'),
       links: [
-        { name: t('footer.privacyPolicy'), href: "#" },
-        { name: t('footer.termsOfService'), href: "#" },
-        { name: t('footer.cookiePolicy'), href: "#" }
+        { name: t('footer.privacyPolicy'), href: '/privacy' },
+        { name: t('footer.termsOfService'), href: '/terms' },
+        { name: t('footer.cookiePolicy'), href: '/cookies' }
       ]
     }
   ];
 
   const socialIcons = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" }
+    { icon: Facebook, href: "https://facebook.com/vidacure", label: "Facebook" },
+    { icon: Twitter, href: "https://twitter.com/vidacure", label: "Twitter" },
+    { icon: Instagram, href: "https://instagram.com/vidacure", label: "Instagram" },
+    { icon: Linkedin, href: "https://linkedin.com/company/vidacure", label: "LinkedIn" }
   ];
 
   // const certifications = [
@@ -70,14 +72,43 @@ const FooterSection = () => {
     className?: string;
   };
   
-  const FooterLink = ({ href, children, className = "" }: FooterLinkProps) => (
-    <a
-      href={href}
-      className={`text-emerald-50 text-base font-normal font-inter leading-normal hover:text-white transition-colors duration-200 ${className}`}
-    >
-      {children}
-    </a>
-  );
+  const FooterLink = ({ href, children, className = "" }: FooterLinkProps) => {
+    // Hash link (in-page navigation)
+    if (href.startsWith('#')) {
+      return (
+        <a
+          href={href}
+          className={`text-emerald-50 text-base font-normal font-inter leading-normal hover:text-white transition-colors duration-200 ${className}`}
+        >
+          {children}
+        </a>
+      );
+    }
+
+    // External link
+    if (href.startsWith('http')) {
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`text-emerald-50 text-base font-normal font-inter leading-normal hover:text-white transition-colors duration-200 ${className}`}
+        >
+          {children}
+        </a>
+      );
+    }
+
+    // Internal route
+    return (
+      <Link
+        to={href}
+        className={`text-emerald-50 text-base font-normal font-inter leading-normal hover:text-white transition-colors duration-200 ${className}`}
+      >
+        {children}
+      </Link>
+    );
+  };
 
   type SocialIconProps = {
     icon: React.ComponentType<{ className?: string }>;

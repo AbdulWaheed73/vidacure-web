@@ -1,13 +1,12 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Clock, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import img from "@/assets/injections.svg";
 import TestimonialSection from './Testimonial';
 
 const HealthJournalSection = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const articles = [
     {
@@ -28,36 +27,37 @@ const HealthJournalSection = () => {
   ];
 
   const ArticleCard = ({ article, className = "" }: { article: any; className?: string }) => (
-    <Card
-      onClick={() => navigate(`/article/${article.id}`)}
-      className={`bg-white rounded-[20px] shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group ${className}`}
-    >
-      <CardContent className="p-0 h-full flex flex-col">
-        {/* Title Section */}
-        <div className="p-6 flex-1 flex items-center">
-          <h2 className="text-black text-lg lg:text-xl font-bold font-sora leading-snug group-hover:text-teal-600 transition-colors duration-300 line-clamp-4">
-            {article.title}
-          </h2>
-        </div>
+    <Link to={`/article/${article.id}`} className="block">
+      <Card
+        className={`bg-white rounded-[20px] shadow-md hover:shadow-lg transition-all duration-300 group ${className}`}
+      >
+        <CardContent className="p-0 h-full flex flex-col">
+          {/* Title Section */}
+          <div className="p-6 flex-1 flex items-center">
+            <h2 className="text-black text-lg lg:text-xl font-bold font-sora leading-snug group-hover:text-teal-600 transition-colors duration-300 line-clamp-4">
+              {article.title}
+            </h2>
+          </div>
 
-        {/* Footer Section */}
-        <div className="p-6 pt-0 flex justify-between items-center">
-          <div className="px-3 py-1 bg-emerald-50 rounded-full flex items-center gap-2.5">
-            <Clock className="w-4 h-4 text-zinc-600" />
-            <span className="text-zinc-800 text-base font-normal font-manrope leading-snug">
-              {article.readTime}
-            </span>
+          {/* Footer Section */}
+          <div className="p-6 pt-0 flex justify-between items-center">
+            <div className="px-3 py-1 bg-emerald-50 rounded-full flex items-center gap-2.5">
+              <Clock className="w-4 h-4 text-zinc-600" />
+              <span className="text-zinc-800 text-base font-normal font-manrope leading-snug">
+                {article.readTime}
+              </span>
+            </div>
+            <div className="w-6 h-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <ArrowUpRight className="w-4 h-4 text-black group-hover:text-teal-600 transition-colors duration-300" />
+            </div>
           </div>
-          <div className="w-6 h-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-            <ArrowUpRight className="w-4 h-4 text-black group-hover:text-teal-600 transition-colors duration-300" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </Link>
   );
 
   return (
-    <div className="py-16 px-4 sm:px-6 lg:px-14">
+    <div className="py-16 sm:px-6 lg:px-14">
       <div className="max-w-7xl mx-auto">
         <div className="p-6 sm:p-8 lg:p-10 rounded-3xl">
 
@@ -117,12 +117,12 @@ const HealthJournalSection = () => {
           </div>
 
           {/* Desktop Layout - 3 columns */}
-          <div className="hidden lg:flex justify-start items-start gap-8">
+          <div className="hidden lg:grid grid-cols-3 gap-8">
             {articles.map((article) => (
-              <ArticleCard 
-                key={article.id} 
-                article={article} 
-                className="flex-1 h-80"
+              <ArticleCard
+                key={article.id}
+                article={article}
+                className="h-80"
               />
             ))}
           </div>

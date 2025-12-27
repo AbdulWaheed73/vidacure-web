@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { ROUTES } from '@/constants';
 import { Card, CardContent } from '@/components/ui/card';
+import { SEOHead } from '@/components/seo/SEOHead';
+import { createOrganizationSchema } from '@/utils/structuredData';
 
 export default function AboutUs() {
   const { t } = useTranslation();
@@ -21,8 +23,18 @@ export default function AboutUs() {
     t('partner.reasons.longTerm')
   ];
 
+  // Organization schema for about page
+  const organizationSchema = createOrganizationSchema(t('seo.aboutUs.description'));
+
   return (
-    <div className="min-h-screen bg-[#E6F9F6]">
+    <>
+      <SEOHead
+        title={t('seo.aboutUs.title')}
+        description={t('seo.aboutUs.description')}
+        keywords={t('seo.defaultKeywords')}
+        structuredData={organizationSchema}
+      />
+      <div className="min-h-screen bg-[#E6F9F6]">
       <div className="w-full px-4 sm:px-8 md:px-14 py-12 md:py-16">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -107,5 +119,6 @@ export default function AboutUs() {
         </div>
       </div>
     </div>
+    </>
   );
 }

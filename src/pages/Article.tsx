@@ -1,16 +1,18 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import { ArrowLeft, Clock } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { ROUTES } from '@/constants/routes';
 import whatIsObesityImg from '@/assets/what-is-obesity.jpg';
 import treatingObesityImg from '@/assets/Treating-Obesity.jpg';
 import girlsImg from '@/assets/girls.jpg';
+import { SEOHead } from '@/components/seo/SEOHead';
+import { createArticleSchema } from '@/utils/structuredData';
 
 export default function Article() {
   const { articleId } = useParams<{ articleId: string }>();
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   // Scroll to top when component mounts or articleId changes
   useEffect(() => {
@@ -48,18 +50,49 @@ export default function Article() {
 
   const article = articles.find(a => a.id === articleId);
 
+  // Get SEO title and description based on article ID
+  const getSEOData = () => {
+    if (articleId === 'what-is-obesity') {
+      return {
+        title: t('seo.articles.whatIsObesity.title'),
+        description: t('seo.articles.whatIsObesity.description')
+      };
+    } else if (articleId === 'treating-obesity') {
+      return {
+        title: t('seo.articles.treatingObesity.title'),
+        description: t('seo.articles.treatingObesity.description')
+      };
+    } else if (articleId === 'women-health-obesity') {
+      return {
+        title: t('seo.articles.womenHealth.title'),
+        description: t('seo.articles.womenHealth.description')
+      };
+    }
+    return { title: '', description: '' };
+  };
+
+  const seoData = getSEOData();
+
+  // Article schema
+  const articleSchema = article && articleId ? createArticleSchema(
+    article.title,
+    seoData.description || article.content.substring(0, 160),
+    `https://vidacure.se${articleImages[articleId]}`,
+    new Date().toISOString()
+  ) : undefined;
+
   if (!article) {
     return (
       <div className="min-h-screen bg-[#E6F9F6] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl font-bold font-sora text-zinc-800 mb-4">Article Not Found</h1>
-          <button
-            onClick={() => navigate('/')}
+          <Link
+            to={ROUTES.HOME}
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-teal-600 text-white rounded-full hover:bg-teal-700 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Go Back Home
-          </button>
+          </Link>
         </div>
       </div>
     );
@@ -140,17 +173,27 @@ export default function Article() {
   };
 
   return (
-    <div className="min-h-screen bg-[#E6F9F6]">
+    <>
+      {article && articleId && (
+        <SEOHead
+          title={seoData.title || article.title}
+          description={seoData.description || article.content.substring(0, 160)}
+          keywords={t('seo.defaultKeywords')}
+          ogImage={`https://vidacure.se${articleImages[articleId]}`}
+          structuredData={articleSchema}
+        />
+      )}
+      <div className="min-h-screen bg-[#E6F9F6]">
       <div className="w-full px-4 sm:px-8 md:px-14 py-12">
         <div className="max-w-4xl mx-auto">
           {/* Back Button */}
-          <button
-            onClick={() => navigate('/')}
+          <Link
+            to={ROUTES.HOME}
             className="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 mb-8 font-semibold font-sora transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Home
-          </button>
+          </Link>
 
           {/* Article Card */}
           <Card className="bg-white rounded-3xl shadow-lg border-0">
@@ -188,5 +231,6 @@ export default function Article() {
         </div>
       </div>
     </div>
+    </>
   );
 }

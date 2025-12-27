@@ -62,7 +62,7 @@ const TestimonialSection = () => {
   );
 
   return (
-    <div className="py-20 px-4 lg:px-14">
+    <div className="py-20 lg:px-14">
       <div className="max-w-7xl mx-auto">
         <Card className="bg-white rounded-3xl shadow-lg border-0">
           <CardContent className="p-8 sm:p-12 lg:p-14">

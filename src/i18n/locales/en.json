@@ -401,5 +401,52 @@
     "role": "Role",
     "accountActions": "Account Actions",
     "logout": "🚪 Logout"
+  },
+  "seo": {
+    "defaultTitle": "Vidacure - Sustainable Weight Loss Backed by Medical Science",
+    "defaultDescription": "Vidacure combines approved medication with personal coaching to help you achieve sustainable weight loss. Effective, science-backed treatment with medical support.",
+    "defaultKeywords": "weight loss, medical weight loss, GLP-1, obesity treatment, sustainable weight loss, healthcare Sweden, vidacure",
+    "home": {
+      "title": "Sustainable Weight Loss Program - Medical Support & Coaching",
+      "description": "Achieve lasting weight loss with Vidacure's medical program. FDA-approved medication, personal coaching, and dedicated care team. Start your transformation today."
+    },
+    "aboutUs": {
+      "title": "About Vidacure - Your Medical Weight Loss Partner",
+      "description": "Meet the Vidacure team dedicated to helping you achieve sustainable weight loss through medical science, personalized coaching, and continuous support."
+    },
+    "articles": {
+      "whatIsObesity": {
+        "title": "What is Obesity? Understanding the Medical Condition",
+        "description": "Learn about obesity as a complex medical condition, its biological factors, and how modern medical treatments can help achieve sustainable weight management."
+      },
+      "treatingObesity": {
+        "title": "Treating Obesity - Modern Medical Approaches",
+        "description": "Discover evidence-based obesity treatments including GLP-1 medications, lifestyle coaching, and comprehensive medical support for lasting results."
+      },
+      "womenHealth": {
+        "title": "Women's Health and Obesity - What You Need to Know",
+        "description": "Explore the unique relationship between women's health and weight management, including hormonal factors and personalized treatment approaches."
+      }
+    }
+  },
+  "imageAlt": {
+    "heroGallery1": "Patient transformation - before and after weight loss journey",
+    "heroGallery2": "Successful weight loss transformation with Vidacure program",
+    "heroGallery3": "Medical weight loss success story - healthy lifestyle achievement",
+    "heroGallery4": "Patient celebrating weight loss milestone",
+    "heroGallery5": "Sustainable weight management results",
+    "heroGallery6": "Medical weight loss program transformation",
+    "journeyStep1": "Step 1: Online medical consultation with board-certified doctor for personalized treatment plan",
+    "journeyStep2": "Step 2: Receiving custom treatment plan with GLP-1 medication and lifestyle coaching",
+    "journeyStep3": "Step 3: Ongoing support from dedicated care team throughout weight loss journey",
+    "vidacureApp": "Vidacure mobile app for tracking weight loss progress and accessing support",
+    "medicalInjections": "GLP-1 medication for evidence-based weight management",
+    "vidacureLogo": "Vidacure - Medical weight loss program combining medication and coaching",
+    "bmiCalculator": "BMI calculator for assessing weight and health status",
+    "pricingPlan": "Vidacure pricing plans for medical weight loss programs",
+    "faqSection": "Frequently asked questions about Vidacure weight loss program",
+    "testimonial": "Patient testimonial and success story",
+    "doctorSelma": "Dr. Selma Mehr - Specialist doctor in family medicine at Vidacure",
+    "coachMarcus": "Marcus Flink - Health Coach at Vidacure"
   }
 }
