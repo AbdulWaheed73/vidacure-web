@@ -205,14 +205,22 @@
     "teamMembers": {
       "selma": {
         "name": "Selma Mehr",
-        "title": "Specialist doctor in family medicine"
+        "title": "Specialist doctor in family medicine",
+        "description": "As a specialist in general medicine with eight years of experience, I have broad expertise in preventive healthcare and treatment of chronic diseases. My philosophy is to focus on a holistic approach to weight loss and health, as it's more than just diet and exercise. I work with patients to improve their metabolic control, thereby preventing diseases such as type 2 diabetes, high blood pressure, high blood lipids, and cardiovascular diseases.",
+        "description2": "My extensive experience also includes focus on stress management, sleep, and behavioral changes to achieve lasting results. I strive to make the entire process as personal and simple as possible, also offering health coaching as a vital part of the program."
       },
       "marcus": {
         "name": "Marcus Flink",
-        "title": "Health Coach"
+        "title": "Health Coach",
+        "description": "Marcus Flink is a trained physiotherapist with a strong interest in longevity (living well, for a long time). As a physiotherapist, Marcus has worked with many different patient groups as well as with the Swedish national surf team. As a researcher, Marcus co-authored a nationwide study comparing digital group training with traditional group training for heart attack patients. The results show that digital groups are fully feasible, safe, and provide similar experiences and effects as traditional group training.",
+        "description2": "The problem is that these digital group training sessions should have been available in heart patients' lives many years earlier — then perhaps the heart attack could have been avoided. Combined with knowledge of digital groups and Marcus's experience in health coaching, health-promoting interventions can now be implemented as soon as risk factors for future heart attacks are present. This means that people with high blood pressure, obesity, and physical inactivity should, and now can, receive the help that health coaching through digital groups offers.",
+        "coachingTitle": "When you choose health coaching with Marcus",
+        "coachingDescription": "When you choose to participate in health coaching with Marcus, you will be part of digital group sessions every two weeks for 6 months. Each session is structured to cover bio-, psycho-, and social factors that affect your weight and health. Individual goals will be designed and followed up on. To facilitate goal achievement, a community will be created regardless of where you are geographically. You will be given opportunities to share your journey and you will notice that you are not alone. Each group session ends with some form of movement and believe it or not, it will be fun! No requirement to be visible on camera, but it can help promote group dynamics."
       }
     },
-    "ctaButton": "Find Out More"
+    "ctaButton": "Find Out More",
+    "ctaText": "Ready to start your health journey?",
+    "teamSubtitle": "Meet the experts behind Vidacure"
   },
   "testimonial": {
     "title": "Real People,",

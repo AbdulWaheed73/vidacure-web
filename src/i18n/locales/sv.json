@@ -205,14 +205,22 @@
     "teamMembers": {
       "selma": {
         "name": "Selma Mehr",
-        "title": "Specialistläkare inom allmänmedicin"
+        "title": "Specialistläkare inom allmänmedicin",
+        "description": "Som specialistläkare inom allmänmedicin med åtta års erfarenhet, har jag bred kunskap inom förebyggande hälsoarbete och behandling av kroniska sjukdomar. Min filosofi är att fokusera på en helhetssyn när det gäller viktminskning och hälsa, då det inte bara handlar om kost och motion. Jag arbetar med patienter för att förbättra deras metabola kontroll och därigenom förebygga sjukdomar som typ 2-diabetes, högt blodtryck, höga blodfetter och hjärt-kärlsjukdomar.",
+        "description2": "Min långa erfarenhet inkluderar även fokus på stresshantering, sömn, och beteendeförändring för att nå bestående resultat. Jag strävar efter att göra hela processen så enkel och personlig som möjligt, och erbjuder även hälsocoaching som en viktig del av coachingen."
       },
       "marcus": {
         "name": "Marcus Flink",
-        "title": "Hälsocoach"
+        "title": "Hälsocoach",
+        "description": "Marcus Flink är utbildad fysioterapeut med stort intresse för longevity (att leva väl, länge). Som fysioterapeut har Marcus arbetat med många olika patientgrupper samt med svenska surflandslaget. Som forskare har Marcus medförfattat en rikstäckande studie där digital gruppträning jämfördes med traditionell gruppträning för hjärtinfarktspatienter. Resultatet visar att digitala grupper är fullt genomförbart, säkert och ger liknande upplevelser och effekter som traditionell gruppträning ger.",
+        "description2": "Problemet är att de här digitala gruppträningarna borde funnits i de hjärtsjuka patienternas liv många år tidigare, då kunde möjligen hjärtinfarkten undvikits. I kombination med kunskap om digitala grupper och Marcus erfarenhet av hälsocoaching kommer hälsofrämjande insatser kunna sättas in så fort riskfaktorer för framtida hjärtinfarkt råder. Det innebär att personer med högt blodtryck, övervikt och fysisk inaktivitet bör, och nu kan få den hjälp som hälsocoaching via digitala grupper erbjuder.",
+        "coachingTitle": "När du väljer hälsocoaching med Marcus",
+        "coachingDescription": "När du väljer att medverka i hälsocoaching med Marcus kommer du att vara med i digitala gruppbesök varannan vecka i 6 månader. Varje besök är strukturerat för att täcka bio-, psyko- och sociala faktorer som påverkar din vikt och hälsa. Individuella mål kommer att utformas och följas upp. För att underlätta måluppfyllelse kommer en gemenskap skapas oavsett var du befinner dig geografiskt. Du ges möjligheter att dela med dig av din resa och du kommer märka att du inte är ensam. Varje gruppbesök avslutas med rörelse i någon form och tro det eller ej, det kommer bli kul! Inget krav på att synas i bild men det kan bidra till att främja gruppdynamiken."
       }
     },
-    "ctaButton": "Ta reda på mer"
+    "ctaButton": "Ta reda på mer",
+    "ctaText": "Redo att börja din hälsoresa?",
+    "teamSubtitle": "Möt experterna bakom Vidacure"
   },
   "testimonial": {
     "title": "Riktiga personer,",
