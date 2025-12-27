@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import footer from "../../assets/footer_logo.png";
+import { useCookieConsentStore } from '@/stores/cookieConsentStore';
 
 const FooterSection = () => {
   const { t } = useTranslation();
-  
+  const { openPreferences } = useCookieConsentStore();
+
   const footerSections = [
     {
       title: t('footer.company'),
@@ -36,7 +38,8 @@ const FooterSection = () => {
       links: [
         { name: t('footer.privacyPolicy'), href: '/privacy' },
         { name: t('footer.termsOfService'), href: '/terms' },
-        { name: t('footer.cookiePolicy'), href: '/cookies' }
+        { name: t('footer.cookiePolicy'), href: '/cookies' },
+        { name: t('footer.cookieSettings', 'Cookie Settings'), href: '#cookie-settings', onClick: openPreferences }
       ]
     }
   ];
@@ -70,9 +73,22 @@ const FooterSection = () => {
     href: string;
     children: React.ReactNode;
     className?: string;
+    onClick?: () => void;
   };
-  
-  const FooterLink = ({ href, children, className = "" }: FooterLinkProps) => {
+
+  const FooterLink = ({ href, children, className = "", onClick }: FooterLinkProps) => {
+    // Button with onClick handler
+    if (onClick) {
+      return (
+        <button
+          onClick={onClick}
+          className={`text-emerald-50 text-base font-normal font-inter leading-normal hover:text-white transition-colors duration-200 text-left ${className}`}
+        >
+          {children}
+        </button>
+      );
+    }
+
     // Hash link (in-page navigation)
     if (href.startsWith('#')) {
       return (
@@ -154,7 +170,7 @@ const FooterSection = () => {
                   </div>
                   <div className="flex flex-col gap-4">
                     {section.links.map((link, linkIndex) => (
-                      <FooterLink key={linkIndex} href={link.href}>
+                      <FooterLink key={linkIndex} href={link.href} onClick={link.onClick}>
                         {link.name}
                       </FooterLink>
                     ))}
@@ -202,7 +218,7 @@ const FooterSection = () => {
                   </div>
                   <div className="flex flex-col gap-4">
                     {section.links.map((link, linkIndex) => (
-                      <FooterLink key={linkIndex} href={link.href}>
+                      <FooterLink key={linkIndex} href={link.href} onClick={link.onClick}>
                         {link.name}
                       </FooterLink>
                     ))}

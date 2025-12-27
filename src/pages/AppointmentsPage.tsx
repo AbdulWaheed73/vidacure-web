@@ -17,6 +17,7 @@ import { Alert, AlertDescription } from '@/components/ui/Alert';
 import { PopupModal } from 'react-calendly';
 import { calendlyService } from '../services/calendlyService';
 import type { PatientMeeting } from '../types/calendly-types';
+import { useCookieConsentStore } from '@/stores/cookieConsentStore';
 
 export const AppointmentsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -26,6 +27,8 @@ export const AppointmentsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isBookingLoading, setIsBookingLoading] = useState(false);
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
+  const { consent, openPreferences } = useCookieConsentStore();
+  const hasFunctionalConsent = consent?.functional ?? false;
 
   const loadMeetings = async () => {
     setIsLoading(true);
@@ -170,7 +173,13 @@ export const AppointmentsPage: React.FC = () => {
               {t('common.refresh')}
             </Button>
             <Button
-              onClick={handleDirectBooking}
+              onClick={() => {
+                if (hasFunctionalConsent) {
+                  handleDirectBooking();
+                } else {
+                  openPreferences();
+                }
+              }}
               disabled={isBookingLoading}
               className="bg-teal-600 hover:bg-teal-700 flex items-center gap-2"
             >
@@ -317,16 +326,18 @@ export const AppointmentsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Calendly Popup Modal */}
-      <PopupModal
-        url={schedulingLink || ''}
-        open={!!schedulingLink}
-        onModalClose={() => {
-          setSchedulingLink(null);
-          handleBookingSuccess();
-        }}
-        rootElement={document.getElementById('root')!}
-      />
+      {/* Calendly Popup Modal - Only show if functional cookies accepted */}
+      {hasFunctionalConsent && (
+        <PopupModal
+          url={schedulingLink || ''}
+          open={!!schedulingLink}
+          onModalClose={() => {
+            setSchedulingLink(null);
+            handleBookingSuccess();
+          }}
+          rootElement={document.getElementById('root')!}
+        />
+      )}
     </div>
   );
 };

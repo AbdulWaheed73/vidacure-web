@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from '@/components/ui/Alert';
 import { Badge } from '@/components/ui/badge';
 import { calendlyService } from '@/services/calendlyService';
 import type { EventTypeOption } from '@/types/calendly-types';
+import { useCookieConsentStore } from '@/stores/cookieConsentStore';
 
 type AppointmentBookingProps = {
   isOpen: boolean;
@@ -35,13 +36,15 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   const [success, setSuccess] = useState<string | null>(null);
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
   const [doctorName, setDoctorName] = useState<string>('');
+  const { consent, openPreferences } = useCookieConsentStore();
+  const hasFunctionalConsent = consent?.functional ?? false;
 
   // Load available event types and auto-generate booking link when modal opens
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && hasFunctionalConsent) {
       loadAvailableEventTypes();
     }
-  }, [isOpen]);
+  }, [isOpen, hasFunctionalConsent]);
 
   const handleBooking = async () => {
     if (!availableEventType) {
@@ -133,8 +136,25 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
           </DialogHeader>
 
           <div className="space-y-4 py-4">
+            {/* Cookie Consent Required */}
+            {!hasFunctionalConsent && (
+              <div className="text-center py-8">
+                <AlertCircle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Cookie Consent Required</h3>
+                <p className="text-gray-600 mb-4">
+                  To book appointments, please enable functional cookies in your cookie settings.
+                </p>
+                <Button
+                  onClick={openPreferences}
+                  className="bg-teal-600 hover:bg-teal-700"
+                >
+                  Open Cookie Settings
+                </Button>
+              </div>
+            )}
+
             {/* Loading State */}
-            {(isLoadingTypes || isBooking) && (
+            {hasFunctionalConsent && (isLoadingTypes || isBooking) && (
               <div className="text-center py-8">
                 <div className="w-6 h-6 border-2 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                 <p className="text-gray-600">
@@ -144,7 +164,7 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
             )}
 
             {/* Single Event Type Display - Only show if not booking */}
-            {!isLoadingTypes && !isBooking && availableEventType && (
+            {hasFunctionalConsent && !isLoadingTypes && !isBooking && availableEventType && (
               <div className="space-y-4">
                 <div className="p-4 border-2 border-teal-200 bg-teal-50 rounded-lg">
                   <div className="flex items-center justify-between">
@@ -176,7 +196,7 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
             )}
 
             {/* No Event Types Available */}
-            {!isLoadingTypes && !availableEventType && !error && (
+            {hasFunctionalConsent && !isLoadingTypes && !availableEventType && !error && (
               <div className="text-center py-8">
                 <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-2" />
                 <p className="text-gray-600">No appointment types available</p>
@@ -216,16 +236,18 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
       </Dialog>
 
       {/* Calendly Popup Modal - Opens automatically when schedulingLink is available */}
-      <PopupModal
-        url={schedulingLink || ''}
-        open={!!schedulingLink}
-        onModalClose={() => {
-          setSchedulingLink(null);
-          handleClose();
-          if (onSuccess) onSuccess();
-        }}
-        rootElement={document.getElementById('root')!}
-      />
+      {hasFunctionalConsent && (
+        <PopupModal
+          url={schedulingLink || ''}
+          open={!!schedulingLink}
+          onModalClose={() => {
+            setSchedulingLink(null);
+            handleClose();
+            if (onSuccess) onSuccess();
+          }}
+          rootElement={document.getElementById('root')!}
+        />
+      )}
     </>
   );
 };

@@ -4,6 +4,7 @@ import { Slider } from "@/components/ui/slider";
 import { Minus, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { PopupModal } from 'react-calendly';
+import { useCookieConsentStore } from "@/stores/cookieConsentStore";
 
 export const BMI = () => {
   const { t } = useTranslation();
@@ -11,6 +12,8 @@ export const BMI = () => {
   const [weight, setWeight] = useState(100);
   const [height, setHeight] = useState(182);
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+  const { consent, openPreferences } = useCookieConsentStore();
+  const hasFunctionalConsent = consent?.functional ?? false;
 
   // Calculate BMI
   const calculateBMI = () => {
@@ -275,7 +278,13 @@ export const BMI = () => {
                   {t('bmi.disclaimer')}{" "}
                 </span>
                 <button
-                  onClick={() => setIsCalendlyOpen(true)}
+                  onClick={() => {
+                    if (hasFunctionalConsent) {
+                      setIsCalendlyOpen(true);
+                    } else {
+                      openPreferences();
+                    }
+                  }}
                   className="text-emerald-50 text-base font-bold font-['Manrope'] underline leading-snug hover:text-white transition-colors"
                 >
                   {t('bmi.ctaButton')}
@@ -286,13 +295,15 @@ export const BMI = () => {
         </Card>
       </div>
 
-      {/* Calendly Popup Modal */}
-      <PopupModal
-        url="https://calendly.com/mesudh044/meeting-for-paid-users"
-        open={isCalendlyOpen}
-        onModalClose={() => setIsCalendlyOpen(false)}
-        rootElement={document.getElementById('root')!}
-      />
+      {/* Calendly Popup Modal - Only show if functional cookies accepted */}
+      {hasFunctionalConsent && (
+        <PopupModal
+          url="https://calendly.com/mesudh044/meeting-for-paid-users"
+          open={isCalendlyOpen}
+          onModalClose={() => setIsCalendlyOpen(false)}
+          rootElement={document.getElementById('root')!}
+        />
+      )}
     </div>
   );
 };

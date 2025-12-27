@@ -30,6 +30,8 @@ import { TopBar } from "./components/TopBar";
 import { PopupModal } from "react-calendly";
 import { useState } from "react";
 import { calendlyService } from "./services/calendlyService";
+import { CookieBanner } from "./components/cookie/CookieBanner";
+import { useCookieConsentStore } from "./stores/cookieConsentStore";
 
 function App() {
   const {
@@ -46,6 +48,8 @@ function App() {
 
   // const [isBookingLoading, setIsBookingLoading] = useState(false);
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
+  const { consent } = useCookieConsentStore();
+  const hasFunctionalConsent = consent?.functional ?? false;
 
   const handleDirectBooking = async () => {
     // setIsBookingLoading(true);
@@ -104,15 +108,17 @@ function App() {
           />
           {children}
         </SidebarInset>
-        {/* Global Calendly Popup Modal */}
-        <PopupModal
-          url={schedulingLink || ""}
-          open={!!schedulingLink}
-          onModalClose={() => {
-            setSchedulingLink(null);
-          }}
-          rootElement={document.getElementById("root")!}
-        />
+        {/* Global Calendly Popup Modal - Only show if functional cookies accepted */}
+        {hasFunctionalConsent && (
+          <PopupModal
+            url={schedulingLink || ""}
+            open={!!schedulingLink}
+            onModalClose={() => {
+              setSchedulingLink(null);
+            }}
+            rootElement={document.getElementById("root")!}
+          />
+        )}
       </SidebarProvider>
     );
   };
@@ -137,6 +143,9 @@ function App() {
 
   return (
     <BrowserRouter>
+      {/* Cookie Consent Banner */}
+      <CookieBanner />
+
       <Routes>
         {/* Admin Routes - Must be FIRST to prevent regular auth interference */}
         <Route path="/admin/login" element={<AdminLogin />} />
