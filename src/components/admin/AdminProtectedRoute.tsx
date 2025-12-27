@@ -23,7 +23,7 @@ export const AdminProtectedRoute = ({ children }: AdminProtectedRouteProps) => {
   // Show loading spinner while checking authentication
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-white">
         <LoadingSpinner />
       </div>
     );

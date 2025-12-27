@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';
 import { Alert } from '@/components/ui/Alert';
 import { useAdminAuthStore } from '@/stores/adminAuthStore';
-import { Shield, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
+import VidacureLogo from '@/assets/vidacure_png.png';
 
 export const AdminLogin = () => {
   const navigate = useNavigate();
@@ -16,16 +16,14 @@ export const AdminLogin = () => {
   const authSuccess = searchParams.get('auth');
 
   useEffect(() => {
-    // Check if already authenticated
     checkAdminAuth();
   }, [checkAdminAuth]);
 
   useEffect(() => {
-    // If authenticated and login was successful, redirect to admin dashboard
-    if (isAdminAuthenticated && authSuccess === 'success') {
+    if (isAdminAuthenticated) {
       navigate('/admin');
     }
-  }, [isAdminAuthenticated, authSuccess, navigate]);
+  }, [isAdminAuthenticated, navigate]);
 
   const handleLogin = () => {
     loginAdmin();
@@ -49,64 +47,80 @@ export const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-4 text-center">
-          <div className="mx-auto w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center">
-            <Shield className="w-8 h-8 text-white" />
+    <div className="min-h-screen flex">
+      {/* Left side - Branding */}
+      <div className="hidden lg:flex lg:w-1/2 bg-teal-600 p-12 flex-col justify-between">
+        <div>
+          <img src={VidacureLogo} alt="Vidacure" className="h-8 brightness-0 invert" />
+        </div>
+        <div>
+          <h1 className="text-4xl font-bold text-white mb-4">
+            Admin Portal
+          </h1>
+          <p className="text-teal-100 text-lg">
+            Manage patients, doctors, and subscriptions from one place.
+          </p>
+        </div>
+        <p className="text-teal-200 text-sm">
+          © {new Date().getFullYear()} Vidacure. All rights reserved.
+        </p>
+      </div>
+
+      {/* Right side - Login */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
+        <div className="w-full max-w-sm">
+          {/* Mobile logo */}
+          <div className="lg:hidden mb-8">
+            <img src={VidacureLogo} alt="Vidacure" className="h-6" />
           </div>
-          <CardTitle className="text-2xl font-bold">Admin Portal</CardTitle>
-          <CardDescription>
-            Secure access for Vidacure administrators
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
+
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-zinc-900 mb-2">
+              Sign in
+            </h2>
+            <p className="text-zinc-500 text-sm">
+              Use your BankID to access the admin dashboard
+            </p>
+          </div>
+
           {error && (
-            <Alert variant="destructive" title="Authentication Error">
-              <AlertCircle className="h-4 w-4" />
-              <span className="ml-2">{getErrorMessage(error)}</span>
-            </Alert>
+            <div className="mb-6">
+              <Alert variant="destructive" title="Error">
+                <AlertCircle className="h-4 w-4" />
+                <span className="ml-2">{getErrorMessage(error)}</span>
+              </Alert>
+            </div>
           )}
 
           {authSuccess === 'success' && !error && (
-            <Alert variant="default" title="Success">
-              <span className="ml-2">Login successful! Redirecting...</span>
-            </Alert>
+            <div className="mb-6 p-3 bg-teal-50 border border-teal-200 rounded-lg">
+              <p className="text-teal-700 text-sm">Login successful! Redirecting...</p>
+            </div>
           )}
 
-          <div className="space-y-4">
-            <div className="text-sm text-muted-foreground text-center">
-              <p className="mb-2">This portal is restricted to authorized administrators only.</p>
-              <p>Please authenticate using BankID.</p>
-            </div>
+          <Button
+            onClick={handleLogin}
+            disabled={isLoading}
+            className="w-full h-11 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-medium"
+            size="lg"
+          >
+            {isLoading ? 'Connecting...' : 'Continue with BankID'}
+          </Button>
 
-            <Button
-              onClick={handleLogin}
-              disabled={isLoading}
-              className="w-full bg-indigo-600 hover:bg-indigo-700"
-              size="lg"
-            >
-              {isLoading ? 'Loading...' : 'Login with BankID'}
-            </Button>
+          <p className="mt-6 text-xs text-zinc-400 text-center">
+            Only registered administrators can access this portal.
+          </p>
 
-            <div className="text-xs text-center text-muted-foreground">
-              <p>Admins must be registered in the system.</p>
-              <p>Regular user accounts cannot access this portal.</p>
-            </div>
-          </div>
-
-          <div className="pt-4 border-t">
-            <Button
-              variant="ghost"
-              size="sm"
+          <div className="mt-8 pt-6 border-t border-zinc-100">
+            <button
               onClick={() => navigate('/')}
-              className="w-full"
+              className="text-sm text-zinc-500 hover:text-zinc-700"
             >
-              Back to Home
-            </Button>
+              ← Back to website
+            </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

@@ -38,7 +38,7 @@ export const adminAuthService = {
    * Clears admin_token cookie
    */
   logout: async (): Promise<void> => {
-    await api.post('/admin/auth/logout');
+    await api.post('/api/admin/auth/logout');
     // Clear any local storage
     localStorage.removeItem('admin-auth-storage');
   },

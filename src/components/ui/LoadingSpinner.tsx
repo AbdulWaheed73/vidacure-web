@@ -3,19 +3,15 @@ interface LoadingSpinnerProps {
   clientType?: string;
 }
 
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  message = "Loading...", 
-  clientType 
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+  message,
+  clientType
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 flex items-center justify-center">
-      <div className="text-center text-white">
-        <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-xl font-medium">{message}</p>
-        {clientType && (
-          <p className="text-sm opacity-75 mt-2">Client: {clientType}</p>
-        )}
-      </div>
+    <div className="text-center">
+      <div className="w-10 h-10 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin mx-auto"></div>
+      {message && <p className="text-sm text-zinc-600 mt-3">{message}</p>}
+      {clientType && <p className="text-xs text-zinc-400 mt-1">Client: {clientType}</p>}
     </div>
   );
 };
