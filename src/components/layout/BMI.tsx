@@ -47,7 +47,10 @@ export const BMI = () => {
   //   const heightPercentage = Math.min((height - 100) / 150 * 100, 100);
 
   return (
-    <div className="w-full px-4 sm:px-8 lg:px-14 py-12 lg:py-20 bg-gradient-to-br from-teal-600 to-teal-900 flex flex-col justify-start items-center">
+    <div
+      className="w-full px-4 sm:px-8 lg:px-14 py-12 lg:py-20 flex flex-col justify-start items-center"
+      style={{ background: 'radial-gradient(81.35% 88.61% at 51.94% 50%, #008D77 0%, #005044 100%)' }}
+    >
       <div className="w-full max-w-6xl">
         <Card className="p-6 sm:p-8 lg:p-14 rounded-3xl bg-transparent border-none shadow-none">
           <CardContent className="p-0 flex flex-col justify-center items-center gap-8">
