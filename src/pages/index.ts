@@ -15,3 +15,4 @@ export { default as AboutUs } from './AboutUs';
 export { default as Article } from './Article';
 export { default as AdminDashboard } from './AdminDashboard';
 export { default as AdminLogin } from './admin/AdminLogin';
+export { default as SubscribePage } from './SubscribePage';

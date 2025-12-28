@@ -1,4 +1,5 @@
-import { User, Settings, LogOut } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { User, Settings, LogOut, Bell } from 'lucide-react';
 import { Button } from '../ui/Button';
 import {
   DropdownMenu,
@@ -8,12 +9,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import { adminService } from '@/services/adminService';
+import { cn } from '@/lib/utils';
 
 type AdminTopBarProps = {
   onLogout: () => void;
+  onNotificationClick?: () => void;
 };
 
-export const AdminTopBar = ({ onLogout }: AdminTopBarProps) => {
+export const AdminTopBar = ({ onLogout, onNotificationClick }: AdminTopBarProps) => {
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [hasHighPriority, setHasHighPriority] = useState(false);
+
+  useEffect(() => {
+    const fetchNotificationCount = async () => {
+      try {
+        const data = await adminService.getNotificationCount();
+        setNotificationCount(data.unreadCount);
+        setHasHighPriority(data.highPriorityUnread > 0);
+      } catch (error) {
+        console.error('Failed to fetch notification count:', error);
+      }
+    };
+
+    fetchNotificationCount();
+    const interval = setInterval(fetchNotificationCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
   // Generate dynamic greeting based on time of day
   const getGreeting = () => {
     const currentHour = new Date().getHours();
@@ -37,7 +59,29 @@ export const AdminTopBar = ({ onLogout }: AdminTopBarProps) => {
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-4">
+        {/* Notification Bell */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative hover:bg-teal-50"
+          onClick={onNotificationClick}
+        >
+          <Bell className="h-5 w-5 text-zinc-700" />
+          {notificationCount > 0 && (
+            <span
+              className={cn(
+                'absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full text-xs font-semibold flex items-center justify-center',
+                hasHighPriority
+                  ? 'bg-red-500 text-white'
+                  : 'bg-teal-600 text-white'
+              )}
+            >
+              {notificationCount > 99 ? '99+' : notificationCount}
+            </span>
+          )}
+        </Button>
+
         {/* User Profile Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

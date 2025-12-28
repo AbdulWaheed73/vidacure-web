@@ -20,7 +20,7 @@ export type DeletionResponse = {
  * This is a permanent action that removes all user data
  */
 export const deleteAccount = async (): Promise<DeletionResponse> => {
-  const response = await api.delete<DeletionResponse>('/users/me');
+  const response = await api.delete<DeletionResponse>('/api/users/me');
   return response.data;
 };
 

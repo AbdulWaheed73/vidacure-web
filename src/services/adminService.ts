@@ -1,6 +1,16 @@
 import { api } from './api';
 import type { PatientStripeData, PatientSubscriptionDetailsResponse } from '../types/payment-types';
-import type { SSNCheckResponse, ConvertPatientToDoctorRequest, AddDoctorFormValues } from '../types/admin-types';
+import type {
+  SSNCheckResponse,
+  ConvertPatientToDoctorRequest,
+  AddDoctorFormValues,
+  NotificationCountResponse,
+  NotificationsResponse,
+  AdminNotification,
+  DeleteUserResponse,
+  DeletionLogsResponse,
+  DeletionLog,
+} from '../types/admin-types';
 
 export type DashboardStats = {
   totalPatients: number;
@@ -146,6 +156,77 @@ export const adminService = {
    */
   addDoctor: async (data: AddDoctorFormValues): Promise<{ message: string; doctor: Doctor }> => {
     const response = await api.post('/api/admin/add-doctor', data);
+    return response.data;
+  },
+
+  // ============ Notification Methods ============
+
+  /**
+   * Get notification counts for badges
+   */
+  getNotificationCount: async (): Promise<NotificationCountResponse> => {
+    const response = await api.get('/api/admin/notifications/count');
+    return response.data;
+  },
+
+  /**
+   * Get notifications with pagination and filtering
+   */
+  getNotifications: async (
+    page: number = 1,
+    limit: number = 20,
+    type?: string,
+    read?: boolean
+  ): Promise<NotificationsResponse> => {
+    const response = await api.get('/api/admin/notifications', {
+      params: { page, limit, type, read }
+    });
+    return response.data;
+  },
+
+  /**
+   * Mark a notification as resolved
+   */
+  resolveNotification: async (notificationId: string): Promise<AdminNotification> => {
+    const response = await api.put(`/api/admin/notifications/${notificationId}/resolve`);
+    return response.data;
+  },
+
+  // ============ User Deletion Methods ============
+
+  /**
+   * Delete a user (admin action)
+   */
+  deleteUser: async (
+    userId: string,
+    userType: 'patient' | 'doctor',
+    reassignDoctorId?: string
+  ): Promise<DeleteUserResponse> => {
+    const response = await api.delete(`/api/users/admin/${userId}`, {
+      data: { userType, reassignDoctorId }
+    });
+    return response.data;
+  },
+
+  /**
+   * Get deletion logs with pagination
+   */
+  getDeletionLogs: async (
+    page: number = 1,
+    limit: number = 20,
+    status?: string
+  ): Promise<DeletionLogsResponse> => {
+    const response = await api.get('/api/users/admin/deletions', {
+      params: { page, limit, status }
+    });
+    return response.data;
+  },
+
+  /**
+   * Get a specific deletion log detail
+   */
+  getDeletionDetail: async (deletionId: string): Promise<DeletionLog> => {
+    const response = await api.get(`/api/users/admin/deletions/${deletionId}`);
     return response.data;
   }
 };

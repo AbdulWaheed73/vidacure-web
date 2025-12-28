@@ -16,6 +16,7 @@ import {
   BMICheck,
   AboutUs,
   Article,
+  SubscribePage,
 } from "./pages";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -286,6 +287,20 @@ function App() {
             isAuthenticated ? (
               <SidebarLayout>
                 <ChatPage />
+              </SidebarLayout>
+            ) : (
+              <Navigate to={ROUTES.LOGIN} replace />
+            )
+          }
+        />
+
+        {/* Subscribe Route - Protected with Sidebar */}
+        <Route
+          path={ROUTES.SUBSCRIBE}
+          element={
+            isAuthenticated ? (
+              <SidebarLayout>
+                <SubscribePage />
               </SidebarLayout>
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />

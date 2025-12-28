@@ -1,4 +1,5 @@
 import React from 'react';
+import { DeleteAccountDialog } from '@/components/dashboard/DeleteAccountDialog';
 
 const DoctorAccount: React.FC = () => {
   return (
@@ -61,6 +62,15 @@ const DoctorAccount: React.FC = () => {
               <div className="text-gray-600 text-sm">Manage data and privacy</div>
             </button>
           </div>
+        </div>
+
+        {/* Danger Zone */}
+        <div className="mt-8 bg-red-50 border border-red-200 rounded-lg p-6">
+          <h3 className="text-xl font-semibold text-red-800 mb-2">Danger Zone</h3>
+          <p className="text-red-600 text-sm mb-4">
+            Once you delete your account, there is no going back. Please be certain.
+          </p>
+          <DeleteAccountDialog userType="doctor" />
         </div>
       </div>
     </div>

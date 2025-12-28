@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/badge';
-import { RefreshCw, Eye } from 'lucide-react';
+import { RefreshCw, Eye, Trash2 } from 'lucide-react';
 import type { Patient, Doctor } from '@/services/adminService';
 import { SubscriptionDetailsModal } from './SubscriptionDetailsModal';
 
@@ -17,6 +17,7 @@ type PatientsViewProps = {
   patients: Patient[];
   doctors: Doctor[];
   onReassign: (patient: Patient) => void;
+  onDelete?: (patient: Patient) => void;
   onRefreshStripeData?: () => void;
   isLoadingStripeData?: boolean;
   pagination?: {
@@ -64,6 +65,7 @@ export const PatientsView = ({
   patients,
   doctors,
   onReassign,
+  onDelete,
   onRefreshStripeData,
   isLoadingStripeData = false,
   pagination,
@@ -195,6 +197,17 @@ export const PatientsView = ({
                       >
                         Reassign
                       </Button>
+                      {onDelete && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onDelete(patient)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          title="Delete patient"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

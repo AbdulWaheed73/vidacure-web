@@ -104,8 +104,21 @@ export const useChatStore = create<ChatState>()(
             set({ currentChannel: channel, error: null });
           }
         } catch (error: unknown) {
-          const errorMessage = error instanceof Error ? error.message : 'Failed to get patient channel';
+          let errorMessage = error instanceof Error ? error.message : 'Failed to get patient channel';
           console.error('Failed to get patient channel:', error);
+
+          // Check for "no doctor assigned" error from backend
+          if (error && typeof error === 'object' && 'response' in error) {
+            const axiosError = error as { response?: { data?: { error?: string } } };
+            if (axiosError.response?.data?.error) {
+              errorMessage = axiosError.response.data.error;
+            }
+          }
+
+          // Translate Stream Chat errors to user-friendly messages
+          if (errorMessage.includes('specify atleast one member') || errorMessage.includes('specify at least one member')) {
+            errorMessage = 'No doctor assigned yet. Please wait for a doctor to be assigned to your case.';
+          }
 
           // Don't show connection errors to users - these are expected during connect/disconnect cycles
           const isConnectionError = errorMessage.includes('connectUser') || errorMessage.includes('connectAnonymousUser');

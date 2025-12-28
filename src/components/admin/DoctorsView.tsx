@@ -8,13 +8,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/Button';
-import { Plus } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import type { Doctor, Patient } from '@/services/adminService';
 import { AddDoctorDialog } from './AddDoctorDialog';
 
 type DoctorsViewProps = {
   doctors: Doctor[];
   onReassign: (patient: Patient) => void;
+  onDelete?: (doctor: Doctor) => void;
   onRefresh: () => void;
 };
 
@@ -41,7 +42,7 @@ const getStatusBadgeVariant = (status: string) => {
   }
 };
 
-export const DoctorsView = ({ doctors, onReassign, onRefresh }: DoctorsViewProps) => {
+export const DoctorsView = ({ doctors, onReassign, onDelete, onRefresh }: DoctorsViewProps) => {
   const [isAddDoctorOpen, setIsAddDoctorOpen] = useState(false);
 
   return (
@@ -78,6 +79,17 @@ export const DoctorsView = ({ doctors, onReassign, onRefresh }: DoctorsViewProps
                 <Badge variant="outline" className="text-sm">
                   {doctor.channelCount} Channels
                 </Badge>
+                {onDelete && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onDelete(doctor)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    title="Delete doctor"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
             </div>
           </CardHeader>

@@ -71,7 +71,10 @@ export class ChatService {
       const response = await api.get('/api/chat/patient/channel');
       const { channelId } = response.data;
 
-      const channel = this.client.channel('messaging', channelId);
+      // Handle both string and object responses for channelId
+      const channelIdString = typeof channelId === 'object' ? channelId.id : channelId;
+
+      const channel = this.client.channel('messaging', channelIdString);
       await channel.watch();
       return channel;
     } catch (error) {

@@ -36,3 +36,104 @@ export type ConvertPatientToDoctorRequest = {
   patientId: string;
   email: string;
 };
+
+// Admin Notification Types
+export type NotificationType = 'calendly_deletion' | 'general';
+export type NotificationPriority = 'high' | 'medium' | 'low';
+
+export type AdminNotification = {
+  _id: string;
+  type: NotificationType;
+  priority: NotificationPriority;
+  read: boolean;
+  message: string;
+  actionRequired: string;
+  metadata: {
+    userEmail?: string;
+    userName?: string;
+    calendlyUserUri?: string;
+    deletionLogId?: string;
+    [key: string]: unknown;
+  };
+  createdAt: string;
+  updatedAt: string;
+  resolvedAt?: string;
+  resolvedBy?: string;
+};
+
+export type NotificationCountResponse = {
+  total: number;
+  unreadCount: number;
+  highPriorityUnread: number;
+};
+
+export type NotificationsResponse = {
+  notifications: AdminNotification[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    unreadCount: number;
+  };
+};
+
+// User Deletion Types
+export type DeletionStatus = 'in_progress' | 'completed' | 'partial_failure' | 'failed';
+
+export type DeletionResult = {
+  success: boolean;
+  error?: string;
+  channelIds?: string[];
+  notificationCreated?: boolean;
+  email?: string;
+};
+
+export type DeletionResults = {
+  stripe: DeletionResult;
+  stream: DeletionResult;
+  calendly: DeletionResult;
+  mongodb: DeletionResult;
+};
+
+export type DeletionLog = {
+  _id: string;
+  deletionId: string;
+  userId: string;
+  userType: 'patient' | 'doctor';
+  userEmail: string;
+  userName: string;
+  requestedBy: string;
+  requestedAt: string;
+  completedAt?: string;
+  status: DeletionStatus;
+  deletionResults: DeletionResults;
+  metadata: {
+    stripeCustomerId?: string;
+    patientCount?: number;
+    calendlyUserUri?: string;
+    reassignedDoctorId?: string;
+  };
+  confirmationId: string;
+};
+
+export type DeletionLogsResponse = {
+  deletions: DeletionLog[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+};
+
+export type DeleteUserRequest = {
+  userType: 'patient' | 'doctor';
+  reassignDoctorId?: string;
+};
+
+export type DeleteUserResponse = {
+  success: boolean;
+  message: string;
+  deletionId: string;
+  confirmationId: string;
+  results: DeletionResults;
+};

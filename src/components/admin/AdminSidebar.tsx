@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import {
   LayoutDashboard,
   Users,
   UserCog,
   LogOut,
+  Bell,
+  FileText,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -21,6 +24,7 @@ import { ROUTES } from '../../constants';
 import Vidacure from "../../assets/vidacure_png.png";
 import { useAdminAuthStore } from '../../stores/adminAuthStore';
 import { Button } from '../ui/Button';
+import { adminService } from '@/services/adminService';
 
 type AdminSidebarProps = {
   activeTab: string;
@@ -29,6 +33,24 @@ type AdminSidebarProps = {
 
 export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
   const { logoutAdmin } = useAdminAuthStore();
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [hasHighPriority, setHasHighPriority] = useState(false);
+
+  useEffect(() => {
+    const fetchNotificationCount = async () => {
+      try {
+        const data = await adminService.getNotificationCount();
+        setNotificationCount(data.unreadCount);
+        setHasHighPriority(data.highPriorityUnread > 0);
+      } catch (error) {
+        console.error('Failed to fetch notification count:', error);
+      }
+    };
+
+    fetchNotificationCount();
+    const interval = setInterval(fetchNotificationCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const adminMenuItems = [
     {
@@ -45,6 +67,18 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
       title: 'Doctors',
       value: 'doctors',
       icon: UserCog,
+    },
+    {
+      title: 'Notifications',
+      value: 'notifications',
+      icon: Bell,
+      badge: notificationCount > 0 ? notificationCount : undefined,
+      highPriority: hasHighPriority,
+    },
+    {
+      title: 'Deletion Logs',
+      value: 'deletion-logs',
+      icon: FileText,
     },
   ];
 
@@ -80,6 +114,8 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
               {adminMenuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.value;
+                const badge = 'badge' in item ? item.badge : undefined;
+                const highPriority = 'highPriority' in item ? item.highPriority : false;
 
                 return (
                   <SidebarMenuItem key={item.title} className="mb-1">
@@ -103,13 +139,25 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
                       />
                       <span
                         className={cn(
-                          'text-base leading-snug',
+                          'text-base leading-snug flex-1',
                           isActive ? 'text-dark-teal font-bold' : 'text-zinc-800 font-normal'
                         )}
                         style={isActive ? { color: '#005044', fontWeight: 'bold' } : undefined}
                       >
                         {item.title}
                       </span>
+                      {badge !== undefined && (
+                        <span
+                          className={cn(
+                            'min-w-5 h-5 px-1.5 rounded-full text-xs font-semibold flex items-center justify-center',
+                            highPriority
+                              ? 'bg-red-500 text-white'
+                              : 'bg-teal-600 text-white'
+                          )}
+                        >
+                          {badge > 99 ? '99+' : badge}
+                        </span>
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

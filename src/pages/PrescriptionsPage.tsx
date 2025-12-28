@@ -4,6 +4,7 @@ import { Pill, Plus } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { PrescriptionRequestModal } from '../components/PrescriptionRequestModal';
 import { PrescriptionRequestsList } from '../components/PrescriptionRequestsList';
+import { SubscriptionRequired } from '@/components/subscription/SubscriptionRequired';
 
 export const PrescriptionsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -17,32 +18,34 @@ export const PrescriptionsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Pill className="size-8 text-teal-action" />
-            <h1 className="text-3xl font-bold text-gray-800 font-manrope">{t('prescriptions.title')}</h1>
+    <SubscriptionRequired featureName="Prescriptions">
+      <div className="p-8">
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <Pill className="size-8 text-teal-action" />
+              <h1 className="text-3xl font-bold text-gray-800 font-manrope">{t('prescriptions.title')}</h1>
+            </div>
+            <Button onClick={() => setModalOpen(true)} className="flex items-center gap-2">
+              <Plus className="size-4" />
+              Request Prescription
+            </Button>
           </div>
-          <Button onClick={() => setModalOpen(true)} className="flex items-center gap-2">
-            <Plus className="size-4" />
-            Request Prescription
-          </Button>
+          <p className="text-lg text-gray-600 font-manrope">
+            {t('prescriptions.description')}
+          </p>
         </div>
-        <p className="text-lg text-gray-600 font-manrope">
-          {t('prescriptions.description')}
-        </p>
-      </div>
 
-      <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
-        <PrescriptionRequestsList refreshTrigger={refreshTrigger} />
-      </div>
+        <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
+          <PrescriptionRequestsList refreshTrigger={refreshTrigger} />
+        </div>
 
-      <PrescriptionRequestModal
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        onSuccess={handleRequestSuccess}
-      />
-    </div>
+        <PrescriptionRequestModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          onSuccess={handleRequestSuccess}
+        />
+      </div>
+    </SubscriptionRequired>
   );
 };

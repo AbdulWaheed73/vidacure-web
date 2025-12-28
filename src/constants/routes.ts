@@ -25,7 +25,8 @@ export const ROUTES = {
   CONTACT: '/contact',
   BMI_CHECK: '/bmi-check',
   ONBOARDING: '/onboarding',
-  SUBSCRIPTION_SUCCESS: '/subscription/success'
+  SUBSCRIPTION_SUCCESS: '/subscription/success',
+  SUBSCRIBE: '/subscribe'
 } as const;
 
 export type RouteKeys = keyof typeof ROUTES;

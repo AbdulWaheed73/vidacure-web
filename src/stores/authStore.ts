@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { api } from '../services/api';
+import { api, updateCsrfToken } from '../services/api';
 import type { AuthStore } from '../types';
 
 
@@ -34,6 +34,7 @@ export const useAuthStore = create<AuthStore>()(
           
           if (data.authenticated) {
             localStorage.setItem("csrfToken", data.csrfToken);
+            updateCsrfToken(data.csrfToken); // Update axios headers
             set({
               isAuthenticated: true,
               user: data.user,
@@ -63,6 +64,10 @@ export const useAuthStore = create<AuthStore>()(
 
       setAuthData: (response) => {
         if (response.authenticated && response.user) {
+          if (response.csrfToken) {
+            localStorage.setItem("csrfToken", response.csrfToken);
+            updateCsrfToken(response.csrfToken); // Update axios headers
+          }
           set({
             isAuthenticated: true,
             user: response.user,
@@ -96,6 +101,12 @@ export const useAuthStore = create<AuthStore>()(
       partialize: (state) => ({
         csrfToken: state.csrfToken,
       }),
+      onRehydrateStorage: () => (state) => {
+        // Update axios headers when store is rehydrated from localStorage
+        if (state?.csrfToken) {
+          updateCsrfToken(state.csrfToken);
+        }
+      },
     }
   )
 );

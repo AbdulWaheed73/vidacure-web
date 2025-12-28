@@ -5,6 +5,9 @@ import { PatientsView } from '@/components/admin/PatientsView';
 import { DoctorsView } from '@/components/admin/DoctorsView';
 import { ReassignDoctorModal } from '@/components/admin/ReassignDoctorModal';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
+import { NotificationsView } from '@/components/admin/NotificationsView';
+import { DeletionLogsView } from '@/components/admin/DeletionLogsView';
+import { DeleteUserDialog } from '@/components/admin/DeleteUserDialog';
 import { adminService } from '@/services/adminService';
 import type { Patient, Doctor, DashboardStats } from '@/services/adminService';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -28,6 +31,22 @@ export const AdminDashboard = () => {
     totalCount: 0,
     totalPages: 0,
   });
+
+  // Delete user state
+  const [deleteTarget, setDeleteTarget] = useState<{
+    user: Patient | Doctor | null;
+    type: 'patient' | 'doctor';
+  }>({ user: null, type: 'patient' });
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const handleDeleteUser = (user: Patient | Doctor, type: 'patient' | 'doctor') => {
+    setDeleteTarget({ user, type });
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteSuccess = () => {
+    fetchData();
+  };
 
   const fetchData = async () => {
     try {
@@ -103,36 +122,27 @@ export const AdminDashboard = () => {
     }
   };
 
-  if (loading && !stats) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-8">
-        <Alert variant="destructive" title="Error">
-          {error}
-        </Alert>
-      </div>
-    );
-  }
-
   return (
     <>
       <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
       <div className="p-8 space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
-          <p className="text-muted-foreground">
-            Manage doctors, patients, and assignments
-          </p>
+
+      {/* Loading State */}
+      {loading && !stats && (
+        <div className="flex items-center justify-center h-[calc(100vh-8rem)]">
+          <LoadingSpinner />
         </div>
+      )}
+
+      {/* Error State */}
+      {error && !loading && (
+        <Alert variant="destructive" title="Error">
+          {error}
+        </Alert>
+      )}
 
       {/* Tabs for Dashboard, Patients and Doctors Views */}
+      {!loading && !error && stats && (
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsContent value="dashboard" className="space-y-4">
           {/* Stats Cards */}
@@ -209,6 +219,7 @@ export const AdminDashboard = () => {
                 patients={patients}
                 doctors={doctors}
                 onReassign={handleReassign}
+                onDelete={(patient) => handleDeleteUser(patient, 'patient')}
                 onRefreshStripeData={handleRefreshStripeData}
                 isLoadingStripeData={isLoadingStripeData}
                 pagination={pagination}
@@ -219,9 +230,23 @@ export const AdminDashboard = () => {
         </TabsContent>
 
         <TabsContent value="doctors" className="space-y-4">
-          <DoctorsView doctors={doctors} onReassign={handleReassign} onRefresh={fetchData} />
+          <DoctorsView
+            doctors={doctors}
+            onReassign={handleReassign}
+            onDelete={(doctor) => handleDeleteUser(doctor, 'doctor')}
+            onRefresh={fetchData}
+          />
+        </TabsContent>
+
+        <TabsContent value="notifications" className="space-y-4">
+          <NotificationsView />
+        </TabsContent>
+
+        <TabsContent value="deletion-logs" className="space-y-4">
+          <DeletionLogsView />
         </TabsContent>
       </Tabs>
+      )}
 
       {/* Reassign Doctor Modal */}
       <ReassignDoctorModal
@@ -234,6 +259,19 @@ export const AdminDashboard = () => {
         doctors={doctors}
         onReassign={handleReassignSubmit}
         isLoading={isReassigning}
+      />
+
+      {/* Delete User Dialog */}
+      <DeleteUserDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => {
+          setIsDeleteDialogOpen(false);
+          setDeleteTarget({ user: null, type: 'patient' });
+        }}
+        user={deleteTarget.user}
+        userType={deleteTarget.type}
+        doctors={doctors}
+        onSuccess={handleDeleteSuccess}
       />
       </div>
     </>

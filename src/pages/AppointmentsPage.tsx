@@ -18,6 +18,7 @@ import { PopupModal } from 'react-calendly';
 import { calendlyService } from '../services/calendlyService';
 import type { PatientMeeting } from '../types/calendly-types';
 import { useCookieConsentStore } from '@/stores/cookieConsentStore';
+import { SubscriptionRequired } from '@/components/subscription/SubscriptionRequired';
 
 export const AppointmentsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -145,6 +146,7 @@ export const AppointmentsPage: React.FC = () => {
 
 
   return (
+    <SubscriptionRequired featureName="Appointments">
     <div className="p-8">
       {/* Header */}
       <div className="mb-8">
@@ -339,5 +341,6 @@ export const AppointmentsPage: React.FC = () => {
         />
       )}
     </div>
+    </SubscriptionRequired>
   );
 };
