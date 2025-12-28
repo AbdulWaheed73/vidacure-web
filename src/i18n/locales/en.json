@@ -437,6 +437,30 @@
       }
     }
   },
+  "cookies": {
+    "banner": {
+      "title": "We use cookies",
+      "description": "We use cookies to enhance your experience and enable appointment booking features.",
+      "descriptionShort": "to enhance your experience and enable appointment booking.",
+      "acceptAll": "Accept All",
+      "customize": "Customize",
+      "rejectAll": "Reject All",
+      "privacyPolicy": "Privacy Policy"
+    },
+    "preferences": {
+      "title": "Cookie Preferences",
+      "description": "Manage your cookie preferences below.",
+      "essential": {
+        "title": "Essential Cookies",
+        "description": "Required for the website to function properly. Cannot be disabled."
+      },
+      "functional": {
+        "title": "Functional Cookies",
+        "description": "Enable appointment booking features (Calendly integration)."
+      },
+      "save": "Save Preferences"
+    }
+  },
   "imageAlt": {
     "heroGallery1": "Patient transformation - before and after weight loss journey",
     "heroGallery2": "Successful weight loss transformation with Vidacure program",

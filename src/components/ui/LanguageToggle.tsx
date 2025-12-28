@@ -6,11 +6,13 @@ const LanguageToggle = () => {
   const { i18n } = useTranslation();
 
   const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'sv' : 'en';
+    // Use startsWith to handle locale codes like 'en-US' or 'sv-SE'
+    const isEnglish = i18n.language.startsWith('en');
+    const newLang = isEnglish ? 'sv' : 'en';
     i18n.changeLanguage(newLang);
   };
 
-  const currentLang = i18n.language === 'sv' ? 'SV' : 'EN';
+  const currentLang = i18n.language.startsWith('sv') ? 'SV' : 'EN';
 
   return (
     <Button

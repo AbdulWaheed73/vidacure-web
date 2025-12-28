@@ -66,16 +66,12 @@ export const Navbar = () => {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <a
-                    href="#about-us"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      scrollToSection("about-us");
-                    }}
+                  <Link
+                    to={ROUTES.ABOUT_US}
                     className={`${darkTealText} font-normal inline-flex items-center justify-center px-2 xl:px-4 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm whitespace-nowrap`}
                   >
                     {t("navbar.ourStory")}
-                  </a>
+                  </Link>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
@@ -256,16 +252,13 @@ export const Navbar = () => {
 
                   <NavigationMenuItem className="w-full">
                     <NavigationMenuLink asChild>
-                      <a
-                        href="#about-us"
+                      <Link
+                        to={ROUTES.ABOUT_US}
                         className="block w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4 text-center"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          scrollToSection("about-us");
-                        }}
+                        onClick={() => setIsOpen(false)}
                       >
                         {t("navbar.ourStory")}
-                      </a>
+                      </Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
 

@@ -6,6 +6,7 @@ import { ROUTES } from '@/constants';
 import { Card, CardContent } from '@/components/ui/card';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { createOrganizationSchema } from '@/utils/structuredData';
+import Navbar from '@/components/layout/Navbar';
 
 export default function AboutUs() {
   const { t } = useTranslation();
@@ -34,7 +35,10 @@ export default function AboutUs() {
         keywords={t('seo.defaultKeywords')}
         structuredData={organizationSchema}
       />
-      <div className="min-h-screen bg-[#E6F9F6]">
+      <div className="w-full shadow-2xs fixed z-50">
+        <Navbar />
+      </div>
+      <div className="min-h-screen bg-[#E6F9F6] pt-16">
       <div className="w-full px-4 sm:px-8 md:px-14 py-12 md:py-16">
         <div className="max-w-7xl mx-auto">
           {/* Header */}

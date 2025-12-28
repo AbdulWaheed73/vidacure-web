@@ -437,6 +437,30 @@
       }
     }
   },
+  "cookies": {
+    "banner": {
+      "title": "Vi använder cookies",
+      "description": "Vi använder cookies för att förbättra din upplevelse och möjliggöra bokningsfunktioner.",
+      "descriptionShort": "för att förbättra din upplevelse och möjliggöra tidsbokning.",
+      "acceptAll": "Acceptera alla",
+      "customize": "Anpassa",
+      "rejectAll": "Avvisa alla",
+      "privacyPolicy": "Integritetspolicy"
+    },
+    "preferences": {
+      "title": "Cookie-inställningar",
+      "description": "Hantera dina cookie-inställningar nedan.",
+      "essential": {
+        "title": "Nödvändiga cookies",
+        "description": "Krävs för att webbplatsen ska fungera korrekt. Kan inte inaktiveras."
+      },
+      "functional": {
+        "title": "Funktionella cookies",
+        "description": "Aktivera bokningsfunktioner (Calendly-integration)."
+      },
+      "save": "Spara inställningar"
+    }
+  },
   "imageAlt": {
     "heroGallery1": "Patientens transformation - före och efter viktminskningsresa",
     "heroGallery2": "Framgångsrik viktminskning med Vidacure-programmet",
