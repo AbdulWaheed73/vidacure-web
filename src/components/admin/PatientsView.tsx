@@ -9,8 +9,9 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/badge';
-import { RefreshCw, Eye, Trash2 } from 'lucide-react';
+import { RefreshCw, Eye, Trash2, CheckCircle, Clock, XCircle } from 'lucide-react';
 import type { Patient, Doctor } from '@/services/adminService';
+import { adminService } from '@/services/adminService';
 import { SubscriptionDetailsModal } from './SubscriptionDetailsModal';
 
 type PatientsViewProps = {
@@ -27,6 +28,7 @@ type PatientsViewProps = {
     totalPages: number;
   };
   onPageChange?: (page: number) => void;
+  onRefresh?: () => void;
 };
 
 const formatDate = (dateString: string) => {
@@ -70,8 +72,11 @@ export const PatientsView = ({
   isLoadingStripeData = false,
   pagination,
   onPageChange,
+  onRefresh,
 }: PatientsViewProps) => {
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null);
+  const [approvingPatientId, setApprovingPatientId] = useState<string | null>(null);
+  const [approvalError, setApprovalError] = useState<string | null>(null);
 
   const handleViewDetails = (patient: Patient) => {
     setSelectedPatient({ id: patient._id, name: patient.name });
@@ -79,6 +84,53 @@ export const PatientsView = ({
 
   const handleCloseModal = () => {
     setSelectedPatient(null);
+  };
+
+  const handleApproveMeeting = async (patient: Patient) => {
+    if (!confirm(`Approve meeting for ${patient.name}? This will allow them to subscribe without a consultation.`)) {
+      return;
+    }
+
+    setApprovingPatientId(patient._id);
+    setApprovalError(null);
+
+    try {
+      await adminService.approveMeeting(patient._id);
+      // Refresh the patients list to show updated status
+      onRefresh?.();
+    } catch (err: any) {
+      console.error('Error approving meeting:', err);
+      setApprovalError(err.response?.data?.error || 'Failed to approve meeting');
+    } finally {
+      setApprovingPatientId(null);
+    }
+  };
+
+  const getMeetingStatusBadge = (patient: Patient) => {
+    const status = patient.meetingStatus || 'none';
+    switch (status) {
+      case 'completed':
+        return (
+          <Badge variant="default" className="bg-green-100 text-green-800">
+            <CheckCircle className="w-3 h-3 mr-1" />
+            Approved
+          </Badge>
+        );
+      case 'scheduled':
+        return (
+          <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            <Clock className="w-3 h-3 mr-1" />
+            Scheduled
+          </Badge>
+        );
+      default:
+        return (
+          <Badge variant="outline" className="bg-gray-100 text-gray-600">
+            <XCircle className="w-3 h-3 mr-1" />
+            Not Scheduled
+          </Badge>
+        );
+    }
   };
 
   return (
@@ -98,19 +150,32 @@ export const PatientsView = ({
         </div>
       )}
 
+      {/* Approval Error Alert */}
+      {approvalError && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+          {approvalError}
+          <button
+            className="absolute top-0 right-0 px-4 py-3"
+            onClick={() => setApprovalError(null)}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       <div className="rounded-md border bg-white">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Patient Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Assigned Doctor</TableHead>
-              <TableHead>Subscription</TableHead>
-              <TableHead>Plan Type</TableHead>
-              <TableHead>Next Billing</TableHead>
-              <TableHead>Payment Method</TableHead>
-              <TableHead>Last Login</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead className="whitespace-nowrap">Patient Name</TableHead>
+              <TableHead className="whitespace-nowrap">Email</TableHead>
+              <TableHead className="whitespace-nowrap">Meeting Status</TableHead>
+              <TableHead className="whitespace-nowrap">Assigned Doctor</TableHead>
+              <TableHead className="whitespace-nowrap">Subscription</TableHead>
+              <TableHead className="whitespace-nowrap">Plan Type</TableHead>
+              <TableHead className="whitespace-nowrap">Next Billing</TableHead>
+              <TableHead className="whitespace-nowrap">Last Login</TableHead>
+              <TableHead className="text-right whitespace-nowrap">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -125,6 +190,27 @@ export const PatientsView = ({
                 <TableRow key={patient._id}>
                   <TableCell className="font-medium">{patient.name}</TableCell>
                   <TableCell>{patient.email || 'N/A'}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      {getMeetingStatusBadge(patient)}
+                      {patient.meetingStatus !== 'completed' && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleApproveMeeting(patient)}
+                          disabled={approvingPatientId === patient._id}
+                          className="text-green-600 hover:text-green-700 hover:bg-green-50 h-7 px-2"
+                          title="Approve meeting (allow subscription)"
+                        >
+                          {approvingPatientId === patient._id ? (
+                            <RefreshCw className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <CheckCircle className="h-3 w-3" />
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     {patient.doctor ? (
                       <div>
@@ -160,18 +246,6 @@ export const PatientsView = ({
                       formatDate(patient.subscription.currentPeriodEnd.toString())
                     ) : (
                       'N/A'
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {patient.stripeData?.paymentMethod?.card ? (
-                      <div className="text-sm">
-                        <span className="capitalize">{patient.stripeData.paymentMethod.card.brand}</span>
-                        <span className="text-muted-foreground ml-1">
-                          ****{patient.stripeData.paymentMethod.card.last4}
-                        </span>
-                      </div>
-                    ) : (
-                      <span className="text-sm text-muted-foreground">N/A</span>
                     )}
                   </TableCell>
                   <TableCell>

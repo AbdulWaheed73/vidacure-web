@@ -125,7 +125,7 @@ export const AdminDashboard = () => {
   return (
     <>
       <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
-      <div className="p-8 space-y-8">
+      <div className="p-8 space-y-8 overflow-x-hidden">
 
       {/* Loading State */}
       {loading && !stats && (
@@ -210,11 +210,11 @@ export const AdminDashboard = () => {
         </TabsContent>
 
         <TabsContent value="patients" className="space-y-4">
-          <Card>
+          <Card className="overflow-hidden">
             <CardHeader>
               <CardTitle>Patient Management</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-x-auto">
               <PatientsView
                 patients={patients}
                 doctors={doctors}
@@ -224,6 +224,7 @@ export const AdminDashboard = () => {
                 isLoadingStripeData={isLoadingStripeData}
                 pagination={pagination}
                 onPageChange={handlePageChange}
+                onRefresh={fetchData}
               />
             </CardContent>
           </Card>

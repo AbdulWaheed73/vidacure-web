@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Button } from '../components/ui/Button';
+import { CheckCircle, ArrowLeft, AlertTriangle } from 'lucide-react';
 import { PaymentService } from '../services';
+import vidaCure from '../assets/vidacure_png.png';
 
 export const SubscriptionSuccess: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -27,7 +28,7 @@ export const SubscriptionSuccess: React.FC = () => {
     try {
       // Give the webhook some time to process
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       const status = await PaymentService.getSubscriptionStatus();
       setSubscriptionDetails(status);
     } catch (error) {
@@ -42,13 +43,37 @@ export const SubscriptionSuccess: React.FC = () => {
     navigate('/dashboard');
   };
 
+  // Header component used across all states
+  const Header = () => (
+    <div className="w-full left-0 top-0 absolute bg-white shadow-sm flex flex-col justify-center items-start z-10">
+      <div className="w-full max-w-7xl mx-auto py-3 px-4 sm:py-5 sm:px-6 flex justify-start items-center gap-4 sm:gap-8">
+        <div
+          className="w-6 h-6 relative overflow-hidden cursor-pointer"
+          onClick={() => navigate('/')}
+        >
+          <ArrowLeft className="w-4 h-4 absolute left-1 top-1 text-zinc-800" />
+        </div>
+        <div className="flex justify-start items-center">
+          <img className="w-28 h-4 sm:w-36 sm:h-5" src={vidaCure} alt="VidaCure Logo" />
+        </div>
+      </div>
+    </div>
+  );
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent mx-auto mb-4"></div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Processing your subscription...</h2>
-          <p className="text-gray-600">Please wait while we confirm your payment.</p>
+      <div className="w-full min-h-screen relative bg-emerald-50 overflow-hidden">
+        <Header />
+        <div className="w-full max-w-[95%] sm:max-w-md md:max-w-lg px-6 py-8 sm:px-8 sm:py-12 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 absolute bg-white rounded-xl sm:rounded-2xl shadow-lg border border-stone-50 flex flex-col justify-center items-center gap-6">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-teal-600 border-t-transparent"></div>
+          <div className="flex flex-col gap-2 text-center">
+            <h2 className="text-xl sm:text-2xl font-semibold font-sora text-zinc-800">
+              Processing your subscription...
+            </h2>
+            <p className="text-sm sm:text-base font-manrope text-teal-700">
+              Please wait while we confirm your payment.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -56,56 +81,80 @@ export const SubscriptionSuccess: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
-          <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Something went wrong</h2>
-          <p className="text-gray-600 mb-6">{error}</p>
-          <Button onClick={handleGoToDashboard} className="w-full">
+      <div className="w-full min-h-screen relative bg-red-50 overflow-hidden">
+        <Header />
+        <div className="w-full max-w-[95%] sm:max-w-md md:max-w-lg px-6 py-8 sm:px-8 sm:py-12 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 absolute bg-white rounded-xl sm:rounded-2xl shadow-lg border border-stone-50 flex flex-col justify-center items-center gap-6">
+          <AlertTriangle className="w-16 h-16 text-error-red" />
+          <div className="flex flex-col gap-2 text-center">
+            <h2 className="text-xl sm:text-2xl font-bold font-sora text-zinc-800">
+              Something went wrong
+            </h2>
+            <p className="text-sm sm:text-base font-manrope text-zinc-600">
+              {error}
+            </p>
+          </div>
+          <button
+            onClick={handleGoToDashboard}
+            className="w-full h-12 px-6 py-3 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full text-white font-semibold font-sora hover:from-teal-700 hover:to-teal-700 transition-colors"
+          >
             Go to Dashboard
-          </Button>
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
-        <div className="text-green-500 text-6xl mb-4">🎉</div>
-        
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          Welcome to Vidacure!
-        </h2>
-        
-        <p className="text-gray-600 mb-6">
-          Your subscription has been successfully activated. You now have access to all the features of your plan.
-        </p>
+    <div className="w-full min-h-screen relative bg-emerald-50 overflow-hidden">
+      <Header />
+      <div className="w-full max-w-[95%] sm:max-w-md md:max-w-lg px-6 py-8 sm:px-8 sm:py-12 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 absolute bg-white rounded-xl sm:rounded-2xl shadow-lg border border-stone-50 flex flex-col justify-center items-center gap-6 sm:gap-8">
+        {/* Success Icon */}
+        <div className="w-20 h-20 rounded-full bg-hover-teal-buttons flex items-center justify-center">
+          <CheckCircle className="w-12 h-12 text-teal-action" />
+        </div>
 
+        {/* Header Text */}
+        <div className="flex flex-col gap-3 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold font-sora text-zinc-800">
+            Welcome to Vidacure!
+          </h2>
+          <p className="text-sm sm:text-base font-manrope text-teal-700 leading-relaxed">
+            Your subscription has been successfully activated. You now have access to all the features of your plan.
+          </p>
+        </div>
+
+        {/* Subscription Details */}
         {subscriptionDetails && (
-          <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
-            <h3 className="font-semibold text-gray-800 mb-2">Subscription Details:</h3>
-            <div className="space-y-1 text-sm text-gray-600">
-              <div className="flex justify-between">
-                <span>Plan:</span>
-                <span className="font-medium">
+          <div className="w-full bg-hover-teal-buttons rounded-xl p-4 sm:p-5">
+            <h3 className="font-semibold font-sora text-dark-teal mb-3">
+              Subscription Details
+            </h3>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-manrope text-zinc-600">Plan</span>
+                <span className="text-sm font-medium font-manrope text-zinc-800">
                   {subscriptionDetails.planType === 'lifestyle' ? 'Lifestyle Program' : 'Medical Program'}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <span>Status:</span>
-                <span className="font-medium text-green-600">Active</span>
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-manrope text-zinc-600">Status</span>
+                <span className="text-sm font-semibold font-manrope text-teal-action">
+                  Active
+                </span>
               </div>
             </div>
           </div>
         )}
 
-        <div className="space-y-3">
-          <Button onClick={handleGoToDashboard} className="w-full" size="lg">
+        {/* CTA Section */}
+        <div className="w-full flex flex-col gap-3">
+          <button
+            onClick={handleGoToDashboard}
+            className="w-full h-12 px-6 py-3 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full text-white font-semibold font-sora hover:from-teal-700 hover:to-teal-700 transition-colors"
+          >
             Go to Dashboard
-          </Button>
-          
-          <p className="text-xs text-gray-500">
+          </button>
+          <p className="text-xs font-manrope text-zinc-500 text-center">
             You can manage your subscription anytime from your dashboard.
           </p>
         </div>

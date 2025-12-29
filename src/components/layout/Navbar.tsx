@@ -186,7 +186,7 @@ export const Navbar = () => {
                 {t("navbar.login")}
               </Link>
               <Link
-                to={ROUTES.LOGIN}
+                to={ROUTES.PRE_LOGIN_BMI}
                 className="h-10 px-4 xl:px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
               >
                 <span className="text-white text-sm font-semibold font-['Sora'] leading-tight whitespace-nowrap">
@@ -317,7 +317,7 @@ export const Navbar = () => {
                         {t("navbar.login")}
                       </Link>
                       <Link
-                        to={ROUTES.LOGIN}
+                        to={ROUTES.PRE_LOGIN_BMI}
                         className="w-full h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 hover:from-teal-700 hover:to-teal-700 transition-colors"
                       >
                         <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">

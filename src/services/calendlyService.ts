@@ -43,7 +43,19 @@ export const calendlyService = {
       // Fallback: open in new tab
       window.open(schedulingLink, '_blank');
     }
-  }
+  },
+
+  // Mark a patient's meeting as complete (doctor action)
+  async markMeetingComplete(patientId: string): Promise<{ success: boolean; message: string }> {
+    const response = await api.post(`/api/calendly/mark-complete/${patientId}`);
+    return response.data;
+  },
+
+  // Mark meeting complete by patient email (alternative)
+  async markMeetingCompleteByEmail(patientEmail: string): Promise<{ success: boolean; message: string }> {
+    const response = await api.post('/api/calendly/mark-complete-by-email', { email: patientEmail });
+    return response.data;
+  },
 };
 
 // Load Calendly widget script

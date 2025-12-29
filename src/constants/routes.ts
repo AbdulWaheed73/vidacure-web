@@ -1,6 +1,9 @@
 export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
+  // Pre-login onboarding flow
+  PRE_LOGIN_BMI: '/get-started',
+  PRE_LOGIN_BOOKING: '/book-consultation',
   DASHBOARD: '/dashboard',
   // Admin Dashboard Routes
   ADMIN_DASHBOARD: '/admin',
@@ -23,7 +26,6 @@ export const ROUTES = {
   ABOUT: '/about',
   ABOUT_US: '/aboutus',
   CONTACT: '/contact',
-  BMI_CHECK: '/bmi-check',
   ONBOARDING: '/onboarding',
   SUBSCRIPTION_SUCCESS: '/subscription/success',
   SUBSCRIBE: '/subscribe'

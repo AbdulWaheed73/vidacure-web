@@ -1,11 +1,36 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { api, updateCsrfToken } from '../services/api';
+import { pendingSessionService } from '../services/pendingSessionService';
 import type { AuthStore } from '../types';
 
 
 // Guard to prevent multiple simultaneous auth checks
 let isCheckingAuth = false;
+
+// Helper function to link pending booking after auth
+const linkPendingBooking = async (csrfToken: string) => {
+  const token = pendingSessionService.getStoredToken();
+  if (!token) return;
+
+  try {
+    console.log("🔗 Attempting to link pending booking with token:", token);
+    const response = await pendingSessionService.linkBookingToUser(token, csrfToken);
+
+    if (response.success) {
+      console.log("✅ Successfully linked booking to user");
+      // Clear the stored token after successful link
+      pendingSessionService.clearStoredToken();
+      // Also clear any client-side Calendly booking data
+      localStorage.removeItem("vidacure_pending_calendly_booking");
+    } else {
+      console.log("⚠️ Booking link response:", response.message);
+    }
+  } catch (error) {
+    console.error("❌ Failed to link pending booking:", error);
+    // Don't clear the token on error - user might retry
+  }
+};
 
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -41,6 +66,12 @@ export const useAuthStore = create<AuthStore>()(
               csrfToken: data.csrfToken,
               isLoading: false,
             });
+
+            // After successful auth, try to link any pending booking
+            // Only for patients (not doctors)
+            if (data.user?.role === 'patient') {
+              linkPendingBooking(data.csrfToken);
+            }
           } else {
             set({
               isAuthenticated: false,

@@ -42,6 +42,10 @@ export type Patient = {
   stripeData?: PatientStripeData;
   lastLogin: string;
   createdAt: string;
+  // Meeting status for subscription eligibility
+  meetingStatus?: 'none' | 'scheduled' | 'completed';
+  scheduledMeetingTime?: string;
+  meetingCompletedAt?: string;
 };
 
 export type Doctor = {
@@ -228,5 +232,21 @@ export const adminService = {
   getDeletionDetail: async (deletionId: string): Promise<DeletionLog> => {
     const response = await api.get(`/api/users/admin/deletions/${deletionId}`);
     return response.data;
-  }
+  },
+
+  // ============ Meeting Approval Methods ============
+
+  /**
+   * Approve a patient's meeting (mark as complete) - Admin only
+   * This allows the patient to subscribe without requiring an actual meeting
+   */
+  approveMeeting: async (patientId: string): Promise<{
+    success: boolean;
+    message: string;
+    meetingStatus: string;
+    meetingCompletedAt: string;
+  }> => {
+    const response = await api.post(`/api/calendly/mark-complete/${patientId}`);
+    return response.data;
+  },
 };

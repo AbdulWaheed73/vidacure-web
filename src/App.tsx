@@ -13,11 +13,12 @@ import {
   NotFoundPage,
   SubscriptionSuccess,
   ChatPage,
-  BMICheck,
   AboutUs,
   Article,
   SubscribePage,
 } from "./pages";
+import PreLoginBMI from "./pages/PreLoginBMI";
+import PreLoginBooking from "./pages/PreLoginBooking";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/admin/AdminLogin";
 import { AdminProtectedRoute } from "./components/admin/AdminProtectedRoute";
@@ -134,9 +135,11 @@ function App() {
 
     return (
       <SidebarProvider>
-        <SidebarInset className="bg-[#F0F7F4] ml-64">
+        <SidebarInset className="bg-[#F0F7F4] ml-64 w-[calc(100vw-16rem)] overflow-x-hidden">
           <AdminTopBar onLogout={handleLogout} />
-          {children}
+          <div className="overflow-x-auto">
+            {children}
+          </div>
         </SidebarInset>
       </SidebarProvider>
     );
@@ -161,6 +164,36 @@ function App() {
           }
         />
 
+        {/* Pre-Login BMI Check - Public route for eligibility check */}
+        <Route
+          path={ROUTES.PRE_LOGIN_BMI}
+          element={
+            isAuthenticated ? (
+              user?.role === "doctor" ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : user?.hasCompletedOnboarding ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : (
+                <Navigate to={ROUTES.ONBOARDING as string} replace />
+              )
+            ) : (
+              <PreLoginBMI />
+            )
+          }
+        />
+
+        {/* Pre-Login Booking - Public route for booking consultation */}
+        <Route
+          path={ROUTES.PRE_LOGIN_BOOKING}
+          element={
+            isAuthenticated ? (
+              <Navigate to={ROUTES.DASHBOARD as string} replace />
+            ) : (
+              <PreLoginBooking />
+            )
+          }
+        />
+
         {/* Landing Page Route - Redirect if authenticated */}
         <Route
           path={ROUTES.HOME}
@@ -171,7 +204,7 @@ function App() {
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : (
-                <Navigate to={ROUTES.BMI_CHECK as string} replace />
+                <Navigate to={ROUTES.ONBOARDING as string} replace />
               )
             ) : (
               <LandingPage />
@@ -192,7 +225,7 @@ function App() {
             ) : user?.hasCompletedOnboarding ? (
               <Navigate to={ROUTES.DASHBOARD as string} replace />
             ) : (
-              <Navigate to={ROUTES.BMI_CHECK as string} replace />
+              <Navigate to={ROUTES.ONBOARDING as string} replace />
             )
           }
         />
@@ -302,24 +335,6 @@ function App() {
               <SidebarLayout>
                 <SubscribePage />
               </SidebarLayout>
-            ) : (
-              <Navigate to={ROUTES.LOGIN} replace />
-            )
-          }
-        />
-
-        {/* BMI Check Route - Protected (without sidebar) */}
-        <Route
-          path={ROUTES.BMI_CHECK}
-          element={
-            isAuthenticated ? (
-              user?.role === "doctor" ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : user?.hasCompletedOnboarding ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : (
-                <BMICheck />
-              )
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />
             )
