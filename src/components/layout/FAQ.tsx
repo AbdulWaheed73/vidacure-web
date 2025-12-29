@@ -130,7 +130,7 @@ const FAQSection = () => {
               {t('faq.introduction')}
             </p>
             <Link
-              to={ROUTES.LOGIN}
+              to={ROUTES.PRE_LOGIN_BMI}
               className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full inline-flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors duration-200 group"
             >
               <span className="text-white text-sm font-semibold font-sora leading-tight">
@@ -184,7 +184,7 @@ const FAQSection = () => {
                 </p>
               </div>
               <Link
-                to={ROUTES.LOGIN}
+                to={ROUTES.PRE_LOGIN_BMI}
                 className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors duration-200 group self-center"
               >
                 <span className="text-white text-sm font-semibold font-sora leading-tight">

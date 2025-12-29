@@ -178,7 +178,7 @@ export default function AboutUs() {
               {t('partner.ctaText', 'Ready to start your health journey?')}
             </p>
             <button
-              onClick={() => navigate(ROUTES.LOGIN)}
+              onClick={() => navigate(ROUTES.PRE_LOGIN_BMI)}
               className="group inline-flex items-center gap-2.5 px-8 py-3 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full transition-all duration-200 hover:from-teal-700 hover:to-teal-700 hover:scale-105"
             >
               <span className="text-white text-base font-semibold font-['Sora'] leading-tight">

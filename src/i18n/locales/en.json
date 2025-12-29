@@ -480,5 +480,35 @@
     "testimonial": "Patient testimonial and success story",
     "doctorSelma": "Dr. Selma Mehr - Specialist doctor in family medicine at Vidacure",
     "coachMarcus": "Marcus Flink - Health Coach at Vidacure"
+  },
+  "preLoginBMI": {
+    "backToHome": "Back to Home",
+    "title": "Check Your Eligibility",
+    "description": "Enter your height and weight to see if you qualify for our medical weight management program.",
+    "height": "Height",
+    "heightPlaceholder": "e.g. 175",
+    "heightUnit": "cm",
+    "currentWeight": "Current Weight",
+    "weightPlaceholder": "e.g. 85",
+    "weightUnit": "kg",
+    "yourBmi": "Your BMI:",
+    "eligible": {
+      "title": "You qualify for our program!",
+      "description": "Book a consultation with our doctors to get started."
+    },
+    "notEligible": {
+      "title": "You don't meet the criteria yet.",
+      "description": "Our medical program requires a BMI of 27 or higher. Consider consulting your regular doctor for advice."
+    },
+    "errors": {
+      "sessionFailed": "Failed to create session. Please try again.",
+      "genericError": "Something went wrong. Please try again."
+    },
+    "buttons": {
+      "bookConsultation": "Book Your Consultation",
+      "pleaseWait": "Please wait...",
+      "returnHome": "Return to Home"
+    },
+    "infoText": "BMI (Body Mass Index) is calculated as weight (kg) divided by height (m) squared. A BMI of 27 or higher is required for our medical weight management program."
   }
 }

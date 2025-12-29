@@ -480,5 +480,35 @@
     "testimonial": "Patientvittnesbörd och framgångssaga",
     "doctorSelma": "Dr. Selma Mehr - Specialistläkare i allmänmedicin på Vidacure",
     "coachMarcus": "Marcus Flink - Hälsocoach på Vidacure"
+  },
+  "preLoginBMI": {
+    "backToHome": "Tillbaka till startsidan",
+    "title": "Kontrollera din behörighet",
+    "description": "Ange din längd och vikt för att se om du kvalificerar dig för vårt medicinska vikthanteringsprogram.",
+    "height": "Längd",
+    "heightPlaceholder": "t.ex. 175",
+    "heightUnit": "cm",
+    "currentWeight": "Nuvarande vikt",
+    "weightPlaceholder": "t.ex. 85",
+    "weightUnit": "kg",
+    "yourBmi": "Ditt BMI:",
+    "eligible": {
+      "title": "Du kvalificerar dig för vårt program!",
+      "description": "Boka en konsultation med våra läkare för att komma igång."
+    },
+    "notEligible": {
+      "title": "Du uppfyller inte kriterierna ännu.",
+      "description": "Vårt medicinska program kräver ett BMI på 27 eller högre. Överväg att konsultera din vanliga läkare för råd."
+    },
+    "errors": {
+      "sessionFailed": "Det gick inte att skapa sessionen. Försök igen.",
+      "genericError": "Något gick fel. Försök igen."
+    },
+    "buttons": {
+      "bookConsultation": "Boka din konsultation",
+      "pleaseWait": "Vänligen vänta...",
+      "returnHome": "Tillbaka till startsidan"
+    },
+    "infoText": "BMI (Body Mass Index) beräknas som vikt (kg) delat med längd (m) i kvadrat. Ett BMI på 27 eller högre krävs för vårt medicinska vikthanteringsprogram."
   }
 }

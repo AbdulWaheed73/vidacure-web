@@ -175,7 +175,7 @@ const PricingSection = () => {
                 description={t('pricing.lifestyleDescription')}
                 features={lifestyleFeatures}
                 buttonText={t('pricing.getStarted')}
-                onButtonClick={() => navigate(ROUTES.LOGIN)}
+                onButtonClick={() => navigate(ROUTES.PRE_LOGIN_BMI)}
               />
             </div>
 
@@ -188,7 +188,7 @@ const PricingSection = () => {
                 features={medicalFeatures}
                 buttonText={t('pricing.getStarted')}
                 isPrimary={true}
-                onButtonClick={() => navigate(ROUTES.LOGIN)}
+                onButtonClick={() => navigate(ROUTES.PRE_LOGIN_BMI)}
               />
             </div>
           </div>
@@ -234,7 +234,7 @@ const PricingSection = () => {
                 description={t('pricing.lifestyleDescription')}
                 features={lifestyleFeatures}
                 buttonText={t('pricing.getStarted')}
-                onButtonClick={() => navigate(ROUTES.LOGIN)}
+                onButtonClick={() => navigate(ROUTES.PRE_LOGIN_BMI)}
               />
 
               <PricingCard
@@ -245,7 +245,7 @@ const PricingSection = () => {
                 features={medicalFeatures}
                 buttonText={t('pricing.getStarted')}
                 isPrimary={true}
-                onButtonClick={() => navigate(ROUTES.LOGIN)}
+                onButtonClick={() => navigate(ROUTES.PRE_LOGIN_BMI)}
               />
             </div>
           </div>

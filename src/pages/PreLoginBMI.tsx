@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ROUTES } from "@/constants";
 import { Button } from "@/components/onboarding";
 import { NumericInput, FormField } from "@/components/onboarding";
@@ -8,6 +9,7 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 
 const PreLoginBMI = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [bmi, setBmi] = useState<number | null>(null);
@@ -63,11 +65,11 @@ const PreLoginBMI = () => {
           state: { token: response.token }
         });
       } else {
-        setError("Failed to create session. Please try again.");
+        setError(t('preLoginBMI.errors.sessionFailed'));
       }
     } catch (err) {
       console.error("Error creating pending session:", err);
-      setError("Something went wrong. Please try again.");
+      setError(t('preLoginBMI.errors.genericError'));
     } finally {
       setIsLoading(false);
     }
@@ -82,7 +84,7 @@ const PreLoginBMI = () => {
           className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="font-manrope">Back to Home</span>
+          <span className="font-manrope">{t('preLoginBMI.backToHome')}</span>
         </Link>
       </div>
 
@@ -92,33 +94,33 @@ const PreLoginBMI = () => {
             {/* Header */}
             <div className="text-center space-y-4">
               <h1 className="font-sora font-bold text-[32px] sm:text-[40px] text-[#282828] leading-[1.2]">
-                Check Your Eligibility
+                {t('preLoginBMI.title')}
               </h1>
               <p className="font-manrope text-[16px] text-[#666] leading-[1.6] max-w-[450px]">
-                Enter your height and weight to see if you qualify for our medical weight management program.
+                {t('preLoginBMI.description')}
               </p>
             </div>
 
             {/* BMI Form */}
             <div className="w-full space-y-6 max-w-[400px]">
-              <FormField label="Height">
+              <FormField label={t('preLoginBMI.height')}>
                 <div className="flex items-center gap-3">
                   <NumericInput
-                    placeholder="e.g. 175"
+                    placeholder={t('preLoginBMI.heightPlaceholder')}
                     value={height}
                     onChange={(e) => setHeight(e.target.value)}
                     className="flex-1"
                     min={0}
                     max={300}
                   />
-                  <span className="font-manrope text-[16px] text-[#282828] font-medium">cm</span>
+                  <span className="font-manrope text-[16px] text-[#282828] font-medium">{t('preLoginBMI.heightUnit')}</span>
                 </div>
               </FormField>
 
-              <FormField label="Current Weight">
+              <FormField label={t('preLoginBMI.currentWeight')}>
                 <div className="flex items-center gap-3">
                   <NumericInput
-                    placeholder="e.g. 85"
+                    placeholder={t('preLoginBMI.weightPlaceholder')}
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
                     className="flex-1"
@@ -126,7 +128,7 @@ const PreLoginBMI = () => {
                     max={500}
                     step={0.1}
                   />
-                  <span className="font-manrope text-[16px] text-[#282828] font-medium">kg</span>
+                  <span className="font-manrope text-[16px] text-[#282828] font-medium">{t('preLoginBMI.weightUnit')}</span>
                 </div>
               </FormField>
 
@@ -138,26 +140,25 @@ const PreLoginBMI = () => {
                     : 'bg-amber-50 border-2 border-amber-200'
                 }`}>
                   <h3 className="font-sora font-bold text-[24px] text-[#282828]">
-                    Your BMI: {bmi}
+                    {t('preLoginBMI.yourBmi')} {bmi}
                   </h3>
 
                   {isEligible ? (
                     <div className="space-y-2">
                       <p className="font-manrope text-[16px] font-semibold text-green-700">
-                        You qualify for our program!
+                        {t('preLoginBMI.eligible.title')}
                       </p>
                       <p className="font-manrope text-[14px] text-green-600">
-                        Book a consultation with our doctors to get started.
+                        {t('preLoginBMI.eligible.description')}
                       </p>
                     </div>
                   ) : (
                     <div className="space-y-2">
                       <p className="font-manrope text-[16px] font-semibold text-amber-700">
-                        You don't meet the criteria yet.
+                        {t('preLoginBMI.notEligible.title')}
                       </p>
                       <p className="font-manrope text-[14px] text-amber-600">
-                        Our medical program requires a BMI of 27 or higher.
-                        Consider consulting your regular doctor for advice.
+                        {t('preLoginBMI.notEligible.description')}
                       </p>
                     </div>
                   )}
@@ -186,16 +187,16 @@ const PreLoginBMI = () => {
                     {isLoading ? (
                       <span className="flex items-center justify-center gap-2">
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        Please wait...
+                        {t('preLoginBMI.buttons.pleaseWait')}
                       </span>
                     ) : (
-                      "Book Your Consultation"
+                      t('preLoginBMI.buttons.bookConsultation')
                     )}
                   </Button>
                 ) : (
                   <Link to={ROUTES.HOME}>
                     <Button variant="outline" className="w-full">
-                      Return to Home
+                      {t('preLoginBMI.buttons.returnHome')}
                     </Button>
                   </Link>
                 )}
@@ -204,8 +205,7 @@ const PreLoginBMI = () => {
 
             {/* Info Text */}
             <p className="font-manrope text-[12px] text-[#999] text-center max-w-[400px] leading-[1.5]">
-              BMI (Body Mass Index) is calculated as weight (kg) divided by height (m) squared.
-              A BMI of 27 or higher is required for our medical weight management program.
+              {t('preLoginBMI.infoText')}
             </p>
           </div>
         </div>
