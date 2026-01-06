@@ -107,7 +107,7 @@ export const PatientsView = ({
   };
 
   const getMeetingStatusBadge = (patient: Patient) => {
-    const status = patient.meetingStatus || 'none';
+    const status = patient.calendly?.meetingStatus || 'none';
     switch (status) {
       case 'completed':
         return (
@@ -193,7 +193,7 @@ export const PatientsView = ({
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {getMeetingStatusBadge(patient)}
-                      {patient.meetingStatus !== 'completed' && (
+                      {patient.calendly?.meetingStatus !== 'completed' && (
                         <Button
                           variant="ghost"
                           size="sm"

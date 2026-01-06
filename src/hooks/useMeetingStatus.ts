@@ -6,7 +6,7 @@ export type MeetingStatusHookResult = {
   error: string | null;
   meetingStatus: 'none' | 'scheduled' | 'completed';
   scheduledMeetingTime: Date | null;
-  meetingCompletedAt: Date | null;
+  completedAt: Date | null;
   isMeetingGatePassed: boolean;
   refetch: () => Promise<void>;
 };
@@ -41,8 +41,8 @@ export const useMeetingStatus = (): MeetingStatusHookResult => {
   const scheduledMeetingTime = status?.scheduledMeetingTime
     ? new Date(status.scheduledMeetingTime)
     : null;
-  const meetingCompletedAt = status?.meetingCompletedAt
-    ? new Date(status.meetingCompletedAt)
+  const completedAt = status?.completedAt
+    ? new Date(status.completedAt)
     : null;
 
   // Check if meeting gate is passed (can subscribe)
@@ -59,7 +59,7 @@ export const useMeetingStatus = (): MeetingStatusHookResult => {
     error,
     meetingStatus,
     scheduledMeetingTime,
-    meetingCompletedAt,
+    completedAt,
     isMeetingGatePassed,
     refetch: fetchMeetingStatus,
   };

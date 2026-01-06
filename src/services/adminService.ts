@@ -42,10 +42,14 @@ export type Patient = {
   stripeData?: PatientStripeData;
   lastLogin: string;
   createdAt: string;
-  // Meeting status for subscription eligibility
-  meetingStatus?: 'none' | 'scheduled' | 'completed';
-  scheduledMeetingTime?: string;
-  meetingCompletedAt?: string;
+  // Calendly meeting data - grouped in nested object
+  calendly?: {
+    meetingStatus?: 'none' | 'scheduled' | 'completed';
+    scheduledMeetingTime?: string;
+    completedAt?: string;
+    eventUri?: string;
+    inviteeUri?: string;
+  };
 };
 
 export type Doctor = {
@@ -239,14 +243,17 @@ export const adminService = {
   /**
    * Approve a patient's meeting (mark as complete) - Admin only
    * This allows the patient to subscribe without requiring an actual meeting
+   * Sends completedAt from frontend to use admin's local timezone
    */
   approveMeeting: async (patientId: string): Promise<{
     success: boolean;
     message: string;
     meetingStatus: string;
-    meetingCompletedAt: string;
+    completedAt: string;
   }> => {
-    const response = await api.post(`/api/calendly/mark-complete/${patientId}`);
+    const response = await api.post(`/api/calendly/mark-complete/${patientId}`, {
+      completedAt: new Date().toISOString()
+    });
     return response.data;
   },
 };

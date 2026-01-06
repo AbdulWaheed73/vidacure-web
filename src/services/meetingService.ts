@@ -4,7 +4,7 @@ export type MeetingStatusResponse = {
   success: boolean;
   meetingStatus: 'none' | 'scheduled' | 'completed';
   scheduledMeetingTime: string | null;
-  meetingCompletedAt: string | null;
+  completedAt: string | null;
   isMeetingGatePassed: boolean;
 };
 
