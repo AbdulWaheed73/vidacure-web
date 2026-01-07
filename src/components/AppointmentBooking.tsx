@@ -15,6 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { calendlyService } from '@/services/calendlyService';
 import type { EventTypeOption } from '@/types/calendly-types';
 import { useCookieConsentStore } from '@/stores/cookieConsentStore';
+import { useAuthStore } from '@/stores/authStore';
 
 type AppointmentBookingProps = {
   isOpen: boolean;
@@ -38,6 +39,7 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   const [doctorName, setDoctorName] = useState<string>('');
   const { consent, openPreferences } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
+  const { user } = useAuthStore();
 
   // Load available event types and auto-generate booking link when modal opens
   useEffect(() => {
@@ -246,6 +248,7 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
             if (onSuccess) onSuccess();
           }}
           rootElement={document.getElementById('root')!}
+          utm={user?.userId ? { utmTerm: `patient_${user.userId}` } : undefined}
         />
       )}
     </>

@@ -18,6 +18,7 @@ import { PopupModal } from 'react-calendly';
 import { calendlyService } from '../services/calendlyService';
 import type { PatientMeeting } from '../types/calendly-types';
 import { useCookieConsentStore } from '@/stores/cookieConsentStore';
+import { useAuthStore } from '@/stores/authStore';
 import { SubscriptionRequired } from '@/components/subscription/SubscriptionRequired';
 
 export const AppointmentsPage: React.FC = () => {
@@ -30,6 +31,7 @@ export const AppointmentsPage: React.FC = () => {
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
   const { consent, openPreferences } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
+  const { user } = useAuthStore();
 
   const loadMeetings = async () => {
     setIsLoading(true);
@@ -114,13 +116,21 @@ export const AppointmentsPage: React.FC = () => {
     });
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string, completedAt?: string) => {
     switch (status) {
       case 'active':
+      case 'scheduled':
         return (
           <Badge className="bg-green-100 text-green-800 border-green-200">
             <CheckCircle2 className="w-3 h-3 mr-1" />
             {t('appointments.status.active')}
+          </Badge>
+        );
+      case 'completed':
+        return (
+          <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+            <CheckCircle2 className="w-3 h-3 mr-1" />
+            {t('appointments.status.completed', 'Completed')}
           </Badge>
         );
       case 'canceled':
@@ -138,6 +148,15 @@ export const AppointmentsPage: React.FC = () => {
           </Badge>
         );
     }
+  };
+
+  const getSourceBadge = (source?: string) => {
+    if (!source) return null;
+    return (
+      <Badge variant="outline" className="text-xs text-gray-500">
+        {source === 'pre-login' ? 'First booking' : 'Follow-up'}
+      </Badge>
+    );
   };
 
   const isUpcoming = (startTime: string) => {
@@ -250,7 +269,10 @@ export const AppointmentsPage: React.FC = () => {
                     <Clock className="w-5 h-5 text-teal-600" />
                     {meeting.eventType}
                   </CardTitle>
-                  {getStatusBadge(meeting.status)}
+                  <div className="flex items-center gap-2">
+                    {getSourceBadge(meeting.source)}
+                    {getStatusBadge(meeting.status, meeting.completedAt)}
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -263,9 +285,9 @@ export const AppointmentsPage: React.FC = () => {
                       {formatDate(meeting.startTime)}
                     </p>
                     <p className="text-gray-600">
-                      {formatTime(meeting.startTime)} - {formatTime(meeting.endTime)}
+                      {formatTime(meeting.startTime)}{meeting.endTime ? ` - ${formatTime(meeting.endTime)}` : ''}
                     </p>
-                    {isUpcoming(meeting.startTime) && meeting.status === 'active' && (
+                    {isUpcoming(meeting.startTime) && (meeting.status === 'active' || meeting.status === 'scheduled') && (
                       <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
                         {t('appointments.upcoming')}
                       </Badge>
@@ -287,7 +309,7 @@ export const AppointmentsPage: React.FC = () => {
                       {t('appointments.actions')}
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {meeting.meetingUrl && meeting.status === 'active' && (
+                      {meeting.meetingUrl && (meeting.status === 'active' || meeting.status === 'scheduled') && (
                         <Button
                           size="sm"
                           onClick={() => window.open(meeting.meetingUrl!, '_blank')}
@@ -297,7 +319,7 @@ export const AppointmentsPage: React.FC = () => {
                           {t('appointments.joinMeeting')}
                         </Button>
                       )}
-                      {meeting.rescheduleUrl && meeting.status === 'active' && (
+                      {meeting.rescheduleUrl && (meeting.status === 'active' || meeting.status === 'scheduled') && (
                         <Button
                           size="sm"
                           variant="outline"
@@ -308,7 +330,7 @@ export const AppointmentsPage: React.FC = () => {
                           {t('appointments.reschedule')}
                         </Button>
                       )}
-                      {meeting.cancelUrl && meeting.status === 'active' && (
+                      {meeting.cancelUrl && (meeting.status === 'active' || meeting.status === 'scheduled') && (
                         <Button
                           size="sm"
                           variant="outline"
@@ -318,6 +340,11 @@ export const AppointmentsPage: React.FC = () => {
                           <XCircle className="w-3 h-3 mr-1" />
                           {t('appointments.cancel')}
                         </Button>
+                      )}
+                      {meeting.status === 'completed' && (
+                        <span className="text-sm text-gray-500 italic">
+                          {t('appointments.meetingCompleted', 'Meeting completed')}
+                        </span>
                       )}
                     </div>
                   </div>
@@ -338,6 +365,7 @@ export const AppointmentsPage: React.FC = () => {
             handleBookingSuccess();
           }}
           rootElement={document.getElementById('root')!}
+          utm={user?.userId ? { utmTerm: `patient_${user.userId}` } : undefined}
         />
       )}
     </div>

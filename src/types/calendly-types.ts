@@ -22,8 +22,8 @@ export type PatientMeeting = {
   inviteeName?: string;
   inviteeEmail?: string;
   startTime: string;
-  endTime: string;
-  status: 'active' | 'canceled';
+  endTime: string | null;
+  status: 'active' | 'canceled' | 'scheduled' | 'completed';
   meetingUrl: string | null;
   eventType: string;
   createdAt: string;
@@ -31,6 +31,9 @@ export type PatientMeeting = {
   rescheduleUrl: string | null;
   calendlyHostName?: string | null;
   calendlyHostEmail?: string | null;
+  // New fields for meeting history
+  source?: 'pre-login' | 'post-login';
+  completedAt?: string;
 };
 
 export type PatientMeetingsResponse = {
