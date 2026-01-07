@@ -109,7 +109,8 @@ export const DoctorMeetings: React.FC = () => {
     return new Date(startTime) > new Date();
   };
 
-  const isCurrent = (startTime: string, endTime: string) => {
+  const isCurrent = (startTime: string, endTime: string | null) => {
+    if (!endTime) return false;
     const now = new Date();
     const start = new Date(startTime);
     const end = new Date(endTime);
@@ -117,7 +118,7 @@ export const DoctorMeetings: React.FC = () => {
   };
 
   const getCardStyle = (meeting: PatientMeeting) => {
-    if (isCurrent(meeting.startTime, meeting.endTime)) {
+    if (meeting.endTime && isCurrent(meeting.startTime, meeting.endTime)) {
       return "bg-green-50 border-green-200";
     }
     return "bg-white/95";
@@ -191,12 +192,12 @@ export const DoctorMeetings: React.FC = () => {
                   </CardTitle>
                   <div className="flex items-center gap-2">
                     {getStatusBadge(meeting.status)}
-                    {isCurrent(meeting.startTime, meeting.endTime) && (
+                    {meeting.endTime && isCurrent(meeting.startTime, meeting.endTime) && (
                       <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs animate-pulse">
                         Live Now
                       </Badge>
                     )}
-                    {isUpcoming(meeting.startTime) && meeting.status === 'active' && !isCurrent(meeting.startTime, meeting.endTime) && (
+                    {isUpcoming(meeting.startTime) && meeting.status === 'active' && !(meeting.endTime && isCurrent(meeting.startTime, meeting.endTime)) && (
                       <Badge className="bg-orange-100 text-orange-800 border-orange-200 text-xs">
                         Upcoming
                       </Badge>
@@ -224,7 +225,7 @@ export const DoctorMeetings: React.FC = () => {
                       {formatDate(meeting.startTime)}
                     </p>
                     <p className="text-gray-600">
-                      {formatTime(meeting.startTime)} - {formatTime(meeting.endTime)}
+                      {formatTime(meeting.startTime)}{meeting.endTime ? ` - ${formatTime(meeting.endTime)}` : ''}
                     </p>
                     <p className="text-xs text-gray-500">
                       Booked: {formatDate(meeting.createdAt)}
@@ -241,13 +242,13 @@ export const DoctorMeetings: React.FC = () => {
                           size="sm"
                           onClick={() => window.open(meeting.meetingUrl!, '_blank')}
                           className={`text-xs ${
-                            isCurrent(meeting.startTime, meeting.endTime)
+                            meeting.endTime && isCurrent(meeting.startTime, meeting.endTime)
                               ? 'bg-green-600 hover:bg-green-700'
                               : 'bg-blue-600 hover:bg-blue-700'
                           }`}
                         >
                           <Video className="w-3 h-3 mr-1" />
-                          {isCurrent(meeting.startTime, meeting.endTime) ? 'Start Call' : 'Join Meeting'}
+                          {meeting.endTime && isCurrent(meeting.startTime, meeting.endTime) ? 'Start Call' : 'Join Meeting'}
                         </Button>
                       )}
                     </div>

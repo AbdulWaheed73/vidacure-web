@@ -116,7 +116,7 @@ export const AppointmentsPage: React.FC = () => {
     });
   };
 
-  const getStatusBadge = (status: string, completedAt?: string) => {
+  const getStatusBadge = (status: string, _completedAt?: string) => {
     switch (status) {
       case 'active':
       case 'scheduled':
