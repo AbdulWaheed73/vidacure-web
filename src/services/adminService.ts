@@ -254,6 +254,7 @@ export const adminService = {
    * Approve a patient's meeting (mark as complete) - Admin only
    * This allows the patient to subscribe without requiring an actual meeting
    * Sends completedAt from frontend to use admin's local timezone
+   * Uses force=true to override meeting end time validation (admin already confirmed via dialog)
    */
   approveMeeting: async (patientId: string): Promise<{
     success: boolean;
@@ -262,7 +263,8 @@ export const adminService = {
     completedAt: string;
   }> => {
     const response = await api.post(`/api/calendly/mark-complete/${patientId}`, {
-      completedAt: new Date().toISOString()
+      completedAt: new Date().toISOString(),
+      force: true  // Admin override - they already confirmed via dialog
     });
     return response.data;
   },

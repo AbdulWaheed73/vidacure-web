@@ -21,7 +21,7 @@
     "description": "Vårt program kombinerar godkända mediciner med personlig coaching från ett dedikerat vårdteam för att hjälpa dig uppnå och bibehålla en hälsosam vikt.",
     "getStarted": "Kom igång",
     "feature1": "Effektiv viktminskning upp till 25-30 kg",
-    "feature2": "Pålitlig & godkänd medicinering och toppklassad hälsocoach assistans",
+    "feature2": "Pålitlig & godkänd medicinering och hälsocoach assistans i toppklass",
     "feature3": "Smidig service – inga livstidsabonnemang, inga dolda kostnader",
     "feature4": "Patienter rapporterar högsta nöjdhet och varaktig förändring",
     "feature5": "Lätt att följa instruktioner & program för att spara tid & pengar"
@@ -171,7 +171,7 @@
     },
     "step2": {
       "title": "Få din anpassade plan",
-      "description": "Din läkare granskar din hälsoprofil. Du har två alternativ att välja mellan:\n\n• Medicinsk behandlingsprogram - Månatliga konsultationer med din läkare\n• Livsstilsprogram - Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning"
+      "description": "Din läkare granskar din hälsoprofil. Du har två alternativ att välja mellan:\n\n• Månatliga konsultationer med din läkare och medicinering\n• Medicinskt behandlingsprogram - Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning\n• Livsstilsprogram Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning"
     },
     "step3": {
       "title": "Ta emot behandling och stöd - Hela vägen",
@@ -207,7 +207,7 @@
         "name": "Selma Mehr",
         "title": "Specialistläkare inom allmänmedicin",
         "description": "Som specialistläkare inom allmänmedicin med åtta års erfarenhet, har jag bred kunskap inom förebyggande hälsoarbete och behandling av kroniska sjukdomar. Min filosofi är att fokusera på en helhetssyn när det gäller viktminskning och hälsa, då det inte bara handlar om kost och motion. Jag arbetar med patienter för att förbättra deras metabola kontroll och därigenom förebygga sjukdomar som typ 2-diabetes, högt blodtryck, höga blodfetter och hjärt-kärlsjukdomar.",
-        "description2": "Min långa erfarenhet inkluderar även fokus på stresshantering, sömn, och beteendeförändring för att nå bestående resultat. Jag strävar efter att göra hela processen så enkel och personlig som möjligt, och erbjuder även hälsocoaching som en viktig del av coachingen."
+        "description2": "Min långa erfarenhet inkluderar även fokus på stresshantering, sömn, och beteendeförändring för att nå bestående resultat. Jag strävar efter att göra hela processen så enkel och personlig som möjligt, och erbjuder även hälsocoaching som en viktig del av programmet."
       },
       "marcus": {
         "name": "Marcus Flink",
