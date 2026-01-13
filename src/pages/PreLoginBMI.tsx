@@ -67,9 +67,25 @@ const PreLoginBMI = () => {
       } else {
         setError(t('preLoginBMI.errors.sessionFailed'));
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Error creating pending session:", err);
-      setError(t('preLoginBMI.errors.genericError'));
+
+      // Extract actual error message from axios error response
+      if (err && typeof err === 'object' && 'response' in err) {
+        const axiosError = err as { response?: { data?: { error?: string }, status?: number } };
+        const serverError = axiosError.response?.data?.error;
+        const status = axiosError.response?.status;
+
+        if (status === 429) {
+          setError(t('preLoginBMI.errors.rateLimited', 'Too many requests. Please wait a few minutes and try again.'));
+        } else if (serverError) {
+          setError(serverError);
+        } else {
+          setError(t('preLoginBMI.errors.genericError'));
+        }
+      } else {
+        setError(t('preLoginBMI.errors.genericError'));
+      }
     } finally {
       setIsLoading(false);
     }

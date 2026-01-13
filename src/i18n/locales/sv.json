@@ -207,7 +207,8 @@
         "name": "Selma Mehr",
         "title": "Specialistläkare inom allmänmedicin",
         "description": "Som specialistläkare inom allmänmedicin med åtta års erfarenhet, har jag bred kunskap inom förebyggande hälsoarbete och behandling av kroniska sjukdomar. Min filosofi är att fokusera på en helhetssyn när det gäller viktminskning och hälsa, då det inte bara handlar om kost och motion. Jag arbetar med patienter för att förbättra deras metabola kontroll och därigenom förebygga sjukdomar som typ 2-diabetes, högt blodtryck, höga blodfetter och hjärt-kärlsjukdomar.",
-        "description2": "Min långa erfarenhet inkluderar även fokus på stresshantering, sömn, och beteendeförändring för att nå bestående resultat. Jag strävar efter att göra hela processen så enkel och personlig som möjligt, och erbjuder även hälsocoaching som en viktig del av programmet."
+        "description2": "Min långa erfarenhet inkluderar även fokus på stresshantering, sömn, och beteendeförändring för att nå bestående resultat. Jag strävar efter att göra hela processen så enkel och personlig som möjligt, och erbjuder även hälsocoaching som en viktig del av programmet.",
+        "programDescription": "När du påbörjar vårt medicinska behandlingsprogram får du först träffa en läkare digitalt. Under mötet går vi igenom din medicinska historia, dina förutsättningar och dina mål. Vid behov får du remiss för blodprover som underlag för att kunna fatta trygga och medicinskt korrekta beslut kring din behandling.\n\nUtifrån dina resultat och behov tar vi fram en individualiserad behandlingsplan med tydliga instruktioner för en säker och kontrollerad upptrappning. Under hela processen finns vi tillgängliga för frågor, stöd och kontinuerlig uppföljning.\n\nVårt mål är att vägleda dig steg för steg tills du når en hälsosam och hållbar vikt. Därefter hjälper vi dig att trappa ner behandlingen på ett tryggt och strukturerat sätt.\n\nLivsstilsförändringar är en viktig del av långsiktiga resultat. Om du önskar extra stöd rekommenderar vi vårt livsstilsprogram, där du får professionell vägledning av en erfaren hälsocoach."
       },
       "marcus": {
         "name": "Marcus Flink",
@@ -502,7 +503,8 @@
     },
     "errors": {
       "sessionFailed": "Det gick inte att skapa sessionen. Försök igen.",
-      "genericError": "Något gick fel. Försök igen."
+      "genericError": "Något gick fel. Försök igen.",
+      "rateLimited": "För många förfrågningar. Vänta några minuter och försök igen."
     },
     "buttons": {
       "bookConsultation": "Boka din konsultation",

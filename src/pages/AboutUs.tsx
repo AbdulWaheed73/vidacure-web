@@ -129,6 +129,13 @@ export default function AboutUs() {
                   <p className="text-zinc-700 text-sm sm:text-base font-normal font-['Manrope'] leading-relaxed">
                     {t('partner.teamMembers.selma.description2')}
                   </p>
+
+                  {/* Medical Program Section */}
+                  <div className="pt-4 mt-4 border-t border-zinc-100">
+                    <p className="text-zinc-700 text-sm sm:text-base font-normal font-['Manrope'] leading-relaxed whitespace-pre-line">
+                      {t('partner.teamMembers.selma.programDescription')}
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>

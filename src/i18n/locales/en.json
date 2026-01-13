@@ -207,7 +207,8 @@
         "name": "Selma Mehr",
         "title": "Specialist doctor in family medicine",
         "description": "As a specialist in general medicine with eight years of experience, I have broad expertise in preventive healthcare and treatment of chronic diseases. My philosophy is to focus on a holistic approach to weight loss and health, as it's more than just diet and exercise. I work with patients to improve their metabolic control, thereby preventing diseases such as type 2 diabetes, high blood pressure, high blood lipids, and cardiovascular diseases.",
-        "description2": "My extensive experience also includes focus on stress management, sleep, and behavioral changes to achieve lasting results. I strive to make the entire process as personal and simple as possible, also offering health coaching as a vital part of the program."
+        "description2": "My extensive experience also includes focus on stress management, sleep, and behavioral changes to achieve lasting results. I strive to make the entire process as personal and simple as possible, also offering health coaching as a vital part of the program.",
+        "programDescription": "When you begin our medical treatment program, your first step is a digital consultation with a physician. During this meeting, we review your medical history, your individual circumstances, and your personal goals. If needed, you will be referred for blood tests to ensure that all treatment decisions are based on safe and accurate medical information.\n\nBased on your results and needs, you receive a personalized treatment plan with clear instructions to support a safe and structured dose escalation. Throughout the entire process, we remain available for questions, guidance, and ongoing support.\n\nOur goal is to guide you step by step until you reach a healthy and sustainable weight. Once your goal is achieved, we help you taper off the treatment gradually and safely.\n\nLifestyle changes are essential for long-term success. If you would like additional support, we recommend our lifestyle program, where you receive professional guidance from an experienced health coach."
       },
       "marcus": {
         "name": "Marcus Flink",
@@ -502,7 +503,8 @@
     },
     "errors": {
       "sessionFailed": "Failed to create session. Please try again.",
-      "genericError": "Something went wrong. Please try again."
+      "genericError": "Something went wrong. Please try again.",
+      "rateLimited": "Too many requests. Please wait a few minutes and try again."
     },
     "buttons": {
       "bookConsultation": "Book Your Consultation",
