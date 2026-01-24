@@ -12,7 +12,7 @@ import {
   LandingPage,
   NotFoundPage,
   SubscriptionSuccess,
-  ChatPage,
+  SupabaseChatPage,
   AboutUs,
   Article,
   SubscribePage,
@@ -314,12 +314,19 @@ function App() {
           }
         />
 
+        {/* Redirect old /chat route to new Supabase chat */}
         <Route
           path="/chat"
+          element={<Navigate to="/supabase-chat" replace />}
+        />
+
+        {/* Supabase Chat Route - Main chat implementation */}
+        <Route
+          path="/supabase-chat"
           element={
             isAuthenticated ? (
               <SidebarLayout>
-                <ChatPage />
+                <SupabaseChatPage />
               </SidebarLayout>
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />
