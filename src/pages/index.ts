@@ -9,7 +9,6 @@ export * from './SubscriptionSuccess';
 export * from './SubscriptionCancel';
 export { default as LandingPage } from './LandingPage';
 export { default as NotFoundPage } from './NotFoundPage';
-export { default as ChatPage } from './ChatPage';
 export { default as SupabaseChatPage } from './SupabaseChatPage';
 export { default as AboutUs } from './AboutUs';
 export { default as Article } from './Article';

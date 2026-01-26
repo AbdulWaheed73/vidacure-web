@@ -1,39 +1,54 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./hooks";
-// import { getClientType } from "./utils";
 import { ROUTES } from "./constants";
-import {
-  LoginPage,
-  AppointmentsPage,
-  PrescriptionsPage,
-  ProgressPage,
-  ResourcesPage,
-  AccountPage,
-  LandingPage,
-  NotFoundPage,
-  SubscriptionSuccess,
-  SupabaseChatPage,
-  AboutUs,
-  Article,
-  SubscribePage,
-} from "./pages";
-import PreLoginBMI from "./pages/PreLoginBMI";
-import PreLoginBooking from "./pages/PreLoginBooking";
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminLogin from "./pages/admin/AdminLogin";
-import { AdminProtectedRoute } from "./components/admin/AdminProtectedRoute";
-import { AdminTopBar } from "./components/admin/AdminTopBar";
-import { useAdminAuthStore } from "./stores/adminAuthStore";
-import OnboardingFlow from "./pages/OnBoarding";
-import DashboardRouter from "./pages/dashboard/DashboardRouter";
+import { lazy, Suspense, useState } from "react";
 import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { TopBar } from "./components/TopBar";
-import { PopupModal } from "react-calendly";
-import { useState } from "react";
 import { calendlyService } from "./services/calendlyService";
 import { CookieBanner } from "./components/cookie/CookieBanner";
 import { useCookieConsentStore } from "./stores/cookieConsentStore";
+import { useAdminAuthStore } from "./stores/adminAuthStore";
+import { AdminTopBar } from "./components/admin/AdminTopBar";
+import { AdminProtectedRoute } from "./components/admin/AdminProtectedRoute";
+
+// Lazy load all pages for code splitting
+const LoginPage = lazy(() => import("./pages/LoginPage").then(m => ({ default: m.LoginPage })));
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+const AboutUs = lazy(() => import("./pages/AboutUs"));
+const Article = lazy(() => import("./pages/Article"));
+const PreLoginBMI = lazy(() => import("./pages/PreLoginBMI"));
+const PreLoginBooking = lazy(() => import("./pages/PreLoginBooking"));
+const SubscriptionSuccess = lazy(() => import("./pages/SubscriptionSuccess").then(m => ({ default: m.SubscriptionSuccess })));
+
+// Patient/Protected routes
+const AppointmentsPage = lazy(() => import("./pages/AppointmentsPage").then(m => ({ default: m.AppointmentsPage })));
+const PrescriptionsPage = lazy(() => import("./pages/PrescriptionsPage").then(m => ({ default: m.PrescriptionsPage })));
+const ProgressPage = lazy(() => import("./pages/ProgressPage").then(m => ({ default: m.ProgressPage })));
+const ResourcesPage = lazy(() => import("./pages/ResourcesPage").then(m => ({ default: m.ResourcesPage })));
+const AccountPage = lazy(() => import("./pages/AccountPage").then(m => ({ default: m.AccountPage })));
+const SupabaseChatPage = lazy(() => import("./pages/SupabaseChatPage"));
+const SubscribePage = lazy(() => import("./pages/SubscribePage"));
+const OnboardingFlow = lazy(() => import("./pages/OnBoarding"));
+const DashboardRouter = lazy(() => import("./pages/dashboard/DashboardRouter"));
+
+// Admin routes
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+
+// Lazy load react-calendly (heavy library)
+const PopupModal = lazy(() => import("react-calendly").then(m => ({ default: m.PopupModal })));
+
+// Loading fallback component
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-screen bg-[#F0F7F4]">
+    <div className="flex flex-col items-center gap-4">
+      <div className="w-10 h-10 border-4 border-teal-600 border-t-transparent rounded-full animate-spin" />
+      <span className="text-gray-600 text-sm">Loading...</span>
+    </div>
+  </div>
+);
 
 function App() {
   const {
@@ -111,15 +126,17 @@ function App() {
           {children}
         </SidebarInset>
         {/* Global Calendly Popup Modal - Only show if functional cookies accepted */}
-        {hasFunctionalConsent && (
-          <PopupModal
-            url={schedulingLink || ""}
-            open={!!schedulingLink}
-            onModalClose={() => {
-              setSchedulingLink(null);
-            }}
-            rootElement={document.getElementById("root")!}
-          />
+        {hasFunctionalConsent && schedulingLink && (
+          <Suspense fallback={null}>
+            <PopupModal
+              url={schedulingLink}
+              open={!!schedulingLink}
+              onModalClose={() => {
+                setSchedulingLink(null);
+              }}
+              rootElement={document.getElementById("root")!}
+            />
+          </Suspense>
         )}
       </SidebarProvider>
     );
@@ -150,7 +167,8 @@ function App() {
       {/* Cookie Consent Banner */}
       <CookieBanner />
 
-      <Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
         {/* Admin Routes - Must be FIRST to prevent regular auth interference */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
@@ -380,7 +398,8 @@ function App() {
 
         {/* 404 Not Found Page */}
         <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

@@ -8,4 +8,3 @@ export * from './weight-types';
 export * from './calendly-types';
 export * from './payment-types';
 export * from './questionnaire-types';
-export * from './chat-types';

@@ -1,9 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap');
+/* Fonts are self-hosted via @fontsource - imported in main.tsx */
 @import "tailwindcss";
 @import "tw-animate-css";
-
-/* Or if you prefer, you can use @font-face for local fonts */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

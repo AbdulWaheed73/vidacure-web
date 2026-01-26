@@ -82,6 +82,45 @@ export default defineConfig({
       outDir: 'dist',
     })
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React core - rarely changes, cache long-term
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          // Radix UI components - separate chunk for UI primitives
+          'radix-ui': [
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-alert-dialog',
+            '@radix-ui/react-checkbox',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-label',
+            '@radix-ui/react-navigation-menu',
+            '@radix-ui/react-progress',
+            '@radix-ui/react-select',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-slider',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-tooltip',
+          ],
+          // Charts - only loaded when needed
+          'charts': ['recharts'],
+          // Calendly - only loaded when booking
+          'calendly': ['react-calendly'],
+          // i18n bundle
+          'i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+          // State management and utilities
+          'utils': ['zustand', 'axios', 'zod', 'clsx', 'tailwind-merge', 'class-variance-authority'],
+        },
+      },
+    },
+    // Enable CSS code splitting
+    cssCodeSplit: true,
+    // Optimize chunk size warnings
+    chunkSizeWarningLimit: 500,
+  },
   server: {
     host: '0.0.0.0',
     port: 5173,
