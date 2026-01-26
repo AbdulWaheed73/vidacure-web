@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardAction,
@@ -27,23 +28,43 @@ type ImageCardProps = {
 };
 
 const ImageCardWeb = ({ src, alt }: ImageCardProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
-    <img
-      className="self-stretch h-72 rounded-3xl shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)]"
-      src={src}
-      alt={alt}
-      loading="lazy"
-    />
+    <div className="relative h-72 w-full rounded-3xl overflow-hidden shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)]">
+      {!isLoaded && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-3xl" />
+      )}
+      <img
+        className={`h-full w-full object-cover transition-opacity duration-300 ${
+          isLoaded ? "opacity-100" : "opacity-0"
+        }`}
+        src={src}
+        alt={alt}
+        loading="lazy"
+        onLoad={() => setIsLoaded(true)}
+      />
+    </div>
   );
 };
 const ImageCardApp = ({ src, alt }: ImageCardProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   return (
-    <img
-      className="self-stretch h-56 rounded-[19.60px] shadow-[0px_2.799999952316284px_5.599999904632568px_0px_rgba(0,0,0,0.16)]"
-      src={src}
-      alt={alt}
-      loading="lazy"
-    />
+    <div className="relative h-56 w-full rounded-[19.60px] overflow-hidden shadow-[0px_2.8px_5.6px_0px_rgba(0,0,0,0.16)]">
+      {!isLoaded && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-[19.60px]" />
+      )}
+      <img
+        className={`h-full w-full object-cover transition-opacity duration-300 ${
+          isLoaded ? "opacity-100" : "opacity-0"
+        }`}
+        src={src}
+        alt={alt}
+        loading="lazy"
+        onLoad={() => setIsLoaded(true)}
+      />
+    </div>
   );
 };
 
