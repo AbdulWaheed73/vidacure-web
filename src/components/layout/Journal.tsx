@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Clock, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import img from "@/assets/injections.svg";
+import { cloudinaryImages, cloudinaryImagesMobile } from '@/constants/cloudinary';
 import TestimonialSection from './Testimonial';
 
 const HealthJournalSection = () => {
@@ -105,13 +105,17 @@ const HealthJournalSection = () => {
                 </div>
               </div>
 
-              {/* Right Image */}
+              {/* Right Image - uses responsive images */}
               <div className="flex justify-center">
-                <img
-                  src={img}
-                  alt="Healthcare professional with measuring tape"
-                  className="rounded-3xl shadow-lg max-w-full h-auto"
-                />
+                <picture>
+                  <source media="(max-width: 768px)" srcSet={cloudinaryImagesMobile.injections} />
+                  <img
+                    src={cloudinaryImages.injections}
+                    alt="Healthcare professional with measuring tape"
+                    className="rounded-3xl shadow-lg max-w-full h-auto"
+                    loading="lazy"
+                  />
+                </picture>
               </div>
             </div>
           </div>

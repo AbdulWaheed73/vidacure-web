@@ -1,8 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
-import Injections from "../../assets/injections.svg";
-// Placeholder image - replace with your actual image import
-// const Injections = "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=600&h=400&fit=crop&crop=center";
+import { cloudinaryImages, cloudinaryImagesMobile } from '@/constants/cloudinary';
 
 export const Obesity = () => {
   const { t } = useTranslation();
@@ -59,7 +57,7 @@ export const Obesity = () => {
               <div className="flex-1">
                 <img
                   className="w-full h-auto max-h-[550px] rounded-3xl object-cover"
-                  src={Injections}
+                  src={cloudinaryImages.injections}
                   alt="Medical injections"
                 />
               </div>
@@ -83,10 +81,11 @@ export const Obesity = () => {
                 </CardContent>
               </Card>
               
-              <img 
-                className="w-full h-96 rounded-3xl object-cover" 
-                src={Injections} 
+              <img
+                className="w-full h-96 rounded-3xl object-cover"
+                src={cloudinaryImagesMobile.injections}
                 alt="Medical injections"
+                loading="lazy"
               />
               
               <div className="w-full flex flex-col justify-start items-start gap-8">

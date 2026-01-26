@@ -15,12 +15,21 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/constants";
 import { Marquee } from "@/components/magicui/marquee";
-import Img1 from "../../assets/first.svg";
-import Img2 from "../../assets/second.png";
-import Img3 from "../../assets/third.svg";
-import Img4 from "../../assets/fourth.png";
-import Img5 from "../../assets/fifth.png";
-import Img6 from "../../assets/sixth.png";
+import { cloudinaryImages, cloudinaryImagesMobile } from "@/constants/cloudinary";
+
+// Desktop images (larger, 600px width)
+const Img1 = cloudinaryImages.first;
+const Img2 = cloudinaryImages.second;
+const Img3 = cloudinaryImages.third;
+const Img4 = cloudinaryImages.fourth;
+const Img5 = cloudinaryImages.fifth;
+const Img6 = cloudinaryImages.sixth;
+
+// Mobile images (smaller, 400px width for faster loading)
+const Img1Mobile = cloudinaryImagesMobile.first;
+const Img2Mobile = cloudinaryImagesMobile.second;
+const Img3Mobile = cloudinaryImagesMobile.third;
+const Img4Mobile = cloudinaryImagesMobile.fourth;
 
 type ImageCardProps = {
   src: string;
@@ -154,17 +163,15 @@ export const HeroSection = () => {
               </CardContent>
             </Card>
 
-            {/* Image Gallery */}
+            {/* Image Gallery - Mobile optimized (fewer images, smaller sizes) */}
             <Card className="h-80 md:h-96 lg:h-[30rem] relative flex justify-center items-center gap-4 overflow-hidden flex-row border-none shadow-none">
               <Marquee vertical className="[--duration:20s]">
-                <ImageCardApp src={Img1} alt={t('imageAlt.heroGallery1')} />
-                <ImageCardApp src={Img2} alt={t('imageAlt.heroGallery2')} />
-                <ImageCardApp src={Img3} alt={t('imageAlt.heroGallery3')} />
+                <ImageCardApp src={Img1Mobile} alt={t('imageAlt.heroGallery1')} />
+                <ImageCardApp src={Img2Mobile} alt={t('imageAlt.heroGallery2')} />
               </Marquee>
               <Marquee reverse vertical className="[--duration:20s]">
-                <ImageCardApp src={Img4} alt={t('imageAlt.heroGallery4')} />
-                <ImageCardApp src={Img5} alt={t('imageAlt.heroGallery5')} />
-                <ImageCardApp src={Img6} alt={t('imageAlt.heroGallery6')} />
+                <ImageCardApp src={Img3Mobile} alt={t('imageAlt.heroGallery3')} />
+                <ImageCardApp src={Img4Mobile} alt={t('imageAlt.heroGallery4')} />
               </Marquee>
               <div className="w-full h-20 left-0 top-0 absolute bg-gradient-to-b from-white to-white/0" />
               <div className="w-full h-20 left-0 bottom-0 absolute bg-gradient-to-b from-white/0 to-white" />

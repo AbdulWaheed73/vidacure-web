@@ -1,9 +1,7 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import JourneyStep1 from "../../assets/journey-step1.svg";
-import JourneyStep2 from "../../assets/journey-step2.svg";
-import JourneyStep3 from "../../assets/journey-step3.svg";
+import { cloudinaryImages, cloudinaryImagesMobile } from '@/constants/cloudinary';
 
 export default function WeightLossSteps() {
   const { t } = useTranslation();
@@ -12,17 +10,20 @@ export default function WeightLossSteps() {
     {
       title: t('journey.step1.title'),
       description: t('journey.step1.description'),
-      image: JourneyStep1
+      image: cloudinaryImages.journeyStep1,
+      imageMobile: cloudinaryImagesMobile.journeyStep1
     },
     {
       title: t('journey.step2.title'),
       description: t('journey.step2.description'),
-      image: JourneyStep2
+      image: cloudinaryImages.journeyStep2,
+      imageMobile: cloudinaryImagesMobile.journeyStep2
     },
     {
       title: t('journey.step3.title'),
       description: t('journey.step3.description'),
-      image: JourneyStep3
+      image: cloudinaryImages.journeyStep3,
+      imageMobile: cloudinaryImagesMobile.journeyStep3
     }
   ];
 
@@ -103,8 +104,9 @@ export default function WeightLossSteps() {
                 <div className="flex flex-col">
                   <img
                     className="w-full max-w-full h-auto object-contain rounded-t-3xl mx-auto"
-                    src={step.image}
+                    src={step.imageMobile}
                     alt={step.title}
+                    loading="lazy"
                   />
                   <div className="px-5 py-8 flex flex-col gap-4">
                     <div className="pb-[0.59px]">

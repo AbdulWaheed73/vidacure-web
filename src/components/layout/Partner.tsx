@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants';
-import Phones from "../../assets/phones.svg";
+import { cloudinaryImages, cloudinaryImagesMobile } from '@/constants/cloudinary';
 
 export default function Partner() {
   const { t } = useTranslation();
@@ -51,7 +51,10 @@ export default function Partner() {
           <div className="flex-1 max-w-md lg:max-w-[576px] w-full">
             <Card className="bg-transparent border-none shadow-none">
               <CardContent className="p-8 md:p-16 flex flex-col items-center justify-center space-y-8">
-                <img src={Phones} alt="Vidacure app" />
+                <picture>
+                  <source media="(max-width: 768px)" srcSet={cloudinaryImagesMobile.phones} />
+                  <img src={cloudinaryImages.phones} alt="Vidacure app" loading="lazy" />
+                </picture>
               </CardContent>
             </Card>
           </div>
