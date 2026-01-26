@@ -157,8 +157,13 @@
       "overweight": "övervikt",
       "obese": "fetma"
     },
+    "tiers": {
+      "notEligible": "Vårt medicinska program kräver ett BMI på 27 eller högre. Överväg att konsultera din vanliga läkare för personliga råd.",
+      "conditional": "Du kan kvalificera dig för behandling. En konsultation behövs för att bedöma ditt blodtryck och ta blodprover för att fastställa behörighet.",
+      "eligible": "Du är en kandidat för behandling! Ta nästa steg mot ett friskare du."
+    },
     "disclaimer": "*Detta är en utgångspunkt för att förstå din hälsa. Om du har ett BMI över 27 är nästa steg att prata med en medicinsk expert.",
-    "ctaButton": "Boka en läkarkonsultation"
+    "ctaButton": "Kom igång"
   },
   "journey": {
     "subtitle": "Så fungerar det",
@@ -494,8 +499,12 @@
     "weightUnit": "kg",
     "yourBmi": "Ditt BMI:",
     "eligible": {
-      "title": "Du kvalificerar dig för vårt program!",
-      "description": "Boka en konsultation med våra läkare för att komma igång."
+      "title": "Du är en kandidat för behandling!",
+      "description": "En konsultation med en läkare behövs för att gå vidare med din behandlingsplan."
+    },
+    "conditional": {
+      "title": "Ytterligare bedömning krävs",
+      "description": "Med detta BMI behöver du ytterligare bedömning av ditt blodtryck och blodprover för att avgöra om du är berättigad till behandling. Vänligen boka en konsultation!"
     },
     "notEligible": {
       "title": "Du uppfyller inte kriterierna ännu.",

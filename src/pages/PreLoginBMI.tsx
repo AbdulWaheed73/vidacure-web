@@ -14,7 +14,7 @@ const PreLoginBMI = () => {
   const [weight, setWeight] = useState("");
   const [bmi, setBmi] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
-  const [isEligible, setIsEligible] = useState(false);
+  const [eligibilityStatus, setEligibilityStatus] = useState<'not_eligible' | 'conditional' | 'eligible'>('not_eligible');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +27,14 @@ const PreLoginBMI = () => {
       if (heightInMeters > 0 && weightInKg > 0) {
         const calculatedBmi = weightInKg / (heightInMeters * heightInMeters);
         setBmi(Math.round(calculatedBmi * 10) / 10);
-        setIsEligible(calculatedBmi >= 27);
+
+        if (calculatedBmi >= 30) {
+          setEligibilityStatus('eligible');
+        } else if (calculatedBmi >= 27) {
+          setEligibilityStatus('conditional');
+        } else {
+          setEligibilityStatus('not_eligible');
+        }
         setShowResult(true);
       } else {
         setBmi(null);
@@ -40,7 +47,7 @@ const PreLoginBMI = () => {
   }, [height, weight]);
 
   const handleContinue = async () => {
-    if (!isEligible || !bmi) return;
+    if (eligibilityStatus === 'not_eligible' || !bmi) return;
 
     setIsLoading(true);
     setError(null);
@@ -151,21 +158,32 @@ const PreLoginBMI = () => {
               {/* BMI Result */}
               {showResult && bmi !== null && (
                 <div className={`rounded-[16px] p-6 text-center space-y-3 ${
-                  isEligible
+                  eligibilityStatus === 'eligible'
                     ? 'bg-green-50 border-2 border-green-200'
+                    : eligibilityStatus === 'conditional'
+                    ? 'bg-blue-50 border-2 border-blue-200'
                     : 'bg-amber-50 border-2 border-amber-200'
                 }`}>
                   <h3 className="font-sora font-bold text-[24px] text-[#282828]">
                     {t('preLoginBMI.yourBmi')} {bmi}
                   </h3>
 
-                  {isEligible ? (
+                  {eligibilityStatus === 'eligible' ? (
                     <div className="space-y-2">
                       <p className="font-manrope text-[16px] font-semibold text-green-700">
                         {t('preLoginBMI.eligible.title')}
                       </p>
                       <p className="font-manrope text-[14px] text-green-600">
                         {t('preLoginBMI.eligible.description')}
+                      </p>
+                    </div>
+                  ) : eligibilityStatus === 'conditional' ? (
+                    <div className="space-y-2">
+                      <p className="font-manrope text-[16px] font-semibold text-blue-700">
+                        {t('preLoginBMI.conditional.title')}
+                      </p>
+                      <p className="font-manrope text-[14px] text-blue-600">
+                        {t('preLoginBMI.conditional.description')}
                       </p>
                     </div>
                   ) : (
@@ -194,7 +212,7 @@ const PreLoginBMI = () => {
             {/* Action Buttons */}
             {showResult && (
               <div className="flex flex-col gap-3 w-full max-w-[400px]">
-                {isEligible ? (
+                {eligibilityStatus !== 'not_eligible' ? (
                   <Button
                     onClick={handleContinue}
                     disabled={isLoading}

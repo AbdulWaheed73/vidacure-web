@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import LanguageToggle from "@/components/ui/LanguageToggle";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import Logo from "../../assets/vidacure_png.png";
@@ -18,13 +18,23 @@ import { darkTealText, ROUTES } from "@/constants";
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setIsOpen(false); // Close mobile menu after clicking
+    const isHomePage = location.pathname === '/' || location.pathname === ROUTES.HOME;
+
+    if (isHomePage) {
+      // Already on home page, just scroll
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      // Navigate to home page with hash
+      navigate(`${ROUTES.HOME}#${sectionId}`);
     }
+    setIsOpen(false); // Close mobile menu after clicking
   };
 
   return (

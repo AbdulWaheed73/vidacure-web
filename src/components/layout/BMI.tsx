@@ -1,19 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Minus, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { PopupModal } from 'react-calendly';
-import { useCookieConsentStore } from "@/stores/cookieConsentStore";
+import { ROUTES } from "@/constants/routes";
 
 export const BMI = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [age, setAge] = useState(28);
   const [weight, setWeight] = useState(100);
   const [height, setHeight] = useState(182);
-  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
-  const { consent, openPreferences } = useCookieConsentStore();
-  const hasFunctionalConsent = consent?.functional ?? false;
 
   // Calculate BMI
   const calculateBMI = () => {
@@ -29,8 +27,20 @@ export const BMI = () => {
     return t("bmi.categories.obese");
   };
 
+  const getBMITier = (bmi: number): 'notEligible' | 'conditional' | 'eligible' => {
+    if (bmi < 27) return 'notEligible';
+    if (bmi < 30) return 'conditional';
+    return 'eligible';
+  };
+
   const bmi = calculateBMI();
-  const category = getBMICategory(parseFloat(bmi));
+  const bmiValue = parseFloat(bmi);
+  const category = getBMICategory(bmiValue);
+  const tier = getBMITier(bmiValue);
+
+  const handleGetStarted = () => {
+    navigate(ROUTES.PRE_LOGIN_BMI);
+  };
 
   const adjustValue = (type: string, operation: string) => {
     if (type === "age") {
@@ -276,18 +286,18 @@ export const BMI = () => {
               <h2 className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold font-['Sora'] text-center">
                 {t('bmi.result')} {bmi} ({category})
               </h2>
+
+              {/* Tier-based messaging */}
+              <p className="text-emerald-100 text-lg font-medium font-['Manrope'] text-center max-w-xl">
+                {t(`bmi.tiers.${tier}`)}
+              </p>
+
               <div className="max-w-2xl text-center">
                 <span className="text-emerald-50 text-base font-normal font-['Manrope'] leading-snug">
                   {t('bmi.disclaimer')}{" "}
                 </span>
                 <button
-                  onClick={() => {
-                    if (hasFunctionalConsent) {
-                      setIsCalendlyOpen(true);
-                    } else {
-                      openPreferences();
-                    }
-                  }}
+                  onClick={handleGetStarted}
                   className="text-emerald-50 text-base font-bold font-['Manrope'] underline leading-snug hover:text-white transition-colors"
                 >
                   {t('bmi.ctaButton')}
@@ -297,16 +307,6 @@ export const BMI = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Calendly Popup Modal - Only show if functional cookies accepted */}
-      {hasFunctionalConsent && (
-        <PopupModal
-          url="https://calendly.com/mesudh044/meeting-for-paid-users"
-          open={isCalendlyOpen}
-          onModalClose={() => setIsCalendlyOpen(false)}
-          rootElement={document.getElementById('root')!}
-        />
-      )}
     </div>
   );
 };

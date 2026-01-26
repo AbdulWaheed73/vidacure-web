@@ -157,8 +157,13 @@
       "overweight": "overweight",
       "obese": "obese"
     },
+    "tiers": {
+      "notEligible": "Our medical program requires a BMI of 27 or higher. Consider consulting your regular doctor for personalized advice.",
+      "conditional": "You may qualify for treatment. A consultation is needed to assess your blood pressure and run blood tests to determine eligibility.",
+      "eligible": "You are a candidate for treatment! Take the next step towards a healthier you."
+    },
     "disclaimer": "*This is a starting point for understanding your health. If you have a BMI over 27, the next step is to speak with a medical professional.",
-    "ctaButton": "Book a Doctor's Consultation"
+    "ctaButton": "Get Started"
   },
   "journey": {
     "subtitle": "How It Works",
@@ -494,8 +499,12 @@
     "weightUnit": "kg",
     "yourBmi": "Your BMI:",
     "eligible": {
-      "title": "You qualify for our program!",
-      "description": "Book a consultation with our doctors to get started."
+      "title": "You are a candidate for treatment!",
+      "description": "A consultation with a doctor is needed to proceed with your treatment plan."
+    },
+    "conditional": {
+      "title": "Further assessment required",
+      "description": "With this BMI, you need further assessment of your blood pressure and blood tests to determine if you are eligible for treatment. Please book a consultation!"
     },
     "notEligible": {
       "title": "You don't meet the criteria yet.",

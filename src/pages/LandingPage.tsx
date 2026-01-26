@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 // import { HeroSection } from "@/components/layout/HeroSection";
 import HeroSection from "@/components/layout/HeroSection";
@@ -15,6 +17,21 @@ import { useTranslation } from "react-i18next";
 
 export const LandingPage = () => {
   const { t } = useTranslation();
+  const location = useLocation();
+
+  // Handle hash navigation when page loads or hash changes
+  useEffect(() => {
+    if (location.hash) {
+      const sectionId = location.hash.replace('#', '');
+      // Small delay to ensure the page is rendered
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [location.hash]);
 
   // Organization schema for home page
   const organizationSchema = createOrganizationSchema(t('seo.defaultDescription'));
