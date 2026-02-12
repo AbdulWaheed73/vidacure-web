@@ -1,39 +1,17 @@
 // Environment configuration utility
 
-type Environment = 'development' | 'production';
-
-const getEnvironment = (): Environment => {
-  // Check Vite's mode first, fallback to NODE_ENV, then default to development
-  return (import.meta.env.MODE as Environment) ||
-         (import.meta.env.VITE_NODE_ENV as Environment) ||
-         'development';
-};
-
-const isProduction = (): boolean => {
-  return getEnvironment() === 'production';
-};
-
 export const config = {
-  environment: getEnvironment(),
-  isProduction: isProduction(),
-
-  // Dynamic URL selection based on environment
-  serverUrl: isProduction()
-    ? import.meta.env.VITE_PROD_SERVER_URL
-    : import.meta.env.VITE_DEV_SERVER_URL,
-
-  frontendUrl: isProduction()
-    ? import.meta.env.VITE_PROD_FRONTEND_URL
-    : import.meta.env.VITE_DEV_FRONTEND_URL,
-
-  // Other config
+  environment: import.meta.env.MODE,
+  isProduction: import.meta.env.MODE === 'production',
+  serverUrl: import.meta.env.VITE_SERVER_URL,
+  frontendUrl: import.meta.env.VITE_FRONTEND_URL,
   streamApiKey: import.meta.env.VITE_STREAM_API_KEY,
   appName: import.meta.env.VITE_APP_NAME,
   appVersion: import.meta.env.VITE_APP_VERSION,
 };
 
 // Log current configuration (only in development)
-if (!isProduction()) {
+if (!config.isProduction) {
   console.log('🏗️ Environment Configuration:', {
     environment: config.environment,
     serverUrl: config.serverUrl,
