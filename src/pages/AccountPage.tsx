@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { User, Trash2 } from 'lucide-react';
+import { User, Trash2, Download, Shield } from 'lucide-react';
 import { Button } from '../components/ui';
+import { Badge } from '../components/ui/badge';
 import type { User as UserType } from '../types';
 import { deleteAccount } from '../services/userDeletionService';
+import { exportMyData, downloadDataAsFile } from '../services/dataExportService';
+import { useConsentStore } from '../stores/consentStore';
 
 type AccountPageProps = {
   user: UserType | null;
@@ -14,6 +17,8 @@ export const AccountPage: React.FC<AccountPageProps> = ({ user, onLogout }) => {
   const { t } = useTranslation();
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const { hasAcceptedLatest, currentVersion } = useConsentStore();
 
   const handleDeleteAccount = async () => {
     if (!showDeleteConfirm) {
@@ -36,6 +41,19 @@ export const AccountPage: React.FC<AccountPageProps> = ({ user, onLogout }) => {
       setShowDeleteConfirm(false);
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleExportData = async () => {
+    try {
+      setIsExporting(true);
+      const data = await exportMyData();
+      downloadDataAsFile(data);
+    } catch (error: any) {
+      console.error('Failed to export data:', error);
+      alert(t('account.exportError') || 'Failed to export data. Please try again.');
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -77,6 +95,44 @@ export const AccountPage: React.FC<AccountPageProps> = ({ user, onLogout }) => {
             </div>
           </div>
         )}
+
+        {/* Data & Privacy Section */}
+        <div className="border-t border-gray-200 pt-6 mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <Shield className="size-5 text-teal-600" />
+            <h2 className="text-xl font-semibold text-gray-800 font-manrope">
+              {t('account.dataPrivacy')}
+            </h2>
+          </div>
+          <div className="space-y-4">
+            <div className="p-4 bg-blue-50 rounded-xl">
+              <p className="text-sm text-gray-600 font-manrope mb-3">
+                {t('account.exportDescription')}
+              </p>
+              <Button
+                onClick={handleExportData}
+                variant="outline"
+                size="sm"
+                disabled={isExporting}
+                className="font-manrope"
+              >
+                <Download className="size-4 mr-2" />
+                {isExporting ? t('account.exporting') : t('account.exportData')}
+              </Button>
+            </div>
+            <div className="flex items-center gap-2">
+              {hasAcceptedLatest ? (
+                <Badge className="bg-green-100 text-green-800 border-green-200 hover:bg-green-100">
+                  {t('account.consentAccepted', { version: currentVersion })}
+                </Badge>
+              ) : (
+                <Badge variant="destructive">
+                  {t('account.consentPending')}
+                </Badge>
+              )}
+            </div>
+          </div>
+        </div>
 
         <div className="border-t border-gray-200 pt-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 font-manrope">

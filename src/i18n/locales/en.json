@@ -407,12 +407,28 @@
     "comingSoon": "Health resources coming soon",
     "emptyMessage": "Educational content and health resources will be available here"
   },
+  "consent": {
+    "title": "Privacy Policy Consent",
+    "description": "To continue using Vidacure, please review and accept our updated Privacy Policy.",
+    "policyText": "We collect and process your personal health data to provide our services. Your data is handled according to GDPR and Swedish healthcare regulations.",
+    "readPolicy": "Read full Privacy Policy",
+    "acceptLabel": "I have read and accept the Privacy Policy (version {{version}})",
+    "accept": "Accept & Continue",
+    "submitting": "Saving..."
+  },
   "account": {
     "title": "Account",
     "description": "Manage your account settings and profile information",
     "profileInfo": "Profile Information",
     "name": "Name",
     "role": "Role",
+    "dataPrivacy": "Data & Privacy",
+    "exportData": "Download My Data",
+    "exporting": "Preparing download...",
+    "exportDescription": "Download a copy of all your personal data stored in Vidacure in JSON format.",
+    "exportError": "Failed to export data. Please try again.",
+    "consentAccepted": "Privacy Policy v{{version}} accepted",
+    "consentPending": "Privacy Policy consent pending",
     "accountActions": "Account Actions",
     "logout": "🚪 Logout"
   },

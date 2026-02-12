@@ -117,18 +117,32 @@ export const PrescriptionRequestsList: React.FC<PrescriptionRequestsListProps> =
     );
   }
 
+  // Find the latest approved request — that's the "active" prescription
+  const activeRequestId = requests.find(
+    (r) => r.status === PrescriptionRequestStatus.APPROVED
+  )?._id;
+
   return (
     <div className="space-y-4">
       <h2 className="text-xl font-semibold text-gray-800 font-manrope mb-4">
         Previous Requests
       </h2>
-      {requests.map((request) => (
-        <Card key={request._id} className="bg-white/95 backdrop-blur-md">
+      {requests.map((request) => {
+        const isActive = request._id === activeRequestId;
+        return (
+        <Card key={request._id} className={`bg-white/95 backdrop-blur-md ${isActive ? 'ring-2 ring-teal-500' : ''}`}>
           <CardHeader>
             <div className="flex justify-between items-start">
-              <CardTitle className="text-lg font-manrope">
-                Request #{request._id.slice(-6)}
-              </CardTitle>
+              <div className="flex items-center gap-2">
+                <CardTitle className="text-lg font-manrope">
+                  Request #{request._id.slice(-6)}
+                </CardTitle>
+                {isActive && (
+                  <Badge className="border-teal-500 text-teal-700 bg-teal-50">
+                    ACTIVE
+                  </Badge>
+                )}
+              </div>
               {getStatusBadge(request.status)}
             </div>
           </CardHeader>
@@ -217,7 +231,8 @@ export const PrescriptionRequestsList: React.FC<PrescriptionRequestsListProps> =
             </div>
           </CardContent>
         </Card>
-      ))}
+        );
+      })}
     </div>
   );
 };

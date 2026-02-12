@@ -407,12 +407,28 @@
     "comingSoon": "Hälsoresurser kommer snart",
     "emptyMessage": "Utbildningsinnehåll och hälsoresurser kommer att finnas tillgängliga här"
   },
+  "consent": {
+    "title": "Samtycke till integritetspolicy",
+    "description": "För att fortsätta använda Vidacure, vänligen granska och acceptera vår uppdaterade integritetspolicy.",
+    "policyText": "Vi samlar in och behandlar dina personliga hälsodata för att tillhandahålla våra tjänster. Dina data hanteras enligt GDPR och svenska hälso- och sjukvårdsregler.",
+    "readPolicy": "Läs hela integritetspolicyn",
+    "acceptLabel": "Jag har läst och accepterar integritetspolicyn (version {{version}})",
+    "accept": "Acceptera & Fortsätt",
+    "submitting": "Sparar..."
+  },
   "account": {
     "title": "Konto",
     "description": "Hantera dina kontoinställningar och profilinformation",
     "profileInfo": "Profilinformation",
     "name": "Namn",
     "role": "Roll",
+    "dataPrivacy": "Data & Integritet",
+    "exportData": "Ladda ner mina data",
+    "exporting": "Förbereder nedladdning...",
+    "exportDescription": "Ladda ner en kopia av alla dina personuppgifter lagrade i Vidacure i JSON-format.",
+    "exportError": "Det gick inte att exportera data. Försök igen.",
+    "consentAccepted": "Integritetspolicy v{{version}} accepterad",
+    "consentPending": "Samtycke till integritetspolicy krävs",
     "accountActions": "Kontoåtgärder",
     "logout": "🚪 Logga ut"
   },

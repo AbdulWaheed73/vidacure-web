@@ -1,13 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./hooks";
 import { ROUTES } from "./constants";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { TopBar } from "./components/TopBar";
 import { calendlyService } from "./services/calendlyService";
 import { CookieBanner } from "./components/cookie/CookieBanner";
+import { ConsentModal } from "./components/ConsentModal";
 import { useCookieConsentStore } from "./stores/cookieConsentStore";
+import { useConsentStore } from "./stores/consentStore";
 import { useAdminAuthStore } from "./stores/adminAuthStore";
 import { AdminTopBar } from "./components/admin/AdminTopBar";
 import { AdminProtectedRoute } from "./components/admin/AdminProtectedRoute";
@@ -67,6 +69,14 @@ function App() {
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
   const { consent } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
+  const checkConsentStatus = useConsentStore(state => state.checkConsentStatus);
+
+  // Check privacy policy consent when user becomes authenticated
+  useEffect(() => {
+    if (isAuthenticated && user?.role === 'patient') {
+      checkConsentStatus();
+    }
+  }, [isAuthenticated, user?.role, checkConsentStatus]);
 
   const handleDirectBooking = async () => {
     // setIsBookingLoading(true);
@@ -166,6 +176,8 @@ function App() {
     <BrowserRouter>
       {/* Cookie Consent Banner */}
       <CookieBanner />
+      {/* Privacy Policy Consent Modal (GDPR) */}
+      <ConsentModal />
 
       <Suspense fallback={<PageLoader />}>
         <Routes>
