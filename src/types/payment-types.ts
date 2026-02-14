@@ -66,6 +66,17 @@ export type StripeInvoice = {
   status: string;
 };
 
+export type Invoice = {
+  id: string;
+  date: string;
+  amount: number;
+  currency: string;
+  status: string;
+  planType: string | null;
+  invoicePdf: string | null;
+  receiptUrl: string | null;
+};
+
 export type PatientStripeData = {
   subscription: StripeSubscription;
   paymentMethod: StripePaymentMethod | null;

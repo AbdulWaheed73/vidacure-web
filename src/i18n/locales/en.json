@@ -430,7 +430,21 @@
     "consentAccepted": "Privacy Policy v{{version}} accepted",
     "consentPending": "Privacy Policy consent pending",
     "accountActions": "Account Actions",
-    "logout": "🚪 Logout"
+    "logout": "🚪 Logout",
+    "billing": {
+      "title": "Subscription & Billing",
+      "historyTitle": "Billing History",
+      "date": "Date",
+      "amount": "Amount",
+      "plan": "Plan",
+      "status": "Status",
+      "receipt": "Receipt",
+      "paid": "Paid",
+      "lifestyle": "Lifestyle",
+      "medical": "Medical",
+      "empty": "No billing history yet",
+      "fetchError": "Failed to load billing history. Please try again."
+    }
   },
   "seo": {
     "defaultTitle": "Vidacure - Sustainable Weight Loss Backed by Medical Science",

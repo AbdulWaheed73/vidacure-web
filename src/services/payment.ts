@@ -2,7 +2,8 @@ import { api } from './api';
 import type {
   CreateCheckoutSessionResponse,
   SubscriptionStatus,
-  CreatePortalSessionResponse
+  CreatePortalSessionResponse,
+  Invoice
 } from '../types/payment-types';
 
 export class PaymentService {
@@ -35,6 +36,14 @@ export class PaymentService {
   static async createPortalSession(): Promise<CreatePortalSessionResponse> {
     const response = await api.post('/api/payment/create-portal-session');
     return response.data;
+  }
+
+  /**
+   * Get invoice history for the current patient
+   */
+  static async getInvoiceHistory(): Promise<Invoice[]> {
+    const response = await api.get('/api/payment/invoices');
+    return response.data.invoices;
   }
 
   /**

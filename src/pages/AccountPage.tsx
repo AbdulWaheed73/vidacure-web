@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { User, Trash2, Download, Shield } from 'lucide-react';
+import { User, Trash2, Download, Shield, CreditCard } from 'lucide-react';
 import { Button } from '../components/ui';
 import { Badge } from '../components/ui/badge';
 import type { User as UserType } from '../types';
 import { deleteAccount } from '../services/userDeletionService';
 import { exportMyData, downloadDataAsFile } from '../services/dataExportService';
 import { useConsentStore } from '../stores/consentStore';
+import { SubscriptionStatusComponent } from '../components/subscription/SubscriptionStatus';
+import { BillingHistory } from '../components/subscription/BillingHistory';
 
 type AccountPageProps = {
   user: UserType | null;
@@ -91,6 +93,27 @@ export const AccountPage: React.FC<AccountPageProps> = ({ user, onLogout }) => {
                   <p className="font-semibold text-gray-700 font-manrope">{t('account.role')}</p>
                   <p className="text-gray-600 font-manrope">{user.role}</p>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Subscription & Billing Section - Patients only */}
+        {user?.role === 'patient' && (
+          <div className="border-t border-gray-200 pt-6 mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <CreditCard className="size-5 text-teal-600" />
+              <h2 className="text-xl font-semibold text-gray-800 font-manrope">
+                {t('account.billing.title')}
+              </h2>
+            </div>
+            <div className="space-y-6">
+              <SubscriptionStatusComponent />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-3 font-manrope">
+                  {t('account.billing.historyTitle')}
+                </h3>
+                <BillingHistory />
               </div>
             </div>
           </div>

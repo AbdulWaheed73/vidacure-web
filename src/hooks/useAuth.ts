@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '../stores/authStore';
 import { AuthService } from '../services';
+import { pendingSessionService } from '../services/pendingSessionService';
+import { updateCsrfToken } from '../services/api';
 
 export const useAuth = () => {
   const {
@@ -49,22 +51,40 @@ export const useAuth = () => {
     try {
       clearError();
       setLoading(true);
-      
+
       // The backend will handle the callback and set cookies
       // We just need to wait a moment and then check auth status
       setTimeout(async () => {
         try {
           const response = await AuthService.checkAuthStatus();
-        console.log("response in sucess 2 : ", response);
-          
+          console.log("response in sucess 2 : ", response);
+
           if (response.authenticated) {
+            // Link pending booking BEFORE setting auth data so dashboard sees correct state
+            if (response.user?.role === 'patient' && response.csrfToken) {
+              updateCsrfToken(response.csrfToken);
+              const token = pendingSessionService.getStoredToken();
+              if (token) {
+                try {
+                  const linkResult = await pendingSessionService.linkBookingToUser(token, response.csrfToken);
+                  if (linkResult.success) {
+                    console.log("✅ Linked pending booking during auth callback");
+                    pendingSessionService.clearStoredToken();
+                    localStorage.removeItem("vidacure_pending_calendly_booking");
+                  }
+                } catch (err) {
+                  console.warn("⚠️ Failed to link pending booking during auth callback:", err);
+                }
+              }
+            }
+
             setAuthData(response);
-            
+
             // Store user data locally
             if (response.user) {
               AuthService.storeUserData(response.user, response.csrfToken);
             }
-            
+
             // Clear URL parameters
             window.history.replaceState({}, document.title, window.location.pathname);
           }
@@ -74,7 +94,7 @@ export const useAuth = () => {
           setLoading(false);
         }
       }, 1000); // Wait 1 second for backend to process
-      
+
     } catch {
       setLoading(false);
     }
@@ -83,18 +103,37 @@ export const useAuth = () => {
   // Handle successful auth redirect
   const handleSuccessfulAuth = async () => {
     clearError();
-    
+    setLoading(true);
+
     // Clear URL parameters
     window.history.replaceState({}, document.title, window.location.pathname);
-    
+
     // Check auth status after a short delay
     setTimeout(async () => {
       try {
         const response = await AuthService.checkAuthStatus();
         console.log("response in sucess: ", response);
         if (response.authenticated) {
+          // Link pending booking BEFORE setting auth data so dashboard sees correct state
+          if (response.user?.role === 'patient' && response.csrfToken) {
+            updateCsrfToken(response.csrfToken);
+            const token = pendingSessionService.getStoredToken();
+            if (token) {
+              try {
+                const linkResult = await pendingSessionService.linkBookingToUser(token, response.csrfToken);
+                if (linkResult.success) {
+                  console.log("✅ Linked pending booking during auth success redirect");
+                  pendingSessionService.clearStoredToken();
+                  localStorage.removeItem("vidacure_pending_calendly_booking");
+                }
+              } catch (err) {
+                console.warn("⚠️ Failed to link pending booking during auth success redirect:", err);
+              }
+            }
+          }
+
           setAuthData(response);
-          
+
           // Store user data locally (like in handleAuthCallback)
           if (response.user) {
             AuthService.storeUserData(response.user, response.csrfToken);
@@ -102,6 +141,8 @@ export const useAuth = () => {
         }
       } catch (err) {
         console.log('Auth check failed:', err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
       }
     }, 500);
   };

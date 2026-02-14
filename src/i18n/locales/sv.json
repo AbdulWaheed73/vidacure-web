@@ -430,7 +430,21 @@
     "consentAccepted": "Integritetspolicy v{{version}} accepterad",
     "consentPending": "Samtycke till integritetspolicy krävs",
     "accountActions": "Kontoåtgärder",
-    "logout": "🚪 Logga ut"
+    "logout": "🚪 Logga ut",
+    "billing": {
+      "title": "Prenumeration & Fakturering",
+      "historyTitle": "Faktureringshistorik",
+      "date": "Datum",
+      "amount": "Belopp",
+      "plan": "Plan",
+      "status": "Status",
+      "receipt": "Kvitto",
+      "paid": "Betald",
+      "lifestyle": "Livsstil",
+      "medical": "Medicinsk",
+      "empty": "Ingen faktureringshistorik ännu",
+      "fetchError": "Det gick inte att ladda faktureringshistorik. Försök igen."
+    }
   },
   "seo": {
     "defaultTitle": "Vidacure - Hållbar Viktminskning med Medicinsk Vetenskap",

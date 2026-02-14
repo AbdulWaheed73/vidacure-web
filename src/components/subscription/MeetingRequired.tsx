@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Calendar, Clock } from 'lucide-react';
 import { meetingService } from '@/services/meetingService';
 import { Button } from '@/components/ui/Button';
@@ -12,6 +13,7 @@ type MeetingRequiredProps = {
 
 export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) => {
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [isMeetingGatePassed, setIsMeetingGatePassed] = useState(false);
   const [meetingStatus, setMeetingStatus] = useState<'none' | 'scheduled' | 'completed'>('none');
@@ -51,7 +53,8 @@ export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) =>
   const formatScheduledTime = () => {
     if (!scheduledTime) return null;
     const date = new Date(scheduledTime);
-    return new Intl.DateTimeFormat('sv-SE', {
+    const locale = i18n.language === 'sv' ? 'sv-SE' : 'en-GB';
+    return new Intl.DateTimeFormat(locale, {
       dateStyle: 'long',
       timeStyle: 'short',
     }).format(date);

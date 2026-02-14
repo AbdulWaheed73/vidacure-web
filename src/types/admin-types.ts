@@ -15,10 +15,18 @@ export const nameSchema = z.string()
   .min(2, 'Name must be at least 2 characters')
   .max(100, 'Name must be less than 100 characters');
 
+// Event types schema for Calendly integration
+export const eventTypesSchema = z.object({
+  free: z.string().optional(),
+  standard: z.string().optional(),
+  premium: z.string().optional(),
+});
+
 // Add Doctor form schema
 export const addDoctorFormSchema = z.object({
   ssn: ssnSchema,
   email: emailSchema,
+  eventTypes: eventTypesSchema.optional(),
 });
 
 export type AddDoctorFormValues = z.infer<typeof addDoctorFormSchema>;

@@ -45,6 +45,11 @@ export const AddDoctorDialog = ({ isOpen, onClose, onSuccess }: AddDoctorDialogP
     defaultValues: {
       ssn: '',
       email: '',
+      eventTypes: {
+        free: '',
+        standard: '',
+        premium: '',
+      },
     },
   });
 
@@ -120,7 +125,20 @@ export const AddDoctorDialog = ({ isOpen, onClose, onSuccess }: AddDoctorDialogP
     setError(null);
 
     try {
-      await adminService.addDoctor(data);
+      // Only include eventTypes if at least one value was provided
+      const payload = { ...data };
+      if (payload.eventTypes) {
+        const hasAnyEventType = Object.values(payload.eventTypes).some(v => v && v.trim() !== '');
+        if (!hasAnyEventType) {
+          delete payload.eventTypes;
+        } else {
+          // Remove empty strings so schema defaults apply for unfilled fields
+          payload.eventTypes = Object.fromEntries(
+            Object.entries(payload.eventTypes).filter(([, v]) => v && v.trim() !== '')
+          ) as typeof payload.eventTypes;
+        }
+      }
+      await adminService.addDoctor(payload);
 
       setSuccessMessage('Doctor successfully added. Name will be populated on first BankID login.');
 
@@ -221,6 +239,65 @@ export const AddDoctorDialog = ({ isOpen, onClose, onSuccess }: AddDoctorDialogP
                   </FormItem>
                 )}
               />
+
+              {/* Event Types */}
+              <div className="space-y-3">
+                <FormLabel>Calendly Event Types</FormLabel>
+                <p className="text-sm text-muted-foreground">
+                  Custom names for Calendly event types. Leave blank to use defaults.
+                </p>
+                <FormField
+                  control={form.control}
+                  name="eventTypes.free"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs font-normal">Free Consultation</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Free Consultation"
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="eventTypes.standard"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs font-normal">Standard Appointment</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Standard Appointment"
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="eventTypes.premium"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs font-normal">Premium Consultation</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="Premium Consultation"
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               {/* Submit Buttons */}
               <DialogFooter>
