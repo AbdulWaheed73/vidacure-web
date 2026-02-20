@@ -10,3 +10,4 @@ export * from './payment-types';
 export * from './questionnaire-types';
 export * from './data-export-types';
 export * from './consent-types';
+export * from './lab-test-types';

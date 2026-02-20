@@ -8,6 +8,7 @@ import type { User } from '../../types';
 const DoctorPrescriptions = lazy(() => import('./doctor/DoctorPrescriptions'));
 const DoctorInbox = lazy(() => import('./doctor/DoctorInbox'));
 const DoctorAccount = lazy(() => import('./doctor/DoctorAccount'));
+const DoctorLabResults = lazy(() => import('./doctor/DoctorLabResults'));
 
 type DashboardRouterProps = {
   user: User | null;
@@ -64,8 +65,20 @@ const DashboardRouter: React.FC<DashboardRouterProps> = ({ user, onLogout, loadi
           )
         } 
       />
-      <Route 
-        path="doctor/account" 
+      <Route
+        path="doctor/lab-results"
+        element={
+          user?.role === 'doctor' ? (
+            <Suspense fallback={<LoadingSpinner />}>
+              <DoctorLabResults />
+            </Suspense>
+          ) : (
+            <Navigate to={ROUTES.LOGIN} replace />
+          )
+        }
+      />
+      <Route
+        path="doctor/account"
         element={
           user?.role === 'doctor' ? (
             <Suspense fallback={<LoadingSpinner />}>
@@ -74,7 +87,7 @@ const DashboardRouter: React.FC<DashboardRouterProps> = ({ user, onLogout, loadi
           ) : (
             <Navigate to={ROUTES.LOGIN} replace />
           )
-        } 
+        }
       />
       
       {/* Catch-all redirect */}

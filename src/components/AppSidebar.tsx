@@ -9,6 +9,7 @@ import {
   User as UserIcon,
   Inbox,
   MessageCircle,
+  FlaskConical,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -51,6 +52,11 @@ export function AppSidebar({ user }: { user: User | null }) {
       icon: Pill,
     },
     {
+      title: t('sidebar.labTests'),
+      url: ROUTES.DOCTOR_LAB_RESULTS,
+      icon: FlaskConical,
+    },
+    {
       title: t('sidebar.account'),
       url: ROUTES.DOCTOR_ACCOUNT,
       icon: UserIcon,
@@ -77,6 +83,11 @@ export function AppSidebar({ user }: { user: User | null }) {
       title: t('sidebar.prescriptions'),
       url: '/prescriptions',
       icon: Pill,
+    },
+    {
+      title: t('sidebar.labTests'),
+      url: '/lab-tests',
+      icon: FlaskConical,
     },
     {
       title: t('sidebar.myProgress'),

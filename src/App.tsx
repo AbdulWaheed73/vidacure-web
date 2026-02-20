@@ -27,6 +27,7 @@ const SubscriptionSuccess = lazy(() => import("./pages/SubscriptionSuccess").the
 // Patient/Protected routes
 const AppointmentsPage = lazy(() => import("./pages/AppointmentsPage").then(m => ({ default: m.AppointmentsPage })));
 const PrescriptionsPage = lazy(() => import("./pages/PrescriptionsPage").then(m => ({ default: m.PrescriptionsPage })));
+const LabTestsPage = lazy(() => import("./pages/LabTestsPage").then(m => ({ default: m.LabTestsPage })));
 const ProgressPage = lazy(() => import("./pages/ProgressPage").then(m => ({ default: m.ProgressPage })));
 const ResourcesPage = lazy(() => import("./pages/ResourcesPage").then(m => ({ default: m.ResourcesPage })));
 const AccountPage = lazy(() => import("./pages/AccountPage").then(m => ({ default: m.AccountPage })));
@@ -298,6 +299,19 @@ function App() {
             isAuthenticated ? (
               <SidebarLayout>
                 <PrescriptionsPage />
+              </SidebarLayout>
+            ) : (
+              <Navigate to={ROUTES.LOGIN} replace />
+            )
+          }
+        />
+
+        <Route
+          path="/lab-tests"
+          element={
+            isAuthenticated ? (
+              <SidebarLayout>
+                <LabTestsPage />
               </SidebarLayout>
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />
