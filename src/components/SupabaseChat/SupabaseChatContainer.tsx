@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Loader2, AlertCircle, MessageSquare } from 'lucide-react';
+import { AlertCircle, MessageSquare } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import {
   useSupabaseChatStore,
@@ -12,7 +12,14 @@ import {
   selectCurrentUserId,
   selectCurrentUserRole,
   selectMessageReadStatus,
+  selectDoctorName,
+  selectHasMoreMessages,
+  selectIsLoadingMoreMessages,
 } from '../../stores/supabaseChatStore';
+import { Card, CardContent, CardHeader } from '../ui/card';
+import { Separator } from '../ui/separator';
+import { Skeleton } from '../ui/skeleton';
+import { Button } from '../ui/Button';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 
@@ -20,7 +27,6 @@ export const SupabaseChatContainer: React.FC = () => {
   const { user, isAuthenticated } = useAuthStore();
   const [isInitializing, setIsInitializing] = useState(true);
 
-  // Supabase chat store
   const connectionStatus = useSupabaseChatStore(selectConnectionStatus);
   const conversation = useSupabaseChatStore(selectConversation);
   const messages = useSupabaseChatStore(selectMessages);
@@ -30,9 +36,17 @@ export const SupabaseChatContainer: React.FC = () => {
   const currentUserId = useSupabaseChatStore(selectCurrentUserId);
   const currentUserRole = useSupabaseChatStore(selectCurrentUserRole);
   const messageReadStatus = useSupabaseChatStore(selectMessageReadStatus);
-  const { connect, disconnect, sendMessage, clearError } = useSupabaseChatStore();
+  const doctorName = useSupabaseChatStore(selectDoctorName);
+  const hasMoreMessages = useSupabaseChatStore(selectHasMoreMessages);
+  const isLoadingMoreMessages = useSupabaseChatStore(selectIsLoadingMoreMessages);
+  const { connect, sendMessage, clearError, setChatPageVisible, loadOlderMessages } = useSupabaseChatStore();
 
-  // Initialize chat
+  // Track chat page visibility for read receipts
+  useEffect(() => {
+    setChatPageVisible(true);
+    return () => setChatPageVisible(false);
+  }, [setChatPageVisible]);
+
   useEffect(() => {
     const initChat = async () => {
       if (!isAuthenticated || !user) {
@@ -41,8 +55,19 @@ export const SupabaseChatContainer: React.FC = () => {
       }
 
       try {
-        if (connectionStatus === 'disconnected') {
+        const currentStatus = useSupabaseChatStore.getState().connectionStatus;
+
+        if (currentStatus === 'disconnected') {
           await connect(user.userId, user.name, user.role as 'patient' | 'doctor');
+        } else if (currentStatus === 'connected') {
+          // Already connected — ensure conversation is loaded
+          const currentConv = useSupabaseChatStore.getState().conversation;
+          if (!currentConv) {
+            await useSupabaseChatStore.getState().loadPatientConversation();
+          } else {
+            // Conversation already loaded — mark as read (patient returned to chat page)
+            await useSupabaseChatStore.getState().markConversationAsRead(currentConv.id);
+          }
         }
       } catch (err) {
         console.error('Failed to initialize chat:', err);
@@ -52,13 +77,7 @@ export const SupabaseChatContainer: React.FC = () => {
     };
 
     initChat();
-
-    // Cleanup on unmount
-    return () => {
-      if (connectionStatus === 'connected') {
-        disconnect().catch(console.error);
-      }
-    };
+    // Don't disconnect on cleanup — let Zustand state persist across navigation.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, user?.userId]);
 
@@ -73,95 +92,165 @@ export const SupabaseChatContainer: React.FC = () => {
     sendMessage(content);
   };
 
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((n) => n.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   // Loading state
   if (isInitializing) {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50">
-        <Loader2 className="w-10 h-10 text-[#00a38a] animate-spin" />
-        <p className="mt-4 text-gray-500">Loading chat...</p>
-      </div>
+      <Card className="flex flex-col h-full border-0 shadow-none rounded-none bg-transparent py-0 gap-0">
+        <CardHeader className="px-6 py-4">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="h-5 w-32" />
+          </div>
+        </CardHeader>
+        <Separator />
+        <CardContent className="flex-1 px-6 py-4 space-y-5">
+          <div className="flex flex-col items-start"><Skeleton className="h-11 w-[40%] rounded-2xl" /></div>
+          <div className="flex flex-col items-end"><Skeleton className="h-11 w-[30%] rounded-2xl" /></div>
+          <div className="flex flex-col items-start"><Skeleton className="h-16 w-[50%] rounded-2xl" /></div>
+          <div className="flex flex-col items-end"><Skeleton className="h-11 w-[35%] rounded-2xl" /></div>
+          <div className="flex flex-col items-start"><Skeleton className="h-11 w-[25%] rounded-2xl" /></div>
+          <div className="flex flex-col items-end"><Skeleton className="h-16 w-[45%] rounded-2xl" /></div>
+        </CardContent>
+        <div className="px-6 py-4">
+          <Skeleton className="h-12 w-full rounded-full" />
+        </div>
+      </Card>
     );
   }
 
   // Not authenticated
   if (!isAuthenticated || !user) {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50">
-        <AlertCircle className="w-12 h-12 text-red-500" />
-        <p className="mt-4 text-lg font-semibold text-gray-900">Authentication Required</p>
-        <p className="mt-2 text-gray-500">Please log in to access chat</p>
-      </div>
+      <Card className="flex flex-col h-full items-center justify-center border-0 shadow-none rounded-none bg-transparent">
+        <CardContent className="text-center">
+          <AlertCircle className="w-12 h-12 text-destructive mx-auto" />
+          <p className="mt-4 text-lg font-semibold">Authentication Required</p>
+          <p className="mt-2 text-sm text-muted-foreground">Please log in to access chat</p>
+        </CardContent>
+      </Card>
     );
   }
 
-  // Subscription required for patients
+  // Subscription required
   if (user.role === 'patient' && !subscriptionActive && connectionStatus === 'connected') {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50 px-8">
-        <MessageSquare className="w-12 h-12 text-gray-400" />
-        <p className="mt-4 text-lg font-semibold text-gray-900">Subscription Required</p>
-        <p className="mt-2 text-gray-500 text-center">
-          Please subscribe to access chat with your doctor
-        </p>
-      </div>
+      <Card className="flex flex-col h-full items-center justify-center border-0 shadow-none rounded-none bg-transparent">
+        <CardContent className="text-center">
+          <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto" />
+          <p className="mt-4 text-lg font-semibold">Subscription Required</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Please subscribe to access chat with your doctor
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
-  // Connecting state
+  // Connecting
   if (connectionStatus === 'connecting') {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50">
-        <Loader2 className="w-10 h-10 text-[#00a38a] animate-spin" />
-        <p className="mt-4 text-gray-500">Connecting to chat...</p>
-      </div>
+      <Card className="flex flex-col h-full border-0 shadow-none rounded-none bg-transparent py-0 gap-0">
+        <CardHeader className="px-6 py-4">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="h-5 w-32" />
+          </div>
+        </CardHeader>
+        <Separator />
+        <CardContent className="flex-1 px-6 py-4 space-y-5">
+          <div className="flex flex-col items-start"><Skeleton className="h-11 w-[40%] rounded-2xl" /></div>
+          <div className="flex flex-col items-end"><Skeleton className="h-11 w-[30%] rounded-2xl" /></div>
+          <div className="flex flex-col items-start"><Skeleton className="h-16 w-[50%] rounded-2xl" /></div>
+          <div className="flex flex-col items-end"><Skeleton className="h-11 w-[35%] rounded-2xl" /></div>
+          <div className="flex flex-col items-start"><Skeleton className="h-11 w-[25%] rounded-2xl" /></div>
+          <div className="flex flex-col items-end"><Skeleton className="h-16 w-[45%] rounded-2xl" /></div>
+        </CardContent>
+        <div className="px-6 py-4">
+          <Skeleton className="h-12 w-full rounded-full" />
+        </div>
+      </Card>
     );
   }
 
-  // Error state
+  // Error
   if (connectionStatus === 'error' || error) {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50 px-8">
-        <AlertCircle className="w-12 h-12 text-red-500" />
-        <p className="mt-4 text-lg font-semibold text-red-600">Connection Error</p>
-        <p className="mt-2 text-gray-500 text-center">{error || 'Failed to connect to chat'}</p>
-        <button
-          onClick={handleRetry}
-          className="mt-4 px-6 py-2 bg-[#00a38a] text-white rounded-lg hover:bg-[#008f79] transition-colors"
-        >
-          Retry Connection
-        </button>
-      </div>
+      <Card className="flex flex-col h-full items-center justify-center border-0 shadow-none rounded-none bg-transparent">
+        <CardContent className="text-center">
+          <AlertCircle className="w-12 h-12 text-destructive mx-auto" />
+          <p className="mt-4 text-lg font-semibold text-destructive">Connection Error</p>
+          <p className="mt-2 text-sm text-muted-foreground">{error || 'Failed to connect to chat'}</p>
+          <Button onClick={handleRetry} className="mt-4 bg-[#00a38a] hover:bg-[#008f79]">
+            Retry Connection
+          </Button>
+        </CardContent>
+      </Card>
     );
   }
 
-  // No doctor assigned (for patients)
+  // Still loading conversation data — show skeleton instead of empty state
+  if (isLoadingMessages) {
+    return (
+      <Card className="flex flex-col h-full border-0 shadow-none rounded-none bg-transparent py-0 gap-0">
+        <CardHeader className="px-6 py-4">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="h-5 w-32" />
+          </div>
+        </CardHeader>
+        <Separator />
+        <CardContent className="flex-1 px-6 py-4 space-y-5">
+          <div className="flex flex-col items-start"><Skeleton className="h-11 w-[40%] rounded-2xl" /></div>
+          <div className="flex flex-col items-end"><Skeleton className="h-11 w-[30%] rounded-2xl" /></div>
+          <div className="flex flex-col items-start"><Skeleton className="h-16 w-[50%] rounded-2xl" /></div>
+          <div className="flex flex-col items-end"><Skeleton className="h-11 w-[35%] rounded-2xl" /></div>
+        </CardContent>
+        <div className="px-6 py-4">
+          <Skeleton className="h-12 w-full rounded-full" />
+        </div>
+      </Card>
+    );
+  }
+
+  // No doctor assigned
   if (user.role === 'patient' && !conversation) {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50 px-8">
-        <MessageSquare className="w-12 h-12 text-gray-400" />
-        <p className="mt-4 text-lg font-semibold text-gray-900">No Doctor Assigned</p>
-        <p className="mt-2 text-gray-500 text-center">
-          Please wait for a doctor to be assigned to your case.
-        </p>
-      </div>
+      <Card className="flex flex-col h-full items-center justify-center border-0 shadow-none rounded-none bg-transparent">
+        <CardContent className="text-center">
+          <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto" />
+          <p className="mt-4 text-lg font-semibold">No Doctor Assigned</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Please wait for a doctor to be assigned to your case.
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
-  return (
-    <div className="flex flex-col h-full bg-white">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <h2 className="text-xl font-bold text-gray-900">Medical Chat</h2>
-        <p className="text-sm text-gray-500">Secure communication with your doctor</p>
-      </div>
+  const displayName = doctorName || 'Your Doctor';
 
-      {/* Connection status */}
-      {connectionStatus === 'connected' && (
-        <div className="flex items-center bg-green-50 border-b border-green-100 px-4 py-2">
-          <span className="w-2 h-2 bg-green-500 rounded-full mr-2" />
-          <span className="text-sm text-green-700">Connected</span>
+  return (
+    <Card className="flex flex-col h-full border-0 shadow-none rounded-none bg-transparent py-0 gap-0">
+      {/* Header */}
+      <CardHeader className="px-6 py-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-[#00a38a] rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0">
+            {getInitials(displayName)}
+          </div>
+          <span className="text-base font-semibold text-foreground">{displayName}</span>
         </div>
-      )}
+      </CardHeader>
+
+      <Separator />
 
       {/* Messages */}
       <div className="flex-1 overflow-hidden">
@@ -171,6 +260,9 @@ export const SupabaseChatContainer: React.FC = () => {
           currentUserRole={currentUserRole || 'patient'}
           isLoading={isLoadingMessages}
           messageReadStatus={messageReadStatus}
+          hasMoreMessages={hasMoreMessages}
+          isLoadingMoreMessages={isLoadingMoreMessages}
+          onLoadMore={loadOlderMessages}
         />
       </div>
 
@@ -179,7 +271,7 @@ export const SupabaseChatContainer: React.FC = () => {
         onSendMessage={handleSendMessage}
         disabled={connectionStatus !== 'connected'}
       />
-    </div>
+    </Card>
   );
 };
 

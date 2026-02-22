@@ -1,0 +1,104 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Target } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/Button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { usePatientProfile, useWeightHistory } from '@/hooks/useDashboardQueries';
+
+export const GoalsCard: React.FC = () => {
+  const navigate = useNavigate();
+  const { data: profileData, isLoading: profileLoading } = usePatientProfile();
+  const { data: weightData, isLoading: weightLoading } = useWeightHistory();
+
+  const isLoading = profileLoading || weightLoading;
+
+  const goalWeight = profileData?.profile.goalWeight ?? null;
+  const history = weightData?.weightHistory ?? [];
+  const currentWeight = history.length > 0 ? history[0].weight : null;
+  const startingWeight = history.length > 0 ? history[history.length - 1].weight : null;
+
+  if (isLoading) {
+    return (
+      <Card className="bg-white/95 backdrop-blur-md shadow-lg">
+        <CardHeader className="pb-2">
+          <Skeleton className="h-6 w-24" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-5 w-full mb-3" />
+          <Skeleton className="h-5 w-full mb-3" />
+          <Skeleton className="h-5 w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (goalWeight === null && currentWeight === null) {
+    return (
+      <Card className="bg-white/95 backdrop-blur-md shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-lg font-manrope">My Goals</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center justify-center py-8">
+          <Target className="size-8 text-gray-300 mb-3" />
+          <p className="text-gray-500 mb-4 text-center text-sm">Set your weight goal to track your progress</p>
+          <Button onClick={() => navigate('/account')} className="bg-teal-600 hover:bg-teal-700 text-white">
+            Set Goal Weight
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const progressPercent = (goalWeight && startingWeight && currentWeight)
+    ? Math.min(100, Math.max(0, ((startingWeight - currentWeight) / (startingWeight - goalWeight)) * 100))
+    : 0;
+
+  return (
+    <Card className="bg-white/95 backdrop-blur-md shadow-lg">
+      <CardHeader>
+        <CardTitle className="text-lg font-manrope">My Goals</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-500">Goal Weight</span>
+            <span className="text-sm font-semibold text-gray-800">
+              {goalWeight ? `${goalWeight} kg` : "Not set"}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-500">Current Weight</span>
+            <span className="text-sm font-semibold text-gray-800">
+              {currentWeight ? `${currentWeight} kg` : "\u2014"}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-500">Starting Weight</span>
+            <span className="text-sm font-semibold text-gray-800">
+              {startingWeight ? `${startingWeight} kg` : "\u2014"}
+            </span>
+          </div>
+        </div>
+
+        {goalWeight && startingWeight && currentWeight && (
+          <div>
+            <div className="flex justify-between text-xs text-gray-400 mb-1">
+              <span>Start</span>
+              <span>Goal</span>
+            </div>
+            <div className="w-full bg-gray-100 rounded-full h-2">
+              <div
+                className="bg-teal-500 h-2 rounded-full transition-all duration-500"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              {Math.round(progressPercent)}% of goal reached
+            </p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};

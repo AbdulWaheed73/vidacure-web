@@ -1,0 +1,431 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from 'recharts';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { MessageCircle } from 'lucide-react';
+import {
+  useDoctorPatientProfile,
+  useDoctorPatientQuestionnaire,
+} from '@/hooks/useDoctorDashboardQueries';
+import { QUESTION_LABELS } from '@/components/onboarding/questionMapping';
+import type { WeightHistoryEntry, PrescriptionRequestEntry } from '@/types/doctor-patient-types';
+
+type PatientProfilePanelProps = {
+  patientId: string | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+const chartConfig = {
+  weight: {
+    label: 'Weight',
+    color: 'var(--chart-1)',
+  },
+} satisfies ChartConfig;
+
+// --- Weight Chart Sub-component ---
+
+const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[] }> = ({ weightHistory }) => {
+  const [timeRange, setTimeRange] = useState('8w');
+
+  const today = new Date();
+  let daysToSubtract = 56;
+  if (timeRange === '2w') daysToSubtract = 14;
+  else if (timeRange === '4w') daysToSubtract = 28;
+
+  const cutoffDate = new Date(today);
+  cutoffDate.setDate(cutoffDate.getDate() - daysToSubtract);
+
+  const filteredData = weightHistory
+    .filter((entry) => {
+      if (!entry.date) return false;
+      const itemDate = new Date(entry.date);
+      return itemDate >= cutoffDate && itemDate <= today;
+    })
+    .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime());
+
+  const rangeProgress =
+    filteredData.length > 1
+      ? Math.round((filteredData[0].weight - filteredData[filteredData.length - 1].weight) * 10) / 10
+      : 0;
+
+  const weeksLabel = timeRange === '2w' ? '2 weeks' : timeRange === '4w' ? '4 weeks' : '8 weeks';
+
+  const weights = filteredData.map((d) => d.weight);
+  const minWeight = weights.length > 0 ? Math.floor(Math.min(...weights) - 2) : 90;
+  const maxWeight = weights.length > 0 ? Math.ceil(Math.max(...weights) + 2) : 110;
+
+  if (weightHistory.length === 0) {
+    return (
+      <div className="bg-white rounded-2xl border border-[#e0e0e0] p-5">
+        <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">Weight progress</h3>
+        <p className="text-[#b0b0b0] text-sm font-manrope text-center py-6">No weight entries yet</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-2xl border border-[#e0e0e0] p-5">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-sora font-semibold text-sm text-[#282828]">Weight progress</h3>
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger className="w-[130px] h-8 text-xs rounded-lg">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl">
+            <SelectItem value="8w" className="rounded-lg text-xs">Last 2 Months</SelectItem>
+            <SelectItem value="4w" className="rounded-lg text-xs">Last 4 Weeks</SelectItem>
+            <SelectItem value="2w" className="rounded-lg text-xs">Last 2 Weeks</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <ChartContainer config={chartConfig} className="aspect-auto h-[180px] w-full">
+        <AreaChart data={filteredData} margin={{ left: 4, right: 4, top: 8, bottom: 4 }}>
+          <defs>
+            <linearGradient id="panelWeightGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--color-weight)" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="var(--color-weight)" stopOpacity={0.05} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="date"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={6}
+            tickFormatter={(value) => {
+              const date = new Date(value);
+              return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }}
+          />
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            tickMargin={6}
+            domain={[minWeight, maxWeight]}
+            tickFormatter={(value) => `${value}`}
+            width={32}
+          />
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                labelFormatter={(value) =>
+                  new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                }
+                formatter={(value) => [`${value} kg`, 'Weight']}
+              />
+            }
+          />
+          <Area
+            dataKey="weight"
+            type="monotone"
+            stroke="var(--color-weight)"
+            strokeWidth={2}
+            fill="url(#panelWeightGradient)"
+            dot={{ fill: 'var(--color-weight)', strokeWidth: 2, r: 2 }}
+            activeDot={{ r: 4, stroke: 'var(--color-weight)', strokeWidth: 2, fill: 'white' }}
+          />
+        </AreaChart>
+      </ChartContainer>
+      <div className="flex items-center text-xs text-teal-600 font-medium mt-1">
+        <span>{rangeProgress > 0 ? `-${rangeProgress}` : `+${Math.abs(rangeProgress)}`} kg</span>
+        <span className="ml-1.5 text-gray-500">in the last {weeksLabel}</span>
+      </div>
+    </div>
+  );
+};
+
+// --- Prescription status badge helper ---
+
+const statusStyles: Record<string, string> = {
+  pending: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  approved: 'bg-green-100 text-green-800 border-green-200',
+  denied: 'bg-red-100 text-red-800 border-red-200',
+  under_review: 'bg-blue-100 text-blue-800 border-blue-200',
+};
+
+const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry }> = ({ request }) => {
+  const style = statusStyles[request.status] ?? 'bg-gray-100 text-gray-800 border-gray-200';
+  return (
+    <div className="bg-white rounded-xl border border-[#e0e0e0] p-4">
+      <div className="flex items-center justify-between mb-2">
+        <span className="font-sora font-medium text-sm text-[#282828]">
+          {request.medicationName ?? 'Prescription Request'}
+        </span>
+        <Badge className={`${style} text-[10px] px-2 py-0.5 capitalize`}>
+          {request.status.replace('_', ' ')}
+        </Badge>
+      </div>
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-[#b0b0b0] font-manrope">
+        {request.dosage && (
+          <>
+            <span>Dosage</span>
+            <span className="text-[#282828]">{request.dosage}</span>
+          </>
+        )}
+        {request.currentWeight && (
+          <>
+            <span>Weight</span>
+            <span className="text-[#282828]">{request.currentWeight} kg</span>
+          </>
+        )}
+        {request.createdAt && (
+          <>
+            <span>Requested</span>
+            <span className="text-[#282828]">
+              {new Date(request.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+            </span>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// --- Questionnaire display ---
+
+const QUESTION_GROUPS = [
+  { label: 'Personal Info', ids: ['Q1', 'Q2', 'Q3'] },
+  { label: 'Physical Details', ids: ['Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11'] },
+  { label: 'Health Background', ids: ['Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20', 'Q21'] },
+  { label: 'Medical History', ids: ['Q22', 'Q23', 'Q24', 'Q25'] },
+];
+
+const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean }> = ({
+  patientId,
+  enabled,
+}) => {
+  const { data, isLoading } = useDoctorPatientQuestionnaire(patientId, enabled);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4 p-1">
+        {[1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className="h-20 w-full rounded-xl" />
+        ))}
+      </div>
+    );
+  }
+
+  const answers = data?.questionnaire ?? [];
+  const answerMap = new Map(answers.map((a) => [a.questionId, a.answer]));
+
+  if (answers.length === 0) {
+    return (
+      <div className="text-center py-10">
+        <p className="text-[#b0b0b0] font-manrope text-sm">No questionnaire data available</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-5 p-1">
+      {QUESTION_GROUPS.map((group) => {
+        const groupAnswers = group.ids.filter((id) => answerMap.has(id));
+        if (groupAnswers.length === 0) return null;
+        return (
+          <div key={group.label}>
+            <h4 className="font-sora font-semibold text-xs text-[#005044] uppercase tracking-wide mb-2">
+              {group.label}
+            </h4>
+            <div className="bg-[#f0f7f4] rounded-xl p-4 space-y-3">
+              {groupAnswers.map((id) => (
+                <div key={id}>
+                  <p className="text-xs text-[#b0b0b0] font-manrope">
+                    {QUESTION_LABELS[id as keyof typeof QUESTION_LABELS] ?? id}
+                  </p>
+                  <p className="text-sm text-[#282828] font-manrope mt-0.5">
+                    {answerMap.get(id) || '—'}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+// --- Main Panel ---
+
+export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
+  patientId,
+  open,
+  onOpenChange,
+}) => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('overview');
+  const { data, isLoading } = useDoctorPatientProfile(patientId);
+
+  const profile = data?.patientProfile;
+
+  const formatDate = (dateStr: string | null): string => {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleDateString([], {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent
+        side="right"
+        className="w-[450px] sm:max-w-[450px] overflow-y-auto p-0"
+      >
+        <SheetHeader className="p-5 pb-0">
+          <SheetTitle className="font-sora font-bold text-lg text-[#282828]">
+            Profile overview
+          </SheetTitle>
+          <SheetDescription className="sr-only">Patient profile details</SheetDescription>
+        </SheetHeader>
+
+        <div className="px-5 pt-3">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="!bg-transparent w-full justify-start gap-2 border-b border-[#e0e0e0] rounded-none p-0 h-auto">
+              <TabsTrigger
+                value="overview"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
+              >
+                Overview
+              </TabsTrigger>
+              <TabsTrigger
+                value="questionnaire"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
+              >
+                Questionnaire
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Overview Tab */}
+            <TabsContent value="overview" className="mt-4 space-y-4 pb-6">
+              {isLoading ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-32 w-full rounded-xl" />
+                  <Skeleton className="h-48 w-full rounded-xl" />
+                  <Skeleton className="h-24 w-full rounded-xl" />
+                </div>
+              ) : !profile ? (
+                <p className="text-[#b0b0b0] text-sm text-center py-8">
+                  Could not load patient profile
+                </p>
+              ) : (
+                <>
+                  {/* Patient Details */}
+                  <div className="bg-[#f0f7f4] rounded-2xl p-5">
+                    <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">
+                      Patient details
+                    </h3>
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm font-manrope">
+                      <div>
+                        <p className="text-[#b0b0b0] text-xs">Name</p>
+                        <p className="text-[#282828] font-medium">{profile.name}</p>
+                      </div>
+                      {profile.height && (
+                        <div>
+                          <p className="text-[#b0b0b0] text-xs">Height</p>
+                          <p className="text-[#282828] font-medium">{profile.height} cm</p>
+                        </div>
+                      )}
+                      {profile.bmi && (
+                        <div>
+                          <p className="text-[#b0b0b0] text-xs">BMI</p>
+                          <p className="text-[#282828] font-medium">{profile.bmi}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Weight Progress */}
+                  <WeightChart weightHistory={profile.weightHistory} />
+
+                  {/* Prescriptions */}
+                  {profile.prescriptionRequests.length > 0 && (
+                    <div>
+                      <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">
+                        Prescription requests
+                      </h3>
+                      <div className="space-y-2">
+                        {profile.prescriptionRequests.map((req, i) => (
+                          <PrescriptionCard key={req.id ?? i} request={req} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Active Prescription */}
+                  {profile.prescription && (
+                    <div className="bg-[#f0f7f4] rounded-2xl p-5">
+                      <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">
+                        Active prescription
+                      </h3>
+                      <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm font-manrope">
+                        {profile.prescription.medicationDetails && (
+                          <>
+                            <p className="text-[#b0b0b0] text-xs">Medication</p>
+                            <p className="text-[#282828] text-xs">{profile.prescription.medicationDetails}</p>
+                          </>
+                        )}
+                        {profile.prescription.status && (
+                          <>
+                            <p className="text-[#b0b0b0] text-xs">Status</p>
+                            <p className="text-[#282828] text-xs capitalize">{profile.prescription.status}</p>
+                          </>
+                        )}
+                        {profile.prescription.validFrom && (
+                          <>
+                            <p className="text-[#b0b0b0] text-xs">Valid from</p>
+                            <p className="text-[#282828] text-xs">{formatDate(profile.prescription.validFrom)}</p>
+                          </>
+                        )}
+                        {profile.prescription.validTo && (
+                          <>
+                            <p className="text-[#b0b0b0] text-xs">Valid to</p>
+                            <p className="text-[#282828] text-xs">{formatDate(profile.prescription.validTo)}</p>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Send Message Button */}
+                  <button
+                    onClick={() => {
+                      onOpenChange(false);
+                      navigate('/supabase-chat');
+                    }}
+                    className="w-full bg-[#005044] text-white rounded-xl px-6 py-3 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    Send message
+                  </button>
+                </>
+              )}
+            </TabsContent>
+
+            {/* Questionnaire Tab */}
+            <TabsContent value="questionnaire" className="mt-4 pb-6">
+              <QuestionnaireTab
+                patientId={patientId}
+                enabled={activeTab === 'questionnaire'}
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+};

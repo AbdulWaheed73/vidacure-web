@@ -1,49 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { SubscriptionCard, SubscriptionStatusComponent, MeetingRequired } from '../components/subscription';
+import { useQuery } from '@tanstack/react-query';
+import { SubscriptionCard, MeetingRequired } from '../components/subscription';
+import { WeightProgressCard, NextAppointmentCard, PrescriptionCard, BMICard, GoalsCard } from '../components/dashboard';
 import { PaymentService } from '../services';
+import { queryKeys } from '../lib/queryClient';
 import type { DashboardPageProps } from '../types';
-import type { SubscriptionStatus } from '../types';
 
 
 export const DashboardPage: React.FC<DashboardPageProps> = () => {
   const { t } = useTranslation();
-  const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null);
-  const [subscriptionLoading, setSubscriptionLoading] = useState(true);
 
-  useEffect(() => {
-    fetchSubscriptionStatus();
-  }, []);
-
-  const fetchSubscriptionStatus = async () => {
-    try {
-      const status = await PaymentService.getSubscriptionStatus();
-      setSubscriptionStatus(status);
-    } catch (error) {
-      console.error('Error fetching subscription status:', error);
-    } finally {
-      setSubscriptionLoading(false);
-    }
-  };
-
-  const handleStatusChange = () => {
-    fetchSubscriptionStatus();
-  };
-
+  const { data: subscriptionStatus, isLoading: subscriptionLoading } = useQuery({
+    queryKey: queryKeys.subscriptionStatus,
+    queryFn: () => PaymentService.getSubscriptionStatus(),
+  });
 
   return (
     <div className="p-8">
-      
-      {/* Subscription Section */}
+
+      {/* Active subscription — show full dashboard */}
       {!subscriptionLoading && subscriptionStatus?.hasSubscription && (
-        <div className="mb-8">
-          <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
-            <SubscriptionStatusComponent onStatusChange={handleStatusChange} />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Row 1: Weight Progress (2 cols) + Next Appointment (1 col) */}
+          <WeightProgressCard />
+          <NextAppointmentCard />
+
+          {/* Row 2: Prescription + BMI + Goals */}
+          <PrescriptionCard />
+          <BMICard />
+          <GoalsCard />
         </div>
       )}
 
-      {/* Subscription Plans - Wrapped with MeetingRequired to ensure consultation happens first */}
+      {/* No subscription — show subscription plans with meeting gate */}
       {!subscriptionLoading && !subscriptionStatus?.hasSubscription && (
         <div className="mb-8">
           <MeetingRequired>

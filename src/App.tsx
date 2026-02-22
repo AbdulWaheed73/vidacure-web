@@ -1,11 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "./hooks";
 import { ROUTES } from "./constants";
 import { lazy, Suspense, useState, useEffect } from "react";
 import { SidebarProvider, SidebarInset } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/AppSidebar";
 import { TopBar } from "./components/TopBar";
-import { calendlyService } from "./services/calendlyService";
 import { CookieBanner } from "./components/cookie/CookieBanner";
 import { ConsentModal } from "./components/ConsentModal";
 import { useCookieConsentStore } from "./stores/cookieConsentStore";
@@ -79,44 +78,15 @@ function App() {
     }
   }, [isAuthenticated, user?.role, checkConsentStatus]);
 
-  const handleDirectBooking = async () => {
-    // setIsBookingLoading(true);
-
-    try {
-      // First get available event types
-      const eventTypesResponse = await calendlyService.getAvailableEventTypes();
-
-      if (eventTypesResponse.success && eventTypesResponse.eventType) {
-        // Then create booking link
-        const bookingResponse = await calendlyService.createPatientBookingLink(
-          eventTypesResponse.eventType.type
-        );
-
-        if (bookingResponse.success) {
-          setSchedulingLink(bookingResponse.schedulingLink);
-        }
-      }
-    } catch (err) {
-      console.error("Booking error:", err);
-    } finally {
-      // setIsBookingLoading(false);
-    }
-  };
-
   // Layout wrapper for authenticated routes with sidebar
   const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
+    const navigate = useNavigate();
     const handleBookAppointment = () => {
-      handleDirectBooking();
+      navigate(ROUTES.PATIENT_APPOINTMENTS);
     };
 
     const handleProfileClick = () => {
-      // TODO: Navigate to profile page
-      console.log("Profile clicked");
-    };
-
-    const handleAccountClick = () => {
-      // TODO: Navigate to account settings
-      console.log("Account clicked");
+      navigate('/account');
     };
 
     const handleLogout = () => {
@@ -126,15 +96,16 @@ function App() {
     return (
       <SidebarProvider>
         <AppSidebar user={user} />
-        <SidebarInset className="bg-[#F0F7F4] ml-64">
+        <SidebarInset className="bg-[#F0F7F4] ml-64 h-screen overflow-hidden">
           <TopBar
             user={user}
             onBookAppointment={handleBookAppointment}
             onProfileClick={handleProfileClick}
-            onAccountClick={handleAccountClick}
             onLogout={handleLogout}
           />
-          {children}
+          <div className="flex-1 min-h-0 overflow-y-auto">
+            {children}
+          </div>
         </SidebarInset>
         {/* Global Calendly Popup Modal - Only show if functional cookies accepted */}
         {hasFunctionalConsent && schedulingLink && (

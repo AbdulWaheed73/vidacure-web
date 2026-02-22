@@ -8,8 +8,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -82,217 +80,213 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
   const getStatusBadge = (status: DoctorPrescriptionRequest['status']) => {
     const statusConfig = {
       [PrescriptionRequestStatus.PENDING]: {
-        className: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+        className: 'bg-[#f0f7f4] text-[#005044]',
         label: 'PENDING'
       },
       [PrescriptionRequestStatus.APPROVED]: {
-        className: 'bg-green-100 text-green-800 border-green-300',
+        className: 'bg-[rgba(3,160,0,0.15)] text-[#03a000]',
         label: 'APPROVED'
       },
       [PrescriptionRequestStatus.DENIED]: {
-        className: 'bg-red-100 text-red-800 border-red-300',
+        className: 'bg-red-50 text-red-600',
         label: 'DENIED'
       },
       [PrescriptionRequestStatus.UNDER_REVIEW]: {
-        className: 'bg-blue-100 text-blue-800 border-blue-300',
+        className: 'bg-[#f0f7f4] text-[#005044]',
         label: 'UNDER REVIEW'
       },
     };
 
     const config = statusConfig[status];
     return (
-      <Badge className={config.className}>
+      <span className={`${config.className} rounded-full px-3 py-1 text-xs font-sora font-semibold`}>
         {config.label}
-      </Badge>
+      </span>
     );
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col rounded-2xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            <span>Prescription Request Details</span>
+          <DialogTitle className="flex items-center justify-between font-sora text-[#282828]">
+            <span>Prescription Request</span>
             {getStatusBadge(request.status)}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="font-manrope text-[#b0b0b0]">
             Review the patient's prescription request details
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 overflow-y-auto flex-1 pr-2">
           {/* Patient Information */}
-          <Card>
-            <CardContent className="p-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-gray-500" />
-                  <span className="font-semibold text-gray-800 font-manrope">{request.patient.name}</span>
+          <div className="bg-[#f0f7f4] rounded-2xl p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-[#005044] flex items-center justify-center">
+                  <User className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-xs text-gray-500 font-mono">#{request._id.slice(-8)}</span>
+                <div>
+                  <span className="font-sora font-semibold text-[#282828]">{request.patient.name}</span>
+                  <p className="text-xs text-[#b0b0b0] font-manrope">#{request._id.slice(-8)}</p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Request Details */}
-          <Card>
-            <CardContent className="p-3">
-              <div className="flex items-center gap-4 mb-2">
-                <div className="flex items-center gap-2">
-                  <Scale className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm text-gray-600">Weight:</span>
-                  <span className="text-sm font-semibold text-gray-800">{request.currentWeight} kg</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm text-gray-600">Side Effects:</span>
-                  <Badge variant={request.hasSideEffects ? "destructive" : "secondary"} className="text-xs">
-                    {request.hasSideEffects ? 'Yes' : 'No'}
-                  </Badge>
-                </div>
+          <div className="border border-[#e0e0e0] rounded-2xl p-4">
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <Scale className="w-4 h-4 text-[#005044]" />
+                <span className="text-sm text-[#b0b0b0] font-manrope">Weight:</span>
+                <span className="text-sm font-semibold text-[#282828] font-manrope">{request.currentWeight} kg</span>
               </div>
-              {request.hasSideEffects && request.sideEffectsDescription && (
-                <div className="bg-red-50 border border-red-200 rounded-md p-2 mt-2">
-                  <p className="text-xs font-medium text-red-800 mb-1">Side Effects Description:</p>
-                  <p className="text-xs text-red-700 font-manrope">
-                    {request.sideEffectsDescription}
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+              <div className="flex items-center gap-2">
+                <AlertTriangle className={`w-4 h-4 ${request.hasSideEffects ? 'text-red-500' : 'text-[#005044]'}`} />
+                <span className="text-sm text-[#b0b0b0] font-manrope">Side Effects:</span>
+                <span className={`text-xs font-sora font-semibold rounded-full px-2.5 py-0.5 ${
+                  request.hasSideEffects
+                    ? 'bg-red-50 text-red-600'
+                    : 'bg-[#f0f7f4] text-[#005044]'
+                }`}>
+                  {request.hasSideEffects ? 'Yes' : 'No'}
+                </span>
+              </div>
+            </div>
+            {request.hasSideEffects && request.sideEffectsDescription && (
+              <div className="bg-red-50 rounded-xl p-3 mt-3">
+                <p className="text-xs font-sora font-semibold text-red-700 mb-1">Side Effects Description:</p>
+                <p className="text-xs text-red-600 font-manrope">
+                  {request.sideEffectsDescription}
+                </p>
+              </div>
+            )}
+          </div>
 
           {/* Prescription Details - Show existing or form for approval */}
           {request.status === PrescriptionRequestStatus.PENDING ? (
-            <Card>
-              <CardContent className="p-3">
-                <div className="flex items-center gap-2 mb-3">
-                  <Pill className="w-4 h-4 text-gray-500" />
-                  <h3 className="font-semibold text-gray-800 text-sm">Prescription Details</h3>
-                </div>
-                <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label htmlFor="medicationName" className="text-xs">Medication Name *</Label>
-                      <Input
-                        id="medicationName"
-                        value={medicationName}
-                        onChange={(e) => setMedicationName(e.target.value)}
-                        placeholder="e.g., Wegovy"
-                        className="h-9 text-sm"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="dosage" className="text-xs">Dosage *</Label>
-                      <Input
-                        id="dosage"
-                        value={dosage}
-                        onChange={(e) => setDosage(e.target.value)}
-                        placeholder="e.g., 2.4mg weekly"
-                        className="h-9 text-sm"
-                        required
-                      />
-                    </div>
-                  </div>
+            <div className="border border-[#e0e0e0] rounded-2xl p-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Pill className="w-4 h-4 text-[#005044]" />
+                <h3 className="font-sora font-semibold text-[#282828] text-sm">Prescription Details</h3>
+              </div>
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <Label htmlFor="usageInstructions" className="text-xs">Usage Instructions *</Label>
-                    <Textarea
-                      id="usageInstructions"
-                      value={usageInstructions}
-                      onChange={(e) => setUsageInstructions(e.target.value)}
-                      placeholder="Instructions for taking the medication..."
-                      rows={3}
-                      className="text-sm"
+                    <Label htmlFor="medicationName" className="text-xs font-manrope text-[#282828]">Medication Name *</Label>
+                    <Input
+                      id="medicationName"
+                      value={medicationName}
+                      onChange={(e) => setMedicationName(e.target.value)}
+                      placeholder="e.g., Wegovy"
+                      className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
                       required
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label htmlFor="dateIssued" className="text-xs">Date Issued *</Label>
-                      <Input
-                        id="dateIssued"
-                        type="date"
-                        value={dateIssued}
-                        onChange={(e) => setDateIssued(e.target.value)}
-                        className="h-9 text-sm"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="validTill" className="text-xs">Valid Till *</Label>
-                      <Input
-                        id="validTill"
-                        type="date"
-                        value={validTill}
-                        onChange={(e) => setValidTill(e.target.value)}
-                        className="h-9 text-sm"
-                        required
-                      />
-                    </div>
+                  <div>
+                    <Label htmlFor="dosage" className="text-xs font-manrope text-[#282828]">Dosage *</Label>
+                    <Input
+                      id="dosage"
+                      value={dosage}
+                      onChange={(e) => setDosage(e.target.value)}
+                      placeholder="e.g., 2.4mg weekly"
+                      className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                      required
+                    />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <Label htmlFor="usageInstructions" className="text-xs font-manrope text-[#282828]">Usage Instructions *</Label>
+                  <Textarea
+                    id="usageInstructions"
+                    value={usageInstructions}
+                    onChange={(e) => setUsageInstructions(e.target.value)}
+                    placeholder="Instructions for taking the medication..."
+                    rows={3}
+                    className="text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                    required
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="dateIssued" className="text-xs font-manrope text-[#282828]">Date Issued *</Label>
+                    <Input
+                      id="dateIssued"
+                      type="date"
+                      value={dateIssued}
+                      onChange={(e) => setDateIssued(e.target.value)}
+                      className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="validTill" className="text-xs font-manrope text-[#282828]">Valid Till *</Label>
+                    <Input
+                      id="validTill"
+                      type="date"
+                      value={validTill}
+                      onChange={(e) => setValidTill(e.target.value)}
+                      className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           ) : (request.medicationName || request.dosage || request.usageInstructions) && (
-            <Card>
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3 mb-4">
-                  <Pill className="w-5 h-5 text-gray-500" />
-                  <h3 className="font-semibold text-gray-800">Prescription Details</h3>
-                </div>
-                <div className="space-y-4">
-                  {request.medicationName && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Medication Name</p>
-                      <p className="text-base text-gray-800 font-manrope">{request.medicationName}</p>
-                    </div>
-                  )}
-                  {request.dosage && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-600">Dosage</p>
-                      <p className="text-base text-gray-800 font-manrope">{request.dosage}</p>
-                    </div>
-                  )}
-                  {request.usageInstructions && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-600 mb-1">Usage Instructions</p>
-                      <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
-                        <p className="text-sm text-blue-900 font-manrope">
-                          {request.usageInstructions}
-                        </p>
+            <div className="bg-[#f0f7f4] rounded-2xl p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <Pill className="w-4 h-4 text-[#005044]" />
+                <h3 className="font-sora font-semibold text-[#005044] text-sm">Prescription Details</h3>
+              </div>
+              <div className="space-y-3">
+                {request.medicationName && (
+                  <div>
+                    <p className="text-xs text-[#005044]/60 font-manrope">Medication Name</p>
+                    <p className="text-sm font-semibold text-[#005044] font-manrope">{request.medicationName}</p>
+                  </div>
+                )}
+                {request.dosage && (
+                  <div>
+                    <p className="text-xs text-[#005044]/60 font-manrope">Dosage</p>
+                    <p className="text-sm font-semibold text-[#005044] font-manrope">{request.dosage}</p>
+                  </div>
+                )}
+                {request.usageInstructions && (
+                  <div>
+                    <p className="text-xs text-[#005044]/60 font-manrope mb-1">Usage Instructions</p>
+                    <p className="text-sm text-[#005044] font-manrope">{request.usageInstructions}</p>
+                  </div>
+                )}
+                {(request.dateIssued || request.validTill) && (
+                  <div className="grid grid-cols-2 gap-4 pt-3 border-t border-[#005044]/10">
+                    {request.dateIssued && (
+                      <div>
+                        <p className="text-xs text-[#005044]/60 font-manrope">Date Issued</p>
+                        <p className="text-sm text-[#005044] font-manrope">{formatDate(request.dateIssued)}</p>
                       </div>
-                    </div>
-                  )}
-                  {(request.dateIssued || request.validTill) && (
-                    <div className="grid grid-cols-2 gap-4 pt-2 border-t">
-                      {request.dateIssued && (
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">Date Issued</p>
-                          <p className="text-sm text-gray-800">{formatDate(request.dateIssued)}</p>
-                        </div>
-                      )}
-                      {request.validTill && (
-                        <div>
-                          <p className="text-sm font-medium text-gray-600">Valid Till</p>
-                          <p className="text-sm text-gray-800">{formatDate(request.validTill)}</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                    )}
+                    {request.validTill && (
+                      <div>
+                        <p className="text-xs text-[#005044]/60 font-manrope">Valid Till</p>
+                        <p className="text-sm text-[#005044] font-manrope">{formatDate(request.validTill)}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
           )}
 
           {/* Timeline */}
-          <div className="flex items-center gap-4 text-xs text-gray-500">
+          <div className="flex items-center gap-4 text-xs text-[#b0b0b0] font-manrope">
             <div className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
               <span>Submitted: {formatDate(request.createdAt)}</span>
             </div>
             {request.updatedAt !== request.createdAt && (
-              <span>• Updated: {formatDate(request.updatedAt)}</span>
+              <span>Updated: {formatDate(request.updatedAt)}</span>
             )}
           </div>
         </div>
@@ -303,6 +297,7 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
             variant="outline"
             onClick={() => onOpenChange(false)}
             disabled={loading}
+            className="rounded-full border-[#e0e0e0] text-[#282828] font-sora"
           >
             Close
           </Button>
@@ -311,7 +306,7 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
               type="button"
               onClick={handleApprove}
               disabled={loading}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-[#005044] hover:bg-[#004038] text-white rounded-full font-sora"
             >
               {loading ? 'Approving...' : 'Approve Request'}
             </Button>

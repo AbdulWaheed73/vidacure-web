@@ -9,8 +9,9 @@ export const ROUTES = {
   ADMIN_DASHBOARD: '/admin',
   // Doctor Dashboard Routes
   DOCTOR_DASHBOARD: '/dashboard/doctor',
+  DOCTOR_APPOINTMENTS: '/dashboard/doctor/appointments',
   DOCTOR_PRESCRIPTIONS: '/dashboard/doctor/prescriptions',
-  DOCTOR_INBOX: '/dashboard/doctor/inbox',
+  DOCTOR_PATIENTS: '/dashboard/doctor/patients',
   DOCTOR_ACCOUNT: '/dashboard/doctor/account',
   DOCTOR_LAB_RESULTS: '/dashboard/doctor/lab-results',
   DOCTOR_CHAT: '/supabase-chat',

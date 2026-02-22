@@ -6,7 +6,7 @@ import { PaymentService } from '@/services';
 import { meetingService } from '@/services/meetingService';
 import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants';
-import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type SubscriptionRequiredProps = {
   children: React.ReactNode;
@@ -52,8 +52,24 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full min-h-[400px]">
-        <LoadingSpinner />
+      <div className="h-full flex flex-col p-4 bg-[#F0F7F4]">
+        <div className="flex-1 min-h-0 bg-white rounded-2xl shadow-sm overflow-hidden flex flex-col">
+          <div className="px-6 py-4 flex items-center gap-3">
+            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="h-5 w-32" />
+          </div>
+          <div className="border-t border-border" />
+          <div className="flex-1 px-6 py-4 space-y-5">
+            <div className="flex flex-col items-start"><Skeleton className="h-11 w-[40%] rounded-2xl" /></div>
+            <div className="flex flex-col items-end"><Skeleton className="h-11 w-[30%] rounded-2xl" /></div>
+            <div className="flex flex-col items-start"><Skeleton className="h-16 w-[50%] rounded-2xl" /></div>
+            <div className="flex flex-col items-end"><Skeleton className="h-11 w-[35%] rounded-2xl" /></div>
+            <div className="flex flex-col items-start"><Skeleton className="h-11 w-[25%] rounded-2xl" /></div>
+          </div>
+          <div className="px-6 py-4">
+            <Skeleton className="h-12 w-full rounded-full" />
+          </div>
+        </div>
       </div>
     );
   }

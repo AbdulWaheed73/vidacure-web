@@ -60,6 +60,7 @@ export type ConversationWithDetails = Conversation & {
   lastMessage?: Message;
   patientId?: string;
   patientName?: string;
+  doctorName?: string;
 };
 
 export type TokenResponse = {
@@ -114,9 +115,14 @@ export type SupabaseChatState = {
   currentUserId: string | null;
   currentUserRole: 'patient' | 'doctor' | null;
   subscriptionActive: boolean;
+  doctorName: string | null;
   // Unread message state
   unreadCounts: UnreadState;
   messageReadStatus: { [messageId: string]: boolean };
+  chatPageVisible: boolean;
+  // Pagination state
+  hasMoreMessages: boolean;
+  isLoadingMoreMessages: boolean;
 
   // Actions
   connect: (userId: string, userName: string, userRole: 'patient' | 'doctor') => Promise<void>;
@@ -124,6 +130,7 @@ export type SupabaseChatState = {
   loadPatientConversation: () => Promise<void>;
   loadDoctorConversations: () => Promise<void>;
   selectConversation: (conversation: ConversationWithDetails) => Promise<void>;
+  deselectConversation: () => void;
   loadMessages: (conversationId: string) => Promise<void>;
   sendMessage: (content: string) => Promise<void>;
   addMessage: (message: Message) => void;
@@ -138,4 +145,7 @@ export type SupabaseChatState = {
   markConversationAsRead: (conversationId: string) => Promise<void>;
   updateUnreadCount: (conversationId: string, count: number) => void;
   fetchMessageReadStatus: (messageIds: string[], recipientId: string) => Promise<void>;
+  setChatPageVisible: (visible: boolean) => void;
+  // Pagination actions
+  loadOlderMessages: () => Promise<void>;
 };

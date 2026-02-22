@@ -11,3 +11,5 @@ export * from './questionnaire-types';
 export * from './data-export-types';
 export * from './consent-types';
 export * from './lab-test-types';
+export * from './patient-types';
+export * from './doctor-types';

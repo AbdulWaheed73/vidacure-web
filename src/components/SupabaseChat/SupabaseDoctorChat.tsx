@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Loader2, AlertCircle, MessageSquare, Search, ChevronRight } from 'lucide-react';
+import React, { useEffect, useCallback, useState } from 'react';
+import { AlertCircle, MessageSquare, Search, MoreVertical } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import {
   useSupabaseChatStore,
@@ -12,17 +12,48 @@ import {
   selectCurrentUserId,
   selectUnreadCounts,
   selectMessageReadStatus,
+  selectHasMoreMessages,
+  selectIsLoadingMoreMessages,
 } from '../../stores/supabaseChatStore';
+import { Skeleton } from '../ui/skeleton';
+import { Input } from '../ui/input';
+import { Button } from '../ui/Button';
+import { Badge } from '../ui/badge';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import type { ConversationWithDetails } from '../../types/supabase-chat-types';
 
+const formatTimeAgo = (dateString: string | null | undefined) => {
+  if (!dateString) return '';
+  const now = new Date();
+  const date = new Date(dateString);
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'now';
+  if (diffMins < 60) return `${diffMins}m`;
+  if (diffHours < 24) return `${diffHours}h`;
+  if (diffDays < 7) return `${diffDays}d`;
+  return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+};
+
+const getInitials = (name: string) => {
+  return name
+    .split(' ')
+    .map((n) => n.charAt(0))
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+};
+
 export const SupabaseDoctorChat: React.FC = () => {
   const { user, isAuthenticated } = useAuthStore();
   const [isInitializing, setIsInitializing] = useState(true);
+  const [hasLoadedConversations, setHasLoadedConversations] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Supabase chat store
   const connectionStatus = useSupabaseChatStore(selectConnectionStatus);
   const conversation = useSupabaseChatStore(selectConversation);
   const conversations = useSupabaseChatStore(selectConversations);
@@ -32,15 +63,24 @@ export const SupabaseDoctorChat: React.FC = () => {
   const currentUserId = useSupabaseChatStore(selectCurrentUserId);
   const unreadCounts = useSupabaseChatStore(selectUnreadCounts);
   const messageReadStatus = useSupabaseChatStore(selectMessageReadStatus);
+  const hasMoreMessages = useSupabaseChatStore(selectHasMoreMessages);
+  const isLoadingMoreMessages = useSupabaseChatStore(selectIsLoadingMoreMessages);
   const {
     connect,
-    disconnect,
     sendMessage,
     clearError,
     selectConversation: selectConv,
+    deselectConversation,
+    setChatPageVisible,
+    loadOlderMessages,
   } = useSupabaseChatStore();
 
-  // Initialize chat
+  // Track chat page visibility for read receipts
+  useEffect(() => {
+    setChatPageVisible(true);
+    return () => setChatPageVisible(false);
+  }, [setChatPageVisible]);
+
   useEffect(() => {
     const initChat = async () => {
       if (!isAuthenticated || !user || user.role !== 'doctor') {
@@ -49,25 +89,47 @@ export const SupabaseDoctorChat: React.FC = () => {
       }
 
       try {
-        if (connectionStatus === 'disconnected') {
+        // Use getState() for the latest Zustand state (not stale closure)
+        const currentStatus = useSupabaseChatStore.getState().connectionStatus;
+
+        if (currentStatus === 'disconnected') {
           await connect(user.userId, user.name, 'doctor');
+        } else if (currentStatus === 'connected') {
+          // Already connected — ensure conversations are loaded
+          const currentConversations = useSupabaseChatStore.getState().conversations;
+          if (currentConversations.length === 0) {
+            await useSupabaseChatStore.getState().loadDoctorConversations();
+          }
         }
+        // If 'connecting', another connect() is in progress — just wait for it
       } catch (err) {
         console.error('Failed to initialize chat:', err);
       } finally {
         setIsInitializing(false);
+        setHasLoadedConversations(true);
       }
     };
 
     initChat();
-
-    return () => {
-      if (connectionStatus === 'connected') {
-        disconnect().catch(console.error);
-      }
-    };
+    // Don't disconnect on cleanup — let Zustand state persist across navigation.
+    // The service singleton manages subscriptions and cleans up on re-subscribe.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, user?.userId]);
+
+  // Escape key to close active conversation
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && conversation) {
+        deselectConversation();
+      }
+    },
+    [conversation, deselectConversation]
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   const handleRetry = async () => {
     if (user) {
@@ -84,118 +146,161 @@ export const SupabaseDoctorChat: React.FC = () => {
     selectConv(conv);
   };
 
-  // Filter conversations by search
   const filteredConversations = searchQuery.trim()
     ? conversations.filter((conv) =>
         conv.patientName?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : conversations;
 
-  // Loading state
-  if (isInitializing) {
-    return (
-      <div className="flex items-center justify-center h-full bg-gray-50">
-        <Loader2 className="w-10 h-10 text-[#00a38a] animate-spin" />
+  const DoctorChatSkeleton = () => (
+    <div className="flex h-full gap-4 p-4 bg-[#F0F7F4]">
+      <div className="w-[380px] shrink-0 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden">
+        <div className="p-4">
+          <Skeleton className="h-10 w-full rounded-full" />
+        </div>
+        <div className="flex-1 px-2 space-y-1">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex items-center gap-3 px-3 py-3.5">
+              <Skeleton className="w-11 h-11 rounded-full shrink-0" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-3 w-36" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-    );
+      <div className="flex-1 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4">
+          <Skeleton className="h-6 w-32" />
+          <Skeleton className="h-8 w-24 rounded-full" />
+        </div>
+        <div className="flex-1 px-6 py-4 space-y-5">
+          <div className="flex flex-col items-start"><Skeleton className="h-11 w-[40%] rounded-2xl" /></div>
+          <div className="flex flex-col items-end"><Skeleton className="h-11 w-[30%] rounded-2xl" /></div>
+          <div className="flex flex-col items-start"><Skeleton className="h-16 w-[50%] rounded-2xl" /></div>
+          <div className="flex flex-col items-end"><Skeleton className="h-11 w-[35%] rounded-2xl" /></div>
+          <div className="flex flex-col items-start"><Skeleton className="h-11 w-[25%] rounded-2xl" /></div>
+        </div>
+        <div className="px-6 py-4">
+          <Skeleton className="h-12 w-full rounded-full" />
+        </div>
+      </div>
+    </div>
+  );
+
+  // Loading
+  if (isInitializing) {
+    return <DoctorChatSkeleton />;
   }
 
   // Not authenticated or not doctor
   if (!isAuthenticated || !user || user.role !== 'doctor') {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50">
-        <AlertCircle className="w-12 h-12 text-red-500" />
-        <p className="mt-4 text-lg font-semibold text-gray-900">Access Denied</p>
-        <p className="mt-2 text-gray-500">Doctor access required</p>
+      <div className="flex flex-col items-center justify-center h-full">
+        <AlertCircle className="w-12 h-12 text-destructive" />
+        <p className="mt-4 text-lg font-semibold">Access Denied</p>
+        <p className="mt-2 text-sm text-muted-foreground">Doctor access required</p>
       </div>
     );
   }
 
   // Connecting
   if (connectionStatus === 'connecting') {
-    return (
-      <div className="flex items-center justify-center h-full bg-gray-50">
-        <Loader2 className="w-10 h-10 text-[#00a38a] animate-spin" />
-      </div>
-    );
+    return <DoctorChatSkeleton />;
   }
 
   // Error
   if (connectionStatus === 'error' || error) {
     return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50 px-8">
-        <AlertCircle className="w-12 h-12 text-red-500" />
-        <p className="mt-4 text-lg font-semibold text-red-600">Connection Error</p>
-        <p className="mt-2 text-gray-500 text-center">{error || 'Failed to connect'}</p>
-        <button
-          onClick={handleRetry}
-          className="mt-4 px-6 py-2 bg-[#00a38a] text-white rounded-lg hover:bg-[#008f79]"
-        >
+      <div className="flex flex-col items-center justify-center h-full px-8">
+        <AlertCircle className="w-12 h-12 text-destructive" />
+        <p className="mt-4 text-lg font-semibold text-destructive">Connection Error</p>
+        <p className="mt-2 text-sm text-muted-foreground text-center">{error || 'Failed to connect'}</p>
+        <Button onClick={handleRetry} className="mt-4 bg-[#00a38a] hover:bg-[#008f79]">
           Retry
-        </button>
+        </Button>
       </div>
     );
   }
 
+  const selectedPatientName = conversations.find((c) => c.id === conversation?.id)?.patientName || 'Patient';
+
   return (
-    <div className="flex h-full bg-gray-50">
-      {/* Sidebar - Patient list */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-4 border-b border-gray-200">
-          <h2 className="text-lg font-bold text-gray-900">Patient Chats</h2>
-          <div className="mt-3 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search patients..."
+    <div className="flex h-full gap-4 p-4 bg-[#F0F7F4]">
+      {/* Sidebar - Patient list card */}
+      <div className="w-[380px] shrink-0 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden">
+        {/* Search */}
+        <div className="p-4">
+          <div className="relative">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search patients"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#00a38a]/20"
+              className="pl-10 h-10 rounded-full border-border bg-white"
             />
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        {/* Patient list */}
+        <div className="flex-1 overflow-y-auto px-2">
           {filteredConversations.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full px-4 py-8">
-              <MessageSquare className="w-10 h-10 text-gray-300" />
-              <p className="mt-3 text-sm text-gray-500 text-center">
-                {searchQuery ? 'No matches found' : 'No patients assigned'}
-              </p>
-            </div>
+            !hasLoadedConversations && !searchQuery ? (
+              <div className="space-y-1">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="flex items-center gap-3 px-3 py-3.5">
+                    <Skeleton className="w-11 h-11 rounded-full shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-3 w-36" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full px-4 py-8">
+                <MessageSquare className="w-10 h-10 text-muted-foreground/30" />
+                <p className="mt-3 text-sm text-muted-foreground text-center">
+                  {searchQuery ? 'No matches found' : 'No patients assigned'}
+                </p>
+              </div>
+            )
           ) : (
             filteredConversations.map((conv) => {
               const unreadCount = unreadCounts[conv.id] || 0;
+              const isSelected = conversation?.id === conv.id;
               return (
                 <button
                   key={conv.id}
                   onClick={() => handleSelectConversation(conv)}
-                  className={`w-full flex items-center p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
-                    conversation?.id === conv.id ? 'bg-[#00a38a]/5' : ''
+                  className={`w-full flex items-center gap-3 px-3 py-3.5 rounded-xl transition-colors hover:bg-[#F0F7F4]/60 ${
+                    isSelected ? 'bg-[#F0F7F4]' : ''
                   }`}
                 >
-                  <div className="relative">
-                    <div className="w-10 h-10 bg-[#c0ebe5] rounded-full flex items-center justify-center text-[#00a38a] font-semibold">
-                      {conv.patientName?.charAt(0).toUpperCase() || 'P'}
+                  <div className="relative shrink-0">
+                    <div className="w-11 h-11 bg-[#c0ebe5] rounded-full flex items-center justify-center text-[#00a38a] font-semibold text-sm">
+                      {getInitials(conv.patientName || 'P')}
                     </div>
-                    {/* Unread badge */}
                     {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1.5 bg-[#00a38a] text-white text-xs font-bold rounded-full flex items-center justify-center">
+                      <Badge className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 text-[10px] bg-[#00a38a] text-white border-2 border-white hover:bg-[#00a38a]">
                         {unreadCount > 99 ? '99+' : unreadCount}
-                      </span>
+                      </Badge>
                     )}
                   </div>
-                  <div className="flex-1 ml-3 text-left">
-                    <div className="flex items-center justify-between">
-                      <p className={`font-medium ${unreadCount > 0 ? 'text-gray-900' : 'text-gray-700'}`}>
+                  <div className="flex-1 min-w-0 text-left">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className={`text-sm truncate ${unreadCount > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground'}`}>
                         {conv.patientName || 'Patient'}
                       </p>
+                      <span className="text-xs text-muted-foreground shrink-0">
+                        {formatTimeAgo(conv.lastMessage?.created_at || conv.last_message_at)}
+                      </span>
                     </div>
-                    <p className={`text-sm truncate ${unreadCount > 0 ? 'text-gray-700 font-medium' : 'text-gray-500'}`}>
+                    <p className={`text-xs truncate mt-0.5 ${unreadCount > 0 ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
                       {conv.lastMessage?.content || 'No messages yet'}
                     </p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-gray-400" />
                 </button>
               );
             })
@@ -203,18 +308,24 @@ export const SupabaseDoctorChat: React.FC = () => {
         </div>
       </div>
 
-      {/* Main chat area */}
-      <div className="flex-1 flex flex-col">
+      {/* Main chat area card */}
+      <div className="flex-1 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden">
         {conversation ? (
           <>
             {/* Chat header */}
-            <div className="bg-white border-b border-gray-200 px-6 py-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {conversations.find((c) => c.id === conversation.id)?.patientName || 'Patient'}
-              </h3>
-              <div className="flex items-center mt-1">
-                <span className="w-2 h-2 bg-green-500 rounded-full mr-2" />
-                <span className="text-sm text-gray-500">Active conversation</span>
+            <div className="flex items-center justify-between px-6 py-4">
+              <h2 className="text-xl font-bold text-foreground">{selectedPatientName}</h2>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full px-5 border-foreground/20 hover:bg-white"
+                >
+                  View Profile
+                </Button>
+                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full hover:bg-white">
+                  <MoreVertical className="h-5 w-5" />
+                </Button>
               </div>
             </div>
 
@@ -226,6 +337,9 @@ export const SupabaseDoctorChat: React.FC = () => {
                 currentUserRole="doctor"
                 isLoading={isLoadingMessages}
                 messageReadStatus={messageReadStatus}
+                hasMoreMessages={hasMoreMessages}
+                isLoadingMoreMessages={isLoadingMoreMessages}
+                onLoadMore={loadOlderMessages}
               />
             </div>
 
@@ -236,9 +350,9 @@ export const SupabaseDoctorChat: React.FC = () => {
             />
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center bg-gray-50">
-            <MessageSquare className="w-12 h-12 text-gray-300" />
-            <p className="mt-4 text-gray-500">Select a patient to start chatting</p>
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <MessageSquare className="w-12 h-12 text-muted-foreground/30" />
+            <p className="mt-4 text-sm text-muted-foreground">Select a patient to start chatting</p>
           </div>
         )}
       </div>

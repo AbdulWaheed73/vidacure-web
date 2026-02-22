@@ -1,77 +1,83 @@
-import React from 'react';
-import { DeleteAccountDialog } from '@/components/dashboard/DeleteAccountDialog';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { User } from 'lucide-react';
+import { useAuthStore } from '@/stores/authStore';
+import { useDoctorProfile } from '@/hooks/useDoctorDashboardQueries';
+import { exportMyData, downloadDataAsFile } from '@/services/dataExportService';
+import { ProfileCard } from '@/components/account/ProfileCard';
+import { DataPrivacyCard } from '@/components/account/DataPrivacyCard';
+import { AccountActionsCard } from '@/components/account/AccountActionsCard';
 
 const DoctorAccount: React.FC = () => {
+  const { t } = useTranslation();
+  const { logout } = useAuthStore();
+  const { data, isLoading } = useDoctorProfile();
+  const [isExporting, setIsExporting] = useState(false);
+
+  const profile = data?.profile;
+
+  const handleExportData = async () => {
+    try {
+      setIsExporting(true);
+      const exportData = await exportMyData();
+      downloadDataAsFile(exportData);
+    } catch (error: unknown) {
+      console.error('Failed to export data:', error);
+      alert(t('account.exportError') || 'Failed to export data. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="p-8">
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <User className="size-8 text-teal-action" />
+            <div className="h-8 w-48 bg-gray-200 rounded animate-pulse" />
+          </div>
+          <div className="h-5 w-80 bg-gray-200 rounded animate-pulse" />
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="col-span-1 lg:col-span-2 h-48 bg-gray-200 rounded-[20px] animate-pulse" />
+          <div className="col-span-1 h-48 bg-gray-200 rounded-[20px] animate-pulse" />
+          <div className="col-span-1 lg:col-span-3 h-24 bg-gray-200 rounded-[20px] animate-pulse" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-8">
-      <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 font-manrope">
-          Doctor Account
-        </h1>
-        
-        <div className="bg-gradient-to-br from-indigo-50 to-blue-100 rounded-xl p-8 text-center">
-          <div className="text-6xl mb-4">⚙️</div>
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            Account Management
-          </h2>
-          <p className="text-gray-600 text-lg mb-6">
-            Manage your doctor profile, preferences, and account settings. Update your information and customize your experience.
-          </p>
-          <div className="inline-flex items-center px-6 py-3 bg-indigo-100 rounded-lg">
-            <span className="text-indigo-800 font-medium">Coming Soon</span>
-          </div>
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-4">
+          <User className="size-8 text-teal-action" />
+          <h1 className="text-3xl font-bold text-gray-800 font-manrope">{t('account.title')}</h1>
         </div>
-        
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg p-6 border border-gray-200">
-            <h3 className="font-semibold text-gray-800 mb-2">Profile Information</h3>
-            <p className="text-gray-600">Update your professional details</p>
-          </div>
-          
-          <div className="bg-white rounded-lg p-6 border border-gray-200">
-            <h3 className="font-semibold text-gray-800 mb-2">Notification Settings</h3>
-            <p className="text-gray-600">Manage your alert preferences</p>
-          </div>
-          
-          <div className="bg-white rounded-lg p-6 border border-gray-200">
-            <h3 className="font-semibold text-gray-800 mb-2">Security Settings</h3>
-            <p className="text-gray-600">Password and security options</p>
-          </div>
-        </div>
-        
-        <div className="mt-8 bg-gray-50 rounded-lg p-6">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">Quick Actions</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button className="text-left p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 transition-colors">
-              <div className="font-medium text-gray-800">Update Profile Picture</div>
-              <div className="text-gray-600 text-sm">Change your profile photo</div>
-            </button>
-            
-            <button className="text-left p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 transition-colors">
-              <div className="font-medium text-gray-800">Change Password</div>
-              <div className="text-gray-600 text-sm">Update your login credentials</div>
-            </button>
-            
-            <button className="text-left p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 transition-colors">
-              <div className="font-medium text-gray-800">Notification Preferences</div>
-              <div className="text-gray-600 text-sm">Customize your alerts</div>
-            </button>
-            
-            <button className="text-left p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 transition-colors">
-              <div className="font-medium text-gray-800">Privacy Settings</div>
-              <div className="text-gray-600 text-sm">Manage data and privacy</div>
-            </button>
-          </div>
-        </div>
+        <p className="text-lg text-gray-600 font-manrope">
+          {t('account.description')}
+        </p>
+      </div>
 
-        {/* Danger Zone */}
-        <div className="mt-8 bg-red-50 border border-red-200 rounded-lg p-6">
-          <h3 className="text-xl font-semibold text-red-800 mb-2">Danger Zone</h3>
-          <p className="text-red-600 text-sm mb-4">
-            Once you delete your account, there is no going back. Please be certain.
-          </p>
-          <DeleteAccountDialog userType="doctor" />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {profile && (
+          <ProfileCard
+            name={profile.name}
+            givenName={profile.givenName}
+            familyName={profile.familyName}
+            role={profile.role}
+            email={profile.email}
+            memberSince={profile.createdAt}
+          />
+        )}
+
+        <DataPrivacyCard
+          onExportData={handleExportData}
+          isExporting={isExporting}
+        />
+
+        <AccountActionsCard onLogout={logout} userType="doctor" />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Calendar, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { PopupModal } from 'react-calendly';
 import { Button } from '@/components/ui/Button';
@@ -15,8 +15,6 @@ import { Badge } from '@/components/ui/badge';
 import { calendlyService } from '@/services/calendlyService';
 import type { EventTypeOption } from '@/types/calendly-types';
 import { useCookieConsentStore } from '@/stores/cookieConsentStore';
-import { useAuthStore } from '@/stores/authStore';
-
 type AppointmentBookingProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -39,7 +37,21 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   const [doctorName, setDoctorName] = useState<string>('');
   const { consent, openPreferences } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
-  const { user } = useAuthStore();
+
+
+  // Strip utm_term from scheduling URL to prevent duplication by react-calendly
+  // react-calendly merges existing URL query params with the utm prop, causing arrays
+  const { cleanSchedulingUrl, utmTerm } = useMemo(() => {
+    if (!schedulingLink) return { cleanSchedulingUrl: '', utmTerm: undefined };
+    try {
+      const urlObj = new URL(schedulingLink);
+      const term = urlObj.searchParams.get('utm_term') || undefined;
+      urlObj.searchParams.delete('utm_term');
+      return { cleanSchedulingUrl: urlObj.toString(), utmTerm: term };
+    } catch {
+      return { cleanSchedulingUrl: schedulingLink, utmTerm: undefined };
+    }
+  }, [schedulingLink]);
 
   // Load available event types and auto-generate booking link when modal opens
   useEffect(() => {
@@ -240,7 +252,7 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
       {/* Calendly Popup Modal - Opens automatically when schedulingLink is available */}
       {hasFunctionalConsent && (
         <PopupModal
-          url={schedulingLink || ''}
+          url={cleanSchedulingUrl}
           open={!!schedulingLink}
           onModalClose={() => {
             setSchedulingLink(null);
@@ -248,7 +260,7 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
             if (onSuccess) onSuccess();
           }}
           rootElement={document.getElementById('root')!}
-          utm={user?.userId ? { utmTerm: `patient_${user.userId}` } : undefined}
+          utm={utmTerm ? { utmTerm } : undefined}
         />
       )}
     </>

@@ -9,7 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/Button';
 import { Label } from '@/components/ui/label';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { addWeightHistory, getWeightHistory } from '@/services/weightHistory';
+import { queryKeys } from '@/lib/queryClient';
 import type { WeightHistoryEntry } from '@/types/weight-types';
 
 
@@ -30,6 +33,7 @@ return Math.round(bmi * 10) / 10;
 
 export const ProgressPage: React.FC = () => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [timeRange, setTimeRange] = React.useState("8w");
   const [weightHistory, setWeightHistory] = React.useState<WeightHistoryEntry[]>([]);
   const [height, setHeight] = React.useState<number>(0);
@@ -65,7 +69,7 @@ export const ProgressPage: React.FC = () => {
     e.preventDefault();
     
     if (!formData.weight || isNaN(Number(formData.weight))) {
-      alert(t('progress.weightValidation'));
+      toast.error(t('progress.weightValidation'));
       return;
     }
 
@@ -82,10 +86,13 @@ export const ProgressPage: React.FC = () => {
       // Reset form and reload data
       setFormData({ weight: '', sideEffects: '', notes: '' });
       await loadWeightHistory();
-      alert(t('progress.updateSuccess'));
+      // Invalidate dashboard queries so they refetch when navigating back
+      queryClient.invalidateQueries({ queryKey: queryKeys.weightHistory });
+      queryClient.invalidateQueries({ queryKey: queryKeys.patientProfile });
+      toast.success(t('progress.updateSuccess'));
     } catch (error) {
       console.error('Error saving weight history:', error);
-      alert(t('progress.updateError'));
+      toast.error(t('progress.updateError'));
     } finally {
       setSaving(false);
     }
@@ -112,16 +119,22 @@ export const ProgressPage: React.FC = () => {
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  // Calculate dynamic values
-  const currentWeight = filteredData.length > 0 ? filteredData[filteredData.length - 1].weight : 97.5;
-  const startingWeight = filteredData.length > 0 ? filteredData[0].weight : 105.8;
+  // Calculate all-time stats from full weight history (not filtered by time range)
+  const allTimeSorted = [...weightHistory].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+  const currentWeight = allTimeSorted.length > 0
+    ? allTimeSorted[allTimeSorted.length - 1].weight : 0;
+  const startingWeight = allTimeSorted.length > 0
+    ? allTimeSorted[0].weight : 0;
   const totalProgress = Math.round((startingWeight - currentWeight) * 10) / 10;
-  const progressPercentage = Math.round((totalProgress / startingWeight) * 100);
-  const currentBMI = calculateBMI(currentWeight, height);
-  const startingBMI = calculateBMI(startingWeight, height);
-  
+  const progressPercentage = startingWeight > 0
+    ? Math.round((totalProgress / startingWeight) * 100) : 0;
+  const currentBMI = height > 0 ? calculateBMI(currentWeight, height) : 0;
+  const startingBMI = height > 0 ? calculateBMI(startingWeight, height) : 0;
+
   // Calculate progress in the selected time range
-  const rangeProgress = filteredData.length > 1 
+  const rangeProgress = filteredData.length > 1
     ? Math.round((filteredData[0].weight - filteredData[filteredData.length - 1].weight) * 10) / 10
     : totalProgress;
 
@@ -140,9 +153,9 @@ export const ProgressPage: React.FC = () => {
       </div>
 
       {/* Main Content: 2-column layout */}
-      <div className="flex  gap-6 mb-6">
+      <div className="flex items-stretch gap-6 mb-6">
         {/* Left Column: Chart Section */}
-        <Card className="bg-white/95 backdrop-blur-md shadow-lg pt-0 w-3/4">
+        <Card className="bg-white/95 backdrop-blur-md shadow-lg pt-0 w-3/4 flex flex-col">
           <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
             <div className="grid flex-1 gap-1">
               <CardTitle className="text-xl font-manrope">{t('progress.cardTitle')}</CardTitle>
@@ -170,14 +183,14 @@ export const ProgressPage: React.FC = () => {
               </SelectContent>
             </Select>
           </CardHeader>
-          <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-            <div className="mb-6">
+          <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6 flex-1 flex flex-col">
+            <div className="flex-1 min-h-0">
               {loading ? (
-                <div className="h-[400px] w-full flex items-center justify-center">
+                <div className="h-full w-full flex items-center justify-center">
                   <p className="text-gray-500">{t('progress.loadingHistory')}</p>
                 </div>
               ) : (
-                <ChartContainer config={chartConfig} className="aspect-auto h-[400px] w-full">
+                <ChartContainer config={chartConfig} className="aspect-auto h-full w-full">
                 <LineChart accessibilityLayer data={filteredData} margin={{ left: 12, right: 12, top: 12, bottom: 12 }}>
                   <CartesianGrid vertical={false} />
                   <XAxis
@@ -228,47 +241,61 @@ export const ProgressPage: React.FC = () => {
             <div className="flex items-center text-sm text-teal-600 font-medium">
               <span>-{rangeProgress} kg</span>
               <span className="ml-2 text-gray-500">
-                {t('progress.progressInTime')} {timeRange === "2w" ? `2 ${t('progress.weeks')}` : timeRange === "4w" ? `4 ${t('progress.weeks')}` : `12 ${t('progress.weeks')}`}
+                {t('progress.progressInTime')} {timeRange === "2w" ? `2 ${t('progress.weeks')}` : timeRange === "4w" ? `4 ${t('progress.weeks')}` : `8 ${t('progress.weeks')}`}
               </span>
             </div>
           </CardContent>
         </Card>
 
         {/* Right Column: Progress Summary Cards */}
-        <div className="space-y-6 min-w-1/4">
+        <div className="flex flex-col gap-4 min-w-[280px] w-1/4">
           {/* Total Progress Card */}
-          <Card className="bg-white/95 backdrop-blur-md shadow-lg">
-            <CardContent className="p-6">
-              <div className='flex'>
-                <div className="text-right">
-                <div className="text-sm text-gray-600 mb-1">{t('progress.totalProgress')}</div>
-                <div className="text-sm text-gray-500 mb-2">{progressPercentage}{t('progress.ofTotalBodyWeight')}</div>
-              </div>
-                <div className='size-lf-stretch bg-light-teal-background rounded-xl inline-flex justify-center items-center gap-2.5'>
-                  <div className="text-3xl font-bold text-gray-800">-{totalProgress} kg</div>
+          <Card className="bg-white/95 backdrop-blur-md shadow-lg flex-1">
+            <CardContent className="px-6 py-4 h-full flex items-center justify-between gap-6">
+              <div className="flex-1">
+                <div className="text-lg font-bold text-gray-800">{t('progress.totalProgress')}</div>
+                <div className="text-sm text-gray-500 mt-1">
+                  {allTimeSorted.length > 0 ? `${progressPercentage}${t('progress.ofTotalBodyWeight')}` : '--'}
                 </div>
+              </div>
+              <div className="bg-gray-100/80 rounded-2xl px-5 py-4 flex items-center justify-center shrink-0">
+                <span className="text-2xl font-bold text-gray-800 whitespace-nowrap">
+                  {allTimeSorted.length > 0 ? `${totalProgress > 0 ? '-' : ''}${totalProgress} kg` : '--'}
+                </span>
               </div>
             </CardContent>
           </Card>
 
           {/* BMI Card */}
-          <Card className="bg-white/95 backdrop-blur-md shadow-lg">
-            <CardContent className="p-6">
-              <div className="text-right">
-                <div className="text-sm text-gray-600 mb-1">{t('progress.bmi')}</div>
-                <div className="text-sm text-gray-500 mb-2">{t('progress.downFrom')} {startingBMI}</div>
-                <div className="text-3xl font-bold text-gray-800">{currentBMI}</div>
+          <Card className="bg-white/95 backdrop-blur-md shadow-lg flex-1">
+            <CardContent className="px-6 py-4 h-full flex items-center justify-between gap-6">
+              <div className="flex-1">
+                <div className="text-lg font-bold text-gray-800">{t('progress.bmi')}</div>
+                <div className="text-sm text-gray-500 mt-1">
+                  {currentBMI > 0 ? `${t('progress.downFrom')} ${startingBMI}` : '--'}
+                </div>
+              </div>
+              <div className="bg-gray-100/80 rounded-2xl px-5 py-4 flex items-center justify-center shrink-0">
+                <span className="text-2xl font-bold text-gray-800 whitespace-nowrap">
+                  {currentBMI > 0 ? currentBMI : '--'}
+                </span>
               </div>
             </CardContent>
           </Card>
 
           {/* Current Weight Card */}
-          <Card className="bg-white/95 backdrop-blur-md shadow-lg">
-            <CardContent className="p-6">
-              <div className="text-right">
-                <div className="text-sm text-gray-600 mb-1">{t('progress.currentWeight')}</div>
-                <div className="text-sm text-gray-500 mb-2">{totalProgress} {t('progress.lostSinceStarted')}</div>
-                <div className="text-3xl font-bold text-gray-800">{currentWeight} kg</div>
+          <Card className="bg-white/95 backdrop-blur-md shadow-lg flex-1">
+            <CardContent className="px-6 py-4 h-full flex items-center justify-between gap-6">
+              <div className="flex-1">
+                <div className="text-lg font-bold text-gray-800">{t('progress.currentWeight')}</div>
+                <div className="text-sm text-gray-500 mt-1">
+                  {allTimeSorted.length > 0 ? `${totalProgress} ${t('progress.lostSinceStarted')}` : '--'}
+                </div>
+              </div>
+              <div className="bg-gray-100/80 rounded-2xl px-5 py-4 flex items-center justify-center shrink-0">
+                <span className="text-2xl font-bold text-gray-800 whitespace-nowrap">
+                  {allTimeSorted.length > 0 ? `${currentWeight} kg` : '--'}
+                </span>
               </div>
             </CardContent>
           </Card>

@@ -1,8 +1,10 @@
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import img from "../assets/404.png";
 
 const NotFoundPage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen w-full bg-slate-100 flex justify-center items-center px-4">
@@ -20,7 +22,7 @@ const NotFoundPage = () => {
               {t('notFound.description')}
             </div>
           </div>
-          <button className="w-36 h-11 px-4 py-2 bg-teal-900 rounded-full flex justify-center items-center hover:bg-teal-800 transition-colors">
+          <button onClick={() => navigate('/dashboard')} className="w-36 h-11 px-4 py-2 bg-teal-900 rounded-full flex justify-center items-center hover:bg-teal-800 transition-colors">
             <span className="text-white text-base font-semibold">
               {t('notFound.goBack')}
             </span>

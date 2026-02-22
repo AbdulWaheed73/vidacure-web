@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/Button';
+import { Badge } from '../ui/badge';
 import { PaymentService } from '../../services';
 import type { SubscriptionStatus } from '../../types/payment-types';
 
@@ -10,6 +12,7 @@ type SubscriptionStatusProps = {
 export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
   onStatusChange
 }) => {
+  const { t } = useTranslation();
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isActionLoading, setIsActionLoading] = useState(false);
@@ -63,10 +66,11 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-lg">
-        <div className="animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+      <div className="bg-[#f0f7f4] rounded-2xl p-5">
+        <div className="animate-pulse space-y-3">
+          <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 bg-gray-200 rounded w-2/5"></div>
         </div>
       </div>
     );
@@ -76,16 +80,16 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
     return null;
   }
 
-  const getStatusColor = (subscriptionStatus: string) => {
+  const getStatusBadge = (subscriptionStatus: string) => {
     switch (subscriptionStatus) {
       case 'active':
-        return 'text-green-600 bg-green-100';
+        return <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-100 font-manrope">{t('account.billing.active')}</Badge>;
       case 'canceled':
-        return 'text-red-600 bg-red-100';
+        return <Badge variant="destructive" className="font-manrope">{t('account.billing.canceled')}</Badge>;
       case 'past_due':
-        return 'text-yellow-600 bg-yellow-100';
+        return <Badge className="bg-amber-100 text-amber-700 border-amber-200 hover:bg-amber-100 font-manrope">{t('account.billing.pastDue')}</Badge>;
       default:
-        return 'text-gray-600 bg-gray-100';
+        return <Badge variant="secondary" className="font-manrope">{subscriptionStatus}</Badge>;
     }
   };
 
@@ -94,37 +98,33 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-lg">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">Current Subscription</h3>
-      
-      <div className="space-y-3 mb-6">
+    <div className="bg-[#f0f7f4] rounded-2xl p-5">
+      <div className="space-y-3 mb-5">
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">Plan:</span>
-          <span className="font-medium">
-            {status.planType === 'lifestyle' ? 'Lifestyle Program' : 'Medical Program'}
+          <span className="text-sm text-gray-500 font-manrope">{t('account.billing.planLabel')}</span>
+          <span className="font-semibold text-gray-800 font-manrope">
+            {status.planType === 'lifestyle' ? t('account.billing.lifestyle') : t('account.billing.medical')}
           </span>
         </div>
-        
+
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">Status:</span>
-          <span className={`px-2 py-1 rounded-full text-sm font-medium ${getStatusColor(status.subscriptionStatus || '')}`}>
-            {status.subscriptionStatus}
-          </span>
+          <span className="text-sm text-gray-500 font-manrope">{t('account.billing.statusLabel')}</span>
+          {getStatusBadge(status.subscriptionStatus || '')}
         </div>
 
         {status.subscription && (
           <>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Current period:</span>
-              <span className="text-sm">
+              <span className="text-sm text-gray-500 font-manrope">{t('account.billing.period')}</span>
+              <span className="text-sm text-gray-700 font-manrope">
                 {formatDate(status.subscription.currentPeriodStart)} - {formatDate(status.subscription.currentPeriodEnd)}
               </span>
             </div>
 
             {status.subscription.cancelAtPeriodEnd && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                <p className="text-yellow-800 text-sm">
-                  ⚠️ Your subscription will end on {formatDate(status.subscription.currentPeriodEnd)}
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mt-2">
+                <p className="text-amber-800 text-sm font-manrope">
+                  {t('account.billing.cancelNotice', { date: formatDate(status.subscription.currentPeriodEnd) })}
                 </p>
               </div>
             )}
@@ -132,24 +132,26 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-wrap gap-3">
         <Button
           onClick={handleManageBilling}
           disabled={isActionLoading}
           variant="outline"
-          className="flex-1"
+          size="sm"
+          className="font-manrope bg-white"
         >
-          {isActionLoading ? 'Loading...' : 'Manage Billing'}
+          {isActionLoading ? t('account.billing.loading') : t('account.billing.manageBilling')}
         </Button>
 
         {status.subscriptionStatus === 'active' && !status.subscription?.cancelAtPeriodEnd && (
           <Button
             onClick={handleCancelSubscription}
             disabled={isActionLoading}
-            variant="destructive"
-            className="flex-1"
+            variant="outline"
+            size="sm"
+            className="font-manrope text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
           >
-            {isActionLoading ? 'Loading...' : 'Cancel Subscription'}
+            {isActionLoading ? t('account.billing.loading') : t('account.billing.cancelSubscription')}
           </Button>
         )}
       </div>

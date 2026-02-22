@@ -19,6 +19,7 @@ type PresenceCallback = (userId: string, status: "online" | "offline") => void;
 class SupabaseChatService {
   private messageChannel: RealtimeChannel | null = null;
   private presenceChannel: RealtimeChannel | null = null;
+  private doctorInboxChannel: RealtimeChannel | null = null;
   private currentConversationId: string | null = null;
   private currentUserId: string | null = null;
   private isRefreshing = false;
@@ -29,6 +30,8 @@ class SupabaseChatService {
   private messageCallback: MessageCallback | null = null;
   private presenceCallback: PresenceCallback | null = null;
   private presenceUserData: { userId: string; name: string } | null = null;
+  private doctorInboxCallback: MessageCallback | null = null;
+  private doctorInboxConversationIds: string[] = [];
 
   // Visibility handling for token refresh on tab focus
   private tokenExpiresAt: number | null = null;
@@ -237,6 +240,11 @@ class SupabaseChatService {
 
       console.log("Re-subscribed to channels successfully");
     }
+
+    // Re-subscribe doctor inbox if it was active
+    if (this.doctorInboxCallback && this.doctorInboxConversationIds.length > 0) {
+      await this.subscribeToDoctorInbox(this.doctorInboxConversationIds, this.doctorInboxCallback);
+    }
   }
 
   /**
@@ -306,6 +314,11 @@ class SupabaseChatService {
         this.presenceChannel = null;
       }
 
+      if (this.doctorInboxChannel) {
+        await this.doctorInboxChannel.unsubscribe();
+        this.doctorInboxChannel = null;
+      }
+
       // Clear session
       await clearSupabaseSession();
 
@@ -323,16 +336,17 @@ class SupabaseChatService {
   async getPatientConversation(): Promise<{
     conversation: Conversation;
     participants: Participant[];
+    doctorName?: string;
   } | null> {
     try {
       const response = await api.get("/api/supabase-chat/conversation");
-      const { conversation, participants } = response.data;
+      const { conversation, participants, doctorName } = response.data;
 
       if (conversation) {
         this.currentConversationId = conversation.id;
       }
 
-      return conversation ? { conversation, participants } : null;
+      return conversation ? { conversation, participants, doctorName } : null;
     } catch (error: any) {
       if (
         error.response?.status === 400 &&
@@ -358,17 +372,72 @@ class SupabaseChatService {
   }
 
   /**
+   * Subscribe to new messages across all doctor's conversations (for sidebar updates)
+   */
+  async subscribeToDoctorInbox(
+    conversationIds: string[],
+    onMessage: MessageCallback
+  ): Promise<void> {
+    const supabase = getSupabaseClient();
+
+    // Store for re-subscribing after token refresh
+    this.doctorInboxCallback = onMessage;
+    this.doctorInboxConversationIds = conversationIds;
+
+    // Unsubscribe from previous channel if exists
+    if (this.doctorInboxChannel) {
+      await this.doctorInboxChannel.unsubscribe();
+      this.doctorInboxChannel = null;
+    }
+
+    if (conversationIds.length === 0) return;
+
+    // Subscribe to postgres_changes on messages table (unfiltered) and filter client-side
+    this.doctorInboxChannel = supabase
+      .channel("doctor-inbox")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+        },
+        (payload) => {
+          const message = payload.new as Message;
+          // Only process messages for conversations this doctor is part of
+          if (conversationIds.includes(message.conversation_id)) {
+            // Skip own messages
+            if (message.sender_id !== this.currentUserId) {
+              onMessage(message);
+            }
+          }
+        }
+      )
+      .subscribe((_status, err) => {
+        if (err) {
+          console.error("Doctor inbox subscription error:", err);
+        }
+      });
+  }
+
+  /**
    * Load messages for a conversation
    */
-  async loadMessages(conversationId: string, limit = 50): Promise<Message[]> {
+  async loadMessages(conversationId: string, limit = 15, before?: string): Promise<Message[]> {
     try {
       const supabase = getSupabaseClient();
 
-      const { data: messages, error } = await supabase
+      let query = supabase
         .from("messages")
         .select("*")
         .eq("conversation_id", conversationId)
-        .eq("is_deleted", false)
+        .eq("is_deleted", false);
+
+      if (before) {
+        query = query.lt("created_at", before);
+      }
+
+      const { data: messages, error } = await query
         .order("created_at", { ascending: false })
         .limit(limit);
 

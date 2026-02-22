@@ -94,6 +94,5 @@ export type TopBarProps = {
   user: User | null;
   onBookAppointment?: () => void;
   onProfileClick?: () => void;
-  onAccountClick?: () => void;
   onLogout?: () => void;
 }

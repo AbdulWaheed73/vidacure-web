@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Calendar, User, Settings, LogOut } from 'lucide-react';
+import { Calendar, User, LogOut } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import {
   DropdownMenu,
@@ -16,7 +16,6 @@ export const TopBar: React.FC<TopBarProps> = ({
   user,
   onBookAppointment,
   onProfileClick,
-  onAccountClick,
   onLogout,
 }) => {
   const { t } = useTranslation();
@@ -48,7 +47,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   const userInitials = getUserInitials(userName);
 
   return (
-    <div className="bg-[#F0F7F4] px-5 py-8 flex justify-between items-center">
+    <div className="bg-[#F0F7F4] px-5 py-8 flex justify-between items-center shrink-0">
       {/* Dynamic Greeting */}
       <div className="text-zinc-800 text-2xl font-bold font-sora leading-loose">
         {greeting}, {userName}
@@ -85,10 +84,6 @@ export const TopBar: React.FC<TopBarProps> = ({
             <DropdownMenuItem onClick={onProfileClick}>
               <User className="mr-2 h-4 w-4" />
               <span>{t('topbar.profile')}</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={onAccountClick}>
-              <Settings className="mr-2 h-4 w-4" />
-              <span>{t('topbar.accountSettings')}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onLogout}>

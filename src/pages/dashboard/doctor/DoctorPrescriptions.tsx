@@ -1,49 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useState, useMemo } from 'react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { doctorPrescriptionService } from '@/services/doctorPrescriptionService';
-import type { DoctorPrescriptionRequest } from '@/types/doctor-prescription-types';
+import { useDoctorPrescriptions, useApprovePrescription } from '@/hooks/useDoctorDashboardQueries';
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
-import { Clock, CheckCircle, XCircle, AlertCircle, User, Scale, AlertTriangle } from 'lucide-react';
+import type { DoctorPrescriptionRequest } from '@/types/doctor-prescription-types';
 import { PrescriptionRequestDetailModal } from '@/components/PrescriptionRequestDetailModal';
+import { RefreshCw } from 'lucide-react';
 
-const DoctorPrescriptions: React.FC = () => {
-  const [requests, setRequests] = useState<DoctorPrescriptionRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+const DoctorPrescriptions = () => {
+  const { data, isLoading, error, refetch, isRefetching } = useDoctorPrescriptions();
+  const approveMutation = useApprovePrescription();
   const [selectedRequest, setSelectedRequest] = useState<DoctorPrescriptionRequest | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const fetchPrescriptionRequests = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      const response = await doctorPrescriptionService.getDoctorPrescriptionRequests();
+  const requests = data?.data?.prescriptionRequests ?? [];
 
-      if (response.success) {
-        setRequests(response.data.prescriptionRequests);
+  const { pending, history } = useMemo(() => {
+    const p: DoctorPrescriptionRequest[] = [];
+    const h: DoctorPrescriptionRequest[] = [];
+    for (const r of requests) {
+      if (r.status === PrescriptionRequestStatus.PENDING || r.status === PrescriptionRequestStatus.UNDER_REVIEW) {
+        p.push(r);
+      } else {
+        h.push(r);
       }
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error && 'response' in error
-        ? (error as { response?: { data?: { error?: string } } }).response?.data?.error
-        : 'Failed to load prescription requests';
-      setError(errorMessage || 'Failed to load prescription requests');
-    } finally {
-      setLoading(false);
     }
-  };
+    return { pending: p, history: h };
+  }, [requests]);
 
-  useEffect(() => {
-    fetchPrescriptionRequests();
-  }, []);
-
-  const handleRequestClick = (request: DoctorPrescriptionRequest) => {
+  const handleReview = (request: DoctorPrescriptionRequest) => {
     setSelectedRequest(request);
     setModalOpen(true);
   };
 
-  const handleApproveRequest = async (
+  const handleApprove = async (
     requestId: string,
     prescriptionData: {
       medicationName: string;
@@ -53,81 +43,17 @@ const DoctorPrescriptions: React.FC = () => {
       validTill: string;
     }
   ) => {
-    try {
-      await doctorPrescriptionService.updatePrescriptionRequestStatus(
-        requestId,
-        PrescriptionRequestStatus.APPROVED,
-        prescriptionData
-      );
-      // Refresh the list to show updated status
-      await fetchPrescriptionRequests();
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error && 'response' in error
-        ? (error as { response?: { data?: { error?: string } } }).response?.data?.error
-        : 'Failed to approve prescription request';
-      console.error('Error approving prescription request:', errorMessage);
-    }
+    await approveMutation.mutateAsync({ requestId, prescriptionData });
   };
 
-  const getStatusBadge = (status: DoctorPrescriptionRequest['status']) => {
-    const statusConfig = {
-      [PrescriptionRequestStatus.PENDING]: {
-        variant: 'outline' as const,
-        icon: Clock,
-        className: 'border-yellow-500 text-yellow-700 bg-yellow-50',
-        label: 'PENDING',
-      },
-      [PrescriptionRequestStatus.APPROVED]: {
-        variant: 'secondary' as const,
-        icon: CheckCircle,
-        className: 'border-green-500 text-green-700 bg-green-50',
-        label: 'APPROVED',
-      },
-      [PrescriptionRequestStatus.DENIED]: {
-        variant: 'destructive' as const,
-        icon: XCircle,
-        className: 'border-red-500 text-red-700 bg-red-50',
-        label: 'DENIED',
-      },
-      [PrescriptionRequestStatus.UNDER_REVIEW]: {
-        variant: 'outline' as const,
-        icon: AlertCircle,
-        className: 'border-blue-500 text-blue-700 bg-blue-50',
-        label: 'UNDER REVIEW',
-      },
-    };
-
-    const config = statusConfig[status];
-    const Icon = config.icon;
-
+  if (isLoading) {
     return (
-      <Badge variant={config.variant} className={config.className}>
-        <Icon className="w-3 h-3 mr-1" />
-        {config.label}
-      </Badge>
-    );
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  if (loading) {
-    return (
-      <div className="p-8">
-        <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6 font-manrope">
-            Patient Prescription Requests
-          </h1>
-          <div className="flex justify-center py-8">
-            <LoadingSpinner />
-          </div>
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="font-sora font-bold text-2xl text-[#282828]">Prescriptions</h1>
+        </div>
+        <div className="flex justify-center py-12">
+          <LoadingSpinner />
         </div>
       </div>
     );
@@ -135,104 +61,187 @@ const DoctorPrescriptions: React.FC = () => {
 
   if (error) {
     return (
-      <div className="p-8">
-        <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6 font-manrope">
-            Patient Prescription Requests
-          </h1>
-          <div className="text-center py-8">
-            <div className="text-red-600 bg-red-50 p-4 rounded-md">
-              {error}
-            </div>
-          </div>
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="font-sora font-bold text-2xl text-[#282828]">Prescriptions</h1>
+        </div>
+        <div className="text-red-600 bg-red-50 p-4 rounded-lg">
+          Failed to load prescription requests
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8">
-      <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2 font-manrope">
-            Patient Prescription Requests
-          </h1>
-          <p className="text-lg text-gray-600 font-manrope">
-            Review and manage prescription requests from your assigned patients
-          </p>
-        </div>
+    <div className="p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="font-sora font-bold text-2xl text-[#282828]">Prescriptions</h1>
+        <button
+          onClick={() => refetch()}
+          disabled={isRefetching}
+          className="flex items-center gap-2 bg-[#f0f7f4] text-[#005044] rounded-full px-5 py-2.5 font-sora font-semibold text-sm hover:bg-[#c0ebe5] transition-colors"
+        >
+          <RefreshCw className={`w-4 h-4 ${isRefetching ? 'animate-spin' : ''}`} />
+          Refresh
+        </button>
+      </div>
 
+      <Tabs defaultValue="pending">
+        <TabsList className="!bg-transparent border-b border-[#e0e0e0] rounded-none w-full justify-start gap-6 h-auto p-0 mb-6">
+          <TabsTrigger
+            value="pending"
+            className="rounded-none !bg-transparent shadow-none px-0 pb-3 text-base font-sora font-medium text-[#b0b0b0] data-[state=active]:text-[#282828] data-[state=active]:!bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-[#005044]"
+          >
+            Pending Requests
+            {pending.length > 0 && (
+              <span className="ml-2 bg-[#f0f7f4] text-[#005044] rounded-full px-2.5 py-0.5 text-xs font-sora font-semibold">
+                {pending.length}
+              </span>
+            )}
+          </TabsTrigger>
+          <TabsTrigger
+            value="history"
+            className="rounded-none !bg-transparent shadow-none px-0 pb-3 text-base font-sora font-medium text-[#b0b0b0] data-[state=active]:text-[#282828] data-[state=active]:!bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-[#005044]"
+          >
+            History
+          </TabsTrigger>
+        </TabsList>
 
-        {/* Prescription Requests List */}
-        {requests?.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">💊</div>
-            <h2 className="text-xl font-semibold text-gray-700 mb-2 font-manrope">
-              No Prescription Requests
-            </h2>
-            <p className="text-gray-500 font-manrope">
-              No prescription requests from your assigned patients yet.
-            </p>
+        {/* Pending Tab */}
+        <TabsContent value="pending" className="mt-0">
+          <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-2 h-2 rounded-full bg-[#005044]" />
+              <h2 className="font-sora font-bold text-lg text-[#282828]">Prescription Requests</h2>
+              {pending.length > 0 && (
+                <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-2.5 py-0.5 text-xs font-sora font-semibold">
+                  {pending.length} Pending
+                </span>
+              )}
+            </div>
+
+            {pending.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-[#b0b0b0] font-manrope text-sm">No pending prescription requests</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {pending.map((request) => (
+                  <div
+                    key={request._id}
+                    className="bg-white border border-[#e0e0e0] rounded-2xl p-5 flex items-center justify-between hover:border-[#c0ebe5] transition-colors"
+                  >
+                    <div>
+                      <h3 className="font-sora font-semibold text-[#282828]">
+                        {request.patient.name}
+                      </h3>
+                      <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">
+                        {request.hasSideEffects ? 'Side effects reported' : 'Prescription request'}
+                      </p>
+                      <p className="text-[#b0b0b0] text-sm font-manrope">
+                        Latest weight: {request.currentWeight} kg
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleReview(request)}
+                      className="bg-[#f0f7f4] text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-[#c0ebe5] transition-colors"
+                    >
+                      Review
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="space-y-3">
-            <h2 className="text-xl font-semibold text-gray-800 font-manrope mb-4">
-              Prescription Requests
-            </h2>
-            {requests?.map((request) => (
-              <Card
-                key={request._id}
-                className="bg-white hover:bg-gray-50 cursor-pointer transition-colors"
-                onClick={() => handleRequestClick(request)}
-              >
-                <CardContent className="p-4">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-gray-500" />
-                        <span className="font-medium text-gray-800 font-manrope">
+        </TabsContent>
+
+        {/* History Tab */}
+        <TabsContent value="history" className="mt-0">
+          <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-2 h-2 rounded-full bg-[#b0b0b0]" />
+              <h2 className="font-sora font-bold text-lg text-[#282828]">Recent Prescriptions</h2>
+            </div>
+
+            {history.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-[#b0b0b0] font-manrope text-sm">No prescription history yet</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {history.map((request) => (
+                  <div
+                    key={request._id}
+                    className="bg-white border border-[#e0e0e0] rounded-2xl p-5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-sora font-semibold text-[#282828]">
                           {request.patient.name}
-                        </span>
+                        </h3>
+                        <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">
+                          {request.hasSideEffects ? 'Side effects reported' : 'Prescription request'}
+                        </p>
+                        <p className="text-[#b0b0b0] text-sm font-manrope">
+                          Latest weight: {request.currentWeight} kg
+                        </p>
                       </div>
-
-                      <div className="flex items-center gap-2">
-                        <Scale className="w-4 h-4 text-gray-500" />
-                        <span className="text-gray-600 font-manrope">
-                          {request.currentWeight} kg
+                      {request.status === PrescriptionRequestStatus.APPROVED ? (
+                        <span className="bg-[rgba(3,160,0,0.15)] text-[#03a000] rounded-full px-5 py-2 font-sora font-semibold text-sm">
+                          Approved
                         </span>
-                      </div>
-
-                      {request.hasSideEffects && (
-                        <div className="flex items-center gap-1">
-                          <AlertTriangle className="w-4 h-4 text-red-500" />
-                          <span className="text-red-600 text-sm font-manrope">
-                            Side Effects
-                          </span>
-                        </div>
+                      ) : request.status === PrescriptionRequestStatus.DENIED ? (
+                        <span className="bg-red-50 text-red-600 rounded-full px-5 py-2 font-sora font-semibold text-sm">
+                          Denied
+                        </span>
+                      ) : (
+                        <span className="bg-gray-100 text-[#b0b0b0] rounded-full px-5 py-2 font-sora font-semibold text-sm capitalize">
+                          {request.status.replace('_', ' ')}
+                        </span>
                       )}
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm text-gray-500 font-manrope">
-                        {formatDate(request.createdAt)}
-                      </span>
-                      {getStatusBadge(request.status)}
-                    </div>
+                    {/* Inline prescription details for approved items */}
+                    {request.status === PrescriptionRequestStatus.APPROVED &&
+                      (request.medicationName || request.dosage || request.usageInstructions) && (
+                        <div className="bg-[#f0f7f4] rounded-2xl px-6 py-4 mt-4">
+                          <div className="grid grid-cols-3 gap-4">
+                            {request.medicationName && (
+                              <div>
+                                <p className="text-xs text-[#005044]/60 font-manrope mb-1">Medication</p>
+                                <p className="text-sm font-semibold text-[#005044] font-manrope">{request.medicationName}</p>
+                              </div>
+                            )}
+                            {request.dosage && (
+                              <div>
+                                <p className="text-xs text-[#005044]/60 font-manrope mb-1">Dosage</p>
+                                <p className="text-sm font-semibold text-[#005044] font-manrope">{request.dosage}</p>
+                              </div>
+                            )}
+                            {request.usageInstructions && (
+                              <div>
+                                <p className="text-xs text-[#005044]/60 font-manrope mb-1">Instructions</p>
+                                <p className="text-sm text-[#005044] font-manrope">{request.usageInstructions}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </TabsContent>
+      </Tabs>
 
-        {/* Prescription Request Detail Modal */}
-        <PrescriptionRequestDetailModal
-          open={modalOpen}
-          onOpenChange={setModalOpen}
-          request={selectedRequest}
-          onApprove={handleApproveRequest}
-        />
-      </div>
+      <PrescriptionRequestDetailModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        request={selectedRequest}
+        onApprove={handleApprove}
+      />
     </div>
   );
 };

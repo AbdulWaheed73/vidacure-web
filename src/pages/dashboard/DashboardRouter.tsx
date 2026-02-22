@@ -5,8 +5,9 @@ import { DashboardPage } from '../DashboardPage';
 import { DoctorDashboardPage } from '../DoctorDashboardPage';
 import type { User } from '../../types';
 
+const DoctorAppointments = lazy(() => import('./doctor/DoctorAppointments'));
 const DoctorPrescriptions = lazy(() => import('./doctor/DoctorPrescriptions'));
-const DoctorInbox = lazy(() => import('./doctor/DoctorInbox'));
+const DoctorPatients = lazy(() => import('./doctor/DoctorPatients'));
 const DoctorAccount = lazy(() => import('./doctor/DoctorAccount'));
 const DoctorLabResults = lazy(() => import('./doctor/DoctorLabResults'));
 
@@ -41,7 +42,19 @@ const DashboardRouter: React.FC<DashboardRouterProps> = ({ user, onLogout, loadi
       />
       
       {/* Doctor routes */}
-      <Route 
+      <Route
+        path="doctor/appointments"
+        element={
+          user?.role === 'doctor' ? (
+            <Suspense fallback={<LoadingSpinner />}>
+              <DoctorAppointments />
+            </Suspense>
+          ) : (
+            <Navigate to={ROUTES.LOGIN} replace />
+          )
+        }
+      />
+      <Route
         path="doctor/prescriptions" 
         element={
           user?.role === 'doctor' ? (
@@ -53,17 +66,17 @@ const DashboardRouter: React.FC<DashboardRouterProps> = ({ user, onLogout, loadi
           )
         } 
       />
-      <Route 
-        path="doctor/inbox" 
+      <Route
+        path="doctor/patients"
         element={
           user?.role === 'doctor' ? (
             <Suspense fallback={<LoadingSpinner />}>
-              <DoctorInbox />
+              <DoctorPatients />
             </Suspense>
           ) : (
             <Navigate to={ROUTES.LOGIN} replace />
           )
-        } 
+        }
       />
       <Route
         path="doctor/lab-results"

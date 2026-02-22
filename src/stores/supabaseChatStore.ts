@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabaseChatService } from '../services/supabaseChatService';
+import { queryClient } from '../lib/queryClient';
 import type {
   Message,
   LocalMessage,
@@ -25,9 +26,14 @@ const initialState = {
   currentUserId: null as string | null,
   currentUserRole: null as 'patient' | 'doctor' | null,
   subscriptionActive: false,
+  doctorName: null as string | null,
   // Unread message state
   unreadCounts: {} as UnreadState,
   messageReadStatus: {} as { [messageId: string]: boolean },
+  chatPageVisible: false,
+  // Pagination state
+  hasMoreMessages: true,
+  isLoadingMoreMessages: false,
 };
 
 // Helper to convert Message to LocalMessage
@@ -97,11 +103,15 @@ export const useSupabaseChatStore = create<SupabaseChatState>((set, get) => ({
           set({
             conversation: result.conversation,
             participants: result.participants,
+            doctorName: result.doctorName || null,
             error: null,
           });
 
           // Load messages and subscribe to updates (loadMessages handles subscription)
           await get().loadMessages(result.conversation.id);
+
+          // Mark conversation as read (clears unread counts + red dot)
+          await get().markConversationAsRead(result.conversation.id);
 
           // Subscribe to presence
           if (currentUserId) {
@@ -140,15 +150,41 @@ export const useSupabaseChatStore = create<SupabaseChatState>((set, get) => ({
       if (get().connectionStatus === 'connected') {
         set({
           conversations,
-          conversation: conversations[0] || null,
+          conversation: null,
           error: null,
         });
 
         // Fetch unread counts for all conversations
         await get().fetchUnreadCounts();
 
-        // Note: Don't auto-load messages here - doctors see a conversation list first
-        // Messages are loaded when doctor selects a specific conversation
+        // Subscribe to real-time messages across ALL conversations for sidebar updates
+        const conversationIds = conversations.map((c) => c.id);
+        await supabaseChatService.subscribeToDoctorInbox(conversationIds, (message) => {
+          const state = get();
+          const isActiveConversation = state.conversation?.id === message.conversation_id;
+
+          // Update sidebar lastMessage for this conversation
+          set((s) => ({
+            conversations: s.conversations.map((conv) =>
+              conv.id === message.conversation_id
+                ? { ...conv, lastMessage: message, last_message_at: message.created_at }
+                : conv
+            ),
+          }));
+
+          // If this conversation is currently open, add message to the chat
+          if (isActiveConversation) {
+            get().addMessage(message);
+          } else {
+            // Not viewing this conversation — increment unread count
+            set((s) => ({
+              unreadCounts: {
+                ...s.unreadCounts,
+                [message.conversation_id]: (s.unreadCounts[message.conversation_id] || 0) + 1,
+              },
+            }));
+          }
+        });
       }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to load conversations';
@@ -179,11 +215,15 @@ export const useSupabaseChatStore = create<SupabaseChatState>((set, get) => ({
     }
   },
 
+  deselectConversation: () => {
+    set({ conversation: null, messages: [], participants: [], hasMoreMessages: true });
+  },
+
   loadMessages: async (conversationId: string) => {
     set({ isLoadingMessages: true });
 
     try {
-      const messages = await supabaseChatService.loadMessages(conversationId);
+      const messages = await supabaseChatService.loadMessages(conversationId, 15);
 
       // Convert messages to LocalMessage format (all loaded messages are 'sent')
       const localMessages = messages.map(messageToLocalMessage);
@@ -191,6 +231,7 @@ export const useSupabaseChatStore = create<SupabaseChatState>((set, get) => ({
       set({
         messages: localMessages,
         isLoadingMessages: false,
+        hasMoreMessages: messages.length === 15,
         error: null,
       });
 
@@ -260,6 +301,8 @@ export const useSupabaseChatStore = create<SupabaseChatState>((set, get) => ({
   },
 
   addMessage: (message: Message) => {
+    const { conversation, currentUserRole } = get();
+
     set((state) => {
       // Check if message already exists (by id or localId)
       const exists = state.messages.some((m) => m.id === message.id || m.localId === message.id);
@@ -268,16 +311,40 @@ export const useSupabaseChatStore = create<SupabaseChatState>((set, get) => ({
       // Convert to LocalMessage with 'sent' status (for incoming messages from realtime)
       const localMessage = messageToLocalMessage(message);
 
+      // Also update lastMessage in conversations list for sidebar preview
+      const updatedConversations = state.conversations.map((conv) =>
+        conv.id === message.conversation_id
+          ? { ...conv, lastMessage: message, last_message_at: message.created_at }
+          : conv
+      );
+
       return {
         messages: [...state.messages, localMessage],
+        conversations: updatedConversations,
       };
     });
+
+    // Patient viewing their chat — mark as read immediately (only when chat page is open)
+    const { chatPageVisible } = get();
+    if (chatPageVisible && currentUserRole === 'patient' && conversation?.id === message.conversation_id) {
+      get().markConversationAsRead(message.conversation_id);
+    }
   },
 
   addOptimisticMessage: (message: LocalMessage) => {
-    set((state) => ({
-      messages: [...state.messages, message],
-    }));
+    set((state) => {
+      // Also update lastMessage in conversations list for sidebar preview
+      const updatedConversations = state.conversations.map((conv) =>
+        conv.id === message.conversation_id
+          ? { ...conv, lastMessage: message as Message, last_message_at: message.created_at }
+          : conv
+      );
+
+      return {
+        messages: [...state.messages, message],
+        conversations: updatedConversations,
+      };
+    });
   },
 
   updateMessageStatus: (localId: string, status: MessageStatus, serverMessage?: Message | null, error?: string) => {
@@ -373,6 +440,9 @@ export const useSupabaseChatStore = create<SupabaseChatState>((set, get) => ({
           [conversationId]: 0,
         },
       }));
+
+      // Invalidate server-side unread counts cache so sidebar stays in sync
+      queryClient.invalidateQueries({ queryKey: ['chatUnreadCounts'] });
     } catch (error) {
       console.error('Failed to mark conversation as read:', error);
     }
@@ -403,6 +473,33 @@ export const useSupabaseChatStore = create<SupabaseChatState>((set, get) => ({
       console.error('Failed to fetch message read status:', error);
     }
   },
+
+  loadOlderMessages: async () => {
+    const { hasMoreMessages, isLoadingMoreMessages, messages, conversation } = get();
+
+    if (!hasMoreMessages || isLoadingMoreMessages || messages.length === 0 || !conversation) return;
+
+    set({ isLoadingMoreMessages: true });
+
+    try {
+      const cursor = messages[0].created_at;
+      const olderMessages = await supabaseChatService.loadMessages(conversation.id, 15, cursor);
+      const olderLocalMessages = olderMessages.map(messageToLocalMessage);
+
+      set((state) => ({
+        messages: [...olderLocalMessages, ...state.messages],
+        hasMoreMessages: olderMessages.length === 15,
+        isLoadingMoreMessages: false,
+      }));
+    } catch (error) {
+      console.error('Failed to load older messages:', error);
+      set({ isLoadingMoreMessages: false });
+    }
+  },
+
+  setChatPageVisible: (visible: boolean) => {
+    set({ chatPageVisible: visible });
+  },
 }));
 
 // Selectors
@@ -416,7 +513,10 @@ export const selectSubscriptionActive = (state: SupabaseChatState) => state.subs
 export const selectPresenceState = (state: SupabaseChatState) => state.presenceState;
 export const selectCurrentUserId = (state: SupabaseChatState) => state.currentUserId;
 export const selectCurrentUserRole = (state: SupabaseChatState) => state.currentUserRole;
+export const selectDoctorName = (state: SupabaseChatState) => state.doctorName;
 export const selectUnreadCounts = (state: SupabaseChatState) => state.unreadCounts;
 export const selectMessageReadStatus = (state: SupabaseChatState) => state.messageReadStatus;
 export const selectUnreadCountForConversation = (conversationId: string) =>
   (state: SupabaseChatState) => state.unreadCounts[conversationId] || 0;
+export const selectHasMoreMessages = (state: SupabaseChatState) => state.hasMoreMessages;
+export const selectIsLoadingMoreMessages = (state: SupabaseChatState) => state.isLoadingMoreMessages;

@@ -1,5 +1,6 @@
 import React, { useState, useCallback, type KeyboardEvent } from 'react';
-import { Send } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
+import { Button } from '../ui/Button';
 
 type MessageInputProps = {
   onSendMessage: (content: string) => void;
@@ -10,7 +11,7 @@ type MessageInputProps = {
 export const MessageInput: React.FC<MessageInputProps> = ({
   onSendMessage,
   disabled = false,
-  placeholder = 'Type a message...',
+  placeholder = 'Write your message.',
 }) => {
   const [message, setMessage] = useState('');
 
@@ -36,11 +37,13 @@ export const MessageInput: React.FC<MessageInputProps> = ({
     }
   };
 
+  const canSend = message.trim() && !disabled;
+
   return (
-    <div className="bg-white border-t border-gray-200 px-4 py-3">
-      <div className="flex items-end bg-gray-100 rounded-3xl px-4 py-2">
+    <div className="px-6 py-4">
+      <div className="flex items-center gap-3 rounded-full border border-border/40 bg-white/80 px-5 py-2.5">
         <textarea
-          className="flex-1 bg-transparent text-base resize-none outline-none max-h-24 text-gray-900 placeholder-gray-400"
+          className="flex-1 bg-transparent text-base resize-none outline-none max-h-24 text-foreground placeholder:text-muted-foreground leading-relaxed"
           value={message}
           onChange={handleChangeText}
           onKeyDown={handleKeyDown}
@@ -50,17 +53,18 @@ export const MessageInput: React.FC<MessageInputProps> = ({
           disabled={disabled}
           style={{ minHeight: '24px' }}
         />
-        <button
-          className={`ml-2 w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
-            message.trim() && !disabled
-              ? 'bg-[#00a38a] text-white hover:bg-[#008f79]'
-              : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+        <Button
+          size="icon"
+          className={`h-9 w-9 rounded-full shrink-0 ${
+            canSend
+              ? 'bg-[#1a3a34] hover:bg-[#0f2620] text-white'
+              : 'bg-muted text-muted-foreground cursor-not-allowed'
           }`}
           onClick={handleSend}
-          disabled={!message.trim() || disabled}
+          disabled={!canSend}
         >
-          <Send size={18} />
-        </button>
+          <ArrowUp className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );

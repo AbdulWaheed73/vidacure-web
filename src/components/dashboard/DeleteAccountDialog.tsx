@@ -204,7 +204,7 @@ export const DeleteAccountDialog = ({ userType }: DeleteAccountDialogProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700">
+        <Button variant="outline" className="rounded-xl text-gray-500 border-gray-200 hover:text-red-600 hover:border-red-200 hover:bg-red-50 font-manrope px-6 transition-colors">
           <Trash2 className="h-4 w-4 mr-2" />
           Delete Account
         </Button>

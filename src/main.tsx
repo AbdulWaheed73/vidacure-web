@@ -1,6 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from './lib/queryClient'
 
 // Self-hosted fonts - eliminates render-blocking Google Fonts request
 import '@fontsource/manrope/200.css'
@@ -22,12 +24,16 @@ import '@fontsource/sora/800.css'
 import './index.css'
 import App from './App.tsx'
 import './i18n'
+import { Toaster } from './components/ui/sonner'
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <HelmetProvider>
-      <App />
-    </HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
+        <App />
+        <Toaster richColors position="top-right" />
+      </HelmetProvider>
+    </QueryClientProvider>
   </StrictMode>,
 )

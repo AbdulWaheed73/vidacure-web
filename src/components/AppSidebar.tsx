@@ -7,7 +7,7 @@ import {
   TrendingUp,
   BookOpen,
   User as UserIcon,
-  Inbox,
+  Users,
   MessageCircle,
   FlaskConical,
 } from 'lucide-react';
@@ -22,12 +22,24 @@ import {
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '../constants';
+import { useChatUnreadCounts } from '../hooks/useChatQueries';
+import { useSupabaseChatStore, selectUnreadCounts } from '../stores/supabaseChatStore';
 import type { User } from '../types';
 import Vidacure from "../assets/vidacure_png.png";
 
 export function AppSidebar({ user }: { user: User | null }) {
   const location = useLocation();
   const { t } = useTranslation();
+
+  // Server-side unread counts (works even before chat page is opened)
+  const { data: serverUnreadCounts } = useChatUnreadCounts(!!user);
+  // Client-side unread counts (live updates from Zustand store when chat is active)
+  const storeUnreadCounts = useSupabaseChatStore(selectUnreadCounts);
+
+  // Show dot if EITHER source reports unread messages
+  const serverTotal = Object.values(serverUnreadCounts || {}).reduce((sum, count) => sum + count, 0);
+  const storeTotal = Object.values(storeUnreadCounts).reduce((sum, count) => sum + count, 0);
+  const hasUnreadChat = serverTotal > 0 || storeTotal > 0;
 
   // Create menu items with translations - moved inside component to react to language changes
   const doctorMenuItems = [
@@ -37,14 +49,19 @@ export function AppSidebar({ user }: { user: User | null }) {
       icon: Home,
     },
     {
+      title: t('sidebar.appointments', 'Appointments'),
+      url: ROUTES.DOCTOR_APPOINTMENTS,
+      icon: Calendar,
+    },
+    {
       title: t('sidebar.chat'),
       url: ROUTES.DOCTOR_CHAT,
       icon: MessageCircle,
     },
     {
-      title: t('sidebar.inbox'),
-      url: ROUTES.DOCTOR_INBOX,
-      icon: Inbox,
+      title: t('sidebar.patients'),
+      url: ROUTES.DOCTOR_PATIENTS,
+      icon: Users,
     },
     {
       title: t('sidebar.prescriptions'),
@@ -134,27 +151,34 @@ export function AppSidebar({ user }: { user: User | null }) {
               {menuItems.map((item) => {
                 const isActive = location.pathname === item.url;
                 const Icon = item.icon;
-                
+                const isChatItem = item.url === ROUTES.DOCTOR_CHAT || item.url === ROUTES.PATIENT_CHAT;
+                const showDot = isChatItem && hasUnreadChat;
+
                 return (
                   <SidebarMenuItem key={item.title} className="mb-1">
                     <Link
                       to={item.url}
                       className={cn(
-                        'px-5 py-3 rounded-xl inline-flex justify-start items-center gap-3 w-full font-manrope transition-all duration-200',
+                        'px-5 py-3 rounded-xl inline-flex justify-start items-center gap-3 w-full font-manrope transition-all duration-200 relative',
                         isActive
                           ? 'bg-hover-teal-buttons text-dark-teal font-bold'
                           : 'text-zinc-800 font-normal hover:bg-hover-teal-buttons hover:text-dark-teal'
                       )}
                       style={isActive ? { backgroundColor: '#E6F7F5', color: '#005044' } : undefined}
                     >
-                      <Icon 
-                        className={cn(
-                          'size-6 shrink-0',
-                          isActive ? 'text-dark-teal' : 'text-zinc-800'
-                        )} 
-                        style={isActive ? { color: '#005044' } : undefined}
-                      />
-                      <span 
+                      <div className="relative">
+                        <Icon
+                          className={cn(
+                            'size-6 shrink-0',
+                            isActive ? 'text-dark-teal' : 'text-zinc-800'
+                          )}
+                          style={isActive ? { color: '#005044' } : undefined}
+                        />
+                        {showDot && (
+                          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#F0F7F4]" />
+                        )}
+                      </div>
+                      <span
                         className={cn(
                           'text-base leading-snug',
                           isActive ? 'text-dark-teal font-bold' : 'text-zinc-800 font-normal'
