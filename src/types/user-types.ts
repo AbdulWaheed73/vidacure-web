@@ -20,7 +20,7 @@ export type AuthState = {
 
 export type AuthActions = {
   checkAuthStatus: () => Promise<void>;
-  setAuthData: (response: { authenticated: boolean; user?: User; csrfToken?: string }) => void;
+  setAuthData: (response: { authenticated: boolean; user?: User; csrfToken?: string; consentStatus?: { hasAcceptedLatest: boolean; currentVersion: string } }) => void;
   logout: () => void;
   clearError: () => void;
   setLoading: (loading: boolean) => void;

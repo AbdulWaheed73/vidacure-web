@@ -21,7 +21,7 @@ export const DataPrivacyCard = ({
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 p-6 col-span-1">
+    <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 p-4 md:p-6 col-span-1">
       <div className="flex items-center gap-2 mb-5">
         <Shield className="size-5 text-[#005044]" />
         <h3 className="text-lg font-semibold text-gray-800 font-sora">
@@ -29,7 +29,7 @@ export const DataPrivacyCard = ({
         </h3>
       </div>
 
-      <div className="bg-[#f0f7f4] rounded-2xl p-5 mb-4">
+      <div className="bg-[#f0f7f4] rounded-2xl p-4 md:p-5 mb-4">
         <p className="text-sm text-gray-600 font-manrope mb-3">
           {t('account.exportDescription')}
         </p>
@@ -40,8 +40,9 @@ export const DataPrivacyCard = ({
           disabled={isExporting}
           className="font-manrope"
         >
-          <Download className="size-4 mr-2" />
-          {isExporting ? t('account.exporting') : t('account.exportData')}
+          <Download className="size-4 shrink-0" />
+          <span className="hidden xl:inline">{isExporting ? t('account.exporting') : t('account.exportData')}</span>
+          <span className="inline xl:hidden">{isExporting ? '...' : t('account.export')}</span>
         </Button>
       </div>
 

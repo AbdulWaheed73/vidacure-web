@@ -11,7 +11,7 @@ export const AccountActionsCard = ({ onLogout, userType }: AccountActionsCardPro
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 p-6 col-span-1 lg:col-span-3">
+    <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 p-4 md:p-6 col-span-1 lg:col-span-3">
       <h3 className="text-lg font-semibold text-gray-800 font-sora mb-5">
         {t('account.accountActions')}
       </h3>

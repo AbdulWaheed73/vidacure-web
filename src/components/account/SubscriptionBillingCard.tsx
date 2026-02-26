@@ -7,7 +7,7 @@ export const SubscriptionBillingCard = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 p-6 col-span-1 lg:col-span-3">
+    <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 p-4 md:p-6 col-span-1 lg:col-span-3">
       <div className="flex items-center gap-2 mb-5">
         <CreditCard className="size-5 text-[#005044]" />
         <h3 className="text-lg font-semibold text-gray-800 font-sora">

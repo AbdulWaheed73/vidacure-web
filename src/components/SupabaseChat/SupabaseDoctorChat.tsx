@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { AlertCircle, MessageSquare, Search, MoreVertical } from 'lucide-react';
+import { AlertCircle, MessageSquare, Search, MoreVertical, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import {
   useSupabaseChatStore,
@@ -153,8 +153,9 @@ export const SupabaseDoctorChat: React.FC = () => {
     : conversations;
 
   const DoctorChatSkeleton = () => (
-    <div className="flex h-full gap-4 p-4 bg-[#F0F7F4]">
-      <div className="w-[380px] shrink-0 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden">
+    <div className="flex h-full gap-0 lg:gap-4 p-2 lg:p-4 bg-[#F0F7F4]">
+      {/* Patient list skeleton — full width on mobile, fixed sidebar on desktop */}
+      <div className="w-full lg:w-[380px] lg:shrink-0 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden">
         <div className="p-4">
           <Skeleton className="h-10 w-full rounded-full" />
         </div>
@@ -170,7 +171,8 @@ export const SupabaseDoctorChat: React.FC = () => {
           ))}
         </div>
       </div>
-      <div className="flex-1 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden">
+      {/* Chat skeleton — hidden on mobile */}
+      <div className="hidden lg:flex flex-1 bg-white rounded-2xl shadow-sm flex-col overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4">
           <Skeleton className="h-6 w-32" />
           <Skeleton className="h-8 w-24 rounded-full" />
@@ -226,10 +228,15 @@ export const SupabaseDoctorChat: React.FC = () => {
 
   const selectedPatientName = conversations.find((c) => c.id === conversation?.id)?.patientName || 'Patient';
 
+  // On mobile (< lg), show either the patient list or the chat — not both.
+  // On desktop (lg+), show both side by side.
+  const hasMobileConversation = !!conversation;
+
   return (
-    <div className="flex h-full gap-4 p-4 bg-[#F0F7F4]">
+    <div className="flex h-full gap-0 lg:gap-4 p-2 lg:p-4 bg-[#F0F7F4]">
       {/* Sidebar - Patient list card */}
-      <div className="w-[380px] shrink-0 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden">
+      {/* On mobile: hidden when a conversation is open. On desktop: always visible. */}
+      <div className={`${hasMobileConversation ? 'hidden' : 'flex'} lg:flex w-full lg:w-[380px] lg:shrink-0 bg-white rounded-2xl shadow-sm flex-col overflow-hidden`}>
         {/* Search */}
         <div className="p-4">
           <div className="relative">
@@ -309,17 +316,27 @@ export const SupabaseDoctorChat: React.FC = () => {
       </div>
 
       {/* Main chat area card */}
-      <div className="flex-1 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden">
+      {/* On mobile: hidden when no conversation selected. On desktop: always visible. */}
+      <div className={`${hasMobileConversation ? 'flex' : 'hidden'} lg:flex flex-1 bg-white rounded-2xl shadow-sm flex-col overflow-hidden`}>
         {conversation ? (
           <>
             {/* Chat header */}
-            <div className="flex items-center justify-between px-6 py-4">
-              <h2 className="text-xl font-bold text-foreground">{selectedPatientName}</h2>
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
+              <div className="flex items-center gap-3 min-w-0">
+                {/* Back button — mobile only */}
+                <button
+                  onClick={deselectConversation}
+                  className="lg:hidden flex items-center justify-center h-9 w-9 rounded-full hover:bg-[#F0F7F4] transition-colors shrink-0"
+                >
+                  <ArrowLeft className="h-5 w-5 text-foreground" />
+                </button>
+                <h2 className="text-lg md:text-xl font-bold text-foreground truncate">{selectedPatientName}</h2>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="rounded-full px-5 border-foreground/20 hover:bg-white"
+                  className="rounded-full px-5 border-foreground/20 hover:bg-white hidden md:inline-flex"
                 >
                   View Profile
                 </Button>

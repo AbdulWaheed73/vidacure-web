@@ -1,15 +1,19 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { SubscriptionCard, MeetingRequired } from '../components/subscription';
+import { Sparkles } from 'lucide-react';
 import { WeightProgressCard, NextAppointmentCard, PrescriptionCard, BMICard, GoalsCard } from '../components/dashboard';
 import { PaymentService } from '../services';
 import { queryKeys } from '../lib/queryClient';
+import { Button } from '../components/ui/Button';
+import { ROUTES } from '../constants';
 import type { DashboardPageProps } from '../types';
 
 
 export const DashboardPage: React.FC<DashboardPageProps> = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const { data: subscriptionStatus, isLoading: subscriptionLoading } = useQuery({
     queryKey: queryKeys.subscriptionStatus,
@@ -17,7 +21,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   });
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
 
       {/* Active subscription — show full dashboard */}
       {!subscriptionLoading && subscriptionStatus?.hasSubscription && (
@@ -33,40 +37,26 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
         </div>
       )}
 
-      {/* No subscription — show subscription plans with meeting gate */}
+      {/* No subscription — show subscribe prompt */}
       {!subscriptionLoading && !subscriptionStatus?.hasSubscription && (
-        <div className="mb-8">
-          <MeetingRequired>
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center font-manrope">
-                {t('dashboard.choosePlan')}
-              </h3>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                <SubscriptionCard
-                  planType="lifestyle"
-                  onSubscribeClick={() => {
-                    PaymentService.createCheckoutSession('lifestyle')
-                      .then(({ url }) => window.location.href = url)
-                      .catch(error => {
-                        console.error('Error:', error);
-                        alert('Failed to start checkout. Please try again.');
-                      });
-                  }}
-                />
-                <SubscriptionCard
-                  planType="medical"
-                  onSubscribeClick={() => {
-                    PaymentService.createCheckoutSession('medical')
-                      .then(({ url }) => window.location.href = url)
-                      .catch(error => {
-                        console.error('Error:', error);
-                        alert('Failed to start checkout. Please try again.');
-                      });
-                  }}
-                />
-              </div>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
+            <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Sparkles className="w-8 h-8 text-teal-600" />
             </div>
-          </MeetingRequired>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
+              {t('dashboard.choosePlan')}
+            </h2>
+            <p className="text-gray-600 mb-6 font-manrope">
+              {t('dashboard.subscribePrompt')}
+            </p>
+            <Button
+              onClick={() => navigate(ROUTES.SUBSCRIBE)}
+              className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
+            >
+              {t('dashboard.subscribeCTA')}
+            </Button>
+          </div>
         </div>
       )}
     </div>

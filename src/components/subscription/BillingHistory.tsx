@@ -74,20 +74,20 @@ export const BillingHistory: React.FC = () => {
       {invoices.map((invoice) => (
         <div
           key={invoice.id}
-          className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3"
+          className="flex items-center justify-between bg-gray-50 rounded-xl px-3 md:px-4 py-3 gap-2"
         >
-          <div className="flex items-center gap-4 flex-1 min-w-0">
-            <span className="text-sm text-gray-500 font-manrope whitespace-nowrap">
+          <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
+            <span className="text-xs md:text-sm text-gray-500 font-manrope whitespace-nowrap">
               {formatDate(invoice.date)}
             </span>
-            <span className="text-sm font-semibold text-gray-800 font-manrope whitespace-nowrap">
+            <span className="text-xs md:text-sm font-semibold text-gray-800 font-manrope whitespace-nowrap">
               {formatAmount(invoice.amount, invoice.currency)}
             </span>
-            <span className="text-sm text-gray-500 font-manrope hidden sm:inline">
+            <span className="text-sm text-gray-500 font-manrope hidden md:inline">
               {getPlanLabel(invoice.planType)}
             </span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 shrink-0">
             <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-100 font-manrope text-xs">
               {t('account.billing.paid')}
             </Badge>

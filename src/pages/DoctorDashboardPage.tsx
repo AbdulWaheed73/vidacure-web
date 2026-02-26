@@ -62,12 +62,12 @@ const getInitials = (name: string): string => {
 // --- Sub-components ---
 
 const AppointmentCardHighlighted: React.FC<{ meeting: PatientMeeting }> = ({ meeting }) => (
-  <div className="bg-[#005044] rounded-2xl p-6 text-white">
-    <div className="flex items-center justify-between mb-3">
+  <div className="bg-[#005044] rounded-2xl p-4 sm:p-6 text-white">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
       <h3 className="font-sora font-semibold text-lg">
         {meeting.patientName || meeting.inviteeName || 'Patient'}
       </h3>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <span className="bg-white/20 rounded-full px-3 py-1 text-sm font-sora">
           {formatDate(meeting.startTime)}
         </span>
@@ -90,14 +90,14 @@ const AppointmentCardHighlighted: React.FC<{ meeting: PatientMeeting }> = ({ mee
 );
 
 const AppointmentCard: React.FC<{ meeting: PatientMeeting }> = ({ meeting }) => (
-  <div className="border border-[#e0e0e0] rounded-2xl p-5 flex items-center justify-between">
+  <div className="border border-[#e0e0e0] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
     <div>
       <h3 className="font-sora font-semibold text-[#282828]">
         {meeting.patientName || meeting.inviteeName || 'Patient'}
       </h3>
       <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">{meeting.eventType}</p>
     </div>
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 flex-wrap">
       <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-sm font-sora font-medium">
         {formatDate(meeting.startTime)}
       </span>
@@ -113,9 +113,9 @@ const PrescriptionRow: React.FC<{ request: DoctorPrescriptionRequest; onReview: 
   request,
   onReview,
 }) => (
-  <div className="flex items-center justify-between py-4 border-b border-[#e0e0e0] last:border-b-0">
+  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-4 border-b border-[#e0e0e0] last:border-b-0">
     <div>
-      <h4 className="font-sora font-semibold text-lg text-[#282828]">{request.patient.name}</h4>
+      <h4 className="font-sora font-semibold text-base md:text-lg text-[#282828]">{request.patient.name}</h4>
       <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">Reason: Prescription Request</p>
       <p className="text-[#b0b0b0] text-sm font-manrope">Latest weight: {request.currentWeight} kg</p>
     </div>
@@ -145,7 +145,7 @@ const InboxRow: React.FC<{ conversation: ConversationWithDetails; unreadCount: n
 }) => (
   <button
     onClick={onClick}
-    className="flex items-center gap-4 py-4 border-b border-[#e0e0e0] last:border-b-0 w-full text-left hover:bg-[#f9fafb] transition-colors rounded-lg px-2 -mx-2"
+    className="flex items-center gap-3 md:gap-4 py-3 md:py-4 border-b border-[#e0e0e0] last:border-b-0 w-full text-left hover:bg-[#f9fafb] transition-colors rounded-lg px-2 -mx-2"
   >
     <div className="w-10 h-10 bg-[#c0ebe5] rounded-full flex items-center justify-center flex-shrink-0">
       <span className="font-sora text-sm text-[#005044] font-semibold">
@@ -210,11 +210,11 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
   const { data: unreadCounts } = useChatUnreadCounts(true);
 
   return (
-    <div className="flex gap-6 p-6 min-h-[calc(100vh-80px)]">
+    <div className="flex flex-col lg:flex-row gap-6 p-4 md:p-6">
       {/* Left Column — Appointments */}
       <div className="flex-[3] min-w-0">
-        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-8 h-full flex flex-col">
-          <h2 className="font-sora font-bold text-[21px] text-[#282828] mb-6">
+        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 h-full flex flex-col">
+          <h2 className="font-sora font-bold text-lg md:text-[21px] text-[#282828] mb-4 md:mb-6">
             Upcoming Appointments
           </h2>
 
@@ -231,7 +231,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
               <p className="text-[#b0b0b0] font-manrope text-sm">No appointments</p>
             </div>
           ) : (
-            <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-200px)] pr-1">
+            <div className="space-y-4 overflow-y-auto max-h-[60vh] lg:max-h-[calc(100vh-200px)] pr-1">
               {upcomingMeetings.map((meeting, index) =>
                 index === 0 ? (
                   <AppointmentCardHighlighted key={meeting.id} meeting={meeting} />
@@ -253,9 +253,9 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
       {/* Right Column — Prescriptions + Inbox */}
       <div className="flex-[2] min-w-0 flex flex-col gap-6">
         {/* Prescription Requests */}
-        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-8 flex-1 flex flex-col overflow-hidden">
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="font-sora font-bold text-[21px] text-[#282828]">
+        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 flex-1 flex flex-col overflow-hidden">
+          <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+            <h2 className="font-sora font-bold text-lg md:text-[21px] text-[#282828]">
               Prescription Requests
             </h2>
             {pendingCount > 0 && (
@@ -289,9 +289,9 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
         </div>
 
         {/* Inbox */}
-        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-8 flex-1 flex flex-col overflow-hidden">
-          <div className="flex items-center gap-3 mb-6">
-            <h2 className="font-sora font-bold text-[21px] text-[#282828]">Inbox</h2>
+        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 flex-1 flex flex-col overflow-hidden">
+          <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
+            <h2 className="font-sora font-bold text-lg md:text-[21px] text-[#282828]">Inbox</h2>
           </div>
 
           {conversationsLoading ? (
@@ -317,10 +317,10 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
             </div>
           )}
 
-          <div className="mt-4 pt-4">
+          <div className="mt-3 md:mt-4 pt-3 md:pt-4">
             <button
               onClick={() => navigate('/supabase-chat')}
-              className="bg-[#282828] text-white rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-[#3a3a3a] transition-colors w-full"
+              className="bg-[#282828] text-white rounded-full px-4 md:px-6 py-2 md:py-2.5 font-sora font-semibold text-sm hover:bg-[#3a3a3a] transition-colors w-full"
             >
               View all messages
             </button>

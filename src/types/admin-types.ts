@@ -145,3 +145,25 @@ export type DeleteUserResponse = {
   confirmationId: string;
   results: DeletionResults;
 };
+
+// Admin Login/2FA Response Types
+export type AdminLoginResponse = {
+  requires2FA?: boolean;
+  requires2FASetup?: boolean;
+  pendingToken: string;
+};
+
+export type Admin2FASetupResponse = {
+  qrCodeUrl: string;
+  secret: string;
+  backupCodes: string[];
+};
+
+export type Admin2FAVerifyResponse = {
+  success: boolean;
+  user: {
+    userId: string;
+    role: "admin" | "superadmin";
+    isAdmin: true;
+  };
+};

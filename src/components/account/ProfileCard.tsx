@@ -69,13 +69,13 @@ export const ProfileCard = ({
   }, [ssnVisible]);
 
   return (
-    <div className="bg-[#005044] rounded-[20px] p-8 text-white col-span-1 lg:col-span-2">
-      <div className="flex items-center gap-5">
-        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-xl font-sora font-bold">
+    <div className="bg-[#005044] rounded-[20px] p-5 md:p-8 text-white col-span-1 lg:col-span-2">
+      <div className="flex items-center gap-4 md:gap-5">
+        <div className="w-12 h-12 md:w-16 md:h-16 bg-white/20 rounded-full flex items-center justify-center text-lg md:text-xl font-sora font-bold shrink-0">
           {initials}
         </div>
         <div className="flex-1">
-          <h2 className="font-sora font-bold text-xl">{name}</h2>
+          <h2 className="font-sora font-bold text-lg md:text-xl">{name}</h2>
           <span className="inline-block bg-white/20 rounded-full px-3 py-1 text-sm font-sora capitalize mt-1">
             {role}
           </span>

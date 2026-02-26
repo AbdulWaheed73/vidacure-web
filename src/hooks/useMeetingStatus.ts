@@ -45,14 +45,8 @@ export const useMeetingStatus = (): MeetingStatusHookResult => {
     ? new Date(status.completedAt)
     : null;
 
-  // Check if meeting gate is passed (can subscribe)
-  // This is also calculated on the server, but we compute it client-side for real-time updates
-  let isMeetingGatePassed = status?.isMeetingGatePassed || false;
-
-  // Client-side auto-unlock: if scheduled time has passed, consider gate as passed
-  if (!isMeetingGatePassed && meetingStatus === 'scheduled' && scheduledMeetingTime) {
-    isMeetingGatePassed = new Date() > scheduledMeetingTime;
-  }
+  // Server is the source of truth for meeting gate status
+  const isMeetingGatePassed = status?.isMeetingGatePassed || false;
 
   return {
     isLoading,

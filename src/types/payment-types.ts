@@ -93,3 +93,18 @@ export type PatientSubscriptionDetailsResponse = {
   } | null;
   message?: string;
 };
+
+export type CancellationReason = 'too_expensive' | 'no_results' | 'reached_goal' | 'technical_issues' | 'other';
+
+export type CancelSubscriptionRequest = {
+  reason: CancellationReason;
+};
+
+export type CancellationFeedbackRequest = {
+  rating: number;
+  comments?: string;
+};
+
+export type ChangePlanRequest = {
+  planType: 'lifestyle' | 'medical';
+};

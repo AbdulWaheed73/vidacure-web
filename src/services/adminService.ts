@@ -1,5 +1,6 @@
 import { api } from './api';
 import type { PatientStripeData, PatientSubscriptionDetailsResponse } from '../types/payment-types';
+import type { Provider, ProviderTier } from '../types/provider-types';
 import type {
   SSNCheckResponse,
   ConvertPatientToDoctorRequest,
@@ -17,6 +18,7 @@ export type DashboardStats = {
   totalDoctors: number;
   unassignedPatients: number;
   activeSubscriptions: number;
+  totalProviders: number;
 };
 
 export type SubscriptionInfo = {
@@ -266,6 +268,106 @@ export const adminService = {
       completedAt: new Date().toISOString(),
       force: true  // Admin override - they already confirmed via dialog
     });
+    return response.data;
+  },
+
+  // ============ Provider Management Methods ============
+
+  getProviders: async (): Promise<{ providers: Provider[] }> => {
+    const response = await api.get('/api/admin/providers');
+    return response.data;
+  },
+
+  addProvider: async (data: {
+    name: string;
+    email: string;
+    providerType: string;
+    specialty?: string;
+    bio?: string;
+  }): Promise<{ message: string; provider: Provider }> => {
+    const response = await api.post('/api/admin/providers', data);
+    return response.data;
+  },
+
+  updateProvider: async (providerId: string, data: Partial<Provider>): Promise<{ provider: Provider }> => {
+    const response = await api.put(`/api/admin/providers/${providerId}`, data);
+    return response.data;
+  },
+
+  deactivateProvider: async (providerId: string): Promise<{ message: string; provider: Provider }> => {
+    const response = await api.delete(`/api/admin/providers/${providerId}`);
+    return response.data;
+  },
+
+  assignProviderToPatient: async (patientId: string, providerId: string): Promise<{ message: string }> => {
+    const response = await api.post('/api/admin/assign-provider', { patientId, providerId });
+    return response.data;
+  },
+
+  unassignProviderFromPatient: async (patientId: string, providerId: string): Promise<{ message: string }> => {
+    const response = await api.post('/api/admin/unassign-provider', { patientId, providerId });
+    return response.data;
+  },
+
+  // ============ Provider Tier Methods ============
+
+  setProviderTierOverride: async (
+    patientId: string,
+    providerId: string,
+    tier: ProviderTier
+  ): Promise<{ message: string; patientId: string; providerId: string; tier: ProviderTier }> => {
+    const response = await api.post('/api/admin/provider-tier-override', { patientId, providerId, tier });
+    return response.data;
+  },
+
+  removeProviderTierOverride: async (
+    patientId: string,
+    providerId: string
+  ): Promise<{ message: string }> => {
+    const response = await api.post('/api/admin/remove-provider-tier-override', { patientId, providerId });
+    return response.data;
+  },
+
+  getPatientProviderTiers: async (patientId: string): Promise<{
+    patientId: string;
+    patientName: string;
+    patientPlanType: string | null;
+    providers: {
+      _id: string;
+      name: string;
+      email: string;
+      providerType: string;
+      specialty?: string;
+      tier: ProviderTier;
+      source: 'override' | 'default';
+    }[];
+  }> => {
+    const response = await api.get(`/api/admin/patients/${patientId}/provider-tiers`);
+    return response.data;
+  },
+
+  // ============ Calendly Lookup ============
+
+  calendlyLookup: async (email: string): Promise<{
+    found: boolean;
+    user: {
+      name: string;
+      email: string;
+      avatarUrl?: string;
+      schedulingUrl: string;
+      timezone: string;
+      uri: string;
+    };
+    eventTypes: {
+      uri: string;
+      name: string;
+      slug?: string;
+      duration?: number;
+      schedulingUrl: string;
+      active: boolean;
+    }[];
+  }> => {
+    const response = await api.post('/api/admin/calendly-lookup', { email });
     return response.data;
   },
 };

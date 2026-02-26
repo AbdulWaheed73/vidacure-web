@@ -9,10 +9,11 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/badge';
-import { RefreshCw, Eye, Trash2, CheckCircle, Clock, XCircle } from 'lucide-react';
+import { RefreshCw, Eye, Trash2, CheckCircle, Clock, XCircle, Stethoscope } from 'lucide-react';
 import type { Patient, Doctor } from '@/services/adminService';
 import { adminService } from '@/services/adminService';
 import { SubscriptionDetailsModal } from './SubscriptionDetailsModal';
+import { ManageTiersModal } from './ManageTiersModal';
 
 type PatientsViewProps = {
   patients: Patient[];
@@ -77,6 +78,7 @@ export const PatientsView = ({
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null);
   const [approvingPatientId, setApprovingPatientId] = useState<string | null>(null);
   const [approvalError, setApprovalError] = useState<string | null>(null);
+  const [providerModalPatient, setProviderModalPatient] = useState<Patient | null>(null);
 
   const handleViewDetails = (patient: Patient) => {
     setSelectedPatient({ id: patient._id, name: patient.name });
@@ -266,6 +268,15 @@ export const PatientsView = ({
                       <Button
                         variant="outline"
                         size="sm"
+                        onClick={() => setProviderModalPatient(patient)}
+                        title="Manage provider tiers"
+                      >
+                        <Stethoscope className="h-3 w-3 mr-1" />
+                        Tiers
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => onReassign(patient)}
                         disabled={doctors.length === 0}
                       >
@@ -330,6 +341,20 @@ export const PatientsView = ({
         isOpen={!!selectedPatient}
         onClose={handleCloseModal}
       />
+
+      {/* Manage Tiers Modal */}
+      {providerModalPatient && (
+        <ManageTiersModal
+          isOpen={!!providerModalPatient}
+          onClose={() => setProviderModalPatient(null)}
+          patientId={providerModalPatient._id}
+          patientName={providerModalPatient.name}
+          patientPlanType={providerModalPatient.subscription?.planType as 'lifestyle' | 'medical' | undefined}
+          onSuccess={() => {
+            onRefresh?.();
+          }}
+        />
+      )}
     </div>
   );
 };

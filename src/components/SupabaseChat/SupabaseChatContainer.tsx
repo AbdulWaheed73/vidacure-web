@@ -105,14 +105,14 @@ export const SupabaseChatContainer: React.FC = () => {
   if (isInitializing) {
     return (
       <Card className="flex flex-col h-full border-0 shadow-none rounded-none bg-transparent py-0 gap-0">
-        <CardHeader className="px-6 py-4">
+        <CardHeader className="px-4 md:px-6 py-4">
           <div className="flex items-center gap-3">
             <Skeleton className="h-10 w-10 rounded-full" />
             <Skeleton className="h-5 w-32" />
           </div>
         </CardHeader>
         <Separator />
-        <CardContent className="flex-1 px-6 py-4 space-y-5">
+        <CardContent className="flex-1 px-4 md:px-6 py-4 space-y-5">
           <div className="flex flex-col items-start"><Skeleton className="h-11 w-[40%] rounded-2xl" /></div>
           <div className="flex flex-col items-end"><Skeleton className="h-11 w-[30%] rounded-2xl" /></div>
           <div className="flex flex-col items-start"><Skeleton className="h-16 w-[50%] rounded-2xl" /></div>
@@ -120,7 +120,7 @@ export const SupabaseChatContainer: React.FC = () => {
           <div className="flex flex-col items-start"><Skeleton className="h-11 w-[25%] rounded-2xl" /></div>
           <div className="flex flex-col items-end"><Skeleton className="h-16 w-[45%] rounded-2xl" /></div>
         </CardContent>
-        <div className="px-6 py-4">
+        <div className="px-4 md:px-6 py-4">
           <Skeleton className="h-12 w-full rounded-full" />
         </div>
       </Card>
@@ -159,14 +159,14 @@ export const SupabaseChatContainer: React.FC = () => {
   if (connectionStatus === 'connecting') {
     return (
       <Card className="flex flex-col h-full border-0 shadow-none rounded-none bg-transparent py-0 gap-0">
-        <CardHeader className="px-6 py-4">
+        <CardHeader className="px-4 md:px-6 py-4">
           <div className="flex items-center gap-3">
             <Skeleton className="h-10 w-10 rounded-full" />
             <Skeleton className="h-5 w-32" />
           </div>
         </CardHeader>
         <Separator />
-        <CardContent className="flex-1 px-6 py-4 space-y-5">
+        <CardContent className="flex-1 px-4 md:px-6 py-4 space-y-5">
           <div className="flex flex-col items-start"><Skeleton className="h-11 w-[40%] rounded-2xl" /></div>
           <div className="flex flex-col items-end"><Skeleton className="h-11 w-[30%] rounded-2xl" /></div>
           <div className="flex flex-col items-start"><Skeleton className="h-16 w-[50%] rounded-2xl" /></div>
@@ -174,7 +174,7 @@ export const SupabaseChatContainer: React.FC = () => {
           <div className="flex flex-col items-start"><Skeleton className="h-11 w-[25%] rounded-2xl" /></div>
           <div className="flex flex-col items-end"><Skeleton className="h-16 w-[45%] rounded-2xl" /></div>
         </CardContent>
-        <div className="px-6 py-4">
+        <div className="px-4 md:px-6 py-4">
           <Skeleton className="h-12 w-full rounded-full" />
         </div>
       </Card>
@@ -201,20 +201,20 @@ export const SupabaseChatContainer: React.FC = () => {
   if (isLoadingMessages) {
     return (
       <Card className="flex flex-col h-full border-0 shadow-none rounded-none bg-transparent py-0 gap-0">
-        <CardHeader className="px-6 py-4">
+        <CardHeader className="px-4 md:px-6 py-4">
           <div className="flex items-center gap-3">
             <Skeleton className="h-10 w-10 rounded-full" />
             <Skeleton className="h-5 w-32" />
           </div>
         </CardHeader>
         <Separator />
-        <CardContent className="flex-1 px-6 py-4 space-y-5">
+        <CardContent className="flex-1 px-4 md:px-6 py-4 space-y-5">
           <div className="flex flex-col items-start"><Skeleton className="h-11 w-[40%] rounded-2xl" /></div>
           <div className="flex flex-col items-end"><Skeleton className="h-11 w-[30%] rounded-2xl" /></div>
           <div className="flex flex-col items-start"><Skeleton className="h-16 w-[50%] rounded-2xl" /></div>
           <div className="flex flex-col items-end"><Skeleton className="h-11 w-[35%] rounded-2xl" /></div>
         </CardContent>
-        <div className="px-6 py-4">
+        <div className="px-4 md:px-6 py-4">
           <Skeleton className="h-12 w-full rounded-full" />
         </div>
       </Card>
@@ -241,7 +241,7 @@ export const SupabaseChatContainer: React.FC = () => {
   return (
     <Card className="flex flex-col h-full border-0 shadow-none rounded-none bg-transparent py-0 gap-0">
       {/* Header */}
-      <CardHeader className="px-6 py-4">
+      <CardHeader className="px-4 md:px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-[#00a38a] rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0">
             {getInitials(displayName)}

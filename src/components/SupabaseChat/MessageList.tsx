@@ -92,7 +92,7 @@ export const MessageList: React.FC<MessageListProps> = ({
 
   if (isLoading) {
     return (
-      <div className="h-full bg-white/50 py-4 px-6 space-y-5">
+      <div className="h-full bg-white/50 py-4 px-4 md:px-6 space-y-5">
         <div className="flex flex-col items-start">
           <Skeleton className="h-11 w-[40%] rounded-2xl" />
         </div>
@@ -117,7 +117,7 @@ export const MessageList: React.FC<MessageListProps> = ({
 
   if (messages.length === 0) {
     return (
-      <div className="h-full flex flex-col items-center justify-center bg-transparent px-8">
+      <div className="h-full flex flex-col items-center justify-center bg-transparent px-4 md:px-8">
         <p className="text-lg font-semibold text-gray-900">No messages yet</p>
         <p className="text-sm text-gray-500 mt-2 text-center">
           Start the conversation by sending a message
@@ -133,7 +133,7 @@ export const MessageList: React.FC<MessageListProps> = ({
       onScroll={handleScroll}
     >
       {isLoadingMoreMessages && (
-        <div className="px-6 space-y-3 py-3">
+        <div className="px-4 md:px-6 space-y-3 py-3">
           <div className="flex flex-col items-start">
             <Skeleton className="h-10 w-[35%] rounded-2xl" />
           </div>

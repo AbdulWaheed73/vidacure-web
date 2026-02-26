@@ -19,6 +19,8 @@ import {
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
+  SidebarMenuButton,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '../constants';
@@ -26,10 +28,12 @@ import { useChatUnreadCounts } from '../hooks/useChatQueries';
 import { useSupabaseChatStore, selectUnreadCounts } from '../stores/supabaseChatStore';
 import type { User } from '../types';
 import Vidacure from "../assets/vidacure_png.png";
+import VidacureIcon from "/v_black.png";
 
 export function AppSidebar({ user }: { user: User | null }) {
   const location = useLocation();
   const { t } = useTranslation();
+  const { setOpenMobile } = useSidebar();
 
   // Server-side unread counts (works even before chat page is opened)
   const { data: serverUnreadCounts } = useChatUnreadCounts(!!user);
@@ -127,24 +131,28 @@ export function AppSidebar({ user }: { user: User | null }) {
   const menuItems = user?.role === 'doctor' ? doctorMenuItems : patientMenuItems;
 
   return (
-    <Sidebar 
-      collapsible="none" 
-      className="border-r border-zinc-400 bg-[#F0F7F4] fixed left-0 top-0 h-screen z-50"
-      style={{ width: '256px' }} // Fixed width matching Figma design
+    <Sidebar
+      collapsible="icon"
+      className="border-r border-zinc-400 bg-[#F0F7F4]"
     >
       {/* Logo Header */}
-      <SidebarHeader className="px-4 py-8 bg-[#F0F7F4]">
-        <div className="p-2 flex justify-start items-center gap-2.5">
-          <img 
-            className="w-36 h-5" 
-            src={Vidacure} 
-            alt="Vidacure Logo" 
+      <SidebarHeader className="px-4 py-8 bg-[#F0F7F4] md:transition-[padding] md:duration-300 md:ease-in-out group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-4">
+        <div className="p-2 flex justify-start items-center gap-2.5 md:transition-[padding,justify-content] md:duration-300 md:ease-in-out group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0">
+          <img
+            className="w-36 h-5 shrink-0 md:transition-[width,opacity] md:duration-300 md:ease-in-out group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:opacity-0"
+            src={Vidacure}
+            alt="Vidacure Logo"
+          />
+          <img
+            className="w-0 h-7 opacity-0 shrink-0 md:transition-[width,opacity] md:duration-300 md:ease-in-out group-data-[collapsible=icon]:w-7 group-data-[collapsible=icon]:opacity-100"
+            src={VidacureIcon}
+            alt="Vidacure"
           />
         </div>
       </SidebarHeader>
 
       {/* Navigation Content */}
-      <SidebarContent className="px-4 bg-[#F0F7F4] overflow-y-auto">
+      <SidebarContent className="px-4 bg-[#F0F7F4] overflow-y-auto md:transition-[padding] md:duration-300 md:ease-in-out group-data-[collapsible=icon]:px-1">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="flex flex-col gap-0">
@@ -156,38 +164,36 @@ export function AppSidebar({ user }: { user: User | null }) {
 
                 return (
                   <SidebarMenuItem key={item.title} className="mb-1">
-                    <Link
-                      to={item.url}
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={item.title}
+                      size="lg"
                       className={cn(
-                        'px-5 py-3 rounded-xl inline-flex justify-start items-center gap-3 w-full font-manrope transition-all duration-200 relative',
+                        'rounded-xl font-manrope group-data-[collapsible=icon]:justify-center',
                         isActive
-                          ? 'bg-hover-teal-buttons text-dark-teal font-bold'
-                          : 'text-zinc-800 font-normal hover:bg-hover-teal-buttons hover:text-dark-teal'
+                          ? 'bg-[#E6F7F5] text-[#005044] font-bold hover:bg-[#E6F7F5] hover:text-[#005044]'
+                          : 'text-zinc-800 font-normal hover:bg-[#E6F7F5] hover:text-[#005044]'
                       )}
-                      style={isActive ? { backgroundColor: '#E6F7F5', color: '#005044' } : undefined}
                     >
-                      <div className="relative">
-                        <Icon
-                          className={cn(
-                            'size-6 shrink-0',
-                            isActive ? 'text-dark-teal' : 'text-zinc-800'
-                          )}
-                          style={isActive ? { color: '#005044' } : undefined}
-                        />
-                        {showDot && (
-                          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#F0F7F4]" />
-                        )}
-                      </div>
-                      <span
-                        className={cn(
-                          'text-base leading-snug',
-                          isActive ? 'text-dark-teal font-bold' : 'text-zinc-800 font-normal'
-                        )}
-                        style={isActive ? { color: '#005044', fontWeight: 'bold' } : undefined}
+                      <Link
+                        to={item.url}
+                        onClick={() => setOpenMobile(false)}
                       >
-                        {item.title}
-                      </span>
-                    </Link>
+                        <div className="relative shrink-0">
+                          <Icon
+                            className={cn(
+                              '!size-6',
+                              isActive ? 'text-[#005044]' : 'text-zinc-800'
+                            )}
+                          />
+                          {showDot && (
+                            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#F0F7F4]" />
+                          )}
+                        </div>
+                        <span className="md:transition-[opacity,max-width] md:duration-300 md:ease-in-out max-w-48 opacity-100 group-data-[collapsible=icon]:max-w-0 group-data-[collapsible=icon]:opacity-0 overflow-hidden whitespace-nowrap">{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
               })}

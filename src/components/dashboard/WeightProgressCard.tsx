@@ -49,7 +49,7 @@ export const WeightProgressCard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-white/95 backdrop-blur-md shadow-lg col-span-2">
+      <Card className="bg-white/95 backdrop-blur-md shadow-lg col-span-1 md:col-span-2">
         <CardHeader className="pb-2">
           <Skeleton className="h-6 w-40" />
         </CardHeader>
@@ -62,7 +62,7 @@ export const WeightProgressCard: React.FC = () => {
 
   if (weightHistory.length === 0) {
     return (
-      <Card className="bg-white/95 backdrop-blur-md shadow-lg col-span-2">
+      <Card className="bg-white/95 backdrop-blur-md shadow-lg col-span-1 md:col-span-2">
         <CardHeader>
           <CardTitle className="text-lg font-manrope">My Progress</CardTitle>
         </CardHeader>
@@ -77,7 +77,7 @@ export const WeightProgressCard: React.FC = () => {
   }
 
   return (
-    <Card className="bg-white/95 backdrop-blur-md shadow-lg col-span-2 pt-0">
+    <Card className="bg-white/95 backdrop-blur-md shadow-lg col-span-1 md:col-span-2 pt-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-4 sm:flex-row">
         <CardTitle className="text-lg font-manrope">My Progress</CardTitle>
         <Select value={timeRange} onValueChange={setTimeRange}>

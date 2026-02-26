@@ -3,7 +3,9 @@ import type {
   CreateCheckoutSessionResponse,
   SubscriptionStatus,
   CreatePortalSessionResponse,
-  Invoice
+  Invoice,
+  CancellationReason,
+  CancellationFeedbackRequest
 } from '../types/payment-types';
 
 export class PaymentService {
@@ -24,10 +26,27 @@ export class PaymentService {
   }
 
   /**
-   * Cancel current subscription
+   * Cancel current subscription (cancels at period end)
    */
-  static async cancelSubscription(): Promise<void> {
-    await api.post('/api/payment/subscription/cancel');
+  static async cancelSubscription(reason: CancellationReason): Promise<{ currentPeriodEnd?: string }> {
+    const response = await api.post('/api/payment/subscription/cancel', { reason });
+    return {
+      currentPeriodEnd: response.data?.subscription?.currentPeriodEnd,
+    };
+  }
+
+  /**
+   * Submit cancellation feedback (rating + comments)
+   */
+  static async submitCancellationFeedback(data: CancellationFeedbackRequest): Promise<void> {
+    await api.post('/api/payment/subscription/feedback', data);
+  }
+
+  /**
+   * Change subscription plan (lifestyle <-> medical)
+   */
+  static async changePlan(planType: 'lifestyle' | 'medical'): Promise<void> {
+    await api.post('/api/payment/subscription/change-plan', { planType });
   }
 
   /**

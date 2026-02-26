@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import {
   Dialog,
   DialogContent,
@@ -7,15 +10,42 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Alert, AlertDescription } from '@/components/ui/Alert';
 import type { DoctorPrescriptionRequest, PrescriptionRequestDetailModalProps } from '@/types/doctor-prescription-types';
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
-import { User, Scale, AlertTriangle, Calendar, Pill } from 'lucide-react';
+import { User, Scale, AlertTriangle, Calendar, Pill, AlertCircle } from 'lucide-react';
 
+const prescriptionFormSchema = z.object({
+  medicationName: z.string().min(1, 'Medication name is required'),
+  dosage: z.string().min(1, 'Dosage is required'),
+  usageInstructions: z.string().min(1, 'Usage instructions are required'),
+  dateIssued: z.string().min(1, 'Date issued is required'),
+  validTill: z.string().min(1, 'Valid till date is required'),
+}).refine(
+  (data) => {
+    if (data.dateIssued && data.validTill) {
+      return new Date(data.validTill) > new Date(data.dateIssued);
+    }
+    return true;
+  },
+  {
+    message: 'Valid till date must be after the date issued',
+    path: ['validTill'],
+  }
+);
 
+type PrescriptionFormValues = z.infer<typeof prescriptionFormSchema>;
 
 export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailModalProps> = ({
   open,
@@ -24,47 +54,46 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
   onApprove,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [medicationName, setMedicationName] = useState('');
-  const [dosage, setDosage] = useState('');
-  const [usageInstructions, setUsageInstructions] = useState('');
-  const [dateIssued, setDateIssued] = useState('');
-  const [validTill, setValidTill] = useState('');
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const form = useForm<PrescriptionFormValues>({
+    resolver: zodResolver(prescriptionFormSchema),
+    defaultValues: {
+      medicationName: '',
+      dosage: '',
+      usageInstructions: '',
+      dateIssued: '',
+      validTill: '',
+    },
+  });
 
   if (!request) return null;
 
-  const handleApprove = async () => {
-    // Validate required fields
-    if (!medicationName || !dosage || !usageInstructions || !dateIssued || !validTill) {
-      alert('Please fill in all prescription fields');
-      return;
-    }
-
-    const prescriptionData = {
-      medicationName: medicationName.trim(),
-      dosage: dosage.trim(),
-      usageInstructions: usageInstructions.trim(),
-      dateIssued,
-      validTill,
-    };
-
-    console.log('Approving prescription with data:', prescriptionData);
-
+  const handleApprove = async (values: PrescriptionFormValues) => {
+    setSubmitError(null);
     try {
       setLoading(true);
-      await onApprove(request._id, prescriptionData);
-      // Reset form
-      setMedicationName('');
-      setDosage('');
-      setUsageInstructions('');
-      setDateIssued('');
-      setValidTill('');
+      await onApprove(request._id, {
+        medicationName: values.medicationName.trim(),
+        dosage: values.dosage.trim(),
+        usageInstructions: values.usageInstructions.trim(),
+        dateIssued: values.dateIssued,
+        validTill: values.validTill,
+      });
+      form.reset();
       onOpenChange(false);
     } catch (error) {
       console.error('Error approving prescription request:', error);
-      alert('Failed to approve prescription. Please try again.');
+      setSubmitError('Failed to approve prescription. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClose = () => {
+    form.reset();
+    setSubmitError(null);
+    onOpenChange(false);
   };
 
   const formatDate = (dateString: string) => {
@@ -106,7 +135,7 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col rounded-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between font-sora text-[#282828]">
@@ -136,14 +165,14 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
 
           {/* Request Details */}
           <div className="border border-[#e0e0e0] rounded-2xl p-4">
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center gap-4 md:gap-6">
               <div className="flex items-center gap-2">
-                <Scale className="w-4 h-4 text-[#005044]" />
+                <Scale className="w-4 h-4 text-[#005044] shrink-0" />
                 <span className="text-sm text-[#b0b0b0] font-manrope">Weight:</span>
                 <span className="text-sm font-semibold text-[#282828] font-manrope">{request.currentWeight} kg</span>
               </div>
               <div className="flex items-center gap-2">
-                <AlertTriangle className={`w-4 h-4 ${request.hasSideEffects ? 'text-red-500' : 'text-[#005044]'}`} />
+                <AlertTriangle className={`w-4 h-4 shrink-0 ${request.hasSideEffects ? 'text-red-500' : 'text-[#005044]'}`} />
                 <span className="text-sm text-[#b0b0b0] font-manrope">Side Effects:</span>
                 <span className={`text-xs font-sora font-semibold rounded-full px-2.5 py-0.5 ${
                   request.hasSideEffects
@@ -164,76 +193,115 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
             )}
           </div>
 
-          {/* Prescription Details - Show existing or form for approval */}
+          {/* Prescription Details - Show form for pending or existing details */}
           {request.status === PrescriptionRequestStatus.PENDING ? (
-            <div className="border border-[#e0e0e0] rounded-2xl p-4">
-              <div className="flex items-center gap-2 mb-4">
-                <Pill className="w-4 h-4 text-[#005044]" />
-                <h3 className="font-sora font-semibold text-[#282828] text-sm">Prescription Details</h3>
-              </div>
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label htmlFor="medicationName" className="text-xs font-manrope text-[#282828]">Medication Name *</Label>
-                    <Input
-                      id="medicationName"
-                      value={medicationName}
-                      onChange={(e) => setMedicationName(e.target.value)}
-                      placeholder="e.g., Wegovy"
-                      className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="dosage" className="text-xs font-manrope text-[#282828]">Dosage *</Label>
-                    <Input
-                      id="dosage"
-                      value={dosage}
-                      onChange={(e) => setDosage(e.target.value)}
-                      placeholder="e.g., 2.4mg weekly"
-                      className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
-                      required
-                    />
-                  </div>
+            <Form {...form}>
+              <div className="border border-[#e0e0e0] rounded-2xl p-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Pill className="w-4 h-4 text-[#005044]" />
+                  <h3 className="font-sora font-semibold text-[#282828] text-sm">Prescription Details</h3>
                 </div>
-                <div>
-                  <Label htmlFor="usageInstructions" className="text-xs font-manrope text-[#282828]">Usage Instructions *</Label>
-                  <Textarea
-                    id="usageInstructions"
-                    value={usageInstructions}
-                    onChange={(e) => setUsageInstructions(e.target.value)}
-                    placeholder="Instructions for taking the medication..."
-                    rows={3}
-                    className="text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
-                    required
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <FormField
+                      control={form.control}
+                      name="medicationName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs font-manrope text-[#282828]">Medication Name *</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="e.g., Wegovy"
+                              className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="dosage"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs font-manrope text-[#282828]">Dosage *</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="e.g., 2.4mg weekly"
+                              className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <FormField
+                    control={form.control}
+                    name="usageInstructions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs font-manrope text-[#282828]">Usage Instructions *</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            placeholder="Instructions for taking the medication..."
+                            rows={3}
+                            className="text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label htmlFor="dateIssued" className="text-xs font-manrope text-[#282828]">Date Issued *</Label>
-                    <Input
-                      id="dateIssued"
-                      type="date"
-                      value={dateIssued}
-                      onChange={(e) => setDateIssued(e.target.value)}
-                      className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
-                      required
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <FormField
+                      control={form.control}
+                      name="dateIssued"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs font-manrope text-[#282828]">Date Issued *</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="date"
+                              className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="validTill"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-xs font-manrope text-[#282828]">Valid Till *</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="date"
+                              className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                            />
+                          </FormControl>
+                          <FormMessage className="text-xs" />
+                        </FormItem>
+                      )}
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="validTill" className="text-xs font-manrope text-[#282828]">Valid Till *</Label>
-                    <Input
-                      id="validTill"
-                      type="date"
-                      value={validTill}
-                      onChange={(e) => setValidTill(e.target.value)}
-                      className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
-                      required
-                    />
-                  </div>
                 </div>
+
+                {submitError && (
+                  <Alert variant="destructive" className="mt-3">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{submitError}</AlertDescription>
+                  </Alert>
+                )}
               </div>
-            </div>
+            </Form>
           ) : (request.medicationName || request.dosage || request.usageInstructions) && (
             <div className="bg-[#f0f7f4] rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-4">
@@ -280,9 +348,9 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
           )}
 
           {/* Timeline */}
-          <div className="flex items-center gap-4 text-xs text-[#b0b0b0] font-manrope">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#b0b0b0] font-manrope">
             <div className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
+              <Calendar className="w-3 h-3 shrink-0" />
               <span>Submitted: {formatDate(request.createdAt)}</span>
             </div>
             {request.updatedAt !== request.createdAt && (
@@ -291,26 +359,26 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
           </div>
         </div>
 
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={loading}
-            className="rounded-full border-[#e0e0e0] text-[#282828] font-sora"
-          >
-            Close
-          </Button>
+        <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
           {request.status === PrescriptionRequestStatus.PENDING && (
             <Button
               type="button"
-              onClick={handleApprove}
+              onClick={form.handleSubmit(handleApprove)}
               disabled={loading}
-              className="bg-[#005044] hover:bg-[#004038] text-white rounded-full font-sora"
+              className="bg-[#005044] hover:bg-[#004038] text-white rounded-full font-sora w-full sm:w-auto"
             >
               {loading ? 'Approving...' : 'Approve Request'}
             </Button>
           )}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleClose}
+            disabled={loading}
+            className="rounded-full border-[#e0e0e0] text-[#282828] font-sora w-full sm:w-auto"
+          >
+            Close
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

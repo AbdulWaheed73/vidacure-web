@@ -33,18 +33,18 @@ export const AccountPage: React.FC<AccountPageProps> = ({ user, onLogout }) => {
   };
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <User className="size-8 text-teal-action" />
-          <h1 className="text-3xl font-bold text-gray-800 font-manrope">{t('account.title')}</h1>
+    <div className="p-4 md:p-8">
+      <div className="mb-6 md:mb-8">
+        <div className="flex items-center gap-3 mb-2 md:mb-4">
+          <User className="size-6 md:size-8 text-teal-action" />
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 font-manrope">{t('account.title')}</h1>
         </div>
-        <p className="text-lg text-gray-600 font-manrope">
+        <p className="text-sm md:text-lg text-gray-600 font-manrope">
           {t('account.description')}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {user && (
           <ProfileCard
             name={user.name}

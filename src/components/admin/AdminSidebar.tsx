@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Users,
   UserCog,
+  Stethoscope,
   LogOut,
   Bell,
   FileText,
@@ -67,6 +68,11 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
       title: 'Doctors',
       value: 'doctors',
       icon: UserCog,
+    },
+    {
+      title: 'Providers',
+      value: 'providers',
+      icon: Stethoscope,
     },
     {
       title: 'Notifications',

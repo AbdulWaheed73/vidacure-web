@@ -58,12 +58,12 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
 
   if (isFirst || live) {
     return (
-      <div className="bg-[#005044] rounded-2xl p-6 text-white">
-        <div className="flex items-center justify-between mb-3">
+      <div className="bg-[#005044] rounded-2xl p-4 md:p-6 text-white">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3">
           <h3 className="font-sora font-semibold text-lg">
             {meeting.patientName || meeting.inviteeName || 'Patient'}
           </h3>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {live && (
               <span className="bg-white/25 rounded-full px-3 py-1 text-xs font-sora font-semibold animate-pulse">
                 Live Now
@@ -78,7 +78,7 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
             </span>
           </div>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
             <p className="text-white/70 text-sm font-manrope">{meeting.eventType}</p>
             {meeting.inviteeEmail && (
@@ -88,7 +88,7 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
           {meeting.meetingUrl && meeting.status === 'active' && (
             <button
               onClick={() => window.open(meeting.meetingUrl!, '_blank')}
-              className="bg-white text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-white/90 transition-colors"
+              className="bg-white text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-white/90 transition-colors self-start md:self-auto"
             >
               {live ? 'Start Call' : 'Join Meeting'}
             </button>
@@ -99,37 +99,39 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
   }
 
   return (
-    <div className="bg-white border border-[#e0e0e0] rounded-2xl p-5 flex items-center justify-between hover:border-[#c0ebe5] transition-colors">
-      <div className="flex items-center gap-4 min-w-0">
-        <div className="w-10 h-10 rounded-full bg-[#f0f7f4] flex items-center justify-center flex-shrink-0">
-          <Video className="w-4 h-4 text-[#005044]" />
+    <div className="bg-white border border-[#e0e0e0] rounded-2xl p-4 md:p-5 hover:border-[#c0ebe5] transition-colors">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+          <div className="w-10 h-10 rounded-full bg-[#f0f7f4] flex items-center justify-center flex-shrink-0">
+            <Video className="w-4 h-4 text-[#005044]" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="font-sora font-semibold text-[#282828]">
+              {meeting.patientName || meeting.inviteeName || 'Patient'}
+            </h3>
+            <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">{meeting.eventType}</p>
+            {meeting.inviteeEmail && (
+              <p className="text-[#b0b0b0] text-xs font-manrope mt-0.5 truncate">{meeting.inviteeEmail}</p>
+            )}
+          </div>
         </div>
-        <div className="min-w-0">
-          <h3 className="font-sora font-semibold text-[#282828]">
-            {meeting.patientName || meeting.inviteeName || 'Patient'}
-          </h3>
-          <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">{meeting.eventType}</p>
-          {meeting.inviteeEmail && (
-            <p className="text-[#b0b0b0] text-xs font-manrope mt-0.5">{meeting.inviteeEmail}</p>
+        <div className="flex items-center gap-2 flex-wrap flex-shrink-0 pl-13 md:pl-0">
+          <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-sm font-sora font-medium">
+            {formatDate(meeting.startTime)}
+          </span>
+          <span className="flex items-center gap-1.5 bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-sm font-sora font-medium">
+            <Video className="w-3.5 h-3.5" />
+            {formatTime(meeting.startTime)}
+          </span>
+          {meeting.meetingUrl && meeting.status === 'active' && (
+            <button
+              onClick={() => window.open(meeting.meetingUrl!, '_blank')}
+              className="bg-[#005044] text-white rounded-full px-5 py-2 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors"
+            >
+              Join Meeting
+            </button>
           )}
         </div>
-      </div>
-      <div className="flex items-center gap-2 flex-shrink-0">
-        <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-sm font-sora font-medium">
-          {formatDate(meeting.startTime)}
-        </span>
-        <span className="flex items-center gap-1.5 bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-sm font-sora font-medium">
-          <Video className="w-3.5 h-3.5" />
-          {formatTime(meeting.startTime)}
-        </span>
-        {meeting.meetingUrl && meeting.status === 'active' && (
-          <button
-            onClick={() => window.open(meeting.meetingUrl!, '_blank')}
-            className="bg-[#005044] text-white rounded-full px-5 py-2 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors"
-          >
-            Join Meeting
-          </button>
-        )}
       </div>
     </div>
   );
@@ -138,29 +140,31 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
 // --- Past appointment card (muted, informational) ---
 
 const PastCard: React.FC<{ meeting: PatientMeeting }> = ({ meeting }) => (
-  <div className="bg-white border border-[#ebebeb] rounded-2xl p-5 flex items-center justify-between opacity-75 hover:opacity-100 transition-opacity">
-    <div className="flex items-center gap-4 min-w-0">
-      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
-        <Clock className="w-4 h-4 text-[#b0b0b0]" />
+  <div className="bg-white border border-[#ebebeb] rounded-2xl p-4 md:p-5 opacity-75 hover:opacity-100 transition-opacity">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="flex items-center gap-3 md:gap-4 min-w-0">
+        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+          <Clock className="w-4 h-4 text-[#b0b0b0]" />
+        </div>
+        <div className="min-w-0">
+          <h3 className="font-sora font-semibold text-[#282828]">
+            {meeting.patientName || meeting.inviteeName || 'Patient'}
+          </h3>
+          <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">{meeting.eventType}</p>
+          {meeting.inviteeEmail && (
+            <p className="text-[#b0b0b0] text-xs font-manrope mt-0.5 truncate">{meeting.inviteeEmail}</p>
+          )}
+        </div>
       </div>
-      <div className="min-w-0">
-        <h3 className="font-sora font-semibold text-[#282828]">
-          {meeting.patientName || meeting.inviteeName || 'Patient'}
-        </h3>
-        <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">{meeting.eventType}</p>
-        {meeting.inviteeEmail && (
-          <p className="text-[#b0b0b0] text-xs font-manrope mt-0.5">{meeting.inviteeEmail}</p>
-        )}
+      <div className="flex items-center gap-2 flex-shrink-0 pl-13 md:pl-0">
+        <span className="bg-gray-100 text-[#b0b0b0] rounded-full px-3 py-1 text-sm font-sora font-medium">
+          {formatDate(meeting.startTime)}
+        </span>
+        <span className="flex items-center gap-1.5 bg-gray-100 text-[#b0b0b0] rounded-full px-3 py-1 text-sm font-sora font-medium">
+          <Clock className="w-3.5 h-3.5" />
+          {formatTime(meeting.startTime)}
+        </span>
       </div>
-    </div>
-    <div className="flex items-center gap-2 flex-shrink-0">
-      <span className="bg-gray-100 text-[#b0b0b0] rounded-full px-3 py-1 text-sm font-sora font-medium">
-        {formatDate(meeting.startTime)}
-      </span>
-      <span className="flex items-center gap-1.5 bg-gray-100 text-[#b0b0b0] rounded-full px-3 py-1 text-sm font-sora font-medium">
-        <Clock className="w-3.5 h-3.5" />
-        {formatTime(meeting.startTime)}
-      </span>
     </div>
   </div>
 );
@@ -168,15 +172,15 @@ const PastCard: React.FC<{ meeting: PatientMeeting }> = ({ meeting }) => (
 // --- Skeletons ---
 
 const SkeletonRow: React.FC = () => (
-  <div className="animate-pulse rounded-2xl border border-gray-100 p-5 flex items-center justify-between">
-    <div className="flex items-center gap-4">
-      <div className="w-10 h-10 bg-gray-200 rounded-full" />
+  <div className="animate-pulse rounded-2xl border border-gray-100 p-4 md:p-5 space-y-3 md:space-y-0 md:flex md:items-center md:justify-between">
+    <div className="flex items-center gap-3 md:gap-4">
+      <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0" />
       <div className="space-y-2">
         <div className="h-4 bg-gray-200 rounded w-32" />
         <div className="h-3 bg-gray-200 rounded w-20" />
       </div>
     </div>
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-3 pl-13 md:pl-0">
       <div className="h-7 bg-gray-200 rounded-full w-16" />
       <div className="h-7 bg-gray-200 rounded-full w-20" />
     </div>
@@ -211,10 +215,10 @@ const DoctorAppointments: React.FC = () => {
     .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
 
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="font-sora font-bold text-2xl text-[#282828]">Appointments</h1>
+      <div className="flex items-center justify-between mb-6 md:mb-8">
+        <h1 className="font-sora font-bold text-xl md:text-2xl text-[#282828]">Appointments</h1>
         <button
           onClick={() => refetch()}
           disabled={isRefetching}
@@ -232,8 +236,8 @@ const DoctorAppointments: React.FC = () => {
           ))}
         </div>
       ) : allMeetings.length === 0 ? (
-        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-16 text-center">
-          <Calendar className="w-16 h-16 text-[#c0ebe5] mx-auto mb-4" />
+        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-8 md:p-16 text-center">
+          <Calendar className="w-12 h-12 md:w-16 md:h-16 text-[#c0ebe5] mx-auto mb-4" />
           <h2 className="font-sora font-semibold text-lg text-[#282828] mb-2">No Appointments Yet</h2>
           <p className="text-[#b0b0b0] font-manrope text-sm">Appointments will appear here once patients book with you</p>
         </div>
@@ -250,7 +254,7 @@ const DoctorAppointments: React.FC = () => {
             </div>
 
             {upcoming.length === 0 ? (
-              <div className="bg-[#f0f7f4] rounded-2xl p-8 text-center">
+              <div className="bg-[#f0f7f4] rounded-2xl p-6 md:p-8 text-center">
                 <Calendar className="w-10 h-10 text-[#005044] mx-auto mb-3 opacity-40" />
                 <p className="text-[#005044] font-manrope text-sm opacity-60">No upcoming appointments</p>
               </div>

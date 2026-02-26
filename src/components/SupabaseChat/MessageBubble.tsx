@@ -82,9 +82,9 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwnMess
   }
 
   return (
-    <div className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'} my-2 px-6`}>
+    <div className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'} my-2 px-4 md:px-6`}>
       <div
-        className={`max-w-[55%] w-fit px-4 py-3 rounded-2xl ${
+        className={`max-w-[75%] md:max-w-[55%] w-fit px-4 py-3 rounded-2xl ${
           isOwnMessage
             ? message.status === 'failed'
               ? 'bg-red-50 text-foreground border border-red-200'

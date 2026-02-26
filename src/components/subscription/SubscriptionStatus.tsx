@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/badge';
 import { PaymentService } from '../../services';
 import type { SubscriptionStatus } from '../../types/payment-types';
+import { CancelSubscriptionDialog } from './CancelSubscriptionDialog';
+import { ChangePlanDialog } from './ChangePlanDialog';
 
 type SubscriptionStatusProps = {
   onStatusChange?: () => void;
@@ -13,6 +16,7 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
   onStatusChange
 }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [status, setStatus] = useState<SubscriptionStatus | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isActionLoading, setIsActionLoading] = useState(false);
@@ -29,25 +33,6 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
       console.error('Error fetching subscription status:', error);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleCancelSubscription = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription? This action cannot be undone.')) {
-      return;
-    }
-
-    setIsActionLoading(true);
-    try {
-      await PaymentService.cancelSubscription();
-      await fetchSubscriptionStatus();
-      onStatusChange?.();
-      alert('Subscription canceled successfully.');
-    } catch (error) {
-      console.error('Error canceling subscription:', error);
-      alert('Failed to cancel subscription. Please try again.');
-    } finally {
-      setIsActionLoading(false);
     }
   };
 
@@ -76,7 +61,15 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
     );
   }
 
-  if (!status || !status.hasSubscription) {
+  if (!status) {
+    return null;
+  }
+
+  // Fully canceled subscription (period has ended) - show resubscribe option
+  const isCanceled = status.subscriptionStatus === 'canceled';
+  const isActive = status.hasSubscription;
+
+  if (!isActive && !isCanceled) {
     return null;
   }
 
@@ -97,26 +90,73 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
     return new Date(date).toLocaleDateString('sv-SE');
   };
 
+  // Fully canceled state - show resubscribe prompt
+  if (isCanceled && !isActive) {
+    return (
+      <div className="bg-[#f0f7f4] rounded-2xl p-4 md:p-5">
+        <div className="space-y-3 mb-5">
+          <div className="flex justify-between items-center gap-2">
+            <span className="text-sm text-gray-500 font-manrope shrink-0">{t('account.billing.planLabel')}</span>
+            <span className="font-semibold text-gray-800 font-manrope text-right">
+              {status.planType === 'lifestyle' ? t('account.billing.lifestyle') : t('account.billing.medical')}
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center gap-2">
+            <span className="text-sm text-gray-500 font-manrope shrink-0">{t('account.billing.statusLabel')}</span>
+            {getStatusBadge('canceled')}
+          </div>
+
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-3 mt-2">
+            <p className="text-gray-700 text-sm font-manrope">
+              {t('account.billing.expiredNotice')}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          <Button
+            onClick={() => navigate('/subscription')}
+            size="sm"
+            className="font-manrope bg-[#005044] hover:bg-[#003d33] text-white"
+          >
+            {t('account.billing.resubscribe')}
+          </Button>
+          <Button
+            onClick={handleManageBilling}
+            disabled={isActionLoading}
+            variant="outline"
+            size="sm"
+            className="font-manrope bg-white"
+          >
+            {isActionLoading ? t('account.billing.loading') : t('account.billing.manageBilling')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Active subscription state
   return (
-    <div className="bg-[#f0f7f4] rounded-2xl p-5">
+    <div className="bg-[#f0f7f4] rounded-2xl p-4 md:p-5">
       <div className="space-y-3 mb-5">
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-500 font-manrope">{t('account.billing.planLabel')}</span>
-          <span className="font-semibold text-gray-800 font-manrope">
+        <div className="flex justify-between items-center gap-2">
+          <span className="text-sm text-gray-500 font-manrope shrink-0">{t('account.billing.planLabel')}</span>
+          <span className="font-semibold text-gray-800 font-manrope text-right">
             {status.planType === 'lifestyle' ? t('account.billing.lifestyle') : t('account.billing.medical')}
           </span>
         </div>
 
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-gray-500 font-manrope">{t('account.billing.statusLabel')}</span>
+        <div className="flex justify-between items-center gap-2">
+          <span className="text-sm text-gray-500 font-manrope shrink-0">{t('account.billing.statusLabel')}</span>
           {getStatusBadge(status.subscriptionStatus || '')}
         </div>
 
         {status.subscription && (
           <>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500 font-manrope">{t('account.billing.period')}</span>
-              <span className="text-sm text-gray-700 font-manrope">
+            <div className="flex justify-between items-center gap-2">
+              <span className="text-sm text-gray-500 font-manrope shrink-0">{t('account.billing.period')}</span>
+              <span className="text-xs md:text-sm text-gray-700 font-manrope text-right">
                 {formatDate(status.subscription.currentPeriodStart)} - {formatDate(status.subscription.currentPeriodEnd)}
               </span>
             </div>
@@ -143,16 +183,21 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
           {isActionLoading ? t('account.billing.loading') : t('account.billing.manageBilling')}
         </Button>
 
+        {status.subscriptionStatus === 'active' && !status.subscription?.cancelAtPeriodEnd && status.planType && (
+          <ChangePlanDialog
+            currentPlanType={status.planType}
+            onChanged={() => {
+              fetchSubscriptionStatus();
+              onStatusChange?.();
+            }}
+          />
+        )}
+
         {status.subscriptionStatus === 'active' && !status.subscription?.cancelAtPeriodEnd && (
-          <Button
-            onClick={handleCancelSubscription}
-            disabled={isActionLoading}
-            variant="outline"
-            size="sm"
-            className="font-manrope text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
-          >
-            {isActionLoading ? t('account.billing.loading') : t('account.billing.cancelSubscription')}
-          </Button>
+          <CancelSubscriptionDialog onCancelled={() => {
+            fetchSubscriptionStatus();
+            onStatusChange?.();
+          }} />
         )}
       </div>
     </div>

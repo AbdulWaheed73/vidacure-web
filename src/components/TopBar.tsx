@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../components/ui/dropdown-menu';
+import { SidebarTrigger } from '../components/ui/sidebar';
 import type { TopBarProps } from '../types/component-types';
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -47,32 +48,37 @@ export const TopBar: React.FC<TopBarProps> = ({
   const userInitials = getUserInitials(userName);
 
   return (
-    <div className="bg-[#F0F7F4] px-5 py-8 flex justify-between items-center shrink-0">
-      {/* Dynamic Greeting */}
-      <div className="text-zinc-800 text-2xl font-bold font-sora leading-loose">
-        {greeting}, {userName}
+    <div className="bg-[#F0F7F4] px-4 md:px-5 py-4 md:py-8 flex justify-between items-center shrink-0">
+      {/* Left Section — hamburger + greeting */}
+      <div className="flex items-center gap-2 min-w-0">
+        <SidebarTrigger className="h-9 w-9 shrink-0" />
+        <div className="text-zinc-800 text-base md:text-2xl font-bold font-sora leading-loose truncate">
+          {greeting}, {userName}
+        </div>
       </div>
-      
+
       {/* Right Section */}
-      <div className="flex items-center gap-8">
-        {/* Book Appointment Button */}
-        <Button
-          onClick={onBookAppointment}
-          className="h-11 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full hover:from-teal-700 hover:to-teal-700 text-white font-semibold font-sora"
-        >
-          <Calendar className="size-6" />
-          {t('topbar.bookAppointment')}
-        </Button>
-        
+      <div className="flex items-center gap-2 md:gap-3 lg:gap-6 shrink-0">
+        {/* Book Appointment Button — patients only */}
+        {user?.role !== 'doctor' && (
+          <Button
+            onClick={onBookAppointment}
+            className="h-9 md:h-11 px-2.5 md:px-3 lg:px-6 py-2 md:py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full hover:from-teal-700 hover:to-teal-700 text-white font-semibold font-sora"
+          >
+            <Calendar className="size-5 md:size-6" />
+            <span className="hidden lg:inline">{t('topbar.bookAppointment')}</span>
+          </Button>
+        )}
+
         {/* User Profile Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="flex items-center gap-4 p-2 hover:bg-zinc-50"
+              className="flex items-center gap-4 p-1.5 md:p-2 hover:bg-zinc-50"
             >
-              <div className="size-11 p-2.5 rounded-full border-2 border-zinc-800 flex justify-center items-center">
-                <span className="text-zinc-800 text-base font-semibold font-manrope">
+              <div className="size-9 md:size-11 p-2 md:p-2.5 rounded-full border-2 border-zinc-800 flex justify-center items-center">
+                <span className="text-zinc-800 text-sm md:text-base font-semibold font-manrope">
                   {userInitials}
                 </span>
               </div>

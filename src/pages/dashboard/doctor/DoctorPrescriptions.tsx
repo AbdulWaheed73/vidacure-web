@@ -48,9 +48,9 @@ const DoctorPrescriptions = () => {
 
   if (isLoading) {
     return (
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="font-sora font-bold text-2xl text-[#282828]">Prescriptions</h1>
+      <div className="p-4 md:p-6">
+        <div className="flex items-center justify-between mb-6 md:mb-8">
+          <h1 className="font-sora font-bold text-xl md:text-2xl text-[#282828]">Prescriptions</h1>
         </div>
         <div className="flex justify-center py-12">
           <LoadingSpinner />
@@ -61,9 +61,9 @@ const DoctorPrescriptions = () => {
 
   if (error) {
     return (
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="font-sora font-bold text-2xl text-[#282828]">Prescriptions</h1>
+      <div className="p-4 md:p-6">
+        <div className="flex items-center justify-between mb-6 md:mb-8">
+          <h1 className="font-sora font-bold text-xl md:text-2xl text-[#282828]">Prescriptions</h1>
         </div>
         <div className="text-red-600 bg-red-50 p-4 rounded-lg">
           Failed to load prescription requests
@@ -73,10 +73,10 @@ const DoctorPrescriptions = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-4 md:p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="font-sora font-bold text-2xl text-[#282828]">Prescriptions</h1>
+      <div className="flex items-center justify-between mb-6 md:mb-8">
+        <h1 className="font-sora font-bold text-xl md:text-2xl text-[#282828]">Prescriptions</h1>
         <button
           onClick={() => refetch()}
           disabled={isRefetching}
@@ -110,8 +110,8 @@ const DoctorPrescriptions = () => {
 
         {/* Pending Tab */}
         <TabsContent value="pending" className="mt-0">
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-8">
-            <div className="flex items-center gap-3 mb-6">
+          <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8">
+            <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
               <div className="w-2 h-2 rounded-full bg-[#005044]" />
               <h2 className="font-sora font-bold text-lg text-[#282828]">Prescription Requests</h2>
               {pending.length > 0 && (
@@ -130,7 +130,7 @@ const DoctorPrescriptions = () => {
                 {pending.map((request) => (
                   <div
                     key={request._id}
-                    className="bg-white border border-[#e0e0e0] rounded-2xl p-5 flex items-center justify-between hover:border-[#c0ebe5] transition-colors"
+                    className="bg-white border border-[#e0e0e0] rounded-2xl p-4 md:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:border-[#c0ebe5] transition-colors"
                   >
                     <div>
                       <h3 className="font-sora font-semibold text-[#282828]">
@@ -145,7 +145,7 @@ const DoctorPrescriptions = () => {
                     </div>
                     <button
                       onClick={() => handleReview(request)}
-                      className="bg-[#f0f7f4] text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-[#c0ebe5] transition-colors"
+                      className="bg-[#f0f7f4] text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-[#c0ebe5] transition-colors self-start md:self-auto shrink-0"
                     >
                       Review
                     </button>
@@ -158,8 +158,8 @@ const DoctorPrescriptions = () => {
 
         {/* History Tab */}
         <TabsContent value="history" className="mt-0">
-          <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-8">
-            <div className="flex items-center gap-3 mb-6">
+          <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8">
+            <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
               <div className="w-2 h-2 rounded-full bg-[#b0b0b0]" />
               <h2 className="font-sora font-bold text-lg text-[#282828]">Recent Prescriptions</h2>
             </div>
@@ -173,9 +173,9 @@ const DoctorPrescriptions = () => {
                 {history.map((request) => (
                   <div
                     key={request._id}
-                    className="bg-white border border-[#e0e0e0] rounded-2xl p-5"
+                    className="bg-white border border-[#e0e0e0] rounded-2xl p-4 md:p-5"
                   >
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div>
                         <h3 className="font-sora font-semibold text-[#282828]">
                           {request.patient.name}
@@ -188,15 +188,15 @@ const DoctorPrescriptions = () => {
                         </p>
                       </div>
                       {request.status === PrescriptionRequestStatus.APPROVED ? (
-                        <span className="bg-[rgba(3,160,0,0.15)] text-[#03a000] rounded-full px-5 py-2 font-sora font-semibold text-sm">
+                        <span className="bg-[rgba(3,160,0,0.15)] text-[#03a000] rounded-full px-5 py-2 font-sora font-semibold text-sm self-start sm:self-auto shrink-0">
                           Approved
                         </span>
                       ) : request.status === PrescriptionRequestStatus.DENIED ? (
-                        <span className="bg-red-50 text-red-600 rounded-full px-5 py-2 font-sora font-semibold text-sm">
+                        <span className="bg-red-50 text-red-600 rounded-full px-5 py-2 font-sora font-semibold text-sm self-start sm:self-auto shrink-0">
                           Denied
                         </span>
                       ) : (
-                        <span className="bg-gray-100 text-[#b0b0b0] rounded-full px-5 py-2 font-sora font-semibold text-sm capitalize">
+                        <span className="bg-gray-100 text-[#b0b0b0] rounded-full px-5 py-2 font-sora font-semibold text-sm capitalize self-start sm:self-auto shrink-0">
                           {request.status.replace('_', ' ')}
                         </span>
                       )}
@@ -205,24 +205,24 @@ const DoctorPrescriptions = () => {
                     {/* Inline prescription details for approved items */}
                     {request.status === PrescriptionRequestStatus.APPROVED &&
                       (request.medicationName || request.dosage || request.usageInstructions) && (
-                        <div className="bg-[#f0f7f4] rounded-2xl px-6 py-4 mt-4">
-                          <div className="grid grid-cols-3 gap-4">
+                        <div className="bg-[#f0f7f4] rounded-2xl px-4 md:px-6 py-3 md:py-4 mt-3 md:mt-4">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
                             {request.medicationName && (
-                              <div>
+                              <div className="min-w-0">
                                 <p className="text-xs text-[#005044]/60 font-manrope mb-1">Medication</p>
-                                <p className="text-sm font-semibold text-[#005044] font-manrope">{request.medicationName}</p>
+                                <p className="text-sm font-semibold text-[#005044] font-manrope break-words">{request.medicationName}</p>
                               </div>
                             )}
                             {request.dosage && (
-                              <div>
+                              <div className="min-w-0">
                                 <p className="text-xs text-[#005044]/60 font-manrope mb-1">Dosage</p>
-                                <p className="text-sm font-semibold text-[#005044] font-manrope">{request.dosage}</p>
+                                <p className="text-sm font-semibold text-[#005044] font-manrope break-words">{request.dosage}</p>
                               </div>
                             )}
                             {request.usageInstructions && (
-                              <div>
+                              <div className="min-w-0 col-span-2 sm:col-span-1">
                                 <p className="text-xs text-[#005044]/60 font-manrope mb-1">Instructions</p>
-                                <p className="text-sm text-[#005044] font-manrope">{request.usageInstructions}</p>
+                                <p className="text-sm text-[#005044] font-manrope break-words">{request.usageInstructions}</p>
                               </div>
                             )}
                           </div>

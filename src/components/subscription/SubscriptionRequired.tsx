@@ -33,9 +33,7 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
           meetingService.getMeetingStatus(),
         ]);
 
-        setHasActiveSubscription(
-          subStatus.hasSubscription && subStatus.subscriptionStatus === 'active'
-        );
+        setHasActiveSubscription(subStatus.hasSubscription);
         setIsMeetingGatePassed(mtgStatus.isMeetingGatePassed);
         setMeetingStatus(mtgStatus.meetingStatus);
         setScheduledTime(mtgStatus.scheduledMeetingTime);

@@ -144,19 +144,19 @@ export const ProgressPage: React.FC = () => {
   const maxWeight = weights.length > 0 ? Math.ceil(Math.max(...weights) + 2) : 107;
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
+    <div className="p-4 md:p-8">
+      <div className="mb-6 md:mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <TrendingUp className="size-8 text-teal-action" />
-          <h1 className="text-3xl font-bold text-gray-800 font-manrope">{t('progress.title')}</h1>
+          <TrendingUp className="size-6 md:size-8 text-teal-action" />
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 font-manrope">{t('progress.title')}</h1>
         </div>
       </div>
 
       {/* Main Content: 2-column layout */}
-      <div className="flex items-stretch gap-6 mb-6">
+      <div className="flex flex-col lg:flex-row items-stretch gap-4 md:gap-6 mb-4 md:mb-6">
         {/* Left Column: Chart Section */}
-        <Card className="bg-white/95 backdrop-blur-md shadow-lg pt-0 w-3/4 flex flex-col">
-          <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <Card className="bg-white/95 backdrop-blur-md shadow-lg pt-0 w-full lg:w-3/4 flex flex-col">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center gap-2 space-y-0 border-b py-4 sm:py-5">
             <div className="grid flex-1 gap-1">
               <CardTitle className="text-xl font-manrope">{t('progress.cardTitle')}</CardTitle>
               <CardDescription className="text-gray-600">
@@ -184,7 +184,7 @@ export const ProgressPage: React.FC = () => {
             </Select>
           </CardHeader>
           <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6 flex-1 flex flex-col">
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-[250px] lg:min-h-0">
               {loading ? (
                 <div className="h-full w-full flex items-center justify-center">
                   <p className="text-gray-500">{t('progress.loadingHistory')}</p>
@@ -248,18 +248,18 @@ export const ProgressPage: React.FC = () => {
         </Card>
 
         {/* Right Column: Progress Summary Cards */}
-        <div className="flex flex-col gap-4 min-w-[280px] w-1/4">
+        <div className="grid grid-cols-1 gap-4 w-full lg:w-1/4 lg:min-w-[280px]">
           {/* Total Progress Card */}
-          <Card className="bg-white/95 backdrop-blur-md shadow-lg flex-1">
-            <CardContent className="px-6 py-4 h-full flex items-center justify-between gap-6">
-              <div className="flex-1">
-                <div className="text-lg font-bold text-gray-800">{t('progress.totalProgress')}</div>
-                <div className="text-sm text-gray-500 mt-1">
+          <Card className="bg-white/95 backdrop-blur-md shadow-lg">
+            <CardContent className="px-4 md:px-6 py-4 h-full flex items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="text-base md:text-lg font-bold text-gray-800">{t('progress.totalProgress')}</div>
+                <div className="text-xs md:text-sm text-gray-500 mt-1">
                   {allTimeSorted.length > 0 ? `${progressPercentage}${t('progress.ofTotalBodyWeight')}` : '--'}
                 </div>
               </div>
-              <div className="bg-gray-100/80 rounded-2xl px-5 py-4 flex items-center justify-center shrink-0">
-                <span className="text-2xl font-bold text-gray-800 whitespace-nowrap">
+              <div className="bg-gray-100/80 rounded-2xl px-4 py-3 flex items-center justify-center shrink-0">
+                <span className="text-xl md:text-2xl font-bold text-gray-800 whitespace-nowrap">
                   {allTimeSorted.length > 0 ? `${totalProgress > 0 ? '-' : ''}${totalProgress} kg` : '--'}
                 </span>
               </div>
@@ -267,16 +267,16 @@ export const ProgressPage: React.FC = () => {
           </Card>
 
           {/* BMI Card */}
-          <Card className="bg-white/95 backdrop-blur-md shadow-lg flex-1">
-            <CardContent className="px-6 py-4 h-full flex items-center justify-between gap-6">
-              <div className="flex-1">
-                <div className="text-lg font-bold text-gray-800">{t('progress.bmi')}</div>
-                <div className="text-sm text-gray-500 mt-1">
+          <Card className="bg-white/95 backdrop-blur-md shadow-lg">
+            <CardContent className="px-4 md:px-6 py-4 h-full flex items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="text-base md:text-lg font-bold text-gray-800">{t('progress.bmi')}</div>
+                <div className="text-xs md:text-sm text-gray-500 mt-1">
                   {currentBMI > 0 ? `${t('progress.downFrom')} ${startingBMI}` : '--'}
                 </div>
               </div>
-              <div className="bg-gray-100/80 rounded-2xl px-5 py-4 flex items-center justify-center shrink-0">
-                <span className="text-2xl font-bold text-gray-800 whitespace-nowrap">
+              <div className="bg-gray-100/80 rounded-2xl px-4 py-3 flex items-center justify-center shrink-0">
+                <span className="text-xl md:text-2xl font-bold text-gray-800 whitespace-nowrap">
                   {currentBMI > 0 ? currentBMI : '--'}
                 </span>
               </div>
@@ -284,16 +284,16 @@ export const ProgressPage: React.FC = () => {
           </Card>
 
           {/* Current Weight Card */}
-          <Card className="bg-white/95 backdrop-blur-md shadow-lg flex-1">
-            <CardContent className="px-6 py-4 h-full flex items-center justify-between gap-6">
-              <div className="flex-1">
-                <div className="text-lg font-bold text-gray-800">{t('progress.currentWeight')}</div>
-                <div className="text-sm text-gray-500 mt-1">
+          <Card className="bg-white/95 backdrop-blur-md shadow-lg">
+            <CardContent className="px-4 md:px-6 py-4 h-full flex items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="text-base md:text-lg font-bold text-gray-800">{t('progress.currentWeight')}</div>
+                <div className="text-xs md:text-sm text-gray-500 mt-1">
                   {allTimeSorted.length > 0 ? `${totalProgress} ${t('progress.lostSinceStarted')}` : '--'}
                 </div>
               </div>
-              <div className="bg-gray-100/80 rounded-2xl px-5 py-4 flex items-center justify-center shrink-0">
-                <span className="text-2xl font-bold text-gray-800 whitespace-nowrap">
+              <div className="bg-gray-100/80 rounded-2xl px-4 py-3 flex items-center justify-center shrink-0">
+                <span className="text-xl md:text-2xl font-bold text-gray-800 whitespace-nowrap">
                   {allTimeSorted.length > 0 ? `${currentWeight} kg` : '--'}
                 </span>
               </div>
@@ -304,8 +304,8 @@ export const ProgressPage: React.FC = () => {
 
       {/* Bottom Section: Log Your Progress Form */}
       <Card className="bg-white/95 backdrop-blur-md shadow-lg">
-          <CardContent className="p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 font-manrope">{t('progress.logProgress')}</h2>
+          <CardContent className="p-4 md:p-8">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6 font-manrope">{t('progress.logProgress')}</h2>
             
             <form onSubmit={handleFormSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

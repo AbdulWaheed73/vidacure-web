@@ -13,3 +13,4 @@ export * from './consent-types';
 export * from './lab-test-types';
 export * from './patient-types';
 export * from './doctor-types';
+export * from './provider-types';

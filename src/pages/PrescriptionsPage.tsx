@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Plus,
@@ -31,6 +31,8 @@ export const PrescriptionsPage: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<PrescriptionRequest | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const dateLocale = i18n.language === 'sv' ? 'sv-SE' : 'en-US';
 
@@ -55,6 +57,25 @@ export const PrescriptionsPage: React.FC = () => {
   useEffect(() => {
     loadRequests();
   }, []);
+
+  const updateScrollState = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 0);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    window.addEventListener('resize', updateScrollState);
+    return () => {
+      el.removeEventListener('scroll', updateScrollState);
+      window.removeEventListener('resize', updateScrollState);
+    };
+  }, [isLoading, requests, updateScrollState]);
 
   const handleRequestSuccess = () => {
     loadRequests();
@@ -143,64 +164,64 @@ export const PrescriptionsPage: React.FC = () => {
     const hasApprovedData = request.medicationName || request.dosage;
 
     return (
-      <div className={`bg-white rounded-2xl border border-gray-100 p-8 ${className}`}>
+      <div className={`bg-white rounded-2xl border border-gray-100 p-4 sm:p-8 ${className}`}>
         {hasApprovedData ? (
-          <div className="grid grid-cols-2 gap-x-16 gap-y-8">
+          <div className="grid grid-cols-2 gap-x-6 sm:gap-x-16 gap-y-4 sm:gap-y-8">
             <div>
-              <p className="text-base font-semibold text-gray-800 mb-1">
+              <p className="text-sm sm:text-base font-semibold text-gray-800 mb-1">
                 {t('prescriptions.medicationName')}
               </p>
-              <p className="text-base text-gray-600">{request.medicationName || '-'}</p>
+              <p className="text-sm sm:text-base text-gray-600">{request.medicationName || '-'}</p>
             </div>
             <div>
-              <p className="text-base font-semibold text-gray-800 mb-1">
+              <p className="text-sm sm:text-base font-semibold text-gray-800 mb-1">
                 {t('prescriptions.dosage')}
               </p>
-              <p className="text-base text-gray-600">{request.dosage || '-'}</p>
+              <p className="text-sm sm:text-base text-gray-600">{request.dosage || '-'}</p>
             </div>
             <div>
-              <p className="text-base font-semibold text-gray-800 mb-1">
+              <p className="text-sm sm:text-base font-semibold text-gray-800 mb-1">
                 {t('prescriptions.dateIssued')}
               </p>
-              <p className="text-base text-gray-600">
+              <p className="text-sm sm:text-base text-gray-600">
                 {request.dateIssued ? formatDate(request.dateIssued) : '-'}
               </p>
             </div>
             <div>
-              <p className="text-base font-semibold text-gray-800 mb-1">
+              <p className="text-sm sm:text-base font-semibold text-gray-800 mb-1">
                 {t('prescriptions.validTill')}
               </p>
-              <p className="text-base text-gray-600">
+              <p className="text-sm sm:text-base text-gray-600">
                 {request.validTill ? formatDate(request.validTill) : '-'}
               </p>
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-x-16 gap-y-8">
+          <div className="grid grid-cols-2 gap-x-6 sm:gap-x-16 gap-y-4 sm:gap-y-8">
             <div>
-              <p className="text-base font-semibold text-gray-800 mb-1">
+              <p className="text-sm sm:text-base font-semibold text-gray-800 mb-1">
                 {t('prescriptions.weight')}
               </p>
-              <p className="text-base text-gray-600">{request.currentWeight} kg</p>
+              <p className="text-sm sm:text-base text-gray-600">{request.currentWeight} kg</p>
             </div>
             <div>
-              <p className="text-base font-semibold text-gray-800 mb-1">
+              <p className="text-sm sm:text-base font-semibold text-gray-800 mb-1">
                 {t('prescriptions.sideEffects')}
               </p>
-              <p className="text-base text-gray-600">
+              <p className="text-sm sm:text-base text-gray-600">
                 {request.hasSideEffects ? t('prescriptions.yes') : t('prescriptions.no')}
               </p>
             </div>
             <div className="col-span-2">
-              <p className="text-base font-semibold text-gray-800 mb-1">
+              <p className="text-sm sm:text-base font-semibold text-gray-800 mb-1">
                 {t('prescriptions.submittedOn')}
               </p>
-              <p className="text-base text-gray-600">{formatDate(request.createdAt)}</p>
+              <p className="text-sm sm:text-base text-gray-600">{formatDate(request.createdAt)}</p>
             </div>
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-8">
+        <div className="flex items-center justify-between mt-4 sm:mt-8">
           {getStatusBadge(request, isActive)}
           <button
             onClick={() => setSelectedRequest(request)}
@@ -216,18 +237,19 @@ export const PrescriptionsPage: React.FC = () => {
 
   return (
     <SubscriptionRequired featureName="Prescriptions">
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 font-manrope">
+        <div className="flex items-center justify-between gap-3 mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 font-manrope">
             {t('prescriptions.title')}
           </h1>
           <Button
             onClick={() => setModalOpen(true)}
-            className="bg-teal-600 hover:bg-teal-700 flex items-center gap-2"
+            className="bg-teal-600 hover:bg-teal-700 flex items-center gap-2 shrink-0"
           >
             <Plus className="w-4 h-4" />
-            {t('prescriptions.requestNew')}
+            <span className="hidden sm:inline">{t('prescriptions.requestNew')}</span>
+            <span className="sm:hidden">{t('prescriptions.requestNewShort', 'Request')}</span>
           </Button>
         </div>
 
@@ -244,12 +266,12 @@ export const PrescriptionsPage: React.FC = () => {
           <div className="space-y-10">
             <div>
               <Skeleton className="h-7 w-48 mb-4" />
-              <div className="bg-white rounded-2xl border border-gray-100 p-8">
-                <div className="grid grid-cols-2 gap-x-10 gap-y-5">
+              <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-8">
+                <div className="grid grid-cols-2 gap-x-6 sm:gap-x-10 gap-y-5">
                   {[...Array(4)].map((_, i) => (
                     <div key={i} className="space-y-1.5">
-                      <Skeleton className="h-4 w-28" />
-                      <Skeleton className="h-4 w-36" />
+                      <Skeleton className="h-4 w-20 sm:w-28" />
+                      <Skeleton className="h-4 w-24 sm:w-36" />
                     </div>
                   ))}
                 </div>
@@ -261,14 +283,14 @@ export const PrescriptionsPage: React.FC = () => {
             </div>
             <div>
               <Skeleton className="h-7 w-52 mb-4" />
-              <div className="flex gap-4">
+              <div className="flex gap-4 overflow-hidden">
                 {[...Array(3)].map((_, i) => (
-                  <div key={i} className="bg-white rounded-2xl border border-gray-100 p-6 min-w-[300px]">
-                    <div className="grid grid-cols-2 gap-x-10 gap-y-5">
+                  <div key={i} className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 min-w-[280px] sm:min-w-[300px]">
+                    <div className="grid grid-cols-2 gap-x-6 sm:gap-x-10 gap-y-5">
                       {[...Array(4)].map((_, j) => (
                         <div key={j} className="space-y-1.5">
-                          <Skeleton className="h-4 w-28" />
-                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-4 w-20 sm:w-28" />
+                          <Skeleton className="h-4 w-24 sm:w-32" />
                         </div>
                       ))}
                     </div>
@@ -311,7 +333,7 @@ export const PrescriptionsPage: React.FC = () => {
                 <PrescriptionCard
                   request={activeRequest}
                   isActive={true}
-                  className="max-w-xl"
+                  className="sm:max-w-xl"
                 />
               ) : (
                 <div className="bg-white rounded-2xl border border-gray-100 p-6">
@@ -329,13 +351,14 @@ export const PrescriptionsPage: React.FC = () => {
                   <h2 className="text-xl font-bold text-gray-800 font-manrope">
                     {t('prescriptions.history')}
                   </h2>
-                  {historyRequests.length > 3 && (
-                    <div className="flex gap-2">
+                  {historyRequests.length > 1 && (
+                    <div className="hidden sm:flex gap-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => scrollHistory('left')}
-                        className="h-8 w-8 p-0 rounded-full border-gray-300"
+                        disabled={!canScrollLeft}
+                        className="h-8 w-8 p-0 rounded-full border-gray-300 disabled:opacity-30"
                       >
                         <ChevronLeft className="w-4 h-4" />
                       </Button>
@@ -343,26 +366,47 @@ export const PrescriptionsPage: React.FC = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => scrollHistory('right')}
-                        className="h-8 w-8 p-0 rounded-full border-gray-300"
+                        disabled={!canScrollRight}
+                        className="h-8 w-8 p-0 rounded-full border-gray-300 disabled:opacity-30"
                       >
                         <ChevronRight className="w-4 h-4" />
                       </Button>
                     </div>
                   )}
                 </div>
-                <div
-                  ref={scrollRef}
-                  className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide"
-                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                >
-                  {historyRequests.map((request) => (
-                    <PrescriptionCard
-                      key={request._id}
-                      request={request}
-                      isActive={false}
-                      className="min-w-[320px] max-w-[320px] flex-shrink-0"
-                    />
-                  ))}
+                <div className="relative">
+                  <div
+                    ref={scrollRef}
+                    className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide"
+                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                  >
+                    {historyRequests.map((request) => (
+                      <PrescriptionCard
+                        key={request._id}
+                        request={request}
+                        isActive={false}
+                        className="min-w-[280px] sm:min-w-[320px] max-w-[280px] sm:max-w-[320px] flex-shrink-0"
+                      />
+                    ))}
+                  </div>
+                  {/* Right scroll indicator */}
+                  {canScrollRight && (
+                    <button
+                      onClick={() => scrollHistory('right')}
+                      className="absolute right-0 top-0 bottom-2 w-12 flex items-center justify-end bg-gradient-to-l from-[#F0F7F4] via-[#F0F7F4]/80 to-transparent"
+                    >
+                      <ChevronRight className="w-5 h-5 text-gray-500" />
+                    </button>
+                  )}
+                  {/* Left scroll indicator */}
+                  {canScrollLeft && (
+                    <button
+                      onClick={() => scrollHistory('left')}
+                      className="absolute left-0 top-0 bottom-2 w-12 flex items-center justify-start bg-gradient-to-r from-[#F0F7F4] via-[#F0F7F4]/80 to-transparent"
+                    >
+                      <ChevronLeft className="w-5 h-5 text-gray-500" />
+                    </button>
+                  )}
                 </div>
               </div>
             )}
@@ -384,7 +428,7 @@ export const PrescriptionsPage: React.FC = () => {
               <div className="space-y-5 pt-2">
                 {/* Medication info (if approved) */}
                 {(selectedRequest.medicationName || selectedRequest.dosage) && (
-                  <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                     {selectedRequest.medicationName && (
                       <div>
                         <p className="text-xs text-gray-400 mb-0.5">{t('prescriptions.medicationName')}</p>
@@ -428,7 +472,7 @@ export const PrescriptionsPage: React.FC = () => {
                 )}
 
                 {/* Request info */}
-                <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                   <div>
                     <p className="text-xs text-gray-400 mb-0.5">{t('prescriptions.weight')}</p>
                     <p className="text-sm font-medium text-gray-800">{selectedRequest.currentWeight} kg</p>

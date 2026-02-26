@@ -9,7 +9,8 @@ import {
   AlertCircle,
   Stethoscope,
   ArrowRight,
-  MoreHorizontal
+  MoreHorizontal,
+  User,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Alert, AlertDescription } from '@/components/ui/Alert';
@@ -34,12 +35,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PopupModal } from 'react-calendly';
 import { calendlyService } from '../services/calendlyService';
+import { providerService } from '../services/providerService';
 import type { PatientMeeting } from '../types/calendly-types';
+import type { Provider, ProviderMeeting } from '../types/provider-types';
 import { useCookieConsentStore } from '@/stores/cookieConsentStore';
-import { SubscriptionRequired } from '@/components/subscription/SubscriptionRequired';
+import { MeetingRequired } from '@/components/subscription';
 
 export const AppointmentsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -50,8 +55,44 @@ export const AppointmentsPage: React.FC = () => {
   const [isBookingLoading, setIsBookingLoading] = useState(false);
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
   const [selectedMeeting, setSelectedMeeting] = useState<PatientMeeting | null>(null);
+  const [myProviders, setMyProviders] = useState<Provider[]>([]);
+  const [providerMeetings, setProviderMeetings] = useState<ProviderMeeting[]>([]);
+  const [isProviderBookingLoading, setIsProviderBookingLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('doctor');
   const { consent, openPreferences } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
+
+  const loadProviderData = async () => {
+    try {
+      const [providersRes, meetingsRes] = await Promise.all([
+        providerService.getMyProviders(),
+        providerService.getMyProviderMeetings(),
+      ]);
+      setMyProviders(providersRes.providers);
+      setProviderMeetings(meetingsRes.meetings);
+    } catch (err) {
+      console.error('Error loading provider data:', err);
+    }
+  };
+
+  const handleProviderBooking = async (providerId: string) => {
+    if (!hasFunctionalConsent) {
+      openPreferences();
+      return;
+    }
+    setIsProviderBookingLoading(true);
+    setError(null);
+    try {
+      const response = await providerService.createBookingLink(providerId);
+      if (response.success) {
+        setSchedulingLink(response.schedulingLink);
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to generate booking link');
+    } finally {
+      setIsProviderBookingLoading(false);
+    }
+  };
 
   const loadMeetings = async () => {
     setIsLoading(true);
@@ -81,11 +122,13 @@ export const AppointmentsPage: React.FC = () => {
 
   useEffect(() => {
     loadMeetings();
+    loadProviderData();
   }, []);
 
   const handleBookingSuccess = () => {
     setTimeout(() => {
       loadMeetings();
+      loadProviderData();
     }, 2000);
   };
 
@@ -180,12 +223,184 @@ export const AppointmentsPage: React.FC = () => {
     </Button>
   );
 
+  const upcomingProviderMeetings = providerMeetings
+    .filter(m => new Date(m.scheduledTime) > new Date() && m.status === 'scheduled')
+    .sort((a, b) => new Date(a.scheduledTime).getTime() - new Date(b.scheduledTime).getTime());
+
+  const pastProviderMeetings = providerMeetings
+    .filter(m => new Date(m.scheduledTime) <= new Date() || m.status === 'completed' || m.status === 'canceled')
+    .sort((a, b) => new Date(b.scheduledTime).getTime() - new Date(a.scheduledTime).getTime());
+
   return (
-    <SubscriptionRequired featureName="Appointments">
-    <div className="p-8">
+    <MeetingRequired>
+    <div className="p-4 md:p-8">
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+        <TabsList>
+          <TabsTrigger value="doctor">{t('appointments.title')}</TabsTrigger>
+          <TabsTrigger value="specialists">
+            {t('appointments.specialists', 'Specialists')}
+            {myProviders.length > 0 && (
+              <Badge variant="secondary" className="ml-2 text-xs">{myProviders.length}</Badge>
+            )}
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="specialists" className="mt-6">
+          {/* Assigned Providers */}
+          {myProviders.length === 0 ? (
+            <div className="bg-white rounded-2xl border border-gray-100 p-6">
+              <div className="text-center py-12">
+                <Stethoscope className="size-16 text-gray-300 mx-auto mb-4" />
+                <h2 className="text-xl font-semibold text-gray-700 mb-2 font-manrope">
+                  {t('appointments.noSpecialists', 'No specialists assigned yet')}
+                </h2>
+                <p className="text-gray-500 font-manrope">
+                  {t('appointments.noSpecialistsMessage', 'Your care team will assign specialists as needed.')}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-8">
+              {/* Provider Cards */}
+              <div>
+                <h2 className="text-xl font-bold text-gray-800 font-manrope mb-4">
+                  {t('appointments.yourSpecialists', 'Your Specialists')}
+                </h2>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {myProviders.map((provider) => (
+                    <div key={provider._id} className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div>
+                          <h3 className="font-semibold text-gray-800">{provider.name}</h3>
+                          <Badge variant="secondary" className="mt-1">
+                            {provider.providerType === 'physician' ? t('appointments.physician', 'Physician') : provider.providerType === 'hypnotherapist' ? t('appointments.hypnotherapist', 'Hypnotherapist') : provider.providerType}
+                          </Badge>
+                          {provider.specialty && (
+                            <p className="text-sm text-gray-500 mt-1">{provider.specialty}</p>
+                          )}
+                          {provider.bio && (
+                            <p className="text-sm text-gray-600 mt-2">{provider.bio}</p>
+                          )}
+                        </div>
+                        <Button
+                          onClick={() => handleProviderBooking(provider._id)}
+                          disabled={isProviderBookingLoading}
+                          size="sm"
+                          className="bg-teal-600 hover:bg-teal-700"
+                        >
+                          <Calendar className="w-4 h-4 mr-1" />
+                          {t('appointments.bookSpecialist', 'Book')}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Upcoming Provider Meetings */}
+              {upcomingProviderMeetings.length > 0 && (
+                <div>
+                  <h2 className="text-xl font-bold text-gray-800 font-manrope mb-4">
+                    {t('appointments.upcoming')}
+                  </h2>
+                  <div className="space-y-4">
+                    {upcomingProviderMeetings.map((meeting, idx) => (
+                      <div key={idx} className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6">
+                        <div className="grid grid-cols-2 gap-x-4 sm:gap-x-8 gap-y-4">
+                          <div>
+                            <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
+                              <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <span>{t('appointments.date')}</span>
+                            </div>
+                            <p className="text-sm sm:text-base font-medium text-gray-800">{formatDate(meeting.scheduledTime)}</p>
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
+                              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <span>{t('appointments.time')}</span>
+                            </div>
+                            <p className="text-sm sm:text-base font-medium text-gray-800">
+                              {formatTime(meeting.scheduledTime)}
+                              {meeting.endTime ? ` - ${formatTime(meeting.endTime)}` : ''}
+                            </p>
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
+                              <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <span>{t('appointments.specialist', 'Specialist')}</span>
+                            </div>
+                            <p className="text-sm sm:text-base font-medium text-gray-800">{meeting.providerName}</p>
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
+                              <Stethoscope className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <span>{t('appointments.type')}</span>
+                            </div>
+                            <p className="text-sm sm:text-base font-medium text-gray-800 capitalize">{meeting.providerType}</p>
+                          </div>
+                        </div>
+                        {meeting.meetingUrl && (
+                          <div className="mt-4">
+                            <Button
+                              size="sm"
+                              onClick={() => window.open(meeting.meetingUrl!, '_blank')}
+                              className="bg-teal-600 hover:bg-teal-700 text-white"
+                            >
+                              <Video className="w-4 h-4 mr-1" />
+                              {t('appointments.joinMeeting')}
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Past Provider Meetings */}
+              {pastProviderMeetings.length > 0 && (
+                <div>
+                  <h2 className="text-xl font-bold text-gray-800 font-manrope mb-4">
+                    {t('appointments.past')}
+                  </h2>
+                  <div className="bg-[#F0F7F4] rounded-2xl p-4 overflow-hidden">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-b border-gray-200 hover:bg-transparent">
+                          <TableHead className="font-semibold text-gray-700">{t('appointments.date')}</TableHead>
+                          <TableHead className="font-semibold text-gray-700">{t('appointments.specialist', 'Specialist')}</TableHead>
+                          <TableHead className="font-semibold text-gray-700">{t('appointments.type')}</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {pastProviderMeetings.map((meeting, idx) => (
+                          <TableRow key={idx} className="border-b border-gray-200/60 hover:bg-white/40">
+                            <TableCell>
+                              {meeting.status === 'canceled' ? (
+                                <span className="text-red-500 font-semibold">{t('appointments.canceled')}</span>
+                              ) : (
+                                <span className="text-gray-700">{formatDate(meeting.scheduledTime)}</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-gray-700">{meeting.providerName}</TableCell>
+                            <TableCell className="text-gray-700 capitalize">{meeting.providerType}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="doctor" className="mt-6">
+
       {/* Header */}
-      <div className="flex items-center justify-end mb-6">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-end mb-4 md:mb-6">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Button
             variant="outline"
             size="sm"
@@ -213,16 +428,16 @@ export const AppointmentsPage: React.FC = () => {
           {/* Skeleton: Upcoming Section */}
           <div>
             <Skeleton className="h-7 w-56 mb-4" />
-            <div className="bg-white rounded-2xl border border-gray-100 p-8 max-w-2xl">
-              <div className="grid grid-cols-2 gap-x-12 gap-y-6">
+            <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-8 max-w-2xl">
+              <div className="grid grid-cols-2 gap-x-4 sm:gap-x-12 gap-y-4 sm:gap-y-6">
                 {[...Array(4)].map((_, i) => (
                   <div key={i} className="space-y-2">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-5 w-40" />
+                    <Skeleton className="h-4 w-16 sm:w-24" />
+                    <Skeleton className="h-5 w-24 sm:w-40" />
                   </div>
                 ))}
               </div>
-              <Skeleton className="h-10 w-36 mt-8 rounded-lg" />
+              <Skeleton className="h-10 w-36 mt-4 sm:mt-8 rounded-lg" />
             </div>
           </div>
           {/* Skeleton: Past Table */}
@@ -292,53 +507,53 @@ export const AppointmentsPage: React.FC = () => {
                 {upcomingMeetings.map((meeting) => (
                   <div
                     key={meeting.id}
-                    className="bg-white rounded-2xl border border-gray-100 p-8 max-w-2xl"
+                    className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-8 max-w-2xl"
                   >
                     {/* 2x2 grid layout */}
-                    <div className="grid grid-cols-2 gap-x-12 gap-y-6">
+                    <div className="grid grid-cols-2 gap-x-4 sm:gap-x-12 gap-y-4 sm:gap-y-6">
                       {/* Date */}
                       <div>
-                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
-                          <Calendar className="w-4 h-4" />
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
+                          <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           <span>{t('appointments.date')}</span>
                         </div>
-                        <p className="text-base font-medium text-gray-800">
+                        <p className="text-sm sm:text-base font-medium text-gray-800">
                           {formatDate(meeting.startTime)}
                         </p>
                       </div>
                       {/* Time */}
                       <div>
-                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
-                          <Clock className="w-4 h-4" />
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
+                          <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           <span>{t('appointments.time')}</span>
                         </div>
-                        <p className="text-base font-medium text-gray-800">
+                        <p className="text-sm sm:text-base font-medium text-gray-800">
                           {formatTime(meeting.startTime)}
                           {meeting.endTime ? ` - ${formatTime(meeting.endTime)}` : ''}
                         </p>
                       </div>
                       {/* Doctor */}
                       <div>
-                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
-                          <Stethoscope className="w-4 h-4" />
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
+                          <Stethoscope className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           <span>{t('appointments.doctor')}</span>
                         </div>
-                        <p className="text-base font-medium text-gray-800">
+                        <p className="text-sm sm:text-base font-medium text-gray-800">
                           {getMeetingDoctor(meeting)}
                         </p>
                       </div>
                       {/* Type */}
                       <div>
-                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
-                          <Video className="w-4 h-4" />
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
+                          <Video className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           <span>{t('appointments.type')}</span>
                         </div>
-                        <p className="text-base font-medium text-gray-800">
+                        <p className="text-sm sm:text-base font-medium text-gray-800">
                           {meeting.eventType}
                         </p>
                       </div>
                     </div>
-                    <div className="mt-8">
+                    <div className="mt-4 sm:mt-8">
                       <Button
                         onClick={() => setSelectedMeeting(meeting)}
                         className="bg-teal-600 hover:bg-teal-700 text-white flex items-center gap-2 rounded-lg px-5"
@@ -367,40 +582,45 @@ export const AppointmentsPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-[#F0F7F4] rounded-2xl p-4 overflow-hidden">
+              <div className="bg-[#F0F7F4] rounded-2xl p-2 sm:p-4 overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow className="border-b border-gray-200 hover:bg-transparent">
-                      <TableHead className="font-semibold text-gray-700 text-base">
+                      <TableHead className="font-semibold text-gray-700 text-sm sm:text-base hidden sm:table-cell">
                         {t('appointments.date')}
                       </TableHead>
-                      <TableHead className="font-semibold text-gray-700 text-base">
+                      <TableHead className="font-semibold text-gray-700 text-sm sm:text-base">
                         {t('appointments.doctor')}
                       </TableHead>
-                      <TableHead className="font-semibold text-gray-700 text-base">
+                      <TableHead className="font-semibold text-gray-700 text-sm sm:text-base">
                         {t('appointments.reason')}
                       </TableHead>
-                      <TableHead className="w-12" />
+                      <TableHead className="w-10 sm:w-12" />
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {pastMeetings.map((meeting) => (
                       <TableRow key={meeting.id} className="border-b border-gray-200/60 hover:bg-white/40">
-                        <TableCell>
+                        <TableCell className="hidden sm:table-cell">
                           {meeting.status === 'canceled' ? (
-                            <span className="text-red-500 font-semibold">
+                            <span className="text-red-500 font-semibold text-sm">
                               {t('appointments.canceled')}
                             </span>
                           ) : (
-                            <span className="text-gray-700">
+                            <span className="text-gray-700 text-sm">
                               {formatDate(meeting.startTime)}
                             </span>
                           )}
                         </TableCell>
-                        <TableCell className="text-gray-700">
-                          {getMeetingDoctor(meeting)}
+                        <TableCell className="text-gray-700 text-sm">
+                          <div>{getMeetingDoctor(meeting)}</div>
+                          <div className="sm:hidden text-xs text-gray-400 mt-0.5">
+                            {meeting.status === 'canceled'
+                              ? <span className="text-red-500 font-semibold">{t('appointments.canceled')}</span>
+                              : formatDate(meeting.startTime)}
+                          </div>
                         </TableCell>
-                        <TableCell className="text-gray-700">
+                        <TableCell className="text-gray-700 text-sm">
                           {getMeetingReason(meeting)}
                         </TableCell>
                         <TableCell className="text-right">
@@ -462,7 +682,7 @@ export const AppointmentsPage: React.FC = () => {
           </DialogHeader>
           {selectedMeeting && (
             <div className="space-y-5 pt-2">
-              <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                 <div>
                   <p className="text-xs text-gray-400 mb-0.5">{t('appointments.date')}</p>
                   <p className="text-sm font-medium text-gray-800">{formatDate(selectedMeeting.startTime)}</p>
@@ -489,7 +709,7 @@ export const AppointmentsPage: React.FC = () => {
               )}
 
               {isActiveStatus(selectedMeeting.status) && (
-                <div className="flex gap-2 pt-1">
+                <div className="flex flex-wrap gap-2 pt-1">
                   {selectedMeeting.meetingUrl && (
                     <Button
                       size="sm"
@@ -527,6 +747,10 @@ export const AppointmentsPage: React.FC = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Close doctor TabsContent and Tabs */}
+        </TabsContent>
+      </Tabs>
+
       {/* Calendly Popup Modal - Only show if functional cookies accepted */}
       {hasFunctionalConsent && (
         <PopupModal
@@ -540,6 +764,6 @@ export const AppointmentsPage: React.FC = () => {
         />
       )}
     </div>
-    </SubscriptionRequired>
+    </MeetingRequired>
   );
 };

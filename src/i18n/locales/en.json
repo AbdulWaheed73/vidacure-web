@@ -340,7 +340,9 @@
     "goBack": "Go Back"
   },
   "dashboard": {
-    "choosePlan": "💎 Choose Your Plan"
+    "choosePlan": "💎 Choose Your Plan",
+    "subscribePrompt": "Subscribe to unlock all features and connect with your healthcare team.",
+    "subscribeCTA": "View Plans"
   },
   "onboarding": {
     "welcome": "Welcome",
@@ -420,6 +422,7 @@
     "noFound": "No prescriptions found",
     "emptyMessage": "Your current and past prescriptions will be displayed here",
     "requestNew": "Request a prescription",
+    "requestNewShort": "Request",
     "active": "Active prescriptions",
     "noActive": "No active prescription",
     "noActiveMessage": "Once your doctor approves a request, your active prescription will appear here.",
@@ -518,7 +521,15 @@
     },
     "errors": {
       "loadFailed": "Failed to load appointments. Please try again."
-    }
+    },
+    "specialists": "Specialists",
+    "specialist": "Specialist",
+    "physician": "Physician",
+    "hypnotherapist": "Hypnotherapist",
+    "bookSpecialist": "Book",
+    "yourSpecialists": "Your Specialists",
+    "noSpecialists": "No specialists assigned yet",
+    "noSpecialistsMessage": "Your care team will assign specialists as needed."
   },
   "resources": {
     "title": "Resources",
@@ -548,6 +559,7 @@
     "showSSN": "Show personnummer",
     "hideSSN": "Hide personnummer",
     "exportData": "Download My Data",
+    "export": "Export",
     "exporting": "Preparing download...",
     "exportDescription": "Download a copy of all your personal data stored in Vidacure in JSON format.",
     "exportError": "Failed to export data. Please try again.",
@@ -576,9 +588,39 @@
       "fetchError": "Failed to load billing history. Please try again.",
       "manageBilling": "Manage Billing",
       "cancelSubscription": "Cancel Subscription",
-      "cancelNotice": "Your subscription will end on {{date}}",
+      "cancelNotice": "Your subscription will end on {{date}}. You can still use all services until then.",
+      "expiredNotice": "Your subscription has ended. Resubscribe to regain access to all services.",
+      "resubscribe": "Resubscribe",
+      "changePlan": "Change Plan",
+      "changePlanTitle": "Change Your Plan",
+      "changePlanDescription": "Switch between our available plans. The price difference will be prorated.",
+      "currentPlanLabel": "Current plan",
+      "newPlanLabel": "New plan",
+      "perMonth": "mo",
+      "confirmChangePlan": "Confirm Change",
+      "changePlanProration": "Price difference will be prorated on your next invoice.",
+      "changePlanError": "Failed to change plan. Please try again.",
       "loading": "Loading..."
     }
+  },
+  "cancelFlow": {
+    "title": "We're sorry to see you go",
+    "subtitle": "To help us improve, please let us know why you're canceling your membership.",
+    "reasonExpensive": "It's too expensive",
+    "reasonNoResults": "I'm not seeing the results I expected",
+    "reasonGoalReached": "I've reached my goal",
+    "reasonTechnical": "I'm having technical issues with the app",
+    "neverMind": "Never Mind",
+    "cancelSubscription": "Cancel Subscription",
+    "cancelling": "Cancelling...",
+    "successTitle": "Your subscription is cancelled",
+    "successSubtitle": "You can resubscribe at any time.",
+    "accessUntil": "You still have access to all services until {{date}}.",
+    "shareFeedback": "Share feedback",
+    "tellMore": "Tell more...",
+    "submitFeedback": "Submit Feedback",
+    "skip": "Skip",
+    "submitting": "Submitting..."
   },
   "seo": {
     "defaultTitle": "Vidacure - Sustainable Weight Loss Backed by Medical Science",

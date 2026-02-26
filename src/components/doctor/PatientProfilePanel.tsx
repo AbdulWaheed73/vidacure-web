@@ -284,7 +284,7 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-[450px] sm:max-w-[450px] overflow-y-auto p-0"
+        className="w-full sm:w-[450px] sm:max-w-[450px] overflow-y-auto p-0"
       >
         <SheetHeader className="p-5 pb-0">
           <SheetTitle className="font-sora font-bold text-lg text-[#282828]">

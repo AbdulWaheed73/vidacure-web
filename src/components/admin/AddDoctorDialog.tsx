@@ -19,11 +19,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/badge';
 import { addDoctorFormSchema, type AddDoctorFormValues, type SSNCheckResponse } from '@/types/admin-types';
 import { adminService } from '@/services/adminService';
 import { SSNCheckStatus } from './SSNCheckStatus';
 import { PatientConversionConfirmDialog } from './PatientConversionConfirmDialog';
 import { Alert } from '@/components/ui/Alert';
+import { Search, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
 type AddDoctorDialogProps = {
   isOpen: boolean;
@@ -39,6 +41,9 @@ export const AddDoctorDialog = ({ isOpen, onClose, onSuccess }: AddDoctorDialogP
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isLookingUp, setIsLookingUp] = useState(false);
+  const [calendlyEventTypes, setCalendlyEventTypes] = useState<{ name: string; duration?: number }[]>([]);
+  const [calendlyLookupStatus, setCalendlyLookupStatus] = useState<'idle' | 'found' | 'not_found'>('idle');
 
   const form = useForm<AddDoctorFormValues>({
     resolver: zodResolver(addDoctorFormSchema),
@@ -78,6 +83,45 @@ export const AddDoctorDialog = ({ isOpen, onClose, onSuccess }: AddDoctorDialogP
       const error = err as { response?: { data?: { error?: string } } };
       setError(error.response?.data?.error || 'Failed to check SSN');
       setSSNStatus('idle');
+    }
+  };
+
+  const handleCalendlyLookup = async () => {
+    const email = form.getValues('email');
+    if (!email) return;
+
+    setIsLookingUp(true);
+    setCalendlyLookupStatus('idle');
+    setCalendlyEventTypes([]);
+
+    try {
+      const result = await adminService.calendlyLookup(email);
+      setCalendlyLookupStatus('found');
+      setCalendlyEventTypes(result.eventTypes);
+
+      // Auto-fill event type names from Calendly into the form
+      // Map Calendly event types to doctor event type fields by matching names
+      const eventNames = result.eventTypes.map(et => et.name);
+      const freeMatch = eventNames.find(n => /free|gratis|initial/i.test(n));
+      const standardMatch = eventNames.find(n => /standard|regular|follow/i.test(n));
+      const premiumMatch = eventNames.find(n => /premium|medical|specialist/i.test(n));
+
+      if (freeMatch) form.setValue('eventTypes.free', freeMatch);
+      if (standardMatch) form.setValue('eventTypes.standard', standardMatch);
+      if (premiumMatch) form.setValue('eventTypes.premium', premiumMatch);
+
+      // If only one event type, fill the first empty slot
+      if (eventNames.length === 1) {
+        form.setValue('eventTypes.free', eventNames[0]);
+      }
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        setCalendlyLookupStatus('not_found');
+      } else {
+        setError(err.response?.data?.error || 'Failed to lookup Calendly user');
+      }
+    } finally {
+      setIsLookingUp(false);
     }
   };
 
@@ -161,6 +205,8 @@ export const AddDoctorDialog = ({ isOpen, onClose, onSuccess }: AddDoctorDialogP
     setSSNCheckData(null);
     setError(null);
     setSuccessMessage(null);
+    setCalendlyLookupStatus('idle');
+    setCalendlyEventTypes([]);
     onClose();
   };
 
@@ -217,34 +263,80 @@ export const AddDoctorDialog = ({ isOpen, onClose, onSuccess }: AddDoctorDialogP
                 )}
               />
 
-              {/* Email Field */}
+              {/* Email Field with Calendly Lookup */}
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="email"
-                        placeholder="doctor@example.com"
-                        disabled={isSubmitting}
-                      />
-                    </FormControl>
+                    <FormLabel>Calendly Email</FormLabel>
+                    <div className="flex gap-2">
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="email"
+                          placeholder="doctor@example.com"
+                          disabled={isSubmitting}
+                        />
+                      </FormControl>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleCalendlyLookup}
+                        disabled={isLookingUp || isSubmitting || !field.value}
+                        className="shrink-0"
+                      >
+                        {isLookingUp ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Search className="h-4 w-4" />
+                        )}
+                        <span className="ml-1">Lookup</span>
+                      </Button>
+                    </div>
                     <FormDescription>
-                      Official email address for the doctor
+                      Enter the doctor's Calendly email, then click Lookup to auto-fill event types.
                     </FormDescription>
                     <FormMessage />
+
+                    {calendlyLookupStatus === 'found' && (
+                      <div className="flex items-center gap-2 text-sm text-green-600 mt-1">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>Calendly account found — {calendlyEventTypes.length} event type(s)</span>
+                      </div>
+                    )}
+                    {calendlyLookupStatus === 'not_found' && (
+                      <div className="flex items-center gap-2 text-sm text-orange-600 mt-1">
+                        <XCircle className="h-4 w-4" />
+                        <span>No Calendly user found with this email.</span>
+                      </div>
+                    )}
                   </FormItem>
                 )}
               />
+
+              {/* Calendly Event Types Preview */}
+              {calendlyEventTypes.length > 0 && (
+                <div className="rounded-md border p-3 bg-muted/50">
+                  <p className="text-sm font-medium mb-2">Calendly Event Types Found</p>
+                  <div className="flex flex-wrap gap-2">
+                    {calendlyEventTypes.map((et, idx) => (
+                      <Badge key={idx} variant="secondary">
+                        {et.name} {et.duration ? `(${et.duration}min)` : ''}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Event Types */}
               <div className="space-y-3">
                 <FormLabel>Calendly Event Types</FormLabel>
                 <p className="text-sm text-muted-foreground">
-                  Custom names for Calendly event types. Leave blank to use defaults.
+                  {calendlyLookupStatus === 'found'
+                    ? 'Auto-filled from Calendly. Adjust if needed.'
+                    : 'Custom names for Calendly event types. Leave blank to use defaults.'}
                 </p>
                 <FormField
                   control={form.control}

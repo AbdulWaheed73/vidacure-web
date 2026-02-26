@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { api, updateCsrfToken } from '../services/api';
 import { pendingSessionService } from '../services/pendingSessionService';
+import { useConsentStore } from './consentStore';
 import type { AuthStore } from '../types';
 
 
@@ -67,6 +68,11 @@ export const useAuthStore = create<AuthStore>()(
               isLoading: false,
             });
 
+            // Set consent status from /api/me response (avoids separate API call)
+            if (data.consentStatus) {
+              useConsentStore.getState().setConsentFromAuth(data.consentStatus);
+            }
+
             // After successful auth, try to link any pending booking
             // Only for patients (not doctors)
             if (data.user?.role === 'patient') {
@@ -105,6 +111,11 @@ export const useAuthStore = create<AuthStore>()(
             csrfToken: response.csrfToken || null,
             error: null,
           });
+
+          // Set consent status if included in response
+          if (response.consentStatus) {
+            useConsentStore.getState().setConsentFromAuth(response.consentStatus);
+          }
         } else {
           set({
             isAuthenticated: false,

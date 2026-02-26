@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { getStatus, recordConsent } from '../services/consentService';
+import type { ConsentStatusResponse } from '../types';
 
 type ConsentState = {
   hasAcceptedLatest: boolean;
@@ -7,6 +8,7 @@ type ConsentState = {
   isChecking: boolean;
   showConsentModal: boolean;
   checkConsentStatus: () => Promise<void>;
+  setConsentFromAuth: (status: ConsentStatusResponse) => void;
   acceptConsent: () => Promise<void>;
   dismissModal: () => void;
 };
@@ -16,6 +18,15 @@ export const useConsentStore = create<ConsentState>((set, get) => ({
   currentVersion: '',
   isChecking: false,
   showConsentModal: false,
+
+  // Called from auth store when /api/me includes consent status
+  setConsentFromAuth: (status: ConsentStatusResponse) => {
+    set({
+      hasAcceptedLatest: status.hasAcceptedLatest,
+      currentVersion: status.currentVersion,
+      showConsentModal: !status.hasAcceptedLatest,
+    });
+  },
 
   checkConsentStatus: async () => {
     set({ isChecking: true });

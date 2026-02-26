@@ -8,11 +8,12 @@ import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { NotificationsView } from '@/components/admin/NotificationsView';
 import { DeletionLogsView } from '@/components/admin/DeletionLogsView';
 import { DeleteUserDialog } from '@/components/admin/DeleteUserDialog';
+import { ProvidersView } from '@/components/admin/ProvidersView';
 import { adminService } from '@/services/adminService';
 import type { Patient, Doctor, DashboardStats } from '@/services/adminService';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Alert } from '@/components/ui/Alert';
-import { Users, UserPlus, Activity, UserX } from 'lucide-react';
+import { Users, UserPlus, Activity, UserX, Stethoscope } from 'lucide-react';
 
 export const AdminDashboard = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -206,6 +207,23 @@ export const AdminDashboard = () => {
                 </p>
               </CardContent>
             </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Active Providers
+                </CardTitle>
+                <Stethoscope className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {stats?.totalProviders || 0}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Physicians & specialists
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 
@@ -237,6 +255,10 @@ export const AdminDashboard = () => {
             onDelete={(doctor) => handleDeleteUser(doctor, 'doctor')}
             onRefresh={fetchData}
           />
+        </TabsContent>
+
+        <TabsContent value="providers" className="space-y-4">
+          <ProvidersView onRefresh={fetchData} />
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4">

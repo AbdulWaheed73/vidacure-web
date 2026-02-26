@@ -340,7 +340,9 @@
     "goBack": "Gå tillbaka"
   },
   "dashboard": {
-    "choosePlan": "💎 Välj din plan"
+    "choosePlan": "💎 Välj din plan",
+    "subscribePrompt": "Prenumerera för att låsa upp alla funktioner och anslut till ditt vårdteam.",
+    "subscribeCTA": "Visa planer"
   },
   "onboarding": {
     "welcome": "Välkommen",
@@ -420,6 +422,7 @@
     "noFound": "Inga recept hittades",
     "emptyMessage": "Dina nuvarande och tidigare recept kommer att visas här",
     "requestNew": "Begär recept",
+    "requestNewShort": "Begär",
     "active": "Aktiva recept",
     "noActive": "Inget aktivt recept",
     "noActiveMessage": "När din läkare godkänner en förfrågan visas ditt aktiva recept här.",
@@ -518,7 +521,15 @@
     },
     "errors": {
       "loadFailed": "Kunde inte ladda bokningar. Försök igen."
-    }
+    },
+    "specialists": "Specialister",
+    "specialist": "Specialist",
+    "physician": "Läkare",
+    "hypnotherapist": "Hypnoterapeut",
+    "bookSpecialist": "Boka",
+    "yourSpecialists": "Dina specialister",
+    "noSpecialists": "Inga specialister tilldelade ännu",
+    "noSpecialistsMessage": "Ditt vårdteam tilldelar specialister vid behov."
   },
   "resources": {
     "title": "Resurser",
@@ -548,6 +559,7 @@
     "showSSN": "Visa personnummer",
     "hideSSN": "Dölj personnummer",
     "exportData": "Ladda ner mina data",
+    "export": "Exportera",
     "exporting": "Förbereder nedladdning...",
     "exportDescription": "Ladda ner en kopia av alla dina personuppgifter lagrade i Vidacure i JSON-format.",
     "exportError": "Det gick inte att exportera data. Försök igen.",
@@ -576,9 +588,39 @@
       "fetchError": "Det gick inte att ladda faktureringshistorik. Försök igen.",
       "manageBilling": "Hantera fakturering",
       "cancelSubscription": "Avbryt prenumeration",
-      "cancelNotice": "Din prenumeration avslutas den {{date}}",
+      "cancelNotice": "Din prenumeration avslutas den {{date}}. Du kan fortfarande använda alla tjänster fram till dess.",
+      "expiredNotice": "Din prenumeration har avslutats. Prenumerera igen för att få tillgång till alla tjänster.",
+      "resubscribe": "Prenumerera igen",
+      "changePlan": "Byt plan",
+      "changePlanTitle": "Byt din plan",
+      "changePlanDescription": "Byt mellan våra tillgängliga planer. Prisskillnaden justeras proportionellt.",
+      "currentPlanLabel": "Nuvarande plan",
+      "newPlanLabel": "Ny plan",
+      "perMonth": "mån",
+      "confirmChangePlan": "Bekräfta byte",
+      "changePlanProration": "Prisskillnaden justeras proportionellt på din nästa faktura.",
+      "changePlanError": "Det gick inte att byta plan. Försök igen.",
       "loading": "Laddar..."
     }
+  },
+  "cancelFlow": {
+    "title": "Vi är ledsna att se dig gå",
+    "subtitle": "För att hjälpa oss förbättra, berätta varför du vill avbryta ditt medlemskap.",
+    "reasonExpensive": "Det är för dyrt",
+    "reasonNoResults": "Jag ser inte de resultat jag förväntade mig",
+    "reasonGoalReached": "Jag har nått mitt mål",
+    "reasonTechnical": "Jag har tekniska problem med appen",
+    "neverMind": "Ångra",
+    "cancelSubscription": "Avbryt prenumeration",
+    "cancelling": "Avbryter...",
+    "successTitle": "Din prenumeration är avbruten",
+    "successSubtitle": "Du kan prenumerera igen när som helst.",
+    "accessUntil": "Du har fortfarande tillgång till alla tjänster fram till {{date}}.",
+    "shareFeedback": "Dela feedback",
+    "tellMore": "Berätta mer...",
+    "submitFeedback": "Skicka feedback",
+    "skip": "Hoppa över",
+    "submitting": "Skickar..."
   },
   "seo": {
     "defaultTitle": "Vidacure - Hållbar Viktminskning med Medicinsk Vetenskap",

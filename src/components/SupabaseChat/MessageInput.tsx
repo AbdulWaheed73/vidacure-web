@@ -40,8 +40,8 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   const canSend = message.trim() && !disabled;
 
   return (
-    <div className="px-6 py-4">
-      <div className="flex items-center gap-3 rounded-full border border-border/40 bg-white/80 px-5 py-2.5">
+    <div className="px-4 md:px-6 py-3 md:py-4">
+      <div className="flex items-center gap-3 rounded-full border border-border/40 bg-white/80 px-4 md:px-5 py-2.5">
         <textarea
           className="flex-1 bg-transparent text-base resize-none outline-none max-h-24 text-foreground placeholder:text-muted-foreground leading-relaxed"
           value={message}
