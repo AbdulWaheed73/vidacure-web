@@ -33,6 +33,7 @@ const SupabaseChatPage = lazy(() => import("./pages/SupabaseChatPage"));
 const SubscribePage = lazy(() => import("./pages/SubscribePage"));
 const OnboardingFlow = lazy(() => import("./pages/OnBoarding"));
 const DashboardRouter = lazy(() => import("./pages/dashboard/DashboardRouter"));
+const ConsentManagement = lazy(() => import("./pages/ConsentManagement").then(m => ({ default: m.ConsentManagement })));
 
 // Admin routes
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -313,6 +314,19 @@ function App() {
             isAuthenticated ? (
               <SidebarLayout>
                 <AccountPage user={user} onLogout={logout} />
+              </SidebarLayout>
+            ) : (
+              <Navigate to={ROUTES.LOGIN} replace />
+            )
+          }
+        />
+
+        <Route
+          path="/consent"
+          element={
+            isAuthenticated ? (
+              <SidebarLayout>
+                <ConsentManagement />
               </SidebarLayout>
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />

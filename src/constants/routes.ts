@@ -13,7 +13,6 @@ export const ROUTES = {
   DOCTOR_PRESCRIPTIONS: '/dashboard/doctor/prescriptions',
   DOCTOR_PATIENTS: '/dashboard/doctor/patients',
   DOCTOR_ACCOUNT: '/dashboard/doctor/account',
-  DOCTOR_LAB_RESULTS: '/dashboard/doctor/lab-results',
   DOCTOR_CHAT: '/supabase-chat',
   // Patient Dashboard Routes (existing routes)
   PATIENT_DASHBOARD: '/dashboard/patient',
@@ -23,6 +22,7 @@ export const ROUTES = {
   PATIENT_PROGRESS: '/progress',
   PATIENT_LAB_TESTS: '/lab-tests',
   PATIENT_CHAT: '/supabase-chat',
+  PATIENT_CONSENT: '/consent',
   // Add more routes as needed
   PROFILE: '/profile',
   SETTINGS: '/settings',

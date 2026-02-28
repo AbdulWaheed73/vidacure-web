@@ -4,6 +4,7 @@ import { calendlyService } from '@/services/calendlyService';
 import { doctorPrescriptionService } from '@/services/doctorPrescriptionService';
 import { doctorPatientService } from '@/services/doctorPatientService';
 import { doctorProfileService } from '@/services/doctorProfileService';
+import { doctorLabTestService } from '@/services/doctorLabTestService';
 import { supabaseChatService } from '@/services/supabaseChatService';
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
 
@@ -84,6 +85,14 @@ export const useDoctorPatientQuestionnaire = (patientId: string | null, enabled:
   return useQuery({
     queryKey: queryKeys.doctorPatientQuestionnaire(patientId ?? ''),
     queryFn: () => doctorPatientService.getPatientQuestionnaire(patientId!),
+    enabled: !!patientId && enabled,
+  });
+};
+
+export const useDoctorPatientLabOrders = (patientId: string | null, enabled: boolean) => {
+  return useQuery({
+    queryKey: queryKeys.doctorPatientLabOrders(patientId ?? ''),
+    queryFn: () => doctorLabTestService.getPatientLabOrders(patientId!),
     enabled: !!patientId && enabled,
   });
 };

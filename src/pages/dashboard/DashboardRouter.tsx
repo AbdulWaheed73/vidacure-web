@@ -9,7 +9,6 @@ const DoctorAppointments = lazy(() => import('./doctor/DoctorAppointments'));
 const DoctorPrescriptions = lazy(() => import('./doctor/DoctorPrescriptions'));
 const DoctorPatients = lazy(() => import('./doctor/DoctorPatients'));
 const DoctorAccount = lazy(() => import('./doctor/DoctorAccount'));
-const DoctorLabResults = lazy(() => import('./doctor/DoctorLabResults'));
 
 type DashboardRouterProps = {
   user: User | null;
@@ -72,18 +71,6 @@ const DashboardRouter: React.FC<DashboardRouterProps> = ({ user, onLogout, loadi
           user?.role === 'doctor' ? (
             <Suspense fallback={<LoadingSpinner />}>
               <DoctorPatients />
-            </Suspense>
-          ) : (
-            <Navigate to={ROUTES.LOGIN} replace />
-          )
-        }
-      />
-      <Route
-        path="doctor/lab-results"
-        element={
-          user?.role === 'doctor' ? (
-            <Suspense fallback={<LoadingSpinner />}>
-              <DoctorLabResults />
             </Suspense>
           ) : (
             <Navigate to={ROUTES.LOGIN} replace />

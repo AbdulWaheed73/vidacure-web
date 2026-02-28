@@ -31,6 +31,6 @@ export const useChatUnreadCounts = (enabled = true) => {
     enabled,
     staleTime: 10 * 1000, // Consider stale after 10 seconds
     refetchInterval: 15000, // Poll every 15 seconds
-    refetchIntervalInBackground: true, // Keep polling even when tab is hidden
+    refetchIntervalInBackground: false, // Stop polling when tab is hidden
   });
 };

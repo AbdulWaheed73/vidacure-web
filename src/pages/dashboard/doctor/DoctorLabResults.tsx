@@ -18,10 +18,10 @@ import { api } from '@/services/api';
 import type { LabTestOrder } from '@/types/lab-test-types';
 
 type PatientSummary = {
-  _id: string;
+  id: string;
   name: string;
-  given_name?: string;
-  family_name?: string;
+  givenName?: string;
+  familyName?: string;
   email?: string;
 };
 
@@ -42,9 +42,7 @@ const DoctorLabResults: React.FC = () => {
       try {
         setLoadingPatients(true);
         const response = await api.get('/api/doctor/patients');
-        if (response.data.success) {
-          setPatients(response.data.patients || []);
-        }
+        setPatients(response.data.patients || []);
       } catch (err) {
         console.error('Failed to fetch patients:', err);
         setError('Failed to load patients');
@@ -112,10 +110,10 @@ const DoctorLabResults: React.FC = () => {
               <div className="space-y-2">
                 {patients.map((patient) => (
                   <button
-                    key={patient._id}
-                    onClick={() => handleSelectPatient(patient._id)}
+                    key={patient.id}
+                    onClick={() => handleSelectPatient(patient.id)}
                     className={`w-full text-left p-3 rounded-lg flex items-center gap-3 transition-colors ${
-                      selectedPatientId === patient._id
+                      selectedPatientId === patient.id
                         ? 'bg-teal-50 border border-teal-200'
                         : 'bg-gray-50 hover:bg-gray-100 border border-transparent'
                     }`}

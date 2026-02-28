@@ -13,13 +13,25 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } f
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { MessageCircle } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { MessageCircle, FlaskConical } from 'lucide-react';
 import {
   useDoctorPatientProfile,
   useDoctorPatientQuestionnaire,
+  useDoctorPatientLabOrders,
 } from '@/hooks/useDoctorDashboardQueries';
 import { QUESTION_LABELS } from '@/components/onboarding/questionMapping';
+import { LabTestOrderStatusBadge } from '@/components/LabTestOrderStatus';
+import { LabTestResults } from '@/components/LabTestResults';
 import type { WeightHistoryEntry, PrescriptionRequestEntry } from '@/types/doctor-patient-types';
+import type { LabTestOrder } from '@/types/lab-test-types';
 
 type PatientProfilePanelProps = {
   patientId: string | null;
@@ -258,6 +270,86 @@ const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean }>
   );
 };
 
+// --- Lab Tests Tab ---
+
+const LabTestsTab: React.FC<{ patientId: string | null; enabled: boolean }> = ({
+  patientId,
+  enabled,
+}) => {
+  const { data, isLoading } = useDoctorPatientLabOrders(patientId, enabled);
+  const [resultOrder, setResultOrder] = useState<LabTestOrder | null>(null);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-3 p-1">
+        {[1, 2, 3].map((i) => (
+          <Skeleton key={i} className="h-20 w-full rounded-xl" />
+        ))}
+      </div>
+    );
+  }
+
+  const orders = data?.orders ?? [];
+
+  if (orders.length === 0) {
+    return (
+      <div className="text-center py-10">
+        <FlaskConical className="w-10 h-10 text-[#c0ebe5] mx-auto mb-3" />
+        <p className="text-[#b0b0b0] font-manrope text-sm">No lab test orders yet</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="space-y-3 p-1">
+        {orders.map((order) => (
+          <div key={order._id} className="bg-white rounded-xl border border-[#e0e0e0] p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-sora font-medium text-sm text-[#282828]">
+                {order.testPackage.name}
+              </span>
+              <LabTestOrderStatusBadge status={order.status} />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="text-xs text-[#b0b0b0] font-manrope space-y-0.5">
+                <p>Ordered: {new Date(order.orderedAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                {order.completedAt && (
+                  <p>Completed: {new Date(order.completedAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                )}
+              </div>
+              {order.results.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs"
+                  onClick={() => setResultOrder(order)}
+                >
+                  View results
+                </Button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <Dialog open={!!resultOrder} onOpenChange={(open) => !open && setResultOrder(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Lab Results</DialogTitle>
+            <DialogDescription>
+              {resultOrder?.testPackage.name}
+              {' — '}
+              {resultOrder && new Date(resultOrder.orderedAt).toLocaleDateString()}
+            </DialogDescription>
+          </DialogHeader>
+          {resultOrder && <LabTestResults results={resultOrder.results} />}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
 // --- Main Panel ---
 
 export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
@@ -307,6 +399,12 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
               >
                 Questionnaire
+              </TabsTrigger>
+              <TabsTrigger
+                value="lab-tests"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
+              >
+                Lab Tests
               </TabsTrigger>
             </TabsList>
 
@@ -421,6 +519,14 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
               <QuestionnaireTab
                 patientId={patientId}
                 enabled={activeTab === 'questionnaire'}
+              />
+            </TabsContent>
+
+            {/* Lab Tests Tab */}
+            <TabsContent value="lab-tests" className="mt-4 pb-6">
+              <LabTestsTab
+                patientId={patientId}
+                enabled={activeTab === 'lab-tests'}
               />
             </TabsContent>
           </Tabs>

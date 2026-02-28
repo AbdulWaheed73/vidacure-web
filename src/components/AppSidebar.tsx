@@ -10,6 +10,7 @@ import {
   Users,
   MessageCircle,
   FlaskConical,
+  ShieldCheck,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -73,11 +74,6 @@ export function AppSidebar({ user }: { user: User | null }) {
       icon: Pill,
     },
     {
-      title: t('sidebar.labTests'),
-      url: ROUTES.DOCTOR_LAB_RESULTS,
-      icon: FlaskConical,
-    },
-    {
       title: t('sidebar.account'),
       url: ROUTES.DOCTOR_ACCOUNT,
       icon: UserIcon,
@@ -119,6 +115,11 @@ export function AppSidebar({ user }: { user: User | null }) {
       title: t('sidebar.resources'),
       url: '/resources',
       icon: BookOpen,
+    },
+    {
+      title: t('sidebar.consent'),
+      url: '/consent',
+      icon: ShieldCheck,
     },
     {
       title: t('sidebar.account'),

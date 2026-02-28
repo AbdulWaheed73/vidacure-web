@@ -11,6 +11,8 @@ import type {
   DeleteUserResponse,
   DeletionLogsResponse,
   DeletionLog,
+  AuditLogsResponse,
+  AuditAnomaliesResponse,
 } from '../types/admin-types';
 
 export type DashboardStats = {
@@ -299,16 +301,6 @@ export const adminService = {
     return response.data;
   },
 
-  assignProviderToPatient: async (patientId: string, providerId: string): Promise<{ message: string }> => {
-    const response = await api.post('/api/admin/assign-provider', { patientId, providerId });
-    return response.data;
-  },
-
-  unassignProviderFromPatient: async (patientId: string, providerId: string): Promise<{ message: string }> => {
-    const response = await api.post('/api/admin/unassign-provider', { patientId, providerId });
-    return response.data;
-  },
-
   // ============ Provider Tier Methods ============
 
   setProviderTierOverride: async (
@@ -343,6 +335,34 @@ export const adminService = {
     }[];
   }> => {
     const response = await api.get(`/api/admin/patients/${patientId}/provider-tiers`);
+    return response.data;
+  },
+
+  // ============ Audit Log Methods ============
+
+  /**
+   * Get audit logs with filters and pagination
+   */
+  getAuditLogs: async (params: {
+    page?: number;
+    limit?: number;
+    userId?: string;
+    targetId?: string;
+    action?: string;
+    role?: string;
+    success?: string;
+    dateFrom?: string;
+    dateTo?: string;
+  } = {}): Promise<AuditLogsResponse> => {
+    const response = await api.get('/api/admin/audit-logs', { params });
+    return response.data;
+  },
+
+  /**
+   * Get anomaly detection summary (last 7 days)
+   */
+  getAuditAnomalies: async (): Promise<AuditAnomaliesResponse> => {
+    const response = await api.get('/api/admin/audit-logs/anomalies');
     return response.data;
   },
 

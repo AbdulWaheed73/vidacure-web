@@ -27,5 +27,6 @@ export const queryKeys = {
   doctorPatients: ['doctorPatients'] as const,
   doctorPatientProfile: (patientId: string) => ['doctorPatientProfile', patientId] as const,
   doctorPatientQuestionnaire: (patientId: string) => ['doctorPatientQuestionnaire', patientId] as const,
+  doctorPatientLabOrders: (patientId: string) => ['doctorPatientLabOrders', patientId] as const,
   doctorProfile: ['doctorProfile'] as const,
 };

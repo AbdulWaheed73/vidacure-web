@@ -146,6 +146,55 @@ export type DeleteUserResponse = {
   results: DeletionResults;
 };
 
+// Audit Log Types
+export type AuditLog = {
+  _id: string;
+  userId: string;
+  role: string;
+  action: string;
+  operation: 'CREATE' | 'READ' | 'UPDATE' | 'DELETE';
+  success: boolean;
+  targetId?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  timestamp: string;
+  metadata?: Record<string, unknown>;
+  integrityHash?: string;
+};
+
+export type AuditLogsResponse = {
+  logs: AuditLog[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+  };
+};
+
+export type AuditAnomaliesResponse = {
+  period: {
+    from: string;
+    to: string;
+  };
+  anomalies: {
+    highVolumeAccessors: {
+      userId: string;
+      uniqueTargetCount: number;
+      totalAccess: number;
+    }[];
+    failedAccessClusters: {
+      _id: { userId: string; action: string };
+      count: number;
+      latestAttempt: string;
+    }[];
+    afterHoursAccess: {
+      _id: string;
+      afterHoursCount: number;
+    }[];
+  };
+};
+
 // Admin Login/2FA Response Types
 export type AdminLoginResponse = {
   requires2FA?: boolean;

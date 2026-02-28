@@ -7,6 +7,7 @@ import { ReassignDoctorModal } from '@/components/admin/ReassignDoctorModal';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import { NotificationsView } from '@/components/admin/NotificationsView';
 import { DeletionLogsView } from '@/components/admin/DeletionLogsView';
+import { AuditLogsView } from '@/components/admin/AuditLogsView';
 import { DeleteUserDialog } from '@/components/admin/DeleteUserDialog';
 import { ProvidersView } from '@/components/admin/ProvidersView';
 import { adminService } from '@/services/adminService';
@@ -263,6 +264,10 @@ export const AdminDashboard = () => {
 
         <TabsContent value="notifications" className="space-y-4">
           <NotificationsView />
+        </TabsContent>
+
+        <TabsContent value="audit-logs" className="space-y-4">
+          <AuditLogsView />
         </TabsContent>
 
         <TabsContent value="deletion-logs" className="space-y-4">

@@ -23,6 +23,7 @@ export const AdminTopBar = ({ onLogout, onNotificationClick }: AdminTopBarProps)
 
   useEffect(() => {
     const fetchNotificationCount = async () => {
+      if (!document.hasFocus()) return;
       try {
         const data = await adminService.getNotificationCount();
         setNotificationCount(data.unreadCount);
@@ -32,9 +33,15 @@ export const AdminTopBar = ({ onLogout, onNotificationClick }: AdminTopBarProps)
       }
     };
 
+    const handleFocus = () => fetchNotificationCount();
+
     fetchNotificationCount();
     const interval = setInterval(fetchNotificationCount, 30000);
-    return () => clearInterval(interval);
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
   // Generate dynamic greeting based on time of day
   const getGreeting = () => {

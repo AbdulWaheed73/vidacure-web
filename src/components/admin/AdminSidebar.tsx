@@ -8,6 +8,7 @@ import {
   LogOut,
   Bell,
   FileText,
+  Shield,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -39,6 +40,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
 
   useEffect(() => {
     const fetchNotificationCount = async () => {
+      if (!document.hasFocus()) return;
       try {
         const data = await adminService.getNotificationCount();
         setNotificationCount(data.unreadCount);
@@ -48,9 +50,15 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
       }
     };
 
+    const handleFocus = () => fetchNotificationCount();
+
     fetchNotificationCount();
     const interval = setInterval(fetchNotificationCount, 30000);
-    return () => clearInterval(interval);
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   const adminMenuItems = [
@@ -80,6 +88,11 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
       icon: Bell,
       badge: notificationCount > 0 ? notificationCount : undefined,
       highPriority: hasHighPriority,
+    },
+    {
+      title: 'Audit Logs',
+      value: 'audit-logs',
+      icon: Shield,
     },
     {
       title: 'Deletion Logs',
