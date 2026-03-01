@@ -21,6 +21,8 @@ const Article = lazy(() => import("./pages/Article"));
 const PreLoginBMI = lazy(() => import("./pages/PreLoginBMI"));
 const PreLoginBooking = lazy(() => import("./pages/PreLoginBooking"));
 const SubscriptionSuccess = lazy(() => import("./pages/SubscriptionSuccess").then(m => ({ default: m.SubscriptionSuccess })));
+const LabTestPaymentSuccess = lazy(() => import("./pages/LabTestPaymentSuccess").then(m => ({ default: m.LabTestPaymentSuccess })));
+const LabTestPaymentCancel = lazy(() => import("./pages/LabTestPaymentCancel").then(m => ({ default: m.LabTestPaymentCancel })));
 
 // Patient/Protected routes
 const AppointmentsPage = lazy(() => import("./pages/AppointmentsPage").then(m => ({ default: m.AppointmentsPage })));
@@ -390,6 +392,24 @@ function App() {
         <Route
           path={ROUTES.SUBSCRIPTION_SUCCESS}
           element={<SubscriptionSuccess />}
+        />
+
+        {/* Lab Test Payment Routes */}
+        <Route
+          path={ROUTES.LAB_TEST_PAYMENT_SUCCESS}
+          element={<LabTestPaymentSuccess />}
+        />
+        <Route
+          path={ROUTES.LAB_TEST_PAYMENT_CANCELED}
+          element={
+            isAuthenticated ? (
+              <SidebarLayout>
+                <LabTestPaymentCancel />
+              </SidebarLayout>
+            ) : (
+              <Navigate to={ROUTES.LOGIN} replace />
+            )
+          }
         />
 
         {/* About Us Route - Public */}

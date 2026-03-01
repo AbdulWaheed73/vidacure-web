@@ -40,6 +40,8 @@ export type LabTestPackage = {
   description: string;
   descriptionSv: string;
   analyses: LabTestAnalysis[];
+  priceAmountOre: number;
+  priceCurrency: string;
 };
 
 // ============================================================================
@@ -68,6 +70,19 @@ export type LabTestResult = {
 };
 
 // ============================================================================
+// Lab Test Payment
+// ============================================================================
+
+export type LabTestPaymentStatus = "pending_payment" | "paid" | "payment_failed";
+
+export type CreateLabTestCheckoutResponse = {
+  success: boolean;
+  sessionId: string;
+  url: string;
+  orderId: string;
+};
+
+// ============================================================================
 // Lab Test Order
 // ============================================================================
 
@@ -80,7 +95,7 @@ export type LabTestOrder = {
   _id: string;
   patient: string;
   giddirServiceRequestId?: string;
-  externalTrackingId: string;
+  externalTrackingId?: string;
   testPackage: {
     id: string;
     productCode: string;
@@ -88,6 +103,9 @@ export type LabTestOrder = {
     nameSv: string;
   };
   status: LabTestOrderStatusType;
+  paymentStatus?: LabTestPaymentStatus;
+  stripeCheckoutSessionId?: string;
+  stripePaymentIntentId?: string;
   statusHistory: LabTestStatusHistoryEntry[];
   results: LabTestResult[];
   orderedAt: string;

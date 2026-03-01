@@ -10,11 +10,13 @@ type LabTestState = {
   isLoadingOrders: boolean;
   isLoadingOrder: boolean;
   isPlacingOrder: boolean;
+  isCreatingCheckout: boolean;
   error: string | null;
   fetchPackages: () => Promise<void>;
   fetchOrders: (status?: string) => Promise<void>;
   fetchOrderById: (orderId: string) => Promise<void>;
   placeOrder: (testPackageId: string) => Promise<boolean>;
+  createCheckoutSession: (testPackageId: string) => Promise<string | null>;
   clearError: () => void;
   clearSelectedOrder: () => void;
 };
@@ -27,6 +29,7 @@ export const useLabTestStore = create<LabTestState>((set, get) => ({
   isLoadingOrders: false,
   isLoadingOrder: false,
   isPlacingOrder: false,
+  isCreatingCheckout: false,
   error: null,
 
   fetchPackages: async () => {
@@ -82,6 +85,20 @@ export const useLabTestStore = create<LabTestState>((set, get) => ({
       return false;
     } finally {
       set({ isPlacingOrder: false });
+    }
+  },
+
+  createCheckoutSession: async (testPackageId: string) => {
+    set({ isCreatingCheckout: true, error: null });
+    try {
+      const response = await labTestService.createCheckoutSession(testPackageId);
+      return response.url || null;
+    } catch (error) {
+      console.error('Failed to create checkout session:', error);
+      set({ error: 'Failed to create payment session' });
+      return null;
+    } finally {
+      set({ isCreatingCheckout: false });
     }
   },
 

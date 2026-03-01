@@ -4,6 +4,7 @@ import type {
   PlaceLabTestOrderResponse,
   GetLabTestOrdersResponse,
   GetLabTestOrderResponse,
+  CreateLabTestCheckoutResponse,
 } from '../types/lab-test-types';
 
 export const labTestService = {
@@ -16,8 +17,16 @@ export const labTestService = {
     const response = await api.post<PlaceLabTestOrderResponse>('/api/lab-tests/orders', {
       testPackageId,
     }, {
-      timeout: 30000, // 30s — Giddir order involves auth + external API call
+      timeout: 30000,
     });
+    return response.data;
+  },
+
+  createCheckoutSession: async (testPackageId: string): Promise<CreateLabTestCheckoutResponse> => {
+    const response = await api.post<CreateLabTestCheckoutResponse>(
+      '/api/lab-tests/create-checkout-session',
+      { testPackageId }
+    );
     return response.data;
   },
 
@@ -25,7 +34,7 @@ export const labTestService = {
     const params = status ? { status } : {};
     const response = await api.get<GetLabTestOrdersResponse>('/api/lab-tests/orders', {
       params,
-      timeout: 30000, // Syncs pending orders from Giddir
+      timeout: 30000,
     });
     return response.data;
   },

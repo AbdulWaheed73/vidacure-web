@@ -31,7 +31,9 @@ export const ROUTES = {
   CONTACT: '/contact',
   ONBOARDING: '/onboarding',
   SUBSCRIPTION_SUCCESS: '/subscription/success',
-  SUBSCRIBE: '/subscribe'
+  SUBSCRIBE: '/subscribe',
+  LAB_TEST_PAYMENT_SUCCESS: '/lab-tests/payment-success',
+  LAB_TEST_PAYMENT_CANCELED: '/lab-tests/payment-canceled'
 } as const;
 
 export type RouteKeys = keyof typeof ROUTES;

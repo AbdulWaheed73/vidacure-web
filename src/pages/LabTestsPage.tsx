@@ -37,12 +37,12 @@ export const LabTestsPage: React.FC = () => {
     isLoadingPackages,
     isLoadingOrders,
     isLoadingOrder,
-    isPlacingOrder,
+    isCreatingCheckout,
     error,
     fetchPackages,
     fetchOrders,
     fetchOrderById,
-    placeOrder,
+    createCheckoutSession,
     clearError,
     clearSelectedOrder,
   } = useLabTestStore();
@@ -57,11 +57,17 @@ export const LabTestsPage: React.FC = () => {
     fetchOrders();
   }, [fetchPackages, fetchOrders]);
 
+  const formatPrice = (amountOre: number, currency: string) => {
+    const amount = amountOre / 100;
+    return `${amount} ${currency.toUpperCase()}`;
+  };
+
   const handleOrderConfirm = async () => {
     if (!confirmPackage) return;
-    const success = await placeOrder(confirmPackage.id);
-    if (success) {
+    const url = await createCheckoutSession(confirmPackage.id);
+    if (url) {
       setConfirmPackage(null);
+      window.location.href = url;
     }
   };
 
@@ -152,10 +158,13 @@ export const LabTestsPage: React.FC = () => {
                       ))}
                     </div>
                   </CardContent>
-                  <CardFooter>
+                  <CardFooter className="flex items-center justify-between">
+                    <span className="text-lg font-bold text-teal-700">
+                      {formatPrice(pkg.priceAmountOre, pkg.priceCurrency)}
+                    </span>
                     <Button
                       onClick={() => setConfirmPackage(pkg)}
-                      disabled={isPlacingOrder}
+                      disabled={isCreatingCheckout}
                     >
                       {t('labTests.orderTest')}
                     </Button>
@@ -233,23 +242,24 @@ export const LabTestsPage: React.FC = () => {
       <AlertDialog open={!!confirmPackage} onOpenChange={(open) => !open && setConfirmPackage(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('labTests.orderConfirmTitle')}</AlertDialogTitle>
+            <AlertDialogTitle>{t('labTests.paymentConfirmTitle')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('labTests.orderConfirmMessage')}
+              {t('labTests.paymentConfirmMessage')}
               <span className="block font-medium text-gray-800 mt-2">
                 {confirmPackage && (isSv ? confirmPackage.nameSv : confirmPackage.name)}
+                {confirmPackage && ` — ${formatPrice(confirmPackage.priceAmountOre, confirmPackage.priceCurrency)}`}
               </span>
               <span className="block text-sm text-gray-500 mt-2">
-                {t('labTests.orderConfirmNote')}
+                {t('labTests.paymentConfirmNote')}
               </span>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isPlacingOrder}>
+            <AlertDialogCancel disabled={isCreatingCheckout}>
               {t('labTests.cancel')}
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleOrderConfirm} disabled={isPlacingOrder}>
-              {isPlacingOrder ? t('labTests.ordering') : t('labTests.confirmOrder')}
+            <AlertDialogAction onClick={handleOrderConfirm} disabled={isCreatingCheckout}>
+              {isCreatingCheckout ? t('labTests.paymentProcessing') : t('labTests.proceedToPayment')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
