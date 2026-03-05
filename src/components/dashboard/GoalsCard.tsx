@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePatientProfile, useWeightHistory } from '@/hooks/useDashboardQueries';
+import { ConsentRequiredCard, isConsentError } from './ConsentRequiredCard';
 
 export const GoalsCard: React.FC = () => {
   const navigate = useNavigate();
-  const { data: profileData, isLoading: profileLoading } = usePatientProfile();
-  const { data: weightData, isLoading: weightLoading } = useWeightHistory();
+  const { data: profileData, isLoading: profileLoading, error: profileError } = usePatientProfile();
+  const { data: weightData, isLoading: weightLoading, error: weightError } = useWeightHistory();
 
   const isLoading = profileLoading || weightLoading;
 
@@ -17,6 +18,10 @@ export const GoalsCard: React.FC = () => {
   const history = weightData?.weightHistory ?? [];
   const currentWeight = history.length > 0 ? history[0].weight : null;
   const startingWeight = history.length > 0 ? history[history.length - 1].weight : null;
+
+  if (isConsentError(profileError) || isConsentError(weightError)) {
+    return <ConsentRequiredCard title="My Goals" />;
+  }
 
   if (isLoading) {
     return (

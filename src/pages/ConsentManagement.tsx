@@ -38,7 +38,7 @@ const CONSENT_TYPES: ConsentType[] = [
   'communication_consent',
 ];
 
-const REQUIRED_CONSENTS: ConsentType[] = ['privacy_policy', 'treatment_consent'];
+const REQUIRED_CONSENTS: ConsentType[] = ['privacy_policy', 'treatment_consent', 'data_sharing'];
 
 const consentTypeToTranslationKey: Record<ConsentType, string> = {
   privacy_policy: 'consent.privacyPolicy',

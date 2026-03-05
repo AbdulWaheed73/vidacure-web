@@ -9,6 +9,7 @@ import {
   Bell,
   FileText,
   Shield,
+  Tag,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -81,6 +82,11 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
       title: 'Providers',
       value: 'providers',
       icon: Stethoscope,
+    },
+    {
+      title: 'Promotions',
+      value: 'promotions',
+      icon: Tag,
     },
     {
       title: 'Notifications',

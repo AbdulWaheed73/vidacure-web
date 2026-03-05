@@ -21,6 +21,7 @@ const Article = lazy(() => import("./pages/Article"));
 const PreLoginBMI = lazy(() => import("./pages/PreLoginBMI"));
 const PreLoginBooking = lazy(() => import("./pages/PreLoginBooking"));
 const SubscriptionSuccess = lazy(() => import("./pages/SubscriptionSuccess").then(m => ({ default: m.SubscriptionSuccess })));
+const SubscriptionCancel = lazy(() => import("./pages/SubscriptionCancel").then(m => ({ default: m.SubscriptionCancel })));
 const LabTestPaymentSuccess = lazy(() => import("./pages/LabTestPaymentSuccess").then(m => ({ default: m.LabTestPaymentSuccess })));
 const LabTestPaymentCancel = lazy(() => import("./pages/LabTestPaymentCancel").then(m => ({ default: m.LabTestPaymentCancel })));
 
@@ -392,6 +393,12 @@ function App() {
         <Route
           path={ROUTES.SUBSCRIPTION_SUCCESS}
           element={<SubscriptionSuccess />}
+        />
+
+        {/* Subscription Canceled Route */}
+        <Route
+          path={ROUTES.SUBSCRIPTION_CANCELED}
+          element={<SubscriptionCancel />}
         />
 
         {/* Lab Test Payment Routes */}

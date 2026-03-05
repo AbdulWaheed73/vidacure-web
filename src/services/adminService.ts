@@ -14,6 +14,12 @@ import type {
   AuditLogsResponse,
   AuditAnomaliesResponse,
 } from '../types/admin-types';
+import type {
+  CreatePromotionRequest,
+  CreatePromotionResponse,
+  PromotionsListResponse,
+  DeactivatePromotionResponse,
+} from '../types/promotion-types';
 
 export type DashboardStats = {
   totalPatients: number;
@@ -363,6 +369,27 @@ export const adminService = {
    */
   getAuditAnomalies: async (): Promise<AuditAnomaliesResponse> => {
     const response = await api.get('/api/admin/audit-logs/anomalies');
+    return response.data;
+  },
+
+  // ============ Promotion / Coupon Management ============
+
+  createPromotion: async (data: CreatePromotionRequest): Promise<CreatePromotionResponse> => {
+    const response = await api.post('/api/admin/promotions', data);
+    return response.data;
+  },
+
+  listPromotions: async (params?: {
+    active?: boolean;
+    startingAfter?: string;
+    limit?: number;
+  }): Promise<PromotionsListResponse> => {
+    const response = await api.get('/api/admin/promotions', { params });
+    return response.data;
+  },
+
+  deactivatePromotion: async (promoCodeId: string): Promise<DeactivatePromotionResponse> => {
+    const response = await api.post(`/api/admin/promotions/${promoCodeId}/deactivate`);
     return response.data;
   },
 

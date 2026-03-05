@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'sonner';
 import { config } from '../constants';
 import { getClientType } from '../utils';
 
@@ -40,23 +41,38 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       console.log('🔐 Session expired - clearing auth data and redirecting to login');
-      
+
       // Clear all auth data
       clearAuthData();
-      
+
       // Import auth store dynamically to avoid circular dependency
       import('../stores/authStore').then(({ useAuthStore }) => {
         // Clear Zustand auth state
         useAuthStore.getState().logout();
       });
-      
+
       // Redirect to login page (only if not already there or on admin routes)
       const isAdminRoute = window.location.pathname.startsWith('/admin');
       if (window.location.pathname !== '/login' && window.location.pathname !== '/' && !isAdminRoute) {
         window.location.href = '/login';
       }
     }
-    
+
+    // 451 — Consent required. Show a clear message and redirect to /consent.
+    if (error.response?.status === 451) {
+      // Only show the toast once (avoid spamming from multiple parallel 451 responses)
+      if (window.location.pathname !== '/consent') {
+        toast.error('Please review and accept the latest consent terms to continue.', {
+          id: 'consent-required',
+          duration: 6000,
+          action: {
+            label: 'Go to Consent',
+            onClick: () => { window.location.href = '/consent'; },
+          },
+        });
+      }
+    }
+
     return Promise.reject(error);
   }
 );

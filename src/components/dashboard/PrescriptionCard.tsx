@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { usePrescriptionRequests } from '@/hooks/useDashboardQueries';
+import { ConsentRequiredCard, isConsentError } from './ConsentRequiredCard';
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   pending: { label: "Pending Review", className: "bg-yellow-100 text-yellow-800 border-yellow-200" },
@@ -17,7 +18,7 @@ const statusConfig: Record<string, { label: string; className: string }> = {
 export const PrescriptionCard: React.FC = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { data, isLoading } = usePrescriptionRequests();
+  const { data, isLoading, error } = usePrescriptionRequests();
 
   const prescriptions = [...(data?.prescriptionRequests ?? [])].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -30,6 +31,10 @@ export const PrescriptionCard: React.FC = () => {
   const handleNext = () => {
     setCurrentIndex(prev => Math.min(prescriptions.length - 1, prev + 1));
   };
+
+  if (isConsentError(error)) {
+    return <ConsentRequiredCard title="My Prescription" />;
+  }
 
   if (isLoading) {
     return (

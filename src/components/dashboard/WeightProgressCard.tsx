@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useWeightHistory } from '@/hooks/useDashboardQueries';
+import { ConsentRequiredCard, isConsentError } from './ConsentRequiredCard';
 
 const chartConfig = {
   weight: {
@@ -18,7 +19,7 @@ const chartConfig = {
 export const WeightProgressCard: React.FC = () => {
   const navigate = useNavigate();
   const [timeRange, setTimeRange] = useState("8w");
-  const { data, isLoading } = useWeightHistory();
+  const { data, isLoading, error } = useWeightHistory();
 
   const weightHistory = data?.weightHistory ?? [];
 
@@ -46,6 +47,10 @@ export const WeightProgressCard: React.FC = () => {
   const weights = filteredData.map(d => d.weight);
   const minWeight = weights.length > 0 ? Math.floor(Math.min(...weights) - 2) : 90;
   const maxWeight = weights.length > 0 ? Math.ceil(Math.max(...weights) + 2) : 110;
+
+  if (isConsentError(error)) {
+    return <ConsentRequiredCard title="My Progress" className="col-span-1 md:col-span-2" />;
+  }
 
   if (isLoading) {
     return (

@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils';
 import { ROUTES } from '../constants';
 import { useChatUnreadCounts } from '../hooks/useChatQueries';
 import { useSupabaseChatStore, selectUnreadCounts } from '../stores/supabaseChatStore';
+import { useConsentStore } from '../stores/consentStore';
 import type { User } from '../types';
 import Vidacure from "../assets/vidacure_png.png";
 import VidacureIcon from "/v_black.png";
@@ -35,9 +36,11 @@ export function AppSidebar({ user }: { user: User | null }) {
   const location = useLocation();
   const { t } = useTranslation();
   const { setOpenMobile } = useSidebar();
+  const hasAcceptedConsent = useConsentStore((s) => s.hasAcceptedLatest);
 
   // Server-side unread counts (works even before chat page is opened)
-  const { data: serverUnreadCounts } = useChatUnreadCounts(!!user);
+  // Skip when consent not accepted — the API would return 451 anyway
+  const { data: serverUnreadCounts } = useChatUnreadCounts(!!user && hasAcceptedConsent);
   // Client-side unread counts (live updates from Zustand store when chat is active)
   const storeUnreadCounts = useSupabaseChatStore(selectUnreadCounts);
 

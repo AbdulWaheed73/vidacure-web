@@ -10,6 +10,7 @@ import { DeletionLogsView } from '@/components/admin/DeletionLogsView';
 import { AuditLogsView } from '@/components/admin/AuditLogsView';
 import { DeleteUserDialog } from '@/components/admin/DeleteUserDialog';
 import { ProvidersView } from '@/components/admin/ProvidersView';
+import { PromotionsView } from '@/components/admin/PromotionsView';
 import { adminService } from '@/services/adminService';
 import type { Patient, Doctor, DashboardStats } from '@/services/adminService';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -260,6 +261,10 @@ export const AdminDashboard = () => {
 
         <TabsContent value="providers" className="space-y-4">
           <ProvidersView onRefresh={fetchData} />
+        </TabsContent>
+
+        <TabsContent value="promotions" className="space-y-4">
+          <PromotionsView />
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4">

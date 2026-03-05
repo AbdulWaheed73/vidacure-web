@@ -1,6 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, ShieldAlert } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -33,12 +35,14 @@ return Math.round(bmi * 10) / 10;
 
 export const ProgressPage: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [timeRange, setTimeRange] = React.useState("8w");
   const [weightHistory, setWeightHistory] = React.useState<WeightHistoryEntry[]>([]);
   const [height, setHeight] = React.useState<number>(0);
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
+  const [consentRequired, setConsentRequired] = React.useState(false);
 
   // Form state
   const [formData, setFormData] = React.useState({
@@ -58,8 +62,12 @@ export const ProgressPage: React.FC = () => {
       const response = await getWeightHistory();
       setWeightHistory(response.weightHistory);
       setHeight(response.height);
-    } catch (error) {
-      console.error('Error loading weight history:', error);
+    } catch (error: any) {
+      if (error.response?.status === 451) {
+        setConsentRequired(true);
+      } else {
+        console.error('Error loading weight history:', error);
+      }
     } finally {
       setLoading(false);
     }
@@ -142,6 +150,28 @@ export const ProgressPage: React.FC = () => {
   const weights = filteredData.map(d => d.weight);
   const minWeight = weights.length > 0 ? Math.floor(Math.min(...weights) - 2) : 95;
   const maxWeight = weights.length > 0 ? Math.ceil(Math.max(...weights) + 2) : 107;
+
+  if (consentRequired) {
+    return (
+      <div className="p-4 md:p-8">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
+            <ShieldAlert className="w-12 h-12 text-amber-400 mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-gray-800 mb-2 font-manrope">Consent Required</h2>
+            <p className="text-gray-500 mb-6 text-sm">
+              Please accept the latest consent terms to access your progress data.
+            </p>
+            <Button
+              onClick={() => navigate(ROUTES.PATIENT_CONSENT)}
+              className="bg-amber-500 hover:bg-amber-600 text-white"
+            >
+              Review Consent
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 md:p-8">

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePatientProfile, useWeightHistory } from '@/hooks/useDashboardQueries';
+import { ConsentRequiredCard, isConsentError } from './ConsentRequiredCard';
 
 type BMICategory = {
   label: string;
@@ -31,8 +32,8 @@ const getBMICategory = (bmi: number): BMICategory => {
 
 export const BMICard: React.FC = () => {
   const navigate = useNavigate();
-  const { data: profileData, isLoading: profileLoading } = usePatientProfile();
-  const { data: weightData, isLoading: weightLoading } = useWeightHistory();
+  const { data: profileData, isLoading: profileLoading, error: profileError } = usePatientProfile();
+  const { data: weightData, isLoading: weightLoading, error: weightError } = useWeightHistory();
 
   const isLoading = profileLoading || weightLoading;
 
@@ -47,6 +48,10 @@ export const BMICard: React.FC = () => {
     const firstWeight = history[history.length - 1].weight;
     currentBMI = calculateBMI(latestWeight, height);
     startingBMI = calculateBMI(firstWeight, height);
+  }
+
+  if (isConsentError(profileError) || isConsentError(weightError)) {
+    return <ConsentRequiredCard title="BMI" />;
   }
 
   if (isLoading) {

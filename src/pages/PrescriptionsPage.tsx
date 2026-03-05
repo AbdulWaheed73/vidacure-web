@@ -6,6 +6,7 @@ import {
   AlertCircle,
   ChevronLeft,
   ChevronRight,
+  ShieldAlert,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Alert, AlertDescription } from '@/components/ui/Alert';
@@ -22,12 +23,16 @@ import { prescriptionService } from '../services/prescriptionService';
 import { PrescriptionRequestStatus } from '../types/prescription-types';
 import type { PrescriptionRequest } from '../types/prescription-types';
 import { SubscriptionRequired } from '@/components/subscription/SubscriptionRequired';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants';
 
 export const PrescriptionsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [requests, setRequests] = useState<PrescriptionRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [consentRequired, setConsentRequired] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<PrescriptionRequest | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -43,12 +48,16 @@ export const PrescriptionsPage: React.FC = () => {
       const response = await prescriptionService.getPrescriptionRequests();
       setRequests(response.prescriptionRequests);
     } catch (err: any) {
-      console.error('Error loading prescriptions:', err);
-      setError(
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        t('prescriptions.errors.loadFailed')
-      );
+      if (err.response?.status === 451) {
+        setConsentRequired(true);
+      } else {
+        console.error('Error loading prescriptions:', err);
+        setError(
+          err.response?.data?.error ||
+          err.response?.data?.message ||
+          t('prescriptions.errors.loadFailed')
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -237,6 +246,25 @@ export const PrescriptionsPage: React.FC = () => {
 
   return (
     <SubscriptionRequired featureName="Prescriptions">
+      {consentRequired ? (
+        <div className="p-4 md:p-8">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
+              <ShieldAlert className="w-12 h-12 text-amber-400 mx-auto mb-4" />
+              <h2 className="text-xl font-bold text-gray-800 mb-2 font-manrope">Consent Required</h2>
+              <p className="text-gray-500 mb-6 text-sm">
+                Please accept the latest consent terms to access your prescriptions.
+              </p>
+              <Button
+                onClick={() => navigate(ROUTES.PATIENT_CONSENT)}
+                className="bg-amber-500 hover:bg-amber-600 text-white"
+              >
+                Review Consent
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : (
       <div className="p-4 md:p-8">
         {/* Header */}
         <div className="flex items-center justify-between gap-3 mb-6 md:mb-8">
@@ -510,6 +538,7 @@ export const PrescriptionsPage: React.FC = () => {
           onSuccess={handleRequestSuccess}
         />
       </div>
+      )}
     </SubscriptionRequired>
   );
 };

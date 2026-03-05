@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { AlertCircle, MessageSquare } from 'lucide-react';
+import { AlertCircle, MessageSquare, ShieldAlert } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../constants';
 import { useAuthStore } from '../../stores/authStore';
 import {
   useSupabaseChatStore,
@@ -25,6 +27,7 @@ import { MessageInput } from './MessageInput';
 
 export const SupabaseChatContainer: React.FC = () => {
   const { user, isAuthenticated } = useAuthStore();
+  const navigate = useNavigate();
   const [isInitializing, setIsInitializing] = useState(true);
 
   const connectionStatus = useSupabaseChatStore(selectConnectionStatus);
@@ -177,6 +180,24 @@ export const SupabaseChatContainer: React.FC = () => {
         <div className="px-4 md:px-6 py-4">
           <Skeleton className="h-12 w-full rounded-full" />
         </div>
+      </Card>
+    );
+  }
+
+  // Consent required (451)
+  if (error?.includes('451')) {
+    return (
+      <Card className="flex flex-col h-full items-center justify-center border-0 shadow-none rounded-none bg-transparent">
+        <CardContent className="text-center">
+          <ShieldAlert className="w-12 h-12 text-amber-400 mx-auto" />
+          <p className="mt-4 text-lg font-semibold text-gray-800">Consent Required</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Please accept the latest consent terms to access chat.
+          </p>
+          <Button onClick={() => navigate(ROUTES.PATIENT_CONSENT)} className="mt-4 bg-amber-500 hover:bg-amber-600 text-white">
+            Review Consent
+          </Button>
+        </CardContent>
       </Card>
     );
   }
