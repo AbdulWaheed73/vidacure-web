@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, CheckCheck, AlertCircle, Loader2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import type { LocalMessage } from '../../types/supabase-chat-types';
+import type { LocalMessage } from '../../types/chat-types';
 
 type MessageBubbleProps = {
   message: LocalMessage;
@@ -11,7 +11,7 @@ type MessageBubbleProps = {
 };
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwnMessage, isRead, onRetry }) => {
-  const isSystemMessage = message.sender_role === 'system' || message.message_type === 'system';
+  const isSystemMessage = message.senderRole === 'system' || message.messageType === 'system';
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -94,7 +94,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwnMess
       >
         <p className="text-base whitespace-pre-wrap break-words leading-relaxed">{message.content}</p>
         <div className={`flex items-center gap-1 mt-1 ${isOwnMessage ? 'justify-end' : ''}`}>
-          <span className="text-[11px] text-muted-foreground/60">{formatTime(message.created_at)}</span>
+          <span className="text-[11px] text-muted-foreground/60">{formatTime(message.createdAt)}</span>
           <StatusIndicator />
         </div>
       </div>

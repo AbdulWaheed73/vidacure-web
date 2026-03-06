@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { MessageBubble } from './MessageBubble';
 import { Skeleton } from '../ui/skeleton';
-import type { LocalMessage } from '../../types/supabase-chat-types';
+import type { LocalMessage } from '../../types/chat-types';
 
 type MessageListProps = {
   messages: LocalMessage[];
@@ -12,6 +12,7 @@ type MessageListProps = {
   hasMoreMessages?: boolean;
   isLoadingMoreMessages?: boolean;
   onLoadMore?: () => void;
+  onRetry?: (localId: string) => void;
 };
 
 export const MessageList: React.FC<MessageListProps> = ({
@@ -23,6 +24,7 @@ export const MessageList: React.FC<MessageListProps> = ({
   hasMoreMessages = false,
   isLoadingMoreMessages = false,
   onLoadMore,
+  onRetry,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -144,14 +146,15 @@ export const MessageList: React.FC<MessageListProps> = ({
       )}
       {messages.map((message) => {
         const isOwnMessage = currentUserRole
-          ? message.sender_role === currentUserRole
-          : message.sender_id === currentUserId;
+          ? message.senderRole === currentUserRole
+          : message.senderId === currentUserId;
         return (
           <MessageBubble
             key={message.id}
             message={message}
             isOwnMessage={isOwnMessage}
             isRead={messageReadStatus[message.id]}
+            onRetry={onRetry}
           />
         );
       })}

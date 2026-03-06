@@ -1,12 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/queryClient';
-import { supabaseChatService } from '@/services/supabaseChatService';
-import { api } from '@/services/api';
+import { chatService } from '@/services/chatService';
 
 export const useChatConversation = (enabled = true) => {
   return useQuery({
     queryKey: queryKeys.chatConversation,
-    queryFn: () => supabaseChatService.getPatientConversation(),
+    queryFn: () => chatService.getPatientConversation(),
     enabled,
   });
 };
@@ -14,7 +13,7 @@ export const useChatConversation = (enabled = true) => {
 export const useChatConversations = (enabled = true) => {
   return useQuery({
     queryKey: queryKeys.chatConversations,
-    queryFn: () => supabaseChatService.getDoctorConversations(),
+    queryFn: () => chatService.getDoctorConversations(),
     enabled,
   });
 };
@@ -23,10 +22,7 @@ export const useChatUnreadCounts = (enabled = true) => {
   return useQuery({
     queryKey: queryKeys.chatUnreadCounts,
     queryFn: async () => {
-      const response = await api.get<{ counts: { [conversationId: string]: number } }>(
-        '/api/supabase-chat/unread-counts'
-      );
-      return response.data.counts;
+      return chatService.getUnreadCounts();
     },
     enabled,
     staleTime: 10 * 1000, // Consider stale after 10 seconds

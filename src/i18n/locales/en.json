@@ -586,6 +586,8 @@
     "noHistoryMessage": "Your consent actions will be recorded here.",
     "noAccessLog": "No access log entries",
     "noAccessLogMessage": "Access to your medical records will be logged here.",
+    "loadMore": "Load More",
+    "loading": "Loading...",
     "descriptions": {
       "privacyPolicy": "How we collect, store, and process your personal and health data under GDPR.",
       "treatmentConsent": "Your consent to receive medical treatment through the Vidacure platform.",

@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck, History, FileText, AlertTriangle } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
-import { Button } from '../components/ui/Button';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { ShieldCheck, History, FileText, AlertTriangle, Loader2 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Skeleton } from '../components/ui/skeleton';
 import {
@@ -27,7 +25,6 @@ import type {
   ConsentType,
   AllConsentsStatus,
   ConsentRecord,
-  AccessLogEntry,
 } from '../types';
 
 const CONSENT_TYPES: ConsentType[] = [
@@ -61,10 +58,8 @@ export const ConsentManagement: React.FC = () => {
 
   const [consentsStatus, setConsentsStatus] = useState<AllConsentsStatus | null>(null);
   const [history, setHistory] = useState<ConsentRecord[]>([]);
-  const [accessLog, setAccessLog] = useState<AccessLogEntry[]>([]);
   const [isLoadingStatus, setIsLoadingStatus] = useState(true);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
-  const [isLoadingAccessLog, setIsLoadingAccessLog] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<ConsentType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [withdrawTarget, setWithdrawTarget] = useState<ConsentType | null>(null);
@@ -94,17 +89,25 @@ export const ConsentManagement: React.FC = () => {
     }
   }, []);
 
-  const fetchAccessLog = useCallback(async () => {
-    try {
-      setIsLoadingAccessLog(true);
-      const data = await getAccessLog();
-      setAccessLog(data);
-    } catch (err) {
-      console.error('Failed to fetch access log:', err);
-    } finally {
-      setIsLoadingAccessLog(false);
-    }
-  }, []);
+  const {
+    data: accessLogData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingAccessLog,
+    isError: isAccessLogError,
+  } = useInfiniteQuery({
+    queryKey: ['accessLog'],
+    queryFn: ({ pageParam }) => getAccessLog(pageParam, 10),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.pagination.page < lastPage.pagination.totalPages
+        ? lastPage.pagination.page + 1
+        : undefined,
+    enabled: false,
+  });
+
+  const accessLog = accessLogData?.pages.flatMap((page) => page.logs) ?? [];
 
   useEffect(() => {
     fetchConsentsStatus();
@@ -150,34 +153,36 @@ export const ConsentManagement: React.FC = () => {
       fetchHistory();
     }
     if (value === 'accessLog' && accessLog.length === 0) {
-      fetchAccessLog();
+      fetchNextPage();
     }
   };
 
   const isRequired = (type: ConsentType) => REQUIRED_CONSENTS.includes(type);
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="p-4 md:p-6 lg:p-8 max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-6 md:mb-8">
-        <div className="flex items-center gap-3 mb-2 md:mb-4">
-          <ShieldCheck className="size-6 md:size-8 text-teal-action" />
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 font-manrope">
+        <div className="flex items-center gap-3 mb-1 md:mb-2">
+          <div className="w-10 h-10 rounded-full bg-[#f0f7f4] flex items-center justify-center shrink-0">
+            <ShieldCheck className="size-5 text-[#005044]" />
+          </div>
+          <h1 className="text-xl md:text-2xl font-bold text-[#282828] font-sora">
             {t('consent.title')}
           </h1>
         </div>
-        <p className="text-sm md:text-lg text-gray-600 font-manrope">
+        <p className="text-sm text-[#b0b0b0] font-manrope ml-[52px]">
           {t('consent.pageDescription')}
         </p>
       </div>
 
       {/* Error message */}
       {error && (
-        <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg flex items-center justify-between">
+        <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-2xl border border-red-200 flex items-center justify-between text-sm font-manrope">
           <span>{error}</span>
           <button
             onClick={() => setError(null)}
-            className="text-red-500 hover:text-red-700 text-sm"
+            className="text-red-500 hover:text-red-700 text-xs font-semibold ml-4 shrink-0"
           >
             {t('consent.dismiss')}
           </button>
@@ -185,198 +190,183 @@ export const ConsentManagement: React.FC = () => {
       )}
 
       {/* Info banner */}
-      <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-3">
-        <AlertTriangle className="size-5 text-blue-600 mt-0.5 shrink-0" />
-        <div>
-          <p className="text-sm text-blue-800 font-medium">{t('consent.retentionInfo')}</p>
-          <p className="text-sm text-blue-700 mt-1">{t('consent.mustAcceptToUse')}</p>
+      <div className="mb-6 p-4 bg-[#f0f7f4] border border-[#c0ebe5] rounded-2xl flex items-start gap-3">
+        <AlertTriangle className="size-5 text-[#005044] mt-0.5 shrink-0" />
+        <div className="font-manrope">
+          <p className="text-sm text-[#005044] font-semibold">{t('consent.retentionInfo')}</p>
+          <p className="text-sm text-[#005044]/70 mt-1">{t('consent.mustAcceptToUse')}</p>
         </div>
       </div>
 
       {/* Tabs */}
       <Tabs defaultValue="consents" onValueChange={handleTabChange} className="w-full">
-        <TabsList className="mb-6">
-          <TabsTrigger value="consents">{t('consent.consentsTab')}</TabsTrigger>
-          <TabsTrigger value="history">{t('consent.consentHistory')}</TabsTrigger>
-          <TabsTrigger value="accessLog">{t('consent.accessLog')}</TabsTrigger>
+        <TabsList className="mb-6 bg-[#f0f7f4] rounded-full p-1">
+          <TabsTrigger value="consents" className="rounded-full font-sora text-sm data-[state=active]:bg-white data-[state=active]:text-[#005044] data-[state=active]:shadow-sm text-[#b0b0b0]">
+            {t('consent.consentsTab')}
+          </TabsTrigger>
+          <TabsTrigger value="history" className="rounded-full font-sora text-sm data-[state=active]:bg-white data-[state=active]:text-[#005044] data-[state=active]:shadow-sm text-[#b0b0b0]">
+            {t('consent.consentHistory')}
+          </TabsTrigger>
+          <TabsTrigger value="accessLog" className="rounded-full font-sora text-sm data-[state=active]:bg-white data-[state=active]:text-[#005044] data-[state=active]:shadow-sm text-[#b0b0b0]">
+            {t('consent.accessLog')}
+          </TabsTrigger>
         </TabsList>
 
         {/* Consents Tab */}
         <TabsContent value="consents">
           {isLoadingStatus ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div className="space-y-3">
               {[1, 2, 3, 4, 5].map((i) => (
-                <Card key={i}>
-                  <CardHeader>
-                    <Skeleton className="h-6 w-3/4" />
-                    <Skeleton className="h-4 w-full mt-2" />
-                  </CardHeader>
-                  <CardContent>
-                    <Skeleton className="h-9 w-24" />
-                  </CardContent>
-                </Card>
+                <div key={i} className="bg-white rounded-2xl border border-[#e0e0e0] p-5">
+                  <Skeleton className="h-5 w-3/4 mb-3" />
+                  <Skeleton className="h-4 w-full mb-2" />
+                  <Skeleton className="h-8 w-24" />
+                </div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div className="space-y-3">
               {CONSENT_TYPES.map((type) => {
                 const status = consentsStatus?.consents[type];
                 const hasAccepted = status?.hasAcceptedLatest ?? false;
                 const required = isRequired(type);
 
                 return (
-                  <Card
+                  <div
                     key={type}
-                    className="bg-white/95 backdrop-blur-md shadow-lg"
+                    className="bg-white rounded-2xl border border-[#e0e0e0] p-4 md:p-5 hover:border-[#c0ebe5] transition-colors"
                   >
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg font-manrope">
-                          {t(consentTypeToTranslationKey[type])}
-                        </CardTitle>
-                        <div className="flex items-center gap-2">
-                          {required ? (
-                            <Badge variant="destructive" className="text-xs">
-                              {t('consent.required')}
-                            </Badge>
-                          ) : (
-                            <Badge variant="secondary" className="text-xs">
-                              {t('consent.optional')}
-                            </Badge>
-                          )}
-                          {hasAccepted ? (
-                            <Badge className="bg-green-100 text-green-800 border-green-200 text-xs">
-                              {t('consent.accepted')}
-                            </Badge>
-                          ) : (
-                            <Badge variant="outline" className="text-orange-600 border-orange-300 text-xs">
-                              {!status?.userConsentVersion
-                                ? t('consent.withdrawn')
-                                : t('consent.versionRequired')}
-                            </Badge>
-                          )}
-                        </div>
+                    {/* Top row: title + badges */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+                      <h3 className="font-sora font-semibold text-[#282828] text-base">
+                        {t(consentTypeToTranslationKey[type])}
+                      </h3>
+                      <div className="flex items-center gap-2 shrink-0">
+                        {required ? (
+                          <span className="bg-[#005044] text-white rounded-full px-3 py-0.5 text-xs font-sora font-medium">
+                            {t('consent.required')}
+                          </span>
+                        ) : (
+                          <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-0.5 text-xs font-sora font-medium">
+                            {t('consent.optional')}
+                          </span>
+                        )}
+                        {hasAccepted ? (
+                          <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-0.5 text-xs font-sora font-medium">
+                            {t('consent.accepted')}
+                          </span>
+                        ) : (
+                          <span className="bg-orange-50 text-orange-600 rounded-full px-3 py-0.5 text-xs font-sora font-medium border border-orange-200">
+                            {!status?.userConsentVersion
+                              ? t('consent.withdrawn')
+                              : t('consent.versionRequired')}
+                          </span>
+                        )}
                       </div>
-                      <CardDescription className="mt-2">
-                        {t(consentTypeToDescriptionKey[type])}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="text-xs text-gray-500">
-                          {status?.currentVersion && (
-                            <span>
-                              {t('consent.version')}: {status.currentVersion}
-                            </span>
-                          )}
-                          {status?.acceptedAt && (
-                            <span className="ml-3">
-                              {t('consent.acceptedOn')}: {new Date(status.acceptedAt).toLocaleDateString()}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex gap-2">
-                          {!hasAccepted && (
-                            <Button
-                              size="sm"
-                              onClick={() => handleAccept(type)}
-                              disabled={actionInProgress !== null}
-                            >
-                              {actionInProgress === type
-                                ? t('consent.submitting')
-                                : t('consent.accept')}
-                            </Button>
-                          )}
-                          {hasAccepted && !required && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setWithdrawTarget(type)}
-                              disabled={actionInProgress !== null}
-                            >
-                              {t('consent.withdraw')}
-                            </Button>
-                          )}
-                          {hasAccepted && required && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              disabled
-                              className="opacity-50"
-                            >
-                              {t('consent.withdraw')}
-                            </Button>
-                          )}
-                        </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-sm text-[#b0b0b0] font-manrope mb-3">
+                      {t(consentTypeToDescriptionKey[type])}
+                    </p>
+
+                    {/* Bottom row: meta + action */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                      <div className="text-xs text-[#b0b0b0] font-manrope flex flex-wrap gap-x-3 gap-y-1">
+                        {status?.currentVersion && (
+                          <span>{t('consent.version')}: {status.currentVersion}</span>
+                        )}
+                        {status?.acceptedAt && (
+                          <span>{t('consent.acceptedOn')}: {new Date(status.acceptedAt).toLocaleDateString()}</span>
+                        )}
                       </div>
-                    </CardContent>
-                  </Card>
+                      <div className="flex gap-2 shrink-0">
+                        {!hasAccepted && (
+                          <button
+                            onClick={() => handleAccept(type)}
+                            disabled={actionInProgress !== null}
+                            className="bg-[#005044] text-white rounded-full px-5 py-2 text-sm font-sora font-semibold hover:bg-[#003d33] transition-colors disabled:opacity-50"
+                          >
+                            {actionInProgress === type
+                              ? t('consent.submitting')
+                              : t('consent.accept')}
+                          </button>
+                        )}
+                        {hasAccepted && (
+                          <button
+                            onClick={!required ? () => setWithdrawTarget(type) : undefined}
+                            disabled={required || actionInProgress !== null}
+                            className="border border-[#e0e0e0] text-[#282828] rounded-full px-5 py-2 text-sm font-sora font-semibold hover:border-[#c0ebe5] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            {t('consent.withdraw')}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 );
               })}
             </div>
           )}
 
           {/* Deletion grace period info */}
-          <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-            <p className="text-sm text-amber-800">{t('consent.deletionGracePeriod')}</p>
+          <div className="mt-6 p-4 bg-[#f0f7f4] border border-[#c0ebe5] rounded-2xl">
+            <p className="text-sm text-[#005044]/80 font-manrope">{t('consent.deletionGracePeriod')}</p>
           </div>
         </TabsContent>
 
         {/* History Tab */}
         <TabsContent value="history">
           {isLoadingHistory ? (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Skeleton className="h-5 w-48 mb-2" />
-                      <Skeleton className="h-4 w-32" />
-                    </div>
-                    <Skeleton className="h-6 w-20" />
-                  </div>
+                <div key={i} className="bg-white rounded-2xl border border-[#e0e0e0] p-5">
+                  <Skeleton className="h-5 w-48 mb-2" />
+                  <Skeleton className="h-4 w-32" />
                 </div>
               ))}
             </div>
           ) : history.length === 0 ? (
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-8 text-center">
-              <History className="size-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 font-medium">{t('consent.noHistory')}</p>
-              <p className="text-gray-400 text-sm mt-1">{t('consent.noHistoryMessage')}</p>
+            <div className="bg-white rounded-2xl border border-[#e0e0e0] p-10 md:p-16 text-center">
+              <div className="w-14 h-14 rounded-full bg-[#f0f7f4] flex items-center justify-center mx-auto mb-4">
+                <History className="size-7 text-[#c0ebe5]" />
+              </div>
+              <p className="text-[#282828] font-sora font-semibold">{t('consent.noHistory')}</p>
+              <p className="text-[#b0b0b0] text-sm font-manrope mt-1">{t('consent.noHistoryMessage')}</p>
             </div>
           ) : (
             <div className="space-y-3">
               {history.map((record, index) => (
                 <div
                   key={`${record.consentType}-${record.timestamp}-${index}`}
-                  className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-4 md:p-6 hover:shadow-xl transition-shadow"
+                  className="bg-white rounded-2xl border border-[#e0e0e0] p-4 md:p-5 hover:border-[#c0ebe5] transition-colors"
                 >
-                  <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div>
-                      <h3 className="font-semibold text-gray-800 font-manrope">
+                      <h3 className="font-sora font-semibold text-[#282828]">
                         {t(consentTypeToTranslationKey[record.consentType as ConsentType] || record.consentType)}
                       </h3>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-[#b0b0b0] font-manrope mt-1">
                         {t('consent.version')}: {record.version}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-[#b0b0b0] font-manrope">
                         {new Date(record.timestamp).toLocaleString()}
                       </p>
                       {record.withdrawnAt && (
-                        <p className="text-sm text-orange-600">
+                        <p className="text-sm text-orange-500 font-manrope">
                           {t('consent.withdrawnOn')}: {new Date(record.withdrawnAt).toLocaleString()}
                         </p>
                       )}
                     </div>
-                    <div>
+                    <div className="shrink-0">
                       {record.accepted && !record.withdrawnAt ? (
-                        <Badge className="bg-green-100 text-green-800 border-green-200">
+                        <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-xs font-sora font-medium">
                           {t('consent.accepted')}
-                        </Badge>
+                        </span>
                       ) : (
-                        <Badge variant="outline" className="text-orange-600 border-orange-300">
+                        <span className="bg-orange-50 text-orange-600 rounded-full px-3 py-1 text-xs font-sora font-medium border border-orange-200">
                           {t('consent.withdrawn')}
-                        </Badge>
+                        </span>
                       )}
                     </div>
                   </div>
@@ -388,56 +378,79 @@ export const ConsentManagement: React.FC = () => {
 
         {/* Access Log Tab */}
         <TabsContent value="accessLog">
-          <div className="mb-4">
-            <p className="text-sm text-gray-600">{t('consent.accessLogDescription')}</p>
-          </div>
+          <p className="text-sm text-[#b0b0b0] font-manrope mb-4">
+            {t('consent.accessLogDescription')}
+          </p>
 
           {isLoadingAccessLog ? (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Skeleton className="h-5 w-48 mb-2" />
-                      <Skeleton className="h-4 w-32" />
-                    </div>
-                    <Skeleton className="h-6 w-20" />
-                  </div>
+                <div key={i} className="bg-white rounded-2xl border border-[#e0e0e0] p-5">
+                  <Skeleton className="h-5 w-48 mb-2" />
+                  <Skeleton className="h-4 w-32" />
                 </div>
               ))}
             </div>
+          ) : isAccessLogError ? (
+            <div className="bg-white rounded-2xl border border-[#e0e0e0] p-10 md:p-16 text-center">
+              <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
+                <FileText className="size-7 text-red-300" />
+              </div>
+              <p className="text-red-500 font-sora font-semibold">{t('consent.errors.loadFailed')}</p>
+            </div>
           ) : accessLog.length === 0 ? (
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-8 text-center">
-              <FileText className="size-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 font-medium">{t('consent.noAccessLog')}</p>
-              <p className="text-gray-400 text-sm mt-1">{t('consent.noAccessLogMessage')}</p>
+            <div className="bg-white rounded-2xl border border-[#e0e0e0] p-10 md:p-16 text-center">
+              <div className="w-14 h-14 rounded-full bg-[#f0f7f4] flex items-center justify-center mx-auto mb-4">
+                <FileText className="size-7 text-[#c0ebe5]" />
+              </div>
+              <p className="text-[#282828] font-sora font-semibold">{t('consent.noAccessLog')}</p>
+              <p className="text-[#b0b0b0] text-sm font-manrope mt-1">{t('consent.noAccessLogMessage')}</p>
             </div>
           ) : (
             <div className="space-y-3">
               {accessLog.map((entry, index) => (
                 <div
                   key={`${entry.timestamp}-${index}`}
-                  className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-4 md:p-6 hover:shadow-xl transition-shadow"
+                  className="bg-white rounded-2xl border border-[#e0e0e0] p-4 md:p-5 hover:border-[#c0ebe5] transition-colors"
                 >
-                  <div className="flex items-center justify-between flex-wrap gap-2">
-                    <div>
-                      <h3 className="font-semibold text-gray-800 font-manrope">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div className="min-w-0">
+                      <h3 className="font-sora font-semibold text-[#282828] text-sm truncate">
                         {entry.action}
                       </h3>
-                      <p className="text-sm text-gray-500 mt-1">
-                        {t('consent.accessLogRole')}: {entry.accessedBy.role}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {t('consent.accessLogOperation')}: {entry.operation}
-                      </p>
-                      <p className="text-sm text-gray-500">
+                      <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-xs text-[#b0b0b0] font-manrope">
+                        <span>{t('consent.accessLogRole')}: {entry.accessedBy.role}</span>
+                        <span>{t('consent.accessLogOperation')}: {entry.operation}</span>
+                      </div>
+                      <p className="text-xs text-[#b0b0b0] font-manrope mt-0.5">
                         {new Date(entry.timestamp).toLocaleString()}
                       </p>
                     </div>
-                    <Badge variant="secondary">{entry.accessedBy.role}</Badge>
+                    <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-xs font-sora font-medium shrink-0 self-start sm:self-center">
+                      {entry.accessedBy.role}
+                    </span>
                   </div>
                 </div>
               ))}
+
+              {hasNextPage && (
+                <div className="flex justify-center pt-4 pb-2">
+                  <button
+                    onClick={() => fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                    className="bg-[#f0f7f4] text-[#005044] rounded-full px-8 py-2.5 font-sora font-semibold text-sm hover:bg-[#c0ebe5] transition-colors disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {isFetchingNextPage ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        {t('consent.loading')}
+                      </>
+                    ) : (
+                      t('consent.loadMore')
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </TabsContent>
@@ -445,26 +458,26 @@ export const ConsentManagement: React.FC = () => {
 
       {/* Withdraw Confirmation Dialog */}
       <AlertDialog open={!!withdrawTarget} onOpenChange={(open) => !open && setWithdrawTarget(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="rounded-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('consent.withdrawConfirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className="font-sora text-[#282828]">{t('consent.withdrawConfirmTitle')}</AlertDialogTitle>
+            <AlertDialogDescription className="font-manrope text-[#b0b0b0]">
               {t('consent.withdrawWarning')}
               {withdrawTarget && (
-                <span className="block font-medium text-gray-800 mt-2">
+                <span className="block font-semibold text-[#282828] mt-2 font-sora">
                   {t(consentTypeToTranslationKey[withdrawTarget])}
                 </span>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={actionInProgress !== null}>
+            <AlertDialogCancel disabled={actionInProgress !== null} className="rounded-full font-sora">
               {t('consent.cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleWithdraw}
               disabled={actionInProgress !== null}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-600 hover:bg-red-700 rounded-full font-sora"
             >
               {actionInProgress ? t('consent.submitting') : t('consent.confirmWithdraw')}
             </AlertDialogAction>

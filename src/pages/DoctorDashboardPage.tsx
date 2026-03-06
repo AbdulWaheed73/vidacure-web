@@ -6,7 +6,7 @@ import { useChatUnreadCounts } from '@/hooks/useChatQueries';
 import type { DashboardPageProps } from '../types';
 import type { PatientMeeting } from '@/types/calendly-types';
 import type { DoctorPrescriptionRequest } from '@/types/doctor-prescription-types';
-import type { ConversationWithDetails } from '@/types/supabase-chat-types';
+import type { ConversationWithDetails } from '@/types/chat-types';
 
 const formatTime = (dateStr: string): string => {
   return new Date(dateStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -163,9 +163,9 @@ const InboxRow: React.FC<{ conversation: ConversationWithDetails; unreadCount: n
       </p>
     </div>
     <div className="flex flex-col items-end gap-1 flex-shrink-0">
-      {conversation.last_message_at && (
+      {conversation.lastMessageAt && (
         <span className="text-[#b0b0b0] text-xs font-manrope">
-          {formatRelativeTime(conversation.last_message_at)}
+          {formatRelativeTime(conversation.lastMessageAt)}
         </span>
       )}
       {unreadCount > 0 && (

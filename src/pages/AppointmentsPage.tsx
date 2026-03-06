@@ -231,6 +231,44 @@ export const AppointmentsPage: React.FC = () => {
     .filter(m => new Date(m.scheduledTime) <= new Date() || m.status === 'completed' || m.status === 'canceled')
     .sort((a, b) => new Date(b.scheduledTime).getTime() - new Date(a.scheduledTime).getTime());
 
+  // Unified upcoming list: merge doctor appointments + provider meetings
+  type UnifiedMeeting = {
+    id: string;
+    startTime: string;
+    endTime: string | null | undefined;
+    specialist: string;
+    type: string;
+    tag: string;
+    meetingUrl?: string | null;
+    source: 'doctor' | 'provider';
+    original: PatientMeeting | ProviderMeeting;
+  };
+
+  const allUpcoming: UnifiedMeeting[] = [
+    ...upcomingMeetings.map((m): UnifiedMeeting => ({
+      id: m.id,
+      startTime: m.startTime,
+      endTime: m.endTime,
+      specialist: getMeetingDoctor(m),
+      type: m.eventType || t('appointments.followUp'),
+      tag: t('appointments.doctor', 'Doctor'),
+      meetingUrl: m.meetingUrl,
+      source: 'doctor',
+      original: m,
+    })),
+    ...upcomingProviderMeetings.map((m): UnifiedMeeting => ({
+      id: m._id || m.eventUri,
+      startTime: m.scheduledTime,
+      endTime: m.endTime || null,
+      specialist: m.providerName,
+      type: m.eventType || m.providerType,
+      tag: m.providerType.charAt(0).toUpperCase() + m.providerType.slice(1),
+      meetingUrl: m.meetingUrl,
+      source: 'provider',
+      original: m,
+    })),
+  ].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+
   return (
     <MeetingRequired>
     <div className="p-4 md:p-8">
@@ -451,7 +489,7 @@ export const AppointmentsPage: React.FC = () => {
             </div>
           </div>
         </div>
-      ) : meetings.length === 0 ? (
+      ) : meetings.length === 0 && providerMeetings.length === 0 ? (
         /* Empty State */
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
           <div className="text-center py-12">
@@ -489,7 +527,7 @@ export const AppointmentsPage: React.FC = () => {
             <h2 className="text-xl font-bold text-gray-800 font-manrope mb-4">
               {t('appointments.upcoming')}
             </h2>
-            {upcomingMeetings.length === 0 ? (
+            {allUpcoming.length === 0 ? (
               <div className="bg-white rounded-2xl border border-gray-100 p-6">
                 <div className="text-center py-8">
                   <Calendar className="size-10 text-gray-300 mx-auto mb-3" />
@@ -504,11 +542,21 @@ export const AppointmentsPage: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {upcomingMeetings.map((meeting) => (
+                {allUpcoming.map((meeting) => (
                   <div
                     key={meeting.id}
                     className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-8 max-w-2xl"
                   >
+                    {/* Tag */}
+                    <div className="mb-3 sm:mb-4">
+                      <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-sora font-semibold ${
+                        meeting.source === 'doctor'
+                          ? 'bg-[#f0f7f4] text-[#005044]'
+                          : 'bg-purple-50 text-purple-700'
+                      }`}>
+                        {meeting.tag}
+                      </span>
+                    </div>
                     {/* 2x2 grid layout */}
                     <div className="grid grid-cols-2 gap-x-4 sm:gap-x-12 gap-y-4 sm:gap-y-6">
                       {/* Date */}
@@ -532,14 +580,14 @@ export const AppointmentsPage: React.FC = () => {
                           {meeting.endTime ? ` - ${formatTime(meeting.endTime)}` : ''}
                         </p>
                       </div>
-                      {/* Doctor */}
+                      {/* Specialist */}
                       <div>
                         <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
                           <Stethoscope className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                          <span>{t('appointments.doctor')}</span>
+                          <span>{t('appointments.specialist', 'Specialist')}</span>
                         </div>
                         <p className="text-sm sm:text-base font-medium text-gray-800">
-                          {getMeetingDoctor(meeting)}
+                          {meeting.specialist}
                         </p>
                       </div>
                       {/* Type */}
@@ -549,18 +597,30 @@ export const AppointmentsPage: React.FC = () => {
                           <span>{t('appointments.type')}</span>
                         </div>
                         <p className="text-sm sm:text-base font-medium text-gray-800">
-                          {meeting.eventType}
+                          {meeting.type}
                         </p>
                       </div>
                     </div>
                     <div className="mt-4 sm:mt-8">
-                      <Button
-                        onClick={() => setSelectedMeeting(meeting)}
-                        className="bg-teal-600 hover:bg-teal-700 text-white flex items-center gap-2 rounded-lg px-5"
-                      >
-                        {t('appointments.viewDetails')}
-                        <ArrowRight className="w-4 h-4" />
-                      </Button>
+                      {meeting.source === 'doctor' ? (
+                        <Button
+                          onClick={() => setSelectedMeeting(meeting.original as PatientMeeting)}
+                          className="bg-teal-600 hover:bg-teal-700 text-white flex items-center gap-2 rounded-lg px-5"
+                        >
+                          {t('appointments.viewDetails')}
+                          <ArrowRight className="w-4 h-4" />
+                        </Button>
+                      ) : meeting.meetingUrl ? (
+                        <a
+                          href={meeting.meetingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg px-5 py-2 text-sm font-medium transition-colors"
+                        >
+                          <Video className="w-4 h-4" />
+                          {t('appointments.joinMeeting', 'Join Meeting')}
+                        </a>
+                      ) : null}
                     </div>
                   </div>
                 ))}

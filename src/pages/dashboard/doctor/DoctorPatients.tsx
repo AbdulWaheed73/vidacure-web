@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { RefreshCw, Users } from 'lucide-react';
 import { useDoctorPatients } from '@/hooks/useDoctorDashboardQueries';
 import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
@@ -73,8 +74,19 @@ const DoctorPatients: React.FC = () => {
   const { data, isLoading, refetch, isRefetching } = useDoctorPatients();
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const patients = data?.patients ?? [];
+
+  // Auto-open profile panel when navigated with ?patientId=
+  useEffect(() => {
+    const patientId = searchParams.get('patientId');
+    if (patientId) {
+      setSelectedPatientId(patientId);
+      setSheetOpen(true);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const handlePatientClick = (patientId: string) => {
     setSelectedPatientId(patientId);

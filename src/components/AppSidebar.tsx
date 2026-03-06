@@ -26,7 +26,7 @@ import {
 import { cn } from '@/lib/utils';
 import { ROUTES } from '../constants';
 import { useChatUnreadCounts } from '../hooks/useChatQueries';
-import { useSupabaseChatStore, selectUnreadCounts } from '../stores/supabaseChatStore';
+import { useChatStore, selectUnreadCounts } from '../stores/chatStore';
 import { useConsentStore } from '../stores/consentStore';
 import type { User } from '../types';
 import Vidacure from "../assets/vidacure_png.png";
@@ -42,7 +42,7 @@ export function AppSidebar({ user }: { user: User | null }) {
   // Skip when consent not accepted — the API would return 451 anyway
   const { data: serverUnreadCounts } = useChatUnreadCounts(!!user && hasAcceptedConsent);
   // Client-side unread counts (live updates from Zustand store when chat is active)
-  const storeUnreadCounts = useSupabaseChatStore(selectUnreadCounts);
+  const storeUnreadCounts = useChatStore(selectUnreadCounts);
 
   // Show dot if EITHER source reports unread messages
   const serverTotal = Object.values(serverUnreadCounts || {}).reduce((sum, count) => sum + count, 0);

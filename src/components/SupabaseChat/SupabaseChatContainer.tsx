@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../constants';
 import { useAuthStore } from '../../stores/authStore';
 import {
-  useSupabaseChatStore,
+  useChatStore,
   selectConnectionStatus,
   selectConversation,
   selectMessages,
@@ -17,7 +17,7 @@ import {
   selectDoctorName,
   selectHasMoreMessages,
   selectIsLoadingMoreMessages,
-} from '../../stores/supabaseChatStore';
+} from '../../stores/chatStore';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import { Separator } from '../ui/separator';
 import { Skeleton } from '../ui/skeleton';
@@ -30,19 +30,19 @@ export const SupabaseChatContainer: React.FC = () => {
   const navigate = useNavigate();
   const [isInitializing, setIsInitializing] = useState(true);
 
-  const connectionStatus = useSupabaseChatStore(selectConnectionStatus);
-  const conversation = useSupabaseChatStore(selectConversation);
-  const messages = useSupabaseChatStore(selectMessages);
-  const error = useSupabaseChatStore(selectError);
-  const isLoadingMessages = useSupabaseChatStore(selectIsLoadingMessages);
-  const subscriptionActive = useSupabaseChatStore(selectSubscriptionActive);
-  const currentUserId = useSupabaseChatStore(selectCurrentUserId);
-  const currentUserRole = useSupabaseChatStore(selectCurrentUserRole);
-  const messageReadStatus = useSupabaseChatStore(selectMessageReadStatus);
-  const doctorName = useSupabaseChatStore(selectDoctorName);
-  const hasMoreMessages = useSupabaseChatStore(selectHasMoreMessages);
-  const isLoadingMoreMessages = useSupabaseChatStore(selectIsLoadingMoreMessages);
-  const { connect, sendMessage, clearError, setChatPageVisible, loadOlderMessages } = useSupabaseChatStore();
+  const connectionStatus = useChatStore(selectConnectionStatus);
+  const conversation = useChatStore(selectConversation);
+  const messages = useChatStore(selectMessages);
+  const error = useChatStore(selectError);
+  const isLoadingMessages = useChatStore(selectIsLoadingMessages);
+  const subscriptionActive = useChatStore(selectSubscriptionActive);
+  const currentUserId = useChatStore(selectCurrentUserId);
+  const currentUserRole = useChatStore(selectCurrentUserRole);
+  const messageReadStatus = useChatStore(selectMessageReadStatus);
+  const doctorName = useChatStore(selectDoctorName);
+  const hasMoreMessages = useChatStore(selectHasMoreMessages);
+  const isLoadingMoreMessages = useChatStore(selectIsLoadingMoreMessages);
+  const { connect, sendMessage, clearError, setChatPageVisible, loadOlderMessages, retryMessage } = useChatStore();
 
   // Track chat page visibility for read receipts
   useEffect(() => {
@@ -58,18 +58,18 @@ export const SupabaseChatContainer: React.FC = () => {
       }
 
       try {
-        const currentStatus = useSupabaseChatStore.getState().connectionStatus;
+        const currentStatus = useChatStore.getState().connectionStatus;
 
         if (currentStatus === 'disconnected') {
           await connect(user.userId, user.name, user.role as 'patient' | 'doctor');
         } else if (currentStatus === 'connected') {
           // Already connected — ensure conversation is loaded
-          const currentConv = useSupabaseChatStore.getState().conversation;
+          const currentConv = useChatStore.getState().conversation;
           if (!currentConv) {
-            await useSupabaseChatStore.getState().loadPatientConversation();
+            await useChatStore.getState().loadPatientConversation();
           } else {
             // Conversation already loaded — mark as read (patient returned to chat page)
-            await useSupabaseChatStore.getState().markConversationAsRead(currentConv.id);
+            await useChatStore.getState().markConversationAsRead(currentConv.id);
           }
         }
       } catch (err) {
@@ -284,6 +284,7 @@ export const SupabaseChatContainer: React.FC = () => {
           hasMoreMessages={hasMoreMessages}
           isLoadingMoreMessages={isLoadingMoreMessages}
           onLoadMore={loadOlderMessages}
+          onRetry={retryMessage}
         />
       </div>
 

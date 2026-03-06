@@ -1,8 +1,9 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { AlertCircle, MessageSquare, Search, MoreVertical, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { AlertCircle, MessageSquare, Search, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import {
-  useSupabaseChatStore,
+  useChatStore,
   selectConnectionStatus,
   selectConversation,
   selectConversations,
@@ -14,14 +15,14 @@ import {
   selectMessageReadStatus,
   selectHasMoreMessages,
   selectIsLoadingMoreMessages,
-} from '../../stores/supabaseChatStore';
+} from '../../stores/chatStore';
 import { Skeleton } from '../ui/skeleton';
 import { Input } from '../ui/input';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/badge';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
-import type { ConversationWithDetails } from '../../types/supabase-chat-types';
+import type { ConversationWithDetails } from '../../types/chat-types';
 
 const formatTimeAgo = (dateString: string | null | undefined) => {
   if (!dateString) return '';
@@ -53,18 +54,19 @@ export const SupabaseDoctorChat: React.FC = () => {
   const [isInitializing, setIsInitializing] = useState(true);
   const [hasLoadedConversations, setHasLoadedConversations] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
-  const connectionStatus = useSupabaseChatStore(selectConnectionStatus);
-  const conversation = useSupabaseChatStore(selectConversation);
-  const conversations = useSupabaseChatStore(selectConversations);
-  const messages = useSupabaseChatStore(selectMessages);
-  const error = useSupabaseChatStore(selectError);
-  const isLoadingMessages = useSupabaseChatStore(selectIsLoadingMessages);
-  const currentUserId = useSupabaseChatStore(selectCurrentUserId);
-  const unreadCounts = useSupabaseChatStore(selectUnreadCounts);
-  const messageReadStatus = useSupabaseChatStore(selectMessageReadStatus);
-  const hasMoreMessages = useSupabaseChatStore(selectHasMoreMessages);
-  const isLoadingMoreMessages = useSupabaseChatStore(selectIsLoadingMoreMessages);
+  const connectionStatus = useChatStore(selectConnectionStatus);
+  const conversation = useChatStore(selectConversation);
+  const conversations = useChatStore(selectConversations);
+  const messages = useChatStore(selectMessages);
+  const error = useChatStore(selectError);
+  const isLoadingMessages = useChatStore(selectIsLoadingMessages);
+  const currentUserId = useChatStore(selectCurrentUserId);
+  const unreadCounts = useChatStore(selectUnreadCounts);
+  const messageReadStatus = useChatStore(selectMessageReadStatus);
+  const hasMoreMessages = useChatStore(selectHasMoreMessages);
+  const isLoadingMoreMessages = useChatStore(selectIsLoadingMoreMessages);
   const {
     connect,
     sendMessage,
@@ -73,7 +75,8 @@ export const SupabaseDoctorChat: React.FC = () => {
     deselectConversation,
     setChatPageVisible,
     loadOlderMessages,
-  } = useSupabaseChatStore();
+    retryMessage,
+  } = useChatStore();
 
   // Track chat page visibility for read receipts
   useEffect(() => {
@@ -90,15 +93,15 @@ export const SupabaseDoctorChat: React.FC = () => {
 
       try {
         // Use getState() for the latest Zustand state (not stale closure)
-        const currentStatus = useSupabaseChatStore.getState().connectionStatus;
+        const currentStatus = useChatStore.getState().connectionStatus;
 
         if (currentStatus === 'disconnected') {
           await connect(user.userId, user.name, 'doctor');
         } else if (currentStatus === 'connected') {
           // Already connected — ensure conversations are loaded
-          const currentConversations = useSupabaseChatStore.getState().conversations;
+          const currentConversations = useChatStore.getState().conversations;
           if (currentConversations.length === 0) {
-            await useSupabaseChatStore.getState().loadDoctorConversations();
+            await useChatStore.getState().loadDoctorConversations();
           }
         }
         // If 'connecting', another connect() is in progress — just wait for it
@@ -301,7 +304,7 @@ export const SupabaseDoctorChat: React.FC = () => {
                         {conv.patientName || 'Patient'}
                       </p>
                       <span className="text-xs text-muted-foreground shrink-0">
-                        {formatTimeAgo(conv.lastMessage?.created_at || conv.last_message_at)}
+                        {formatTimeAgo(conv.lastMessage?.createdAt || conv.lastMessageAt)}
                       </span>
                     </div>
                     <p className={`text-xs truncate mt-0.5 ${unreadCount > 0 ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
@@ -337,11 +340,13 @@ export const SupabaseDoctorChat: React.FC = () => {
                   variant="outline"
                   size="sm"
                   className="rounded-full px-5 border-foreground/20 hover:bg-white hidden md:inline-flex"
+                  onClick={() => {
+                    if (conversation?.patientId) {
+                      navigate(`/dashboard/doctor/patients?patientId=${conversation.patientId}`);
+                    }
+                  }}
                 >
                   View Profile
-                </Button>
-                <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full hover:bg-white">
-                  <MoreVertical className="h-5 w-5" />
                 </Button>
               </div>
             </div>
@@ -357,6 +362,7 @@ export const SupabaseDoctorChat: React.FC = () => {
                 hasMoreMessages={hasMoreMessages}
                 isLoadingMoreMessages={isLoadingMoreMessages}
                 onLoadMore={loadOlderMessages}
+                onRetry={retryMessage}
               />
             </div>
 

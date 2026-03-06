@@ -4,7 +4,7 @@ import type {
   ConsentType,
   AllConsentsStatus,
   ConsentRecord,
-  AccessLogEntry,
+  AccessLogResponse,
 } from '../types';
 
 /**
@@ -58,11 +58,13 @@ export const getHistory = async (): Promise<ConsentRecord[]> => {
 };
 
 /**
- * Get patient access log (loggutdrag)
+ * Get patient access log (loggutdrag) — paginated
  */
-export const getAccessLog = async (): Promise<AccessLogEntry[]> => {
-  const response = await api.get<{ logs: AccessLogEntry[] }>('/api/patient/access-log');
-  return response.data.logs;
+export const getAccessLog = async (page = 1, limit = 10): Promise<AccessLogResponse> => {
+  const response = await api.get<AccessLogResponse>('/api/patient/access-log', {
+    params: { page, limit },
+  });
+  return response.data;
 };
 
 export default {

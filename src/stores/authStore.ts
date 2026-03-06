@@ -126,6 +126,11 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       logout: () => {
+        // Disconnect chat socket to stop reconnection attempts
+        import('../stores/chatStore').then(({ useChatStore }) => {
+          useChatStore.getState().disconnect();
+        });
+
         set({
           isAuthenticated: false,
           user: null,

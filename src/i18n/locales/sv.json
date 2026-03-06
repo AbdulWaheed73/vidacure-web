@@ -586,6 +586,8 @@
     "noHistoryMessage": "Dina samtyckesåtgärder kommer att registreras här.",
     "noAccessLog": "Inga loggposter",
     "noAccessLogMessage": "Åtkomst till din journal kommer att loggas här.",
+    "loadMore": "Ladda fler",
+    "loading": "Laddar...",
     "descriptions": {
       "privacyPolicy": "Hur vi samlar in, lagrar och behandlar dina person- och hälsouppgifter enligt GDPR.",
       "treatmentConsent": "Ditt samtycke till att ta emot medicinsk behandling via Vidacure-plattformen.",

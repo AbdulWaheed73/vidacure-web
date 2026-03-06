@@ -36,3 +36,13 @@ export type AccessLogEntry = {
   timestamp: string;
   ipAddress?: string;
 };
+
+export type AccessLogResponse = {
+  logs: AccessLogEntry[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+  };
+};

@@ -34,14 +34,16 @@ export const useAuth = () => {
     try {
       clearError();
       setLoading(true);
-      
+
       await AuthService.logout();
       logout(); // Call store logout
-      
+
       // Clear stored data
       AuthService.clearUserData();
-      
+
     } catch {
+      // ignore logout errors
+    } finally {
       setLoading(false);
     }
   };

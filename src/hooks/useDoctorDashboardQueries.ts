@@ -5,7 +5,7 @@ import { doctorPrescriptionService } from '@/services/doctorPrescriptionService'
 import { doctorPatientService } from '@/services/doctorPatientService';
 import { doctorProfileService } from '@/services/doctorProfileService';
 import { doctorLabTestService } from '@/services/doctorLabTestService';
-import { supabaseChatService } from '@/services/supabaseChatService';
+import { chatService } from '@/services/chatService';
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
 
 export const useDoctorMeetings = () => {
@@ -55,7 +55,7 @@ export const useApprovePrescription = () => {
 export const useDoctorConversations = () => {
   return useQuery({
     queryKey: queryKeys.doctorConversations,
-    queryFn: () => supabaseChatService.getDoctorConversations(),
+    queryFn: () => chatService.getDoctorConversations(),
   });
 };
 
