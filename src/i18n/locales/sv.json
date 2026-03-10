@@ -654,12 +654,12 @@
       "resubscribe": "Prenumerera igen",
       "changePlan": "Byt plan",
       "changePlanTitle": "Byt din plan",
-      "changePlanDescription": "Byt mellan våra tillgängliga planer. Prisskillnaden justeras proportionellt.",
+      "changePlanDescription": "Byt mellan våra tillgängliga planer. Du omdirigeras till kassan för att betala den nya planen.",
       "currentPlanLabel": "Nuvarande plan",
       "newPlanLabel": "Ny plan",
       "perMonth": "mån",
       "confirmChangePlan": "Bekräfta byte",
-      "changePlanProration": "Prisskillnaden justeras proportionellt på din nästa faktura.",
+      "changePlanProration": "Din nuvarande plan avslutas och du checkar ut den nya planen.",
       "changePlanError": "Det gick inte att byta plan. Försök igen.",
       "loading": "Laddar..."
     }

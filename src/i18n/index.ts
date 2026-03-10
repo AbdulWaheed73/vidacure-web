@@ -1,6 +1,5 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 
 import enTranslations from './locales/en.json';
 import svTranslations from './locales/sv.json';
@@ -14,23 +13,26 @@ const resources = {
   },
 };
 
+// Default to Swedish; only override if user explicitly chose a language before
+const savedLng = localStorage.getItem('i18nextLng');
+
 i18n
-  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'en',
+    lng: savedLng || 'sv',
+    fallbackLng: 'sv',
     debug: import.meta.env.DEV,
-    
+
     interpolation: {
       escapeValue: false, // React already does escaping
     },
-    
-    detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
-      caches: ['localStorage'],
-    },
   });
+
+// Persist language choice on change
+i18n.on('languageChanged', (lng) => {
+  localStorage.setItem('i18nextLng', lng);
+});
 
 export default i18n;
 

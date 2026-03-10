@@ -18,10 +18,10 @@ export const useDoctorMeetings = () => {
   });
 };
 
-export const useDoctorPrescriptions = () => {
+export const useDoctorPrescriptions = (params?: { page?: number; limit?: number }) => {
   return useQuery({
-    queryKey: queryKeys.doctorPrescriptions,
-    queryFn: () => doctorPrescriptionService.getDoctorPrescriptionRequests(),
+    queryKey: [...queryKeys.doctorPrescriptions, params],
+    queryFn: () => doctorPrescriptionService.getDoctorPrescriptionRequests(params),
   });
 };
 

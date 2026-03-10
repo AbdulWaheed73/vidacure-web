@@ -4,9 +4,9 @@ import type { DoctorPrescriptionResponse, UpdatePrescriptionStatusData } from '.
 
 
 export const doctorPrescriptionService = {
-  // Get all prescription requests for the doctor's assigned patients
-  getDoctorPrescriptionRequests: async (): Promise<DoctorPrescriptionResponse> => {
-    const response = await api.get('/api/doctor/prescriptions');
+  // Get prescription requests for the doctor's assigned patients
+  getDoctorPrescriptionRequests: async (params?: { page?: number; limit?: number }): Promise<DoctorPrescriptionResponse> => {
+    const response = await api.get('/api/doctor/prescriptions', { params });
     return response.data;
   },
 

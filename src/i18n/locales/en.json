@@ -654,12 +654,12 @@
       "resubscribe": "Resubscribe",
       "changePlan": "Change Plan",
       "changePlanTitle": "Change Your Plan",
-      "changePlanDescription": "Switch between our available plans. The price difference will be prorated.",
+      "changePlanDescription": "Switch between our available plans. You'll be redirected to checkout to pay for the new plan.",
       "currentPlanLabel": "Current plan",
       "newPlanLabel": "New plan",
       "perMonth": "mo",
       "confirmChangePlan": "Confirm Change",
-      "changePlanProration": "Price difference will be prorated on your next invoice.",
+      "changePlanProration": "Your current plan will be canceled and you'll check out for the new plan.",
       "changePlanError": "Failed to change plan. Please try again.",
       "loading": "Loading..."
     }

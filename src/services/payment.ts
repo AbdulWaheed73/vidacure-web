@@ -44,9 +44,11 @@ export class PaymentService {
 
   /**
    * Change subscription plan (lifestyle <-> medical)
+   * Returns a Stripe Checkout URL for the new plan
    */
-  static async changePlan(planType: 'lifestyle' | 'medical'): Promise<void> {
-    await api.post('/api/payment/subscription/change-plan', { planType });
+  static async changePlan(planType: 'lifestyle' | 'medical'): Promise<{ checkoutUrl?: string; message?: string }> {
+    const response = await api.post('/api/payment/subscription/change-plan', { planType });
+    return response.data;
   }
 
   /**

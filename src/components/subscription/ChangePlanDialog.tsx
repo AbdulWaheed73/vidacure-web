@@ -36,9 +36,13 @@ export const ChangePlanDialog = ({ currentPlanType, onChanged }: ChangePlanDialo
 
   const changeMutation = useMutation({
     mutationFn: () => PaymentService.changePlan(newPlanType),
-    onSuccess: () => {
-      setOpen(false);
-      onChanged?.();
+    onSuccess: (data) => {
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        setOpen(false);
+        onChanged?.();
+      }
     },
   });
 

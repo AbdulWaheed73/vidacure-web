@@ -53,6 +53,10 @@ export type DoctorPrescriptionResponse = {
     approvedCount: number;
     deniedCount: number;
     underReviewCount: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+    hasMore: boolean;
   };
 };
 

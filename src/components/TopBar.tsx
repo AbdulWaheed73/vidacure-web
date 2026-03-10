@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Calendar, User, LogOut } from 'lucide-react';
+import { Calendar, User, LogOut, Globe } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import {
   DropdownMenu,
@@ -19,7 +19,14 @@ export const TopBar: React.FC<TopBarProps> = ({
   onProfileClick,
   onLogout,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = () => {
+    const isEnglish = i18n.language.startsWith('en');
+    i18n.changeLanguage(isEnglish ? 'sv' : 'en');
+  };
+
+  const currentLang = i18n.language.startsWith('sv') ? 'SV' : 'EN';
 
   // Generate dynamic greeting based on time of day
   const getGreeting = () => {
@@ -48,7 +55,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   const userInitials = getUserInitials(userName);
 
   return (
-    <div className="bg-[#F0F7F4] px-4 md:px-5 py-4 md:py-8 flex justify-between items-center shrink-0">
+    <div className="bg-[#F0F7F4] px-4 md:px-5 py-4 md:py-4 flex justify-between items-center shrink-0">
       {/* Left Section — hamburger + greeting */}
       <div className="flex items-center gap-2 min-w-0">
         <SidebarTrigger className="h-9 w-9 shrink-0" />
@@ -90,6 +97,10 @@ export const TopBar: React.FC<TopBarProps> = ({
             <DropdownMenuItem onClick={onProfileClick}>
               <User className="mr-2 h-4 w-4" />
               <span>{t('topbar.profile')}</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={toggleLanguage}>
+              <Globe className="mr-2 h-4 w-4" />
+              <span>{currentLang === 'EN' ? 'Svenska' : 'English'}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onLogout}>

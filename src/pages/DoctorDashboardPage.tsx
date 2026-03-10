@@ -192,7 +192,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
   const navigate = useNavigate();
 
   const { data: meetingsData, isLoading: meetingsLoading } = useDoctorMeetings();
-  const { data: prescriptionsData, isLoading: prescriptionsLoading } = useDoctorPrescriptions();
+  const { data: prescriptionsData, isLoading: prescriptionsLoading } = useDoctorPrescriptions({ limit: 3 });
   const { data: conversationsData, isLoading: conversationsLoading } = useDoctorConversations();
 
   const now = new Date();
@@ -210,10 +210,10 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
   const { data: unreadCounts } = useChatUnreadCounts(true);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 p-4 md:p-6">
+    <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 p-4 md:p-6">
       {/* Left Column — Appointments */}
-      <div className="flex-[3] min-w-0">
-        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 h-full flex flex-col">
+      <div className="flex-[3] min-w-0 flex flex-col">
+        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 flex flex-col flex-1">
           <h2 className="font-sora font-bold text-lg md:text-[21px] text-[#282828] mb-4 md:mb-6">
             Upcoming Appointments
           </h2>
@@ -231,20 +231,22 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
               <p className="text-[#b0b0b0] font-manrope text-sm">No appointments</p>
             </div>
           ) : (
-            <div className="space-y-4 overflow-y-auto max-h-[60vh] lg:max-h-[calc(100vh-200px)] pr-1">
-              {upcomingMeetings.map((meeting, index) =>
+            <div className="space-y-4">
+              {upcomingMeetings.slice(0, 4).map((meeting, index) =>
                 index === 0 ? (
                   <AppointmentCardHighlighted key={meeting.id} meeting={meeting} />
                 ) : (
                   <AppointmentCard key={meeting.id} meeting={meeting} />
                 )
               )}
-              <button
-                onClick={() => navigate('/dashboard/doctor/appointments')}
-                className="w-full py-3 text-[#005044] font-sora font-semibold text-sm hover:bg-[#f0f7f4] rounded-2xl transition-colors"
-              >
-                View all appointments
-              </button>
+              {upcomingMeetings.length > 4 && (
+                <button
+                  onClick={() => navigate('/dashboard/doctor/appointments')}
+                  className="w-full py-3 text-[#005044] font-sora font-semibold text-sm hover:bg-[#f0f7f4] rounded-2xl transition-colors"
+                >
+                  View all appointments
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -253,7 +255,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
       {/* Right Column — Prescriptions + Inbox */}
       <div className="flex-[2] min-w-0 flex flex-col gap-6">
         {/* Prescription Requests */}
-        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 flex-1 flex flex-col overflow-hidden">
+        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 flex flex-col flex-1">
           <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
             <h2 className="font-sora font-bold text-lg md:text-[21px] text-[#282828]">
               Prescription Requests
@@ -276,7 +278,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
           ) : prescriptionRequests.length === 0 ? (
             <p className="text-[#b0b0b0] font-manrope text-sm">No prescription requests</p>
           ) : (
-            <div className="overflow-y-auto flex-1">
+            <div>
               {prescriptionRequests.map((request) => (
                 <PrescriptionRow
                   key={request._id}
@@ -284,12 +286,20 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
                   onReview={() => navigate('/dashboard/doctor/prescriptions')}
                 />
               ))}
+              {(prescriptionsData?.data?.hasMore) && (
+                <button
+                  onClick={() => navigate('/dashboard/doctor/prescriptions')}
+                  className="w-full py-3 mt-3 text-[#005044] font-sora font-semibold text-sm hover:bg-[#f0f7f4] rounded-2xl transition-colors"
+                >
+                  Load more
+                </button>
+              )}
             </div>
           )}
         </div>
 
         {/* Inbox */}
-        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 flex-1 flex flex-col overflow-hidden">
+        <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 flex flex-col flex-1">
           <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
             <h2 className="font-sora font-bold text-lg md:text-[21px] text-[#282828]">Inbox</h2>
           </div>
@@ -305,8 +315,8 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
           ) : conversations.length === 0 ? (
             <p className="text-[#b0b0b0] font-manrope text-sm">No messages</p>
           ) : (
-            <div className="overflow-y-auto flex-1">
-              {conversations.map((conversation) => (
+            <div>
+              {conversations.slice(0, 3).map((conversation) => (
                 <InboxRow
                   key={conversation.id}
                   conversation={conversation}
