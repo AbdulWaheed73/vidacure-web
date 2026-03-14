@@ -37,7 +37,6 @@ const SubscribePage = lazy(() => import("./pages/SubscribePage"));
 const OnboardingFlow = lazy(() => import("./pages/OnBoarding"));
 const DashboardRouter = lazy(() => import("./pages/dashboard/DashboardRouter"));
 const ConsentManagement = lazy(() => import("./pages/ConsentManagement").then(m => ({ default: m.ConsentManagement })));
-
 // Admin routes
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));

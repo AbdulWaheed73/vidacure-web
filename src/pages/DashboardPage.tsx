@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Sparkles } from 'lucide-react';
-import { WeightProgressCard, NextAppointmentCard, PrescriptionCard, BMICard, GoalsCard } from '../components/dashboard';
+import { WeightProgressCard, NextAppointmentCard, PrescriptionCard, BMICard, GoalsCard, PromoBanner } from '../components/dashboard';
 import { PaymentService } from '../services';
 import { queryKeys } from '../lib/queryClient';
 import { Button } from '../components/ui/Button';
@@ -22,6 +22,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
 
   return (
     <div className="p-4 md:p-8">
+      <PromoBanner />
 
       {/* Active subscription — show full dashboard */}
       {!subscriptionLoading && subscriptionStatus?.hasSubscription && (

@@ -1,7 +1,7 @@
 import type { RadioGroupProps, RadioItemProps } from '../../types';
 
 export const RadioGroup = ({ children }: RadioGroupProps) => (
-  <div className="flex gap-16">{children}</div>
+  <div className="flex flex-wrap gap-4 sm:gap-8 md:gap-16">{children}</div>
 );
 
 export const RadioItem = ({

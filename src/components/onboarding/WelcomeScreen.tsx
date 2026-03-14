@@ -11,7 +11,7 @@ export const WelcomeScreen = () => {
   return (
     <div className="flex flex-col gap-8 items-center text-center">
       <div className="flex flex-col gap-4">
-        <h1 className="font-sora font-bold text-[36px] text-[#282828] leading-[1.2]">
+        <h1 className="font-sora font-bold text-[24px] sm:text-[30px] md:text-[36px] text-[#282828] leading-[1.2]">
           Let's get to know you
         </h1>
         <p className="font-manrope text-[16px] text-[#282828] leading-[1.4]">

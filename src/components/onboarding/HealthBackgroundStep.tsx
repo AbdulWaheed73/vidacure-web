@@ -17,7 +17,7 @@ export const HealthBackgroundStep = () => {
   };
 
   return (
-    <div className="flex flex-col gap-8 w-full">
+    <div className="flex flex-col gap-5 sm:gap-8 w-full">
       <div className="flex flex-col gap-4">
         <label className="font-manrope font-bold text-[16px] text-[#282828]">
           Do you smoke or have you smoked previously?
@@ -64,7 +64,7 @@ export const HealthBackgroundStep = () => {
       </FormField>
 
       <FormField label="Activity level">
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <ActivityLevelButton
             value="sedentary"
             label="Sedentary (little or no exercise)"
@@ -95,7 +95,7 @@ export const HealthBackgroundStep = () => {
       </FormField>
 
       <FormField label="Daily sugar intake?">
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           {["low", "moderate", "high"].map((level) => (
             <ActivityLevelButton
               key={level}
@@ -109,7 +109,7 @@ export const HealthBackgroundStep = () => {
       </FormField>
 
       <FormField label="Carbohydrate intake?">
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           {["low", "moderate", "high"].map((level) => (
             <ActivityLevelButton
               key={level}
@@ -123,7 +123,7 @@ export const HealthBackgroundStep = () => {
       </FormField>
 
       <FormField label="Processed food intake?">
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           {["low", "moderate", "high"].map((level) => (
             <ActivityLevelButton
               key={level}
@@ -136,7 +136,7 @@ export const HealthBackgroundStep = () => {
         </div>
       </FormField>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
         <FormField label="Previous weight loss attempts" className="flex-1">
           <Textarea
             placeholder="Results"

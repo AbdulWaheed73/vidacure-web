@@ -9,7 +9,7 @@ export const FormField = ({
   error = false,
   helperText,
 }: FormFieldProps) => (
-  <div className={`flex flex-col gap-4 ${className}`}>
+  <div className={`flex flex-col gap-2 sm:gap-4 ${className}`}>
     <label className={`font-manrope font-bold text-[16px] ${
       error ? "text-red-600" : "text-[#282828]"
     }`}>

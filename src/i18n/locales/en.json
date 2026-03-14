@@ -421,6 +421,12 @@
       "completed-updated": "Completed",
       "revoked": "Revoked"
     },
+    "resourceBannerTitle": "Learn About Blood Testing",
+    "resourceBannerDescription": "Read about why blood tests are important for your treatment and what our test panels include.",
+    "backToLabTests": "Back to Lab Tests",
+    "findTestLocation": "Find a Test Location",
+    "synlabLocations": "Synlab locations",
+    "synlabPartners": "Synlab sampling partners",
     "doctorView": {
       "title": "Patient Lab Results",
       "description": "View lab test results for your assigned patients",
@@ -428,6 +434,17 @@
       "noPatients": "No patients assigned",
       "noLabOrders": "No lab orders found for this patient"
     }
+  },
+  "treatmentJournal": {
+    "title": "Treatment Journal",
+    "noJournal": "Your doctor has not created a treatment plan yet.",
+    "created": "Created",
+    "lastUpdated": "Last Updated",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Saved successfully",
+    "placeholder": "Start writing the treatment plan...",
+    "by": "By"
   },
   "prescriptions": {
     "title": "Prescriptions",
@@ -548,7 +565,9 @@
     "title": "Resources",
     "description": "Access health articles, guides, and educational materials",
     "comingSoon": "Health resources coming soon",
-    "emptyMessage": "Educational content and health resources will be available here"
+    "emptyMessage": "Educational content and health resources will be available here",
+    "readMore": "Read",
+    "backToResources": "Back to Resources"
   },
   "consent": {
     "title": "Consent Management",
@@ -788,5 +807,13 @@
       "returnHome": "Return to Home"
     },
     "infoText": "BMI (Body Mass Index) is calculated as weight (kg) divided by height (m) squared. A BMI of 27 or higher is required for our medical weight management program."
+  },
+  "promo": {
+    "bloodTestTitle": "Save 200 SEK",
+    "bloodTestSubtitle": "on blood test orders",
+    "subscriptionTitle": "Save 300 SEK",
+    "subscriptionSubtitle": "on subscription plans",
+    "useCode": "Use code",
+    "codeCopied": "Coupon code copied!"
   }
 }

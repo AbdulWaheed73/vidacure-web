@@ -36,7 +36,7 @@ export const DatePicker = ({
         showYearDropdown
         showMonthDropdown
         dropdownMode="select"
-        className="w-full p-4 border border-[#b0b0b0] rounded-[12px] font-manrope text-[16px] focus:border-[#00a38a] focus:outline-none"
+        className="w-full p-3 sm:p-4 border border-[#b0b0b0] rounded-[12px] font-manrope text-[14px] sm:text-[16px] focus:border-[#00a38a] focus:outline-none"
         wrapperClassName="w-full"
         popperClassName="z-50"
         calendarClassName="!font-manrope !border-[#b0b0b0] !rounded-[12px] !shadow-lg"

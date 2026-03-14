@@ -4,6 +4,7 @@ import { getWeightHistory } from '@/services/weightHistory';
 import { patientService } from '@/services/patientService';
 import { calendlyService } from '@/services/calendlyService';
 import { prescriptionService } from '@/services/prescriptionService';
+import { providerService } from '@/services/providerService';
 
 export const useWeightHistory = () => {
   return useQuery({
@@ -30,5 +31,19 @@ export const usePrescriptionRequests = () => {
   return useQuery({
     queryKey: queryKeys.prescriptionRequests,
     queryFn: () => prescriptionService.getPrescriptionRequests(),
+  });
+};
+
+export const useMyProviders = () => {
+  return useQuery({
+    queryKey: queryKeys.myProviders,
+    queryFn: () => providerService.getMyProviders(),
+  });
+};
+
+export const useProviderMeetings = () => {
+  return useQuery({
+    queryKey: queryKeys.providerMeetings,
+    queryFn: () => providerService.getMyProviderMeetings(),
   });
 };

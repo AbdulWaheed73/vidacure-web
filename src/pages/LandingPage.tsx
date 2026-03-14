@@ -14,6 +14,7 @@ import FooterSection from "@/components/layout/Footer";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { createOrganizationSchema } from "@/utils/structuredData";
 import { useTranslation } from "react-i18next";
+import { PromoBanner } from "@/components/dashboard";
 
 export const LandingPage = () => {
   const { t } = useTranslation();
@@ -48,6 +49,9 @@ export const LandingPage = () => {
         <Navbar />
       </div>
       <div className="overflow-y-auto overflow-x-hidden w-full h-full bg-[#E6F9F6] py-2 mx-auto pt-11 lg:pt-0">
+        <div className="pt-16 lg:pt-20">
+          <PromoBanner />
+        </div>
         <div id="hero" className="scroll-mt-16">
           <HeroSection />
         </div>

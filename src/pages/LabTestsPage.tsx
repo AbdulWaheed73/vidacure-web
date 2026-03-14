@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FlaskConical } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { FlaskConical, TestTubes, ArrowRight, MapPin, ExternalLink } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -76,12 +77,14 @@ export const LabTestsPage: React.FC = () => {
     setResultOrder(order);
   };
 
+  const navigate = useNavigate();
+
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <FlaskConical className="size-8 text-teal-action" />
+          <FlaskConical className="size-8 text-[#009689]" />
           <h1 className="text-3xl font-bold text-gray-800 font-manrope">
             {t('labTests.title')}
           </h1>
@@ -89,6 +92,55 @@ export const LabTestsPage: React.FC = () => {
         <p className="text-lg text-gray-600 font-manrope">
           {t('labTests.description')}
         </p>
+      </div>
+
+      {/* Blood Testing Resource Banner */}
+      <div
+        onClick={() => navigate('/resources?article=blood-testing')}
+        className="mb-8 bg-[#f0f7f4] border border-[#009689]/20 rounded-2xl p-5 sm:p-6 flex items-center gap-4 cursor-pointer hover:shadow-md hover:border-[#009689]/40 transition-all duration-200 group"
+      >
+        <div className="p-3 bg-white rounded-xl shrink-0 shadow-sm">
+          <TestTubes className="size-6 text-[#009689]" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-gray-800 font-manrope">
+            {t('labTests.resourceBannerTitle')}
+          </h3>
+          <p className="text-sm text-gray-600 font-manrope mt-0.5">
+            {t('labTests.resourceBannerDescription')}
+          </p>
+        </div>
+        <ArrowRight className="size-5 text-[#009689] shrink-0 group-hover:translate-x-1 transition-transform" />
+      </div>
+
+      {/* Synlab Links */}
+      <div className="mb-8 bg-white border border-gray-100 rounded-2xl p-5 sm:p-6">
+        <div className="flex items-center gap-2 mb-3">
+          <MapPin className="size-5 text-[#009689]" />
+          <h3 className="font-semibold text-gray-800 font-manrope">
+            {t('labTests.findTestLocation')}
+          </h3>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <a
+            href="https://synlab.se/patient/har-finns-vi"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm text-[#009689] hover:text-[#005044] font-manrope font-medium transition-colors"
+          >
+            <ExternalLink className="size-3.5 shrink-0" />
+            {t('labTests.synlabLocations')}
+          </a>
+          <a
+            href="https://synlab.se/patient/har-finns-vi/provtagningspartners"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm text-[#009689] hover:text-[#005044] font-manrope font-medium transition-colors"
+          >
+            <ExternalLink className="size-3.5 shrink-0" />
+            {t('labTests.synlabPartners')}
+          </a>
+        </div>
       </div>
 
       {/* Error message */}
@@ -159,12 +211,13 @@ export const LabTestsPage: React.FC = () => {
                     </div>
                   </CardContent>
                   <CardFooter className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-teal-700">
+                    <span className="text-lg font-bold text-[#009689]">
                       {formatPrice(pkg.priceAmountOre, pkg.priceCurrency)}
                     </span>
                     <Button
                       onClick={() => setConfirmPackage(pkg)}
                       disabled={isCreatingCheckout}
+                      className="bg-[#009689] hover:bg-[#005044] text-white"
                     >
                       {t('labTests.orderTest')}
                     </Button>

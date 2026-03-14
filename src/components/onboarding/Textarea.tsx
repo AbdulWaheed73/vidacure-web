@@ -11,6 +11,6 @@ export const Textarea = ({
     placeholder={placeholder}
     value={value}
     onChange={onChange}
-    className={`w-full p-4 border border-[#b0b0b0] rounded-[12px] font-manrope text-[16px] h-[54px] resize-none focus:border-[#00a38a] focus:outline-none ${className}`}
+    className={`w-full p-3 sm:p-4 border border-[#b0b0b0] rounded-[12px] font-manrope text-[14px] sm:text-[16px] h-[48px] sm:h-[54px] resize-none focus:border-[#00a38a] focus:outline-none ${className}`}
   />
 );

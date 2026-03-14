@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TrendingUp, ShieldAlert } from 'lucide-react';
+import { TrendingUp, ShieldAlert, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants';
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
@@ -11,10 +11,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/Button';
 import { Label } from '@/components/ui/label';
-import { useQueryClient } from '@tanstack/react-query';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { addWeightHistory, getWeightHistory } from '@/services/weightHistory';
+import { treatmentJournalService } from '@/services/treatmentJournalService';
 import { queryKeys } from '@/lib/queryClient';
+import DOMPurify from 'dompurify';
 import type { WeightHistoryEntry } from '@/types/weight-types';
 
 
@@ -181,6 +184,9 @@ export const ProgressPage: React.FC = () => {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800 font-manrope">{t('progress.title')}</h1>
         </div>
       </div>
+
+      {/* Treatment Journal — top of page */}
+      <TreatmentJournalSection />
 
       {/* Main Content: 2-column layout */}
       <div className="flex flex-col lg:flex-row items-stretch gap-4 md:gap-6 mb-4 md:mb-6">
@@ -413,6 +419,82 @@ export const ProgressPage: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+
     </div>
+  );
+};
+
+// --- Treatment Journal Section ---
+const TreatmentJournalSection: React.FC = () => {
+  const { t } = useTranslation();
+  const { data, isLoading } = useQuery({
+    queryKey: queryKeys.patientJournal,
+    queryFn: () => treatmentJournalService.getPatientJournal(),
+  });
+
+  const formatDate = (dateStr: string) =>
+    new Date(dateStr).toLocaleDateString([], {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+
+  if (isLoading) {
+    return (
+      <Card className="bg-white/95 backdrop-blur-md shadow-lg mb-6">
+        <CardHeader>
+          <Skeleton className="h-6 w-48" />
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-4 w-full mb-2" />
+          <Skeleton className="h-4 w-3/4 mb-2" />
+          <Skeleton className="h-4 w-1/2" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const journal = data?.journal;
+
+  if (!journal) {
+    return null;
+  }
+
+  return (
+    <Card className="bg-white/95 backdrop-blur-md shadow-lg mb-6">
+      <CardHeader>
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-2">
+            <FileText className="size-5 text-teal-600" />
+            <CardTitle className="text-xl font-manrope">
+              {t('treatmentJournal.title')}
+            </CardTitle>
+          </div>
+          <div className="text-xs text-[#b0b0b0] font-manrope text-right space-y-0.5">
+            <p>
+              {t('treatmentJournal.created')}: {formatDate(journal.createdAt)}
+            </p>
+            {journal.updatedAt !== journal.createdAt && (
+              <p>
+                {t('treatmentJournal.lastUpdated')}: {formatDate(journal.updatedAt)}
+              </p>
+            )}
+          </div>
+        </div>
+        {journal.doctorName && (
+          <p className="text-sm text-[#005044] font-manrope font-medium mt-1">
+            {t('treatmentJournal.by')} {journal.doctorName}
+          </p>
+        )}
+      </CardHeader>
+      <CardContent>
+        <div
+          className="journal-content font-manrope text-[#282828] text-sm"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(journal.content),
+          }}
+        />
+      </CardContent>
+    </Card>
   );
 };

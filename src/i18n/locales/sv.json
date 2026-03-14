@@ -421,6 +421,12 @@
       "completed-updated": "Slutförd",
       "revoked": "Återkallad"
     },
+    "resourceBannerTitle": "Läs om provtagning",
+    "resourceBannerDescription": "Läs om varför blodprover är viktiga för din behandling och vad våra provpaket innehåller.",
+    "backToLabTests": "Tillbaka till labbprover",
+    "findTestLocation": "Hitta ett provtagningsställe",
+    "synlabLocations": "Synlab mottagningar",
+    "synlabPartners": "Synlab provtagningspartners",
     "doctorView": {
       "title": "Patientlabbresultat",
       "description": "Se labbtestresultat för dina tilldelade patienter",
@@ -428,6 +434,17 @@
       "noPatients": "Inga tilldelade patienter",
       "noLabOrders": "Inga labbbeställningar hittades för denna patient"
     }
+  },
+  "treatmentJournal": {
+    "title": "Behandlingsjournal",
+    "noJournal": "Din läkare har inte skapat en behandlingsplan ännu.",
+    "created": "Skapad",
+    "lastUpdated": "Senast uppdaterad",
+    "save": "Spara",
+    "saving": "Sparar...",
+    "saved": "Sparad",
+    "placeholder": "Börja skriva behandlingsplanen...",
+    "by": "Av"
   },
   "prescriptions": {
     "title": "Recept",
@@ -548,7 +565,9 @@
     "title": "Resurser",
     "description": "Åtkomst till hälsoartiklar, guider och utbildningsmaterial",
     "comingSoon": "Hälsoresurser kommer snart",
-    "emptyMessage": "Utbildningsinnehåll och hälsoresurser kommer att finnas tillgängliga här"
+    "emptyMessage": "Utbildningsinnehåll och hälsoresurser kommer att finnas tillgängliga här",
+    "readMore": "Läs",
+    "backToResources": "Tillbaka till Resurser"
   },
   "consent": {
     "title": "Samtycke",
@@ -788,5 +807,13 @@
       "returnHome": "Tillbaka till startsidan"
     },
     "infoText": "BMI (Body Mass Index) beräknas som vikt (kg) delat med längd (m) i kvadrat. Ett BMI på 27 eller högre krävs för vårt medicinska vikthanteringsprogram."
+  },
+  "promo": {
+    "bloodTestTitle": "Spara 200 kr",
+    "bloodTestSubtitle": "på blodprovsbeställning",
+    "subscriptionTitle": "Spara 300 kr",
+    "subscriptionSubtitle": "på prenumerationsplaner",
+    "useCode": "Använd kod",
+    "codeCopied": "Kupongkod kopierad!"
   }
 }

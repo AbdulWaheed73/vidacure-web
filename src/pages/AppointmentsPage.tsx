@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Calendar,
@@ -11,7 +11,11 @@ import {
   ArrowRight,
   MoreHorizontal,
   User,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/queryClient';
 import { Button } from '../components/ui/Button';
 import { Alert, AlertDescription } from '@/components/ui/Alert';
 import {
@@ -41,39 +45,194 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { PopupModal } from 'react-calendly';
 import { calendlyService } from '../services/calendlyService';
 import { providerService } from '../services/providerService';
+import { usePatientMeetings, useMyProviders, useProviderMeetings } from '@/hooks/useDashboardQueries';
 import type { PatientMeeting } from '../types/calendly-types';
-import type { Provider, ProviderMeeting } from '../types/provider-types';
+import type { ProviderMeeting } from '../types/provider-types';
 import { useCookieConsentStore } from '@/stores/cookieConsentStore';
 import { MeetingRequired } from '@/components/subscription';
 
+// Horizontal scrolling carousel for upcoming appointment cards
+const UpcomingAppointmentsCarousel: React.FC<{
+  meetings: {
+    id: string;
+    startTime: string;
+    endTime: string | null | undefined;
+    specialist: string;
+    type: string;
+    tag: string;
+    meetingUrl?: string | null;
+    source: 'doctor' | 'provider';
+    original: PatientMeeting | ProviderMeeting;
+  }[];
+  t: any;
+  formatDate: (d: string) => string;
+  formatTime: (d: string) => string;
+  onViewDetails: (meeting: any) => void;
+}> = ({ meetings, t, formatDate, formatTime, onViewDetails }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+  };
+
+  useEffect(() => {
+    checkScroll();
+    const el = scrollRef.current;
+    if (el) {
+      el.addEventListener('scroll', checkScroll, { passive: true });
+      window.addEventListener('resize', checkScroll);
+      return () => {
+        el.removeEventListener('scroll', checkScroll);
+        window.removeEventListener('resize', checkScroll);
+      };
+    }
+  }, [meetings]);
+
+  const scroll = (direction: 'left' | 'right') => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cardWidth = el.querySelector<HTMLElement>('[data-card]')?.offsetWidth || 340;
+    el.scrollBy({ left: direction === 'left' ? -cardWidth - 16 : cardWidth + 16, behavior: 'smooth' });
+  };
+
+  return (
+    <div>
+      {/* Nav arrows */}
+      {meetings.length > 1 && (
+        <div className="flex justify-end gap-2 mb-3">
+          <button
+            onClick={() => scroll('left')}
+            disabled={!canScrollLeft}
+            className="w-9 h-9 rounded-full border border-gray-300 flex items-center justify-center transition-colors hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <ChevronLeft className="w-5 h-5 text-gray-600" />
+          </button>
+          <button
+            onClick={() => scroll('right')}
+            disabled={!canScrollRight}
+            className="w-9 h-9 rounded-full border border-gray-300 flex items-center justify-center transition-colors hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <ChevronRight className="w-5 h-5 text-gray-600" />
+          </button>
+        </div>
+      )}
+
+      {/* Scrollable cards */}
+      <div
+        ref={scrollRef}
+        className="flex gap-4 overflow-x-auto scroll-smooth pb-2"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+      >
+        <style>{`[data-appointments-scroll]::-webkit-scrollbar { display: none; }`}</style>
+        {meetings.map((meeting) => (
+          <div
+            key={meeting.id}
+            data-card
+            className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 shrink-0 w-[85vw] sm:w-[340px]"
+          >
+            {/* Tag */}
+            <div className="mb-3">
+              <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-sora font-semibold ${
+                meeting.source === 'doctor'
+                  ? 'bg-[#f0f7f4] text-[#005044]'
+                  : 'bg-purple-50 text-purple-700'
+              }`}>
+                {meeting.tag}
+              </span>
+            </div>
+
+            {/* 2x2 grid */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+              <div>
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-0.5">
+                  <Calendar className="w-3.5 h-3.5" />
+                  <span>{t('appointments.date')}</span>
+                </div>
+                <p className="text-sm font-medium text-gray-800">{formatDate(meeting.startTime)}</p>
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-0.5">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>{t('appointments.time')}</span>
+                </div>
+                <p className="text-sm font-medium text-gray-800">
+                  {formatTime(meeting.startTime)}
+                  {meeting.endTime ? ` - ${formatTime(meeting.endTime)}` : ''}
+                </p>
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-0.5">
+                  <Stethoscope className="w-3.5 h-3.5" />
+                  <span>{t('appointments.specialist', 'Specialist')}</span>
+                </div>
+                <p className="text-sm font-medium text-gray-800">{meeting.specialist}</p>
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5 text-xs text-gray-500 mb-0.5">
+                  <Video className="w-3.5 h-3.5" />
+                  <span>{t('appointments.type')}</span>
+                </div>
+                <p className="text-sm font-medium text-gray-800">{meeting.type}</p>
+              </div>
+            </div>
+
+            {/* Action button */}
+            <div className="mt-4">
+              {meeting.source === 'doctor' ? (
+                <button
+                  onClick={() => onViewDetails(meeting)}
+                  className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                >
+                  {t('appointments.viewDetails')}
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              ) : meeting.meetingUrl ? (
+                <a
+                  href={meeting.meetingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-colors"
+                >
+                  <Video className="w-4 h-4" />
+                  {t('appointments.joinMeeting', 'Join Meeting')}
+                </a>
+              ) : null}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export const AppointmentsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const [meetings, setMeetings] = useState<PatientMeeting[]>([]);
-  const [doctorName, setDoctorName] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const qc = useQueryClient();
+  const { data: meetingsData, isLoading, error: meetingsError, refetch: refetchMeetings } = usePatientMeetings();
+  const { data: providersData, refetch: refetchProviders } = useMyProviders();
+  const { data: providerMeetingsData, refetch: refetchProviderMeetings } = useProviderMeetings();
+
+  const meetings = meetingsData?.meetings ?? [];
+  const doctorName = meetingsData?.doctorName ?? '';
+  const myProviders = providersData?.providers ?? [];
+  const providerMeetings = providerMeetingsData?.meetings ?? [];
+
+  const [bookingError, setBookingError] = useState<string | null>(null);
   const [isBookingLoading, setIsBookingLoading] = useState(false);
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
   const [selectedMeeting, setSelectedMeeting] = useState<PatientMeeting | null>(null);
-  const [myProviders, setMyProviders] = useState<Provider[]>([]);
-  const [providerMeetings, setProviderMeetings] = useState<ProviderMeeting[]>([]);
   const [isProviderBookingLoading, setIsProviderBookingLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('doctor');
   const { consent, openPreferences } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
 
-  const loadProviderData = async () => {
-    try {
-      const [providersRes, meetingsRes] = await Promise.all([
-        providerService.getMyProviders(),
-        providerService.getMyProviderMeetings(),
-      ]);
-      setMyProviders(providersRes.providers);
-      setProviderMeetings(meetingsRes.meetings);
-    } catch (err) {
-      console.error('Error loading provider data:', err);
-    }
-  };
+  // Derive display error from query error or booking error
+  const error = bookingError || (meetingsError ? t('appointments.errors.loadFailed') : null);
 
   const handleProviderBooking = async (providerId: string) => {
     if (!hasFunctionalConsent) {
@@ -81,60 +240,36 @@ export const AppointmentsPage: React.FC = () => {
       return;
     }
     setIsProviderBookingLoading(true);
-    setError(null);
+    setBookingError(null);
     try {
       const response = await providerService.createBookingLink(providerId);
       if (response.success) {
         setSchedulingLink(response.schedulingLink);
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to generate booking link');
+      setBookingError(err.response?.data?.error || 'Failed to generate booking link');
     } finally {
       setIsProviderBookingLoading(false);
     }
   };
 
-  const loadMeetings = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await calendlyService.getPatientMeetings();
-
-      if (response.success) {
-        setMeetings(response.meetings);
-        setDoctorName(response.doctorName || '');
-      }
-    } catch (err: any) {
-      console.error('Error loading meetings:', err);
-
-      if (err.response?.data?.error) {
-        setError(err.response.data.error);
-      } else if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError(t('appointments.errors.loadFailed'));
-      }
-    } finally {
-      setIsLoading(false);
-    }
+  const handleRefresh = () => {
+    refetchMeetings();
+    refetchProviders();
+    refetchProviderMeetings();
   };
-
-  useEffect(() => {
-    loadMeetings();
-    loadProviderData();
-  }, []);
 
   const handleBookingSuccess = () => {
     setTimeout(() => {
-      loadMeetings();
-      loadProviderData();
+      qc.invalidateQueries({ queryKey: queryKeys.patientMeetings });
+      qc.invalidateQueries({ queryKey: queryKeys.myProviders });
+      qc.invalidateQueries({ queryKey: queryKeys.providerMeetings });
     }, 2000);
   };
 
   const handleDirectBooking = async () => {
     setIsBookingLoading(true);
-    setError(null);
+    setBookingError(null);
 
     try {
       const eventTypesResponse = await calendlyService.getAvailableEventTypes();
@@ -145,14 +280,14 @@ export const AppointmentsPage: React.FC = () => {
         if (bookingResponse.success) {
           setSchedulingLink(bookingResponse.schedulingLink);
         } else {
-          setError('Failed to generate booking link');
+          setBookingError('Failed to generate booking link');
         }
       } else {
-        setError('No appointment types available');
+        setBookingError('No appointment types available');
       }
     } catch (err: any) {
       console.error('Booking error:', err);
-      setError(err.response?.data?.error || err.response?.data?.message || 'Failed to generate booking link');
+      setBookingError(err.response?.data?.error || err.response?.data?.message || 'Failed to generate booking link');
     } finally {
       setIsBookingLoading(false);
     }
@@ -442,7 +577,7 @@ export const AppointmentsPage: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={loadMeetings}
+            onClick={handleRefresh}
             disabled={isLoading}
             className="h-10 w-10 p-0 rounded-full border-gray-300"
           >
@@ -541,90 +676,13 @@ export const AppointmentsPage: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
-                {allUpcoming.map((meeting) => (
-                  <div
-                    key={meeting.id}
-                    className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-8 max-w-2xl"
-                  >
-                    {/* Tag */}
-                    <div className="mb-3 sm:mb-4">
-                      <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-sora font-semibold ${
-                        meeting.source === 'doctor'
-                          ? 'bg-[#f0f7f4] text-[#005044]'
-                          : 'bg-purple-50 text-purple-700'
-                      }`}>
-                        {meeting.tag}
-                      </span>
-                    </div>
-                    {/* 2x2 grid layout */}
-                    <div className="grid grid-cols-2 gap-x-4 sm:gap-x-12 gap-y-4 sm:gap-y-6">
-                      {/* Date */}
-                      <div>
-                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
-                          <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                          <span>{t('appointments.date')}</span>
-                        </div>
-                        <p className="text-sm sm:text-base font-medium text-gray-800">
-                          {formatDate(meeting.startTime)}
-                        </p>
-                      </div>
-                      {/* Time */}
-                      <div>
-                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
-                          <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                          <span>{t('appointments.time')}</span>
-                        </div>
-                        <p className="text-sm sm:text-base font-medium text-gray-800">
-                          {formatTime(meeting.startTime)}
-                          {meeting.endTime ? ` - ${formatTime(meeting.endTime)}` : ''}
-                        </p>
-                      </div>
-                      {/* Specialist */}
-                      <div>
-                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
-                          <Stethoscope className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                          <span>{t('appointments.specialist', 'Specialist')}</span>
-                        </div>
-                        <p className="text-sm sm:text-base font-medium text-gray-800">
-                          {meeting.specialist}
-                        </p>
-                      </div>
-                      {/* Type */}
-                      <div>
-                        <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 mb-1">
-                          <Video className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                          <span>{t('appointments.type')}</span>
-                        </div>
-                        <p className="text-sm sm:text-base font-medium text-gray-800">
-                          {meeting.type}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="mt-4 sm:mt-8">
-                      {meeting.source === 'doctor' ? (
-                        <Button
-                          onClick={() => setSelectedMeeting(meeting.original as PatientMeeting)}
-                          className="bg-teal-600 hover:bg-teal-700 text-white flex items-center gap-2 rounded-lg px-5"
-                        >
-                          {t('appointments.viewDetails')}
-                          <ArrowRight className="w-4 h-4" />
-                        </Button>
-                      ) : meeting.meetingUrl ? (
-                        <a
-                          href={meeting.meetingUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg px-5 py-2 text-sm font-medium transition-colors"
-                        >
-                          <Video className="w-4 h-4" />
-                          {t('appointments.joinMeeting', 'Join Meeting')}
-                        </a>
-                      ) : null}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <UpcomingAppointmentsCarousel
+                meetings={allUpcoming}
+                t={t}
+                formatDate={formatDate}
+                formatTime={formatTime}
+                onViewDetails={(meeting) => setSelectedMeeting(meeting.original as PatientMeeting)}
+              />
             )}
           </div>
 

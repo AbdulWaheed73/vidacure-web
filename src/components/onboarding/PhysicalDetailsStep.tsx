@@ -15,7 +15,7 @@ export const PhysicalDetailsStep = () => {
   };
 
   return (
-    <div className="flex flex-col gap-8 w-full">
+    <div className="flex flex-col gap-5 sm:gap-8 w-full">
       <FormField label="Height">
         <div className="flex gap-2.5 items-center">
           <NumericInput
@@ -31,7 +31,7 @@ export const PhysicalDetailsStep = () => {
         </div>
       </FormField>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
         <FormField label="Current Weight" className="flex-1">
           <div className="flex gap-2.5 items-center">
             <NumericInput
@@ -63,7 +63,7 @@ export const PhysicalDetailsStep = () => {
         </FormField>
       </div>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
         <FormField label="Lowest weight in the past" className="flex-1">
           <div className="flex gap-2.5 items-center">
             <NumericInput
@@ -110,7 +110,7 @@ export const PhysicalDetailsStep = () => {
         </div>
       </FormField>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
         <FormField label="Waist circumference" className="flex-1">
           <div className="flex gap-2.5 items-center">
             <NumericInput

@@ -24,7 +24,7 @@ export const PersonalInfoStep = () => {
   const isNameFromBankID = user?.name && personalInfo.fullName === user.name;
 
   return (
-    <div className="flex flex-col gap-8 w-full">
+    <div className="flex flex-col gap-5 sm:gap-8 w-full">
       <FormField 
         label="Full Name" 
         required
@@ -39,7 +39,7 @@ export const PersonalInfoStep = () => {
         />
       </FormField>
 
-      <div className="flex gap-8">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
         <FormField label="Date of birth" required className="flex-1">
           <DatePicker
             placeholder="Select your date of birth"
@@ -51,7 +51,7 @@ export const PersonalInfoStep = () => {
         </FormField>
 
         <FormField label="Gender" required className="flex-1">
-          <div className="p-4 border border-[#b0b0b0] rounded-[12px]">
+          <div className="p-3 sm:p-4 border border-[#b0b0b0] rounded-[12px]">
             <RadioGroup
               value={personalInfo.gender}
               onValueChange={(value) => handleChange("gender", value)}

@@ -6,6 +6,7 @@ import { doctorPatientService } from '@/services/doctorPatientService';
 import { doctorProfileService } from '@/services/doctorProfileService';
 import { doctorLabTestService } from '@/services/doctorLabTestService';
 import { chatService } from '@/services/chatService';
+import { treatmentJournalService } from '@/services/treatmentJournalService';
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
 
 export const useDoctorMeetings = () => {
@@ -94,5 +95,26 @@ export const useDoctorPatientLabOrders = (patientId: string | null, enabled: boo
     queryKey: queryKeys.doctorPatientLabOrders(patientId ?? ''),
     queryFn: () => doctorLabTestService.getPatientLabOrders(patientId!),
     enabled: !!patientId && enabled,
+  });
+};
+
+export const useDoctorPatientJournal = (patientId: string | null, enabled: boolean) => {
+  return useQuery({
+    queryKey: queryKeys.doctorPatientJournal(patientId ?? ''),
+    queryFn: () => treatmentJournalService.getDoctorPatientJournal(patientId!),
+    enabled: !!patientId && enabled,
+  });
+};
+
+export const useUpsertDoctorPatientJournal = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ patientId, content }: { patientId: string; content: string }) =>
+      treatmentJournalService.upsertDoctorPatientJournal(patientId, content),
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({
+        queryKey: queryKeys.doctorPatientJournal(variables.patientId),
+      });
+    },
   });
 };

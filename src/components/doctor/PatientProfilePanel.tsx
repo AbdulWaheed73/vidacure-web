@@ -27,6 +27,7 @@ import {
   useDoctorPatientQuestionnaire,
   useDoctorPatientLabOrders,
 } from '@/hooks/useDoctorDashboardQueries';
+import { JournalTab } from '@/components/doctor/JournalTab';
 import { QUESTION_LABELS } from '@/components/onboarding/questionMapping';
 import { LabTestOrderStatusBadge } from '@/components/LabTestOrderStatus';
 import { LabTestResults } from '@/components/LabTestResults';
@@ -406,6 +407,12 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
               >
                 Lab Tests
               </TabsTrigger>
+              <TabsTrigger
+                value="journal"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
+              >
+                Journal
+              </TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
@@ -527,6 +534,14 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
               <LabTestsTab
                 patientId={patientId}
                 enabled={activeTab === 'lab-tests'}
+              />
+            </TabsContent>
+
+            {/* Journal Tab */}
+            <TabsContent value="journal" className="mt-4 pb-6">
+              <JournalTab
+                patientId={patientId}
+                enabled={activeTab === 'journal'}
               />
             </TabsContent>
           </Tabs>

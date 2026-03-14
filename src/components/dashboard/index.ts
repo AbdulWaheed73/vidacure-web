@@ -4,3 +4,4 @@ export { PrescriptionCard } from './PrescriptionCard';
 export { BMICard } from './BMICard';
 export { GoalsCard } from './GoalsCard';
 export { ConsentRequiredCard, isConsentError } from './ConsentRequiredCard';
+export { PromoBanner } from './PromoBanner';

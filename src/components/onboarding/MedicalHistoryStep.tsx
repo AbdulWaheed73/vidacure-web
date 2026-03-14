@@ -61,7 +61,7 @@ export const MedicalHistoryStep = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-8 w-full">
+    <div className="flex flex-col gap-5 sm:gap-8 w-full">
       <FormField label="Please list your previous or current illnesses">
         <Textarea
           placeholder="Please list all illnesses you have"
@@ -79,7 +79,7 @@ export const MedicalHistoryStep = () => {
       </FormField>
 
       <FormField label="Do you have any of the following conditions? (Select all that apply)">
-        <div className="border border-[#b0b0b0] rounded-[12px] p-6">
+        <div className="border border-[#b0b0b0] rounded-[12px] p-4 sm:p-6">
           <div className="flex flex-col gap-3.5">
             {conditions.map((condition) => (
               <Checkbox
@@ -100,7 +100,7 @@ export const MedicalHistoryStep = () => {
       </FormField>
 
       <FormField label="Do any of your close family members have">
-        <div className="border border-[#b0b0b0] rounded-[12px] p-6">
+        <div className="border border-[#b0b0b0] rounded-[12px] p-4 sm:p-6">
           <div className="flex flex-col gap-3.5">
             {familyConditions.map((condition) => (
               <Checkbox

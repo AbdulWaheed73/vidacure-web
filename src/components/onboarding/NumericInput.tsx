@@ -68,7 +68,7 @@ export const NumericInput = ({
       min={min}
       max={max}
       step={step}
-      className={`w-full p-4 border border-[#b0b0b0] rounded-[12px] font-manrope text-[16px] focus:border-[#00a38a] focus:outline-none ${className}`}
+      className={`w-full p-3 sm:p-4 border border-[#b0b0b0] rounded-[12px] font-manrope text-[14px] sm:text-[16px] focus:border-[#00a38a] focus:outline-none ${className}`}
     />
   );
 };

@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Lock, Clock, Calendar } from 'lucide-react';
+import { PopupModal } from 'react-calendly';
 import { PaymentService } from '@/services';
 import { meetingService } from '@/services/meetingService';
+import { calendlyService } from '@/services/calendlyService';
 import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -24,6 +26,8 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
   const [isMeetingGatePassed, setIsMeetingGatePassed] = useState(true);
   const [meetingStatus, setMeetingStatus] = useState<'none' | 'scheduled' | 'completed'>('none');
   const [scheduledTime, setScheduledTime] = useState<string | null>(null);
+  const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
+  const [isBookingLoading, setIsBookingLoading] = useState(false);
 
   useEffect(() => {
     const checkStatus = async () => {
@@ -47,6 +51,23 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
 
     checkStatus();
   }, []);
+
+  const handleBookConsultation = async () => {
+    setIsBookingLoading(true);
+    try {
+      const eventTypesResponse = await calendlyService.getAvailableEventTypes();
+      if (eventTypesResponse.success && eventTypesResponse.eventType) {
+        const bookingResponse = await calendlyService.createPatientBookingLink(eventTypesResponse.eventType.type);
+        if (bookingResponse.success) {
+          setSchedulingLink(bookingResponse.schedulingLink);
+        }
+      }
+    } catch (error) {
+      console.error('Error generating booking link:', error);
+    } finally {
+      setIsBookingLoading(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -140,15 +161,31 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
                   with one of our doctors to discuss your treatment plan.
                 </p>
                 <Button
-                  onClick={() => navigate(ROUTES.PRE_LOGIN_BMI)}
+                  onClick={handleBookConsultation}
+                  disabled={isBookingLoading}
                   className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
                 >
-                  Book Consultation
+                  {isBookingLoading ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  ) : (
+                    <Calendar className="w-4 h-4 mr-2" />
+                  )}
+                  {isBookingLoading ? 'Loading...' : 'Book Consultation'}
                 </Button>
               </>
             )}
           </div>
         </div>
+
+        <PopupModal
+          url={schedulingLink || ''}
+          open={!!schedulingLink}
+          onModalClose={() => {
+            setSchedulingLink(null);
+            window.location.reload();
+          }}
+          rootElement={document.getElementById('root')!}
+        />
       </div>
     );
   }

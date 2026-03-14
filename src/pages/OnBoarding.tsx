@@ -244,13 +244,13 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
       <div className="min-h-screen bg-[#e6f9f6]">
         <Header />
 
-        <div className="flex items-center justify-center p-8">
-          <div className="bg-white rounded-[16px] shadow-lg max-w-[806px] w-full p-12">
-            <div className="flex flex-col gap-8">
+        <div className="flex items-center justify-center p-4 sm:p-8">
+          <div className="bg-white rounded-[16px] shadow-lg max-w-[806px] w-full p-5 sm:p-8 md:p-12">
+            <div className="flex flex-col gap-5 sm:gap-8">
               {/* Header Section */}
               {currentStep > 0 && (
                 <>
-                  <h1 className="font-sora font-bold text-[36px] text-[#282828] leading-[1.2]">
+                  <h1 className="font-sora font-bold text-[24px] sm:text-[30px] md:text-[36px] text-[#282828] leading-[1.2]">
                     {getStepTitle()}
                   </h1>
                   <OnboardingProgressBar currentStep={currentStep} />
