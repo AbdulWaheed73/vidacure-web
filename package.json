@@ -10,7 +10,7 @@
     "preview": "vite preview --host 0.0.0.0 --port 5173",
     "upload:cloudinary": "node scripts/upload-to-cloudinary.js",
     "pm2:install": "npm install -g serve pm2",
-    "pm2:prod": "npm run build && pm2 delete vidacure-web --silent; pm2 start ecosystem.config.js --env production && pm2 save",
+    "pm2:prod": "npm run build && pm2 delete vidacure-web --silent; pm2 start ecosystem.config.cjs --env production && pm2 save",
     "pm2:stop": "pm2 stop vidacure-web",
     "pm2:restart": "npm run build && pm2 restart vidacure-web",
     "pm2:delete": "pm2 delete vidacure-web",
