@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Info } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';
@@ -9,17 +10,17 @@ import { usePatientProfile, useWeightHistory } from '@/hooks/useDashboardQueries
 import { ConsentRequiredCard, isConsentError } from './ConsentRequiredCard';
 
 type BMICategory = {
-  label: string;
+  key: string;
   color: string;
   min: number;
   max: number;
 };
 
 const bmiCategories: BMICategory[] = [
-  { label: "Underweight", color: "#60a5fa", min: 0, max: 18.5 },
-  { label: "Normal", color: "#34d399", min: 18.5, max: 24.9 },
-  { label: "Overweight", color: "#fbbf24", min: 25, max: 29.9 },
-  { label: "Obese", color: "#f87171", min: 30, max: 100 },
+  { key: "underweight", color: "#60a5fa", min: 0, max: 18.5 },
+  { key: "normal", color: "#34d399", min: 18.5, max: 24.9 },
+  { key: "overweight", color: "#fbbf24", min: 25, max: 29.9 },
+  { key: "obese", color: "#f87171", min: 30, max: 100 },
 ];
 
 const calculateBMI = (weightKg: number, heightCm: number) => {
@@ -32,6 +33,7 @@ const getBMICategory = (bmi: number): BMICategory => {
 
 export const BMICard: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { data: profileData, isLoading: profileLoading, error: profileError } = usePatientProfile();
   const { data: weightData, isLoading: weightLoading, error: weightError } = useWeightHistory();
 
@@ -51,7 +53,7 @@ export const BMICard: React.FC = () => {
   }
 
   if (isConsentError(profileError) || isConsentError(weightError)) {
-    return <ConsentRequiredCard title="BMI" />;
+    return <ConsentRequiredCard title={t('dashboard.bmi')} />;
   }
 
   if (isLoading) {
@@ -72,12 +74,12 @@ export const BMICard: React.FC = () => {
     return (
       <Card className="bg-white/95 backdrop-blur-md shadow-lg">
         <CardHeader>
-          <CardTitle className="text-lg font-manrope">BMI</CardTitle>
+          <CardTitle className="text-lg font-manrope">{t('dashboard.bmi')}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center py-8">
-          <p className="text-gray-500 mb-4 text-center text-sm">Complete your profile to see BMI</p>
+          <p className="text-gray-500 mb-4 text-center text-sm">{t('dashboard.completeProfileBMI')}</p>
           <Button onClick={() => navigate('/account')} className="bg-teal-600 hover:bg-teal-700 text-white">
-            Complete Profile
+            {t('dashboard.completeProfile')}
           </Button>
         </CardContent>
       </Card>
@@ -96,14 +98,14 @@ export const BMICard: React.FC = () => {
   return (
     <Card className="bg-white/95 backdrop-blur-md shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-lg font-manrope">BMI</CardTitle>
+        <CardTitle className="text-lg font-manrope">{t('dashboard.bmi')}</CardTitle>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <Info className="size-4 text-gray-400 cursor-help" />
             </TooltipTrigger>
             <TooltipContent side="left" className="max-w-[200px]">
-              <p className="text-xs">BMI (Body Mass Index) is a measure of body fat based on height and weight. Normal range: 18.5-24.9</p>
+              <p className="text-xs">{t('dashboard.bmiTooltip')}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -143,12 +145,12 @@ export const BMICard: React.FC = () => {
           className="text-sm font-medium px-3 py-1 rounded-full"
           style={{ backgroundColor: category.color + '20', color: category.color }}
         >
-          {category.label}
+          {t(`dashboard.${category.key}`)}
         </span>
 
         {startingBMI !== null && startingBMI !== currentBMI && (
           <p className="text-xs text-gray-500 mt-2">
-            Down from {startingBMI} at start
+            {t('dashboard.downFrom')} {startingBMI} {t('dashboard.atStart')}
           </p>
         )}
       </CardContent>

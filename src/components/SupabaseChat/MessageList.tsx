@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useLayoutEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MessageBubble } from './MessageBubble';
 import { Skeleton } from '../ui/skeleton';
 import type { LocalMessage } from '../../types/chat-types';
@@ -26,6 +27,7 @@ export const MessageList: React.FC<MessageListProps> = ({
   onLoadMore,
   onRetry,
 }) => {
+  const { t } = useTranslation();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const prevScrollHeightRef = useRef<number>(0);
@@ -120,9 +122,9 @@ export const MessageList: React.FC<MessageListProps> = ({
   if (messages.length === 0) {
     return (
       <div className="h-full flex flex-col items-center justify-center bg-transparent px-4 md:px-8">
-        <p className="text-lg font-semibold text-gray-900">No messages yet</p>
+        <p className="text-lg font-semibold text-gray-900">{t('chat.noMessages')}</p>
         <p className="text-sm text-gray-500 mt-2 text-center">
-          Start the conversation by sending a message
+          {t('chat.startConversation')}
         </p>
       </div>
     );

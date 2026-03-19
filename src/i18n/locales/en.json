@@ -221,7 +221,28 @@
         "description": "Marcus Flink is a trained physiotherapist with a strong interest in longevity (living well, for a long time). As a physiotherapist, Marcus has worked with many different patient groups as well as with the Swedish national surf team. As a researcher, Marcus co-authored a nationwide study comparing digital group training with traditional group training for heart attack patients. The results show that digital groups are fully feasible, safe, and provide similar experiences and effects as traditional group training.",
         "description2": "The problem is that these digital group training sessions should have been available in heart patients' lives many years earlier — then perhaps the heart attack could have been avoided. Combined with knowledge of digital groups and Marcus's experience in health coaching, health-promoting interventions can now be implemented as soon as risk factors for future heart attacks are present. This means that people with high blood pressure, obesity, and physical inactivity should, and now can, receive the help that health coaching through digital groups offers.",
         "coachingTitle": "When you choose health coaching with Marcus",
-        "coachingDescription": "When you choose to participate in health coaching with Marcus, you will be part of digital group sessions every two weeks for 6 months. Each session is structured to cover bio-, psycho-, and social factors that affect your weight and health. Individual goals will be designed and followed up on. To facilitate goal achievement, a community will be created regardless of where you are geographically. You will be given opportunities to share your journey and you will notice that you are not alone. Each group session ends with some form of movement and believe it or not, it will be fun! No requirement to be visible on camera, but it can help promote group dynamics."
+        "coachingDescription": "When you choose to participate in health coaching with Marcus, you will be part of digital group sessions every two weeks for 6 months. Each session is structured to cover bio-, psycho-, and social factors that affect your weight and health. Individual goals will be designed and followed up on. To facilitate goal achievement, a community will be created regardless of where you are geographically. You will be given opportunities to share your journey and you will notice that you are not alone. Each group session ends with some form of movement and believe it or not, it will be fun! No requirement to be visible on camera, but it can help promote group dynamics.",
+        "bctDescription": "Our treatment approach is based on Behaviour Change Techniques (BCT), a structured and research-based model for behaviour change. Through goal-focused work, continuous follow-up, and group support, we create the conditions for lasting lifestyle changes and sustainable weight loss."
+      },
+      "giedre": {
+        "name": "Giedre Gaizauskaite-Poe",
+        "title": "Rapid Transformational Therapy® Practitioner and Coach",
+        "description": "My work focuses on serving people in finding the cause of their current limitations and together with my clients transforming them into a desired lifestyle and outcome. I have 14 years of experience working as a coach, I am trained in this incredible method called Rapid Transformational Therapy® and I am a hypnotherapist. I have selected this method to create change within people because it is quite simply the best method I have come across in all my practice.",
+        "description2": "Lasting weight loss starts when we address the root causes, not just the symptoms. If you're here, it's because you're ready for real change. Not a quick fix, not another short-term plan, but a lifestyle you can truly sustain — one that supports your health, your energy, and your future.",
+        "description3": "Perhaps you've even struggled with your weight for years, doing \"everything right\" yet still feeling stuck. And deep down, you may sense that it's not only about food or exercise. Our habits are often shaped by emotions, experiences, and patterns we don't even realize we're carrying. Does that resonate with you?",
+        "description4": "This is why I invite you to look beyond the surface and explore the root causes behind your current behaviors — so you can gently release what no longer serves you and create new habits that last. With the right support, you can build the conditions for lasting change and enjoy better health, confidence, and well-being.",
+        "programTitle": "Mind–Body Recode Program",
+        "programPrice": "5,400 SEK",
+        "programSubtitle": "Rewire your mind for sustainable weight loss",
+        "programDescription": "I have designed a Mind-Body Recode Program to help you create permanent changes so that you can get the best results on your weight loss journey. It consists of a few elements and depending on how we choose to use the time it could extend to 6–8 weeks approximately.",
+        "programIncludes": [
+          "Intake session (1h)",
+          "1 RTT® session (2h)",
+          "1 tailor-made 100% individualized audio recording to reflect our session — a recording you will listen to daily",
+          "2 × 1-hour coaching sessions towards your bright future",
+          "1-hour coaching and 30-min call at the end of the cycle",
+          "Email follow-up contact"
+        ]
       }
     },
     "ctaButton": "Find Out More",
@@ -343,7 +364,78 @@
   "dashboard": {
     "choosePlan": "💎 Choose Your Plan",
     "subscribePrompt": "Subscribe to unlock all features and connect with your healthcare team.",
-    "subscribeCTA": "View Plans"
+    "subscribeCTA": "View Plans",
+    "myProgress": "My Progress",
+    "last2Months": "Last 2 Months",
+    "last4Weeks": "Last 4 Weeks",
+    "last2Weeks": "Last 2 Weeks",
+    "inTheLast": "in the last",
+    "2weeks": "2 weeks",
+    "4weeks": "4 weeks",
+    "8weeks": "8 weeks",
+    "noWeightEntries": "No weight entries yet. Start tracking your progress!",
+    "logYourWeight": "Log Your Weight",
+    "nextAppointment": "Next Appointment",
+    "noUpcomingAppointments": "No upcoming appointments",
+    "bookAppointment": "Book Appointment",
+    "videoCall": "Video Call",
+    "withDr": "with Dr.",
+    "viewDetails": "View Details",
+    "myPrescription": "My Prescription",
+    "pendingMedication": "Pending medication",
+    "noPrescriptions": "No prescriptions yet",
+    "requestPrescription": "Request Prescription",
+    "dosage": "Dosage:",
+    "dateIssued": "Date Issued",
+    "validTill": "Valid Till",
+    "statusPendingReview": "Pending Review",
+    "statusActive": "Active",
+    "statusDenied": "Denied",
+    "statusUnderReview": "Under Review",
+    "bmi": "BMI",
+    "bmiTooltip": "BMI (Body Mass Index) is a measure of body fat based on height and weight. Normal range: 18.5-24.9",
+    "underweight": "Underweight",
+    "normal": "Normal",
+    "overweight": "Overweight",
+    "obese": "Obese",
+    "completeProfileBMI": "Complete your profile to see BMI",
+    "completeProfile": "Complete Profile",
+    "downFrom": "Down from",
+    "atStart": "at start",
+    "myGoals": "My Goals",
+    "goalWeight": "Goal Weight",
+    "currentWeight": "Current Weight",
+    "startingWeight": "Starting Weight",
+    "notSet": "Not set",
+    "setGoalPrompt": "Set your weight goal to track your progress",
+    "setGoalWeight": "Set Goal Weight",
+    "start": "Start",
+    "goal": "Goal",
+    "ofGoalReached": "% of goal reached",
+    "weight": "Weight"
+  },
+  "chat": {
+    "loginRequired": "Please log in to access the medical chat system.",
+    "authRequired": "Authentication Required",
+    "pleaseLogin": "Please log in to access chat",
+    "subscriptionRequired": "Subscription Required",
+    "subscribeToChat": "Please subscribe to access chat with your doctor",
+    "consentRequired": "Consent Required",
+    "consentMessage": "Please accept the latest consent terms to access chat.",
+    "reviewConsent": "Review Consent",
+    "connectionError": "Connection Error",
+    "failedToConnect": "Failed to connect to chat",
+    "retryConnection": "Retry Connection",
+    "noDoctorAssigned": "No Doctor Assigned",
+    "waitForDoctor": "Please wait for a doctor to be assigned to your case.",
+    "yourDoctor": "Your Doctor",
+    "noMessages": "No messages yet",
+    "startConversation": "Start the conversation by sending a message",
+    "writeMessage": "Write your message.",
+    "read": "Read",
+    "sent": "Sent",
+    "retry": "Retry",
+    "clickToRetry": "Click to retry sending"
   },
   "onboarding": {
     "welcome": "Welcome",
@@ -480,7 +572,72 @@
     "loading": "Loading prescriptions...",
     "errors": {
       "loadFailed": "Failed to load prescriptions. Please try again."
+    },
+    "requestModal": {
+      "title": "Request Prescription",
+      "description": "Please provide your current information to request a prescription.",
+      "weightLabel": "Current Weight (kg) *",
+      "weightPlaceholder": "Enter your current weight",
+      "sideEffectsLabel": "Side Effects",
+      "sideEffectsQuestion": "Are you experiencing any side effects?",
+      "sideEffectsDescLabel": "Side Effects Description",
+      "sideEffectsPlaceholder": "Please describe the side effects you are experiencing...",
+      "cancel": "Cancel",
+      "submit": "Submit Request",
+      "submitting": "Submitting...",
+      "errorWeight": "Please enter your current weight",
+      "errorWeightInvalid": "Please enter a valid weight",
+      "errorSideEffects": "Please describe the side effects you are experiencing",
+      "errorSubmit": "Failed to submit prescription request. Please try again."
+    },
+    "requests": {
+      "noRequests": "No prescription requests found. Click \"Request Prescription\" to submit your first request.",
+      "previousRequests": "Previous Requests",
+      "request": "Request",
+      "active": "ACTIVE",
+      "pending": "PENDING",
+      "approved": "APPROVED",
+      "denied": "DENIED",
+      "underReview": "UNDER REVIEW",
+      "currentWeight": "Current Weight",
+      "sideEffects": "Side Effects",
+      "sideEffectsDesc": "Side Effects Description",
+      "medicationName": "Medication Name",
+      "dosage": "Dosage",
+      "usageInstructions": "Usage Instructions",
+      "dateIssued": "Date Issued",
+      "validTill": "Valid Till",
+      "submitted": "Submitted",
+      "lastUpdated": "Last Updated",
+      "loadFailed": "Failed to load prescription requests"
     }
+  },
+  "doctorDashboard": {
+    "upcomingAppointments": "Upcoming Appointments",
+    "noAppointments": "No appointments",
+    "startCall": "Start Call",
+    "viewAllAppointments": "View all appointments",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "prescriptionRequests": "Prescription Requests",
+    "pending": "pending",
+    "noPrescriptionRequests": "No prescription requests",
+    "reason": "Reason: Prescription Request",
+    "latestWeight": "Latest weight:",
+    "review": "Review",
+    "approved": "Approved",
+    "loadMore": "Load more",
+    "inbox": "Inbox",
+    "noMessages": "No messages",
+    "noMessagesYet": "No messages yet",
+    "newMessage": "{{count}} new message",
+    "newMessages": "{{count}} new messages",
+    "viewAllMessages": "View all messages",
+    "patient": "Patient",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago"
   },
   "progress": {
     "title": "My Progress",
@@ -807,6 +964,176 @@
       "returnHome": "Return to Home"
     },
     "infoText": "BMI (Body Mass Index) is calculated as weight (kg) divided by height (m) squared. A BMI of 27 or higher is required for our medical weight management program."
+  },
+  "privacyPolicy": {
+    "seoTitle": "Privacy Policy – Vidacure",
+    "seoDescription": "Read about how Albafides Care AB (Vidacure) processes your personal data in accordance with GDPR and the Swedish Patient Data Act.",
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: March 2026",
+    "intro": "Albafides Care AB, reg. no. 551929-4888, with address Stora Varvsgatan 15E, 211 77 Malmö, is responsible for the processing of personal data within the scope of our operations and digital services under the brand Vidacure. We comply with the EU General Data Protection Regulation (GDPR), the Swedish Patient Data Act, and other relevant legislation.",
+    "dpoTitle": "Data Protection Officer:",
+    "dpoText": "Our Data Protection Officer helps ensure that we handle personal data correctly and securely. You can contact the DPO via email: dpo@vidacure.se or by mail to Albafides Care AB, attn: Data Protection Officer, Stora Varvsgatan 15E, 211 77 Malmö.",
+    "section1": {
+      "title": "1. What personal data we process",
+      "intro": "Personal data is information that can be directly or indirectly linked to you as an individual. This may include:",
+      "examples": [
+        "Name, personal identity number, and contact details",
+        "Information about health, lifestyle, and medical history",
+        "Technical data from our digital services",
+        "Communication with our staff",
+        "Payment and subscription details"
+      ],
+      "processingDef": "Processing of personal data includes all actions relating to the data, such as collection, storage, structuring, analysis, transfer, and deletion.",
+      "legalBasisIntro": "To process personal data, we must have a legal basis under GDPR. For our operations, the following are primarily used:",
+      "legalBases": [
+        "Contract – when you use our services",
+        "Legal obligation – e.g., record-keeping under the Patient Data Act",
+        "Legitimate interest – e.g., to improve our services",
+        "Consent – when required for specific purposes"
+      ],
+      "sensitiveNote": "When processing sensitive personal data, such as health data, we rely on GDPR Article 9, specifically 9.2(h) (healthcare) and 9.2(a) (explicit consent)."
+    },
+    "section2": {
+      "title": "2. How we process personal data in different situations",
+      "examplesLabel": "Examples of data:",
+      "processingLabel": "Processing:",
+      "purposeLabel": "Purpose:",
+      "legalBasisLabel": "Legal basis:",
+      "recipientsLabel": "Recipients:",
+      "subsections": [
+        {
+          "title": "2.1 When you create an account and we assess if the service is suitable for you",
+          "examples": "Name, personal identity number, age, contact details, health information, lifestyle data, photos, technical data, user data.",
+          "processing": [
+            "Collection of data via forms, calls, and digital services",
+            "Assessment of whether Vidacure is suitable for you",
+            "Account creation and identification",
+            "Communication with you",
+            "Storage of data for documentation"
+          ],
+          "purpose": "To offer an account, carry out medical assessments, and provide our digital services.",
+          "legalBasis": "Contract and legitimate interest.",
+          "recipients": "IT providers, identification services (e.g., BankID)."
+        },
+        {
+          "title": "2.2 When you subscribe and pay for a membership",
+          "examples": "Personal identity number, name, contact details, payment information, credit assessment.",
+          "processing": [
+            "Payment processing",
+            "Identification",
+            "Subscription administration",
+            "Communication and documentation"
+          ],
+          "legalBasis": "Contract.",
+          "recipients": "Payment providers, IT providers, BankID, credit reference agencies."
+        },
+        {
+          "title": "2.3 When we provide care and treatment",
+          "examples": "Health data, test results, medical records, lifestyle data, communication with healthcare staff, photos, user data.",
+          "processing": [
+            "Booking and conducting care meetings",
+            "Medical record-keeping and archiving",
+            "Development of care plans",
+            "Prescription management",
+            "Referrals and certificates",
+            "Communication between you, healthcare staff, and other patients (e.g., community features)"
+          ],
+          "legalBasis": "Contract and legal obligation under the Patient Data Act.",
+          "recipients": "Laboratories, pharmacies, other healthcare providers, IT providers, prescription services, authorities when required."
+        },
+        {
+          "title": "2.4 When we work on patient safety and quality improvement",
+          "examples": "Health data, user data, incident management, injury investigations.",
+          "processing": [
+            "Investigation of medical matters",
+            "Quality assurance",
+            "Handling of IVO (Health and Social Care Inspectorate) cases",
+            "Documentation of side effects"
+          ],
+          "legalBasis": "Legitimate interest and legal obligations in healthcare."
+        },
+        {
+          "title": "2.5 When you contact customer service",
+          "examples": "Contact details, personal identity number, technical data, information you provide in the matter.",
+          "processing": [
+            "Communication",
+            "Troubleshooting",
+            "Documentation and follow-up"
+          ],
+          "legalBasis": "Legitimate interest."
+        },
+        {
+          "title": "2.6 When we market our services",
+          "examples": "Contact details, user behavior, reviews, information you provide in recommendations or \"refer a friend\".",
+          "processing": [
+            "Sending information and offers",
+            "Analysis of user behavior",
+            "Publishing stories or reviews (with consent)",
+            "Targeted advertising"
+          ],
+          "legalBasis": "Legitimate interest and consent where required."
+        },
+        {
+          "title": "2.7 When we develop and improve our services",
+          "examples": "Technical data, user behavior, comments, health data (which is anonymized).",
+          "processing": [
+            "System development",
+            "Troubleshooting",
+            "Statistics and research",
+            "Anonymization of patient data"
+          ],
+          "legalBasis": "Legitimate interest."
+        }
+      ]
+    },
+    "section3": {
+      "title": "3. Sharing of personal data",
+      "items": [
+        {
+          "title": "3.1 Employees and consultants",
+          "text": "Only individuals who need the data for their work are given access."
+        },
+        {
+          "title": "3.2 Data processors",
+          "text": "We engage providers for IT operations, customer service, marketing, laboratory services, etc. With all of these, we have agreements on data protection, confidentiality, and security, ensuring they only process data according to our instructions and with a high level of protection."
+        },
+        {
+          "title": "3.3 Independent data controllers",
+          "text": "In some cases, data is shared with entities that are independently responsible for their own processing, such as authorities (Swedish Tax Agency, IVO, Swedish Social Insurance Agency, Police), pharmacies, laboratories, payment providers, and other healthcare providers. When data is shared with these parties, their own privacy policies apply."
+        }
+      ]
+    },
+    "section4": {
+      "title": "4. How long we retain data",
+      "items": [
+        "Medical records: 10 years under the Patient Data Act.",
+        "Contract and subscription data: during the contract period + 6 months.",
+        "Accounting records: 7 years.",
+        "Marketing data: up to 6 months after the activity ends.",
+        "Data based on consent: deleted upon withdrawal or after 2 years at the latest.",
+        "Data for development and research: anonymized."
+      ]
+    },
+    "section5": {
+      "title": "5. Where data is processed",
+      "text": "We strive to process all personal data within the EU/EEA. If data is transferred to countries outside the EU/EEA, we ensure the level of protection through EU Commission adequacy decisions, or standard contractual clauses and other appropriate safeguards."
+    },
+    "section6": {
+      "title": "6. Your rights",
+      "intro": "You have the right to:",
+      "rights": [
+        "Receive information about how we process your data",
+        "Request access to your data (subject access request)",
+        "Request correction of inaccurate data",
+        "Object to processing based on legitimate interest",
+        "Withdraw consent",
+        "Request restriction of processing",
+        "Request deletion in certain cases",
+        "Receive your data for data portability"
+      ],
+      "contact": "You can contact us or our Data Protection Officer to exercise your rights.",
+      "complaint": "You may also file a complaint with the Swedish Authority for Privacy Protection (IMY)."
+    }
   },
   "promo": {
     "bloodTestTitle": "Save 200 SEK",

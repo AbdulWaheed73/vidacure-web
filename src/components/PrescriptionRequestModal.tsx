@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -25,6 +26,7 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
   onOpenChange,
   onSuccess,
 }) => {
+  const { t } = useTranslation();
   const [currentWeight, setCurrentWeight] = useState('');
   const [hasSideEffects, setHasSideEffects] = useState(false);
   const [sideEffectsDescription, setSideEffectsDescription] = useState('');
@@ -37,18 +39,18 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
 
     // Validation
     if (!currentWeight.trim()) {
-      setError('Please enter your current weight');
+      setError(t('prescriptions.requestModal.errorWeight'));
       return;
     }
 
     const weight = parseFloat(currentWeight);
     if (isNaN(weight) || weight <= 0) {
-      setError('Please enter a valid weight');
+      setError(t('prescriptions.requestModal.errorWeightInvalid'));
       return;
     }
 
     if (hasSideEffects && !sideEffectsDescription.trim()) {
-      setError('Please describe the side effects you are experiencing');
+      setError(t('prescriptions.requestModal.errorSideEffects'));
       return;
     }
 
@@ -69,8 +71,8 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
     } catch (error: unknown) {
       const errorMessage = error instanceof Error && 'response' in error
         ? (error as { response?: { data?: { error?: string } } }).response?.data?.error
-        : 'Failed to submit prescription request. Please try again.';
-      setError(errorMessage || 'Failed to submit prescription request. Please try again.');
+        : t('prescriptions.requestModal.errorSubmit');
+      setError(errorMessage || t('prescriptions.requestModal.errorSubmit'));
     } finally {
       setLoading(false);
     }
@@ -89,9 +91,9 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Request Prescription</DialogTitle>
+          <DialogTitle>{t('prescriptions.requestModal.title')}</DialogTitle>
           <DialogDescription>
-            Please provide your current information to request a prescription.
+            {t('prescriptions.requestModal.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -103,12 +105,12 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="weight">Current Weight (kg) *</Label>
+            <Label htmlFor="weight">{t('prescriptions.requestModal.weightLabel')}</Label>
             <Input
               id="weight"
               type="number"
               step="0.1"
-              placeholder="Enter your current weight"
+              placeholder={t('prescriptions.requestModal.weightPlaceholder')}
               value={currentWeight}
               onChange={(e) => setCurrentWeight(e.target.value)}
               disabled={loading}
@@ -116,7 +118,7 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
           </div>
 
           <div className="space-y-3">
-            <Label>Side Effects</Label>
+            <Label>{t('prescriptions.requestModal.sideEffectsLabel')}</Label>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="sideEffects"
@@ -125,17 +127,17 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
                 disabled={loading}
               />
               <Label htmlFor="sideEffects" className="text-sm font-normal">
-                Are you experiencing any side effects?
+                {t('prescriptions.requestModal.sideEffectsQuestion')}
               </Label>
             </div>
           </div>
 
           {hasSideEffects && (
             <div className="space-y-2">
-              <Label htmlFor="description">Side Effects Description</Label>
+              <Label htmlFor="description">{t('prescriptions.requestModal.sideEffectsDescLabel')}</Label>
               <Textarea
                 id="description"
-                placeholder="Please describe the side effects you are experiencing..."
+                placeholder={t('prescriptions.requestModal.sideEffectsPlaceholder')}
                 value={sideEffectsDescription}
                 onChange={(e) => setSideEffectsDescription(e.target.value)}
                 disabled={loading}
@@ -151,10 +153,10 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
               onClick={handleClose}
               disabled={loading}
             >
-              Cancel
+              {t('prescriptions.requestModal.cancel')}
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? 'Submitting...' : 'Submit Request'}
+              {loading ? t('prescriptions.requestModal.submitting') : t('prescriptions.requestModal.submit')}
             </Button>
           </DialogFooter>
         </form>

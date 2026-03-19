@@ -1,5 +1,6 @@
 import React, { useState, useCallback, type KeyboardEvent } from 'react';
 import { ArrowUp } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/Button';
 
 type MessageInputProps = {
@@ -11,9 +12,12 @@ type MessageInputProps = {
 export const MessageInput: React.FC<MessageInputProps> = ({
   onSendMessage,
   disabled = false,
-  placeholder = 'Write your message.',
+  placeholder,
 }) => {
   const [message, setMessage] = useState('');
+  const { t } = useTranslation();
+
+  const resolvedPlaceholder = placeholder || t('chat.writeMessage');
 
   const handleChangeText = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -47,7 +51,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
           value={message}
           onChange={handleChangeText}
           onKeyDown={handleKeyDown}
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           maxLength={2000}
           rows={1}
           disabled={disabled}

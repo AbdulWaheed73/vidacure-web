@@ -1,4 +1,4 @@
-import { ArrowRight, Stethoscope, FlaskConical, UserCheck, TrendingUp, Heart } from 'lucide-react';
+import { ArrowRight, Stethoscope, FlaskConical, UserCheck, TrendingUp, Heart, Brain, CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -173,6 +173,71 @@ export default function AboutUs() {
                     <p className="text-zinc-700 text-sm sm:text-base font-normal font-['Manrope'] leading-relaxed">
                       {t('partner.teamMembers.marcus.coachingDescription')}
                     </p>
+                    <p className="text-zinc-700 text-sm sm:text-base font-normal font-['Manrope'] leading-relaxed mt-4">
+                      {t('partner.teamMembers.marcus.bctDescription')}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Giedre Card — Full width centered below the grid */}
+          <div className="flex justify-center mb-12">
+            <Card className="bg-white rounded-3xl shadow-lg border-0 overflow-hidden transition-all duration-200 hover:shadow-xl w-full lg:w-2/3">
+              <div className="h-1 bg-gradient-to-r from-purple-500 to-teal-500" />
+              <CardContent className="p-6 sm:p-8">
+                <div className="flex items-start gap-4 mb-5">
+                  <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center flex-shrink-0">
+                    <Brain size={24} className="text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-bold font-['Sora'] text-teal-600">
+                      {t('partner.teamMembers.giedre.name')}
+                    </h3>
+                    <p className="text-zinc-500 text-sm font-medium font-['Manrope']">
+                      {t('partner.teamMembers.giedre.title')}
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <p className="text-zinc-700 text-sm sm:text-base font-normal font-['Manrope'] leading-relaxed">
+                    {t('partner.teamMembers.giedre.description')}
+                  </p>
+                  <p className="text-zinc-700 text-sm sm:text-base font-normal font-['Manrope'] leading-relaxed">
+                    {t('partner.teamMembers.giedre.description2')}
+                  </p>
+                  <p className="text-zinc-700 text-sm sm:text-base font-normal font-['Manrope'] leading-relaxed">
+                    {t('partner.teamMembers.giedre.description3')}
+                  </p>
+                  <p className="text-zinc-700 text-sm sm:text-base font-normal font-['Manrope'] leading-relaxed">
+                    {t('partner.teamMembers.giedre.description4')}
+                  </p>
+
+                  {/* Program Section */}
+                  <div className="pt-4 mt-4 border-t border-zinc-100">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+                      <h4 className="text-base sm:text-lg font-semibold font-['Sora'] text-teal-600">
+                        {t('partner.teamMembers.giedre.programTitle')}
+                      </h4>
+                      <span className="text-sm font-semibold font-['Sora'] text-purple-600 bg-purple-50 px-3 py-1 rounded-full w-fit">
+                        {t('partner.teamMembers.giedre.programPrice')}
+                      </span>
+                    </div>
+                    <p className="text-zinc-500 text-sm font-medium font-['Manrope'] italic mb-4">
+                      {t('partner.teamMembers.giedre.programSubtitle')}
+                    </p>
+                    <p className="text-zinc-700 text-sm sm:text-base font-normal font-['Manrope'] leading-relaxed mb-4">
+                      {t('partner.teamMembers.giedre.programDescription')}
+                    </p>
+                    <ul className="space-y-2">
+                      {(t('partner.teamMembers.giedre.programIncludes', { returnObjects: true }) as string[]).map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-zinc-700 text-sm sm:text-base font-['Manrope']">
+                          <CheckCircle className="w-4 h-4 text-teal-500 mt-1 shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </CardContent>

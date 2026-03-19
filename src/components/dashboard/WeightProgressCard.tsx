@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,17 +10,18 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useWeightHistory } from '@/hooks/useDashboardQueries';
 import { ConsentRequiredCard, isConsentError } from './ConsentRequiredCard';
 
-const chartConfig = {
-  weight: {
-    label: "Weight",
-    color: "var(--chart-1)"
-  }
-} satisfies ChartConfig;
-
 export const WeightProgressCard: React.FC = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [timeRange, setTimeRange] = useState("8w");
   const { data, isLoading, error } = useWeightHistory();
+
+  const chartConfig = {
+    weight: {
+      label: t('dashboard.weight'),
+      color: "var(--chart-1)"
+    }
+  } satisfies ChartConfig;
 
   const weightHistory = data?.weightHistory ?? [];
 
@@ -42,14 +44,16 @@ export const WeightProgressCard: React.FC = () => {
     ? Math.round((filteredData[0].weight - filteredData[filteredData.length - 1].weight) * 10) / 10
     : 0;
 
-  const weeksLabel = timeRange === "2w" ? "2 weeks" : timeRange === "4w" ? "4 weeks" : "8 weeks";
+  const weeksLabel = timeRange === "2w" ? t('dashboard.2weeks') : timeRange === "4w" ? t('dashboard.4weeks') : t('dashboard.8weeks');
 
   const weights = filteredData.map(d => d.weight);
   const minWeight = weights.length > 0 ? Math.floor(Math.min(...weights) - 2) : 90;
   const maxWeight = weights.length > 0 ? Math.ceil(Math.max(...weights) + 2) : 110;
 
+  const dateLocale = i18n.language === 'sv' ? 'sv-SE' : 'en-US';
+
   if (isConsentError(error)) {
-    return <ConsentRequiredCard title="My Progress" className="col-span-1 md:col-span-2" />;
+    return <ConsentRequiredCard title={t('dashboard.myProgress')} className="col-span-1 md:col-span-2" />;
   }
 
   if (isLoading) {
@@ -69,12 +73,12 @@ export const WeightProgressCard: React.FC = () => {
     return (
       <Card className="bg-white/95 backdrop-blur-md shadow-lg col-span-1 md:col-span-2">
         <CardHeader>
-          <CardTitle className="text-lg font-manrope">My Progress</CardTitle>
+          <CardTitle className="text-lg font-manrope">{t('dashboard.myProgress')}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <p className="text-gray-500 mb-4">No weight entries yet. Start tracking your progress!</p>
+          <p className="text-gray-500 mb-4">{t('dashboard.noWeightEntries')}</p>
           <Button onClick={() => navigate('/progress')} className="bg-teal-600 hover:bg-teal-700 text-white">
-            Log Your Weight
+            {t('dashboard.logYourWeight')}
           </Button>
         </CardContent>
       </Card>
@@ -84,15 +88,15 @@ export const WeightProgressCard: React.FC = () => {
   return (
     <Card className="bg-white/95 backdrop-blur-md shadow-lg col-span-1 md:col-span-2 pt-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-4 sm:flex-row">
-        <CardTitle className="text-lg font-manrope">My Progress</CardTitle>
+        <CardTitle className="text-lg font-manrope">{t('dashboard.myProgress')}</CardTitle>
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-[160px] rounded-lg sm:ml-auto" aria-label="Select time range">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
-            <SelectItem value="8w" className="rounded-lg">Last 2 Months</SelectItem>
-            <SelectItem value="4w" className="rounded-lg">Last 4 Weeks</SelectItem>
-            <SelectItem value="2w" className="rounded-lg">Last 2 Weeks</SelectItem>
+            <SelectItem value="8w" className="rounded-lg">{t('dashboard.last2Months')}</SelectItem>
+            <SelectItem value="4w" className="rounded-lg">{t('dashboard.last4Weeks')}</SelectItem>
+            <SelectItem value="2w" className="rounded-lg">{t('dashboard.last2Weeks')}</SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>
@@ -113,7 +117,7 @@ export const WeightProgressCard: React.FC = () => {
               tickMargin={8}
               tickFormatter={(value) => {
                 const date = new Date(value);
-                return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+                return date.toLocaleDateString(dateLocale, { month: "short", day: "numeric" });
               }}
             />
             <YAxis
@@ -125,8 +129,8 @@ export const WeightProgressCard: React.FC = () => {
             />
             <ChartTooltip
               content={<ChartTooltipContent
-                labelFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                formatter={(value) => [`${value} kg`, "Weight"]}
+                labelFormatter={(value) => new Date(value).toLocaleDateString(dateLocale, { month: "short", day: "numeric", year: "numeric" })}
+                formatter={(value) => [`${value} kg`, t('dashboard.weight')]}
               />}
             />
             <Area
@@ -143,7 +147,7 @@ export const WeightProgressCard: React.FC = () => {
 
         <div className="flex items-center text-sm text-teal-600 font-medium mt-2">
           <span>{rangeProgress > 0 ? `-${rangeProgress}` : `+${Math.abs(rangeProgress)}`} kg</span>
-          <span className="ml-2 text-gray-500">in the last {weeksLabel}</span>
+          <span className="ml-2 text-gray-500">{t('dashboard.inTheLast')} {weeksLabel}</span>
         </div>
       </CardContent>
     </Card>

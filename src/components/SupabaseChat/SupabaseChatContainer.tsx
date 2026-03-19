@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AlertCircle, MessageSquare, ShieldAlert } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../constants';
 import { useAuthStore } from '../../stores/authStore';
 import {
@@ -28,6 +29,7 @@ import { MessageInput } from './MessageInput';
 export const SupabaseChatContainer: React.FC = () => {
   const { user, isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isInitializing, setIsInitializing] = useState(true);
 
   const connectionStatus = useChatStore(selectConnectionStatus);
@@ -136,8 +138,8 @@ export const SupabaseChatContainer: React.FC = () => {
       <Card className="flex flex-col h-full items-center justify-center border-0 shadow-none rounded-none bg-transparent">
         <CardContent className="text-center">
           <AlertCircle className="w-12 h-12 text-destructive mx-auto" />
-          <p className="mt-4 text-lg font-semibold">Authentication Required</p>
-          <p className="mt-2 text-sm text-muted-foreground">Please log in to access chat</p>
+          <p className="mt-4 text-lg font-semibold">{t('chat.authRequired')}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{t('chat.pleaseLogin')}</p>
         </CardContent>
       </Card>
     );
@@ -149,9 +151,9 @@ export const SupabaseChatContainer: React.FC = () => {
       <Card className="flex flex-col h-full items-center justify-center border-0 shadow-none rounded-none bg-transparent">
         <CardContent className="text-center">
           <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto" />
-          <p className="mt-4 text-lg font-semibold">Subscription Required</p>
+          <p className="mt-4 text-lg font-semibold">{t('chat.subscriptionRequired')}</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Please subscribe to access chat with your doctor
+            {t('chat.subscribeToChat')}
           </p>
         </CardContent>
       </Card>
@@ -190,12 +192,12 @@ export const SupabaseChatContainer: React.FC = () => {
       <Card className="flex flex-col h-full items-center justify-center border-0 shadow-none rounded-none bg-transparent">
         <CardContent className="text-center">
           <ShieldAlert className="w-12 h-12 text-amber-400 mx-auto" />
-          <p className="mt-4 text-lg font-semibold text-gray-800">Consent Required</p>
+          <p className="mt-4 text-lg font-semibold text-gray-800">{t('chat.consentRequired')}</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Please accept the latest consent terms to access chat.
+            {t('chat.consentMessage')}
           </p>
           <Button onClick={() => navigate(ROUTES.PATIENT_CONSENT)} className="mt-4 bg-amber-500 hover:bg-amber-600 text-white">
-            Review Consent
+            {t('chat.reviewConsent')}
           </Button>
         </CardContent>
       </Card>
@@ -208,10 +210,10 @@ export const SupabaseChatContainer: React.FC = () => {
       <Card className="flex flex-col h-full items-center justify-center border-0 shadow-none rounded-none bg-transparent">
         <CardContent className="text-center">
           <AlertCircle className="w-12 h-12 text-destructive mx-auto" />
-          <p className="mt-4 text-lg font-semibold text-destructive">Connection Error</p>
-          <p className="mt-2 text-sm text-muted-foreground">{error || 'Failed to connect to chat'}</p>
+          <p className="mt-4 text-lg font-semibold text-destructive">{t('chat.connectionError')}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{error || t('chat.failedToConnect')}</p>
           <Button onClick={handleRetry} className="mt-4 bg-[#00a38a] hover:bg-[#008f79]">
-            Retry Connection
+            {t('chat.retryConnection')}
           </Button>
         </CardContent>
       </Card>
@@ -248,16 +250,16 @@ export const SupabaseChatContainer: React.FC = () => {
       <Card className="flex flex-col h-full items-center justify-center border-0 shadow-none rounded-none bg-transparent">
         <CardContent className="text-center">
           <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto" />
-          <p className="mt-4 text-lg font-semibold">No Doctor Assigned</p>
+          <p className="mt-4 text-lg font-semibold">{t('chat.noDoctorAssigned')}</p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Please wait for a doctor to be assigned to your case.
+            {t('chat.waitForDoctor')}
           </p>
         </CardContent>
       </Card>
     );
   }
 
-  const displayName = doctorName || 'Your Doctor';
+  const displayName = doctorName || t('chat.yourDoctor');
 
   return (
     <Card className="flex flex-col h-full border-0 shadow-none rounded-none bg-transparent py-0 gap-0">

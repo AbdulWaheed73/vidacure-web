@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Video } from 'lucide-react';
 import { useDoctorMeetings, useDoctorPrescriptions, useDoctorConversations } from '@/hooks/useDoctorDashboardQueries';
 import { useChatUnreadCounts } from '@/hooks/useChatQueries';
@@ -12,7 +13,7 @@ const formatTime = (dateStr: string): string => {
   return new Date(dateStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
-const formatDate = (dateStr: string): string => {
+const formatDateLabel = (dateStr: string, t: (key: string) => string): string => {
   const date = new Date(dateStr);
   const today = new Date();
   const tomorrow = new Date(today);
@@ -23,19 +24,19 @@ const formatDate = (dateStr: string): string => {
     date.getMonth() === today.getMonth() &&
     date.getDate() === today.getDate()
   ) {
-    return 'Today';
+    return t('doctorDashboard.today');
   }
   if (
     date.getFullYear() === tomorrow.getFullYear() &&
     date.getMonth() === tomorrow.getMonth() &&
     date.getDate() === tomorrow.getDate()
   ) {
-    return 'Tomorrow';
+    return t('doctorDashboard.tomorrow');
   }
   return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
 };
 
-const formatRelativeTime = (dateStr: string): string => {
+const formatRelativeTime = (dateStr: string, t: (key: string, opts?: Record<string, unknown>) => string): string => {
   const now = new Date();
   const date = new Date(dateStr);
   const diffMs = now.getTime() - date.getTime();
@@ -43,10 +44,10 @@ const formatRelativeTime = (dateStr: string): string => {
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffMins < 1) return t('doctorDashboard.justNow');
+  if (diffMins < 60) return t('doctorDashboard.minutesAgo', { count: diffMins });
+  if (diffHours < 24) return t('doctorDashboard.hoursAgo', { count: diffHours });
+  if (diffDays < 7) return t('doctorDashboard.daysAgo', { count: diffDays });
   return date.toLocaleDateString();
 };
 
@@ -61,15 +62,15 @@ const getInitials = (name: string): string => {
 
 // --- Sub-components ---
 
-const AppointmentCardHighlighted: React.FC<{ meeting: PatientMeeting }> = ({ meeting }) => (
+const AppointmentCardHighlighted: React.FC<{ meeting: PatientMeeting; t: (key: string) => string }> = ({ meeting, t }) => (
   <div className="bg-[#005044] rounded-2xl p-4 sm:p-6 text-white">
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
       <h3 className="font-sora font-semibold text-lg">
-        {meeting.patientName || meeting.inviteeName || 'Patient'}
+        {meeting.patientName || meeting.inviteeName || t('doctorDashboard.patient')}
       </h3>
       <div className="flex items-center gap-2 flex-wrap">
         <span className="bg-white/20 rounded-full px-3 py-1 text-sm font-sora">
-          {formatDate(meeting.startTime)}
+          {formatDateLabel(meeting.startTime, t)}
         </span>
         <span className="flex items-center gap-1.5 bg-white/20 rounded-full px-3 py-1 text-sm font-sora">
           <Video className="w-3.5 h-3.5" />
@@ -83,23 +84,23 @@ const AppointmentCardHighlighted: React.FC<{ meeting: PatientMeeting }> = ({ mee
         onClick={() => window.open(meeting.meetingUrl!, '_blank')}
         className="bg-white text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-white/90 transition-colors"
       >
-        Start Call
+        {t('doctorDashboard.startCall')}
       </button>
     )}
   </div>
 );
 
-const AppointmentCard: React.FC<{ meeting: PatientMeeting }> = ({ meeting }) => (
+const AppointmentCard: React.FC<{ meeting: PatientMeeting; t: (key: string) => string }> = ({ meeting, t }) => (
   <div className="border border-[#e0e0e0] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
     <div>
       <h3 className="font-sora font-semibold text-[#282828]">
-        {meeting.patientName || meeting.inviteeName || 'Patient'}
+        {meeting.patientName || meeting.inviteeName || t('doctorDashboard.patient')}
       </h3>
       <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">{meeting.eventType}</p>
     </div>
     <div className="flex items-center gap-2 flex-wrap">
       <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-sm font-sora font-medium">
-        {formatDate(meeting.startTime)}
+        {formatDateLabel(meeting.startTime, t)}
       </span>
       <span className="flex items-center gap-1.5 bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-sm font-sora font-medium">
         <Video className="w-3.5 h-3.5" />
@@ -109,26 +110,27 @@ const AppointmentCard: React.FC<{ meeting: PatientMeeting }> = ({ meeting }) => 
   </div>
 );
 
-const PrescriptionRow: React.FC<{ request: DoctorPrescriptionRequest; onReview: () => void }> = ({
+const PrescriptionRow: React.FC<{ request: DoctorPrescriptionRequest; onReview: () => void; t: (key: string) => string }> = ({
   request,
   onReview,
+  t,
 }) => (
   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-4 border-b border-[#e0e0e0] last:border-b-0">
     <div>
       <h4 className="font-sora font-semibold text-base md:text-lg text-[#282828]">{request.patient.name}</h4>
-      <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">Reason: Prescription Request</p>
-      <p className="text-[#b0b0b0] text-sm font-manrope">Latest weight: {request.currentWeight} kg</p>
+      <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">{t('doctorDashboard.reason')}</p>
+      <p className="text-[#b0b0b0] text-sm font-manrope">{t('doctorDashboard.latestWeight')} {request.currentWeight} kg</p>
     </div>
     {request.status === 'pending' ? (
       <button
         onClick={onReview}
         className="bg-[#f0f7f4] text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-[#c0ebe5] transition-colors"
       >
-        Review
+        {t('doctorDashboard.review')}
       </button>
     ) : request.status === 'approved' ? (
       <span className="bg-[rgba(3,160,0,0.15)] text-[#03a000] rounded-full px-5 py-2 font-sora font-semibold text-sm">
-        Approved
+        {t('doctorDashboard.approved')}
       </span>
     ) : (
       <span className="bg-gray-100 text-gray-500 rounded-full px-5 py-2 font-sora font-semibold text-sm capitalize">
@@ -138,10 +140,11 @@ const PrescriptionRow: React.FC<{ request: DoctorPrescriptionRequest; onReview: 
   </div>
 );
 
-const InboxRow: React.FC<{ conversation: ConversationWithDetails; unreadCount: number; onClick: () => void }> = ({
+const InboxRow: React.FC<{ conversation: ConversationWithDetails; unreadCount: number; onClick: () => void; t: (key: string, opts?: Record<string, unknown>) => string }> = ({
   conversation,
   unreadCount,
   onClick,
+  t,
 }) => (
   <button
     onClick={onClick}
@@ -154,18 +157,20 @@ const InboxRow: React.FC<{ conversation: ConversationWithDetails; unreadCount: n
     </div>
     <div className="flex-1 min-w-0">
       <h4 className="font-manrope font-semibold text-[#282828] text-sm">
-        {conversation.patientName || 'Patient'}
+        {conversation.patientName || t('doctorDashboard.patient')}
       </h4>
       <p className={`text-sm font-manrope truncate ${unreadCount > 0 ? 'text-[#007ed2] font-medium' : 'text-[#b0b0b0]'}`}>
         {unreadCount > 0
-          ? `${unreadCount} new message${unreadCount > 1 ? 's' : ''}`
-          : conversation.lastMessage?.content || 'No messages yet'}
+          ? (unreadCount > 1
+              ? t('doctorDashboard.newMessages', { count: unreadCount })
+              : t('doctorDashboard.newMessage', { count: unreadCount }))
+          : conversation.lastMessage?.content || t('doctorDashboard.noMessagesYet')}
       </p>
     </div>
     <div className="flex flex-col items-end gap-1 flex-shrink-0">
       {conversation.lastMessageAt && (
         <span className="text-[#b0b0b0] text-xs font-manrope">
-          {formatRelativeTime(conversation.lastMessageAt)}
+          {formatRelativeTime(conversation.lastMessageAt, t)}
         </span>
       )}
       {unreadCount > 0 && (
@@ -190,6 +195,7 @@ const SkeletonCard: React.FC = () => (
 
 export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { data: meetingsData, isLoading: meetingsLoading } = useDoctorMeetings();
   const { data: prescriptionsData, isLoading: prescriptionsLoading } = useDoctorPrescriptions({ limit: 3 });
@@ -215,7 +221,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
       <div className="flex-[3] min-w-0 flex flex-col">
         <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 flex flex-col flex-1">
           <h2 className="font-sora font-bold text-lg md:text-[21px] text-[#282828] mb-4 md:mb-6">
-            Upcoming Appointments
+            {t('doctorDashboard.upcomingAppointments')}
           </h2>
 
           {meetingsLoading ? (
@@ -228,15 +234,15 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
             </div>
           ) : upcomingMeetings.length === 0 ? (
             <div className="flex-1 flex items-center justify-center">
-              <p className="text-[#b0b0b0] font-manrope text-sm">No appointments</p>
+              <p className="text-[#b0b0b0] font-manrope text-sm">{t('doctorDashboard.noAppointments')}</p>
             </div>
           ) : (
             <div className="space-y-4">
               {upcomingMeetings.slice(0, 4).map((meeting, index) =>
                 index === 0 ? (
-                  <AppointmentCardHighlighted key={meeting.id} meeting={meeting} />
+                  <AppointmentCardHighlighted key={meeting.id} meeting={meeting} t={t} />
                 ) : (
-                  <AppointmentCard key={meeting.id} meeting={meeting} />
+                  <AppointmentCard key={meeting.id} meeting={meeting} t={t} />
                 )
               )}
               {upcomingMeetings.length > 4 && (
@@ -244,7 +250,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
                   onClick={() => navigate('/dashboard/doctor/appointments')}
                   className="w-full py-3 text-[#005044] font-sora font-semibold text-sm hover:bg-[#f0f7f4] rounded-2xl transition-colors"
                 >
-                  View all appointments
+                  {t('doctorDashboard.viewAllAppointments')}
                 </button>
               )}
             </div>
@@ -258,11 +264,11 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
         <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 flex flex-col flex-1">
           <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
             <h2 className="font-sora font-bold text-lg md:text-[21px] text-[#282828]">
-              Prescription Requests
+              {t('doctorDashboard.prescriptionRequests')}
             </h2>
             {pendingCount > 0 && (
               <span className="bg-[rgba(195,188,0,0.15)] text-[#c3bc00] rounded-full px-3 py-0.5 text-sm font-sora font-semibold">
-                {pendingCount} pending
+                {pendingCount} {t('doctorDashboard.pending')}
               </span>
             )}
           </div>
@@ -276,7 +282,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
               ))}
             </div>
           ) : prescriptionRequests.length === 0 ? (
-            <p className="text-[#b0b0b0] font-manrope text-sm">No prescription requests</p>
+            <p className="text-[#b0b0b0] font-manrope text-sm">{t('doctorDashboard.noPrescriptionRequests')}</p>
           ) : (
             <div>
               {prescriptionRequests.map((request) => (
@@ -284,6 +290,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
                   key={request._id}
                   request={request}
                   onReview={() => navigate('/dashboard/doctor/prescriptions')}
+                  t={t}
                 />
               ))}
               {(prescriptionsData?.data?.hasMore) && (
@@ -291,7 +298,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
                   onClick={() => navigate('/dashboard/doctor/prescriptions')}
                   className="w-full py-3 mt-3 text-[#005044] font-sora font-semibold text-sm hover:bg-[#f0f7f4] rounded-2xl transition-colors"
                 >
-                  Load more
+                  {t('doctorDashboard.loadMore')}
                 </button>
               )}
             </div>
@@ -301,7 +308,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
         {/* Inbox */}
         <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-4 md:p-8 flex flex-col flex-1">
           <div className="flex items-center gap-2 md:gap-3 mb-4 md:mb-6">
-            <h2 className="font-sora font-bold text-lg md:text-[21px] text-[#282828]">Inbox</h2>
+            <h2 className="font-sora font-bold text-lg md:text-[21px] text-[#282828]">{t('doctorDashboard.inbox')}</h2>
           </div>
 
           {conversationsLoading ? (
@@ -313,7 +320,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
               ))}
             </div>
           ) : conversations.length === 0 ? (
-            <p className="text-[#b0b0b0] font-manrope text-sm">No messages</p>
+            <p className="text-[#b0b0b0] font-manrope text-sm">{t('doctorDashboard.noMessages')}</p>
           ) : (
             <div>
               {conversations.slice(0, 3).map((conversation) => (
@@ -322,6 +329,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
                   conversation={conversation}
                   unreadCount={unreadCounts?.[conversation.id] ?? 0}
                   onClick={() => navigate('/supabase-chat')}
+                  t={t}
                 />
               ))}
             </div>
@@ -332,7 +340,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
               onClick={() => navigate('/supabase-chat')}
               className="bg-[#282828] text-white rounded-full px-4 md:px-6 py-2 md:py-2.5 font-sora font-semibold text-sm hover:bg-[#3a3a3a] transition-colors w-full"
             >
-              View all messages
+              {t('doctorDashboard.viewAllMessages')}
             </button>
           </div>
         </div>

@@ -221,7 +221,28 @@
         "description": "Marcus Flink är utbildad fysioterapeut med stort intresse för longevity (att leva väl, länge). Som fysioterapeut har Marcus arbetat med många olika patientgrupper samt med svenska surflandslaget. Som forskare har Marcus medförfattat en rikstäckande studie där digital gruppträning jämfördes med traditionell gruppträning för hjärtinfarktspatienter. Resultatet visar att digitala grupper är fullt genomförbart, säkert och ger liknande upplevelser och effekter som traditionell gruppträning ger.",
         "description2": "Problemet är att de här digitala gruppträningarna borde funnits i de hjärtsjuka patienternas liv många år tidigare, då kunde möjligen hjärtinfarkten undvikits. I kombination med kunskap om digitala grupper och Marcus erfarenhet av hälsocoaching kommer hälsofrämjande insatser kunna sättas in så fort riskfaktorer för framtida hjärtinfarkt råder. Det innebär att personer med högt blodtryck, övervikt och fysisk inaktivitet bör, och nu kan få den hjälp som hälsocoaching via digitala grupper erbjuder.",
         "coachingTitle": "När du väljer hälsocoaching med Marcus",
-        "coachingDescription": "När du väljer att medverka i hälsocoaching med Marcus kommer du att vara med i digitala gruppbesök varannan vecka i 6 månader. Varje besök är strukturerat för att täcka bio-, psyko- och sociala faktorer som påverkar din vikt och hälsa. Individuella mål kommer att utformas och följas upp. För att underlätta måluppfyllelse kommer en gemenskap skapas oavsett var du befinner dig geografiskt. Du ges möjligheter att dela med dig av din resa och du kommer märka att du inte är ensam. Varje gruppbesök avslutas med rörelse i någon form och tro det eller ej, det kommer bli kul! Inget krav på att synas i bild men det kan bidra till att främja gruppdynamiken."
+        "coachingDescription": "När du väljer att medverka i hälsocoaching med Marcus kommer du att vara med i digitala gruppbesök varannan vecka i 6 månader. Varje besök är strukturerat för att täcka bio-, psyko- och sociala faktorer som påverkar din vikt och hälsa. Individuella mål kommer att utformas och följas upp. För att underlätta måluppfyllelse kommer en gemenskap skapas oavsett var du befinner dig geografiskt. Du ges möjligheter att dela med dig av din resa och du kommer märka att du inte är ensam. Varje gruppbesök avslutas med rörelse i någon form och tro det eller ej, det kommer bli kul! Inget krav på att synas i bild men det kan bidra till att främja gruppdynamiken.",
+        "bctDescription": "Vårt behandlingsupplägg utgår från Behaviour Change Techniques (BCT), en strukturerad och forskningsbaserad modell för beteendeförändring. Genom målfokuserat arbete, kontinuerlig uppföljning och stöd i grupp skapar vi förutsättningar för varaktiga livsstilsförändringar och hållbar viktminskning."
+      },
+      "giedre": {
+        "name": "Giedre Gaizauskaite-Poe",
+        "title": "Rapid Transformational Therapy®-utövare och coach",
+        "description": "Mitt arbete fokuserar på att hjälpa människor att hitta orsaken till sina nuvarande begränsningar och tillsammans med mina klienter omvandla dem till en önskad livsstil och resultat. Jag har 14 års erfarenhet som coach, jag är utbildad i denna otroliga metod som kallas Rapid Transformational Therapy® och jag är hypnoterapeut. Jag har valt denna metod för att skapa förändring hos människor eftersom den helt enkelt är den bästa metoden jag har stött på i hela min praktik.",
+        "description2": "Varaktig viktminskning börjar när vi tar itu med grundorsakerna, inte bara symptomen. Om du är här beror det på att du är redo för verklig förändring. Inte en snabb lösning, inte ännu en kortsiktig plan, utan en livsstil du verkligen kan upprätthålla — en som stödjer din hälsa, din energi och din framtid.",
+        "description3": "Kanske har du till och med kämpat med din vikt i åratal, gjort \"allt rätt\" men fortfarande känt dig fast. Och djupt inne kanske du anar att det inte bara handlar om mat eller träning. Våra vanor formas ofta av känslor, upplevelser och mönster som vi inte ens inser att vi bär på. Känner du igen dig?",
+        "description4": "Det är därför jag bjuder in dig att se bortom ytan och utforska grundorsakerna bakom dina nuvarande beteenden — så att du försiktigt kan släppa det som inte längre tjänar dig och skapa nya vanor som varar. Med rätt stöd kan du bygga förutsättningarna för varaktig förändring och njuta av bättre hälsa, självförtroende och välmående.",
+        "programTitle": "Mind–Body Recode-programmet",
+        "programPrice": "5 400 SEK",
+        "programSubtitle": "Koppla om ditt sinne för hållbar viktminskning",
+        "programDescription": "Jag har utformat ett Mind-Body Recode-program för att hjälpa dig skapa permanenta förändringar så att du kan få de bästa resultaten på din viktminskningsresa. Det består av några delar och beroende på hur vi väljer att använda tiden kan det sträcka sig till cirka 6–8 veckor.",
+        "programIncludes": [
+          "Introduktionsmöte (1 timme)",
+          "1 RTT®-session (2 timmar)",
+          "1 skräddarsydd 100% individualiserad ljudinspelning som speglar vår session — en inspelning du lyssnar på dagligen",
+          "2 × 1-timmes coachingsessioner mot din ljusa framtid",
+          "1-timmes coaching och 30-minuters samtal i slutet av cykeln",
+          "Uppföljningskontakt via e-post"
+        ]
       }
     },
     "ctaButton": "Ta reda på mer",
@@ -343,7 +364,78 @@
   "dashboard": {
     "choosePlan": "💎 Välj din plan",
     "subscribePrompt": "Prenumerera för att låsa upp alla funktioner och anslut till ditt vårdteam.",
-    "subscribeCTA": "Visa planer"
+    "subscribeCTA": "Visa planer",
+    "myProgress": "Mina framsteg",
+    "last2Months": "Senaste 2 månaderna",
+    "last4Weeks": "Senaste 4 veckorna",
+    "last2Weeks": "Senaste 2 veckorna",
+    "inTheLast": "under de senaste",
+    "2weeks": "2 veckorna",
+    "4weeks": "4 veckorna",
+    "8weeks": "8 veckorna",
+    "noWeightEntries": "Inga viktnoterringar ännu. Börja spåra dina framsteg!",
+    "logYourWeight": "Logga din vikt",
+    "nextAppointment": "Nästa bokning",
+    "noUpcomingAppointments": "Inga kommande bokningar",
+    "bookAppointment": "Boka tid",
+    "videoCall": "Videosamtal",
+    "withDr": "med Dr.",
+    "viewDetails": "Visa detaljer",
+    "myPrescription": "Mitt recept",
+    "pendingMedication": "Väntande medicinering",
+    "noPrescriptions": "Inga recept ännu",
+    "requestPrescription": "Begär recept",
+    "dosage": "Dos:",
+    "dateIssued": "Utfärdat",
+    "validTill": "Giltigt till",
+    "statusPendingReview": "Väntar på granskning",
+    "statusActive": "Aktiv",
+    "statusDenied": "Nekad",
+    "statusUnderReview": "Under granskning",
+    "bmi": "BMI",
+    "bmiTooltip": "BMI (Body Mass Index) är ett mått på kroppsfett baserat på längd och vikt. Normalt intervall: 18,5-24,9",
+    "underweight": "Undervikt",
+    "normal": "Normal",
+    "overweight": "Övervikt",
+    "obese": "Fetma",
+    "completeProfileBMI": "Fyll i din profil för att se BMI",
+    "completeProfile": "Fyll i profil",
+    "downFrom": "Ner från",
+    "atStart": "vid start",
+    "myGoals": "Mina mål",
+    "goalWeight": "Målvikt",
+    "currentWeight": "Nuvarande vikt",
+    "startingWeight": "Startvikt",
+    "notSet": "Ej satt",
+    "setGoalPrompt": "Sätt ditt viktmål för att spåra dina framsteg",
+    "setGoalWeight": "Sätt målvikt",
+    "start": "Start",
+    "goal": "Mål",
+    "ofGoalReached": "% av målet uppnått",
+    "weight": "Vikt"
+  },
+  "chat": {
+    "loginRequired": "Vänligen logga in för att komma åt det medicinska chattsystemet.",
+    "authRequired": "Autentisering krävs",
+    "pleaseLogin": "Vänligen logga in för att komma åt chatten",
+    "subscriptionRequired": "Prenumeration krävs",
+    "subscribeToChat": "Vänligen prenumerera för att chatta med din läkare",
+    "consentRequired": "Samtycke krävs",
+    "consentMessage": "Vänligen godkänn de senaste samtyckevillkoren för att komma åt chatten.",
+    "reviewConsent": "Granska samtycke",
+    "connectionError": "Anslutningsfel",
+    "failedToConnect": "Kunde inte ansluta till chatten",
+    "retryConnection": "Försök igen",
+    "noDoctorAssigned": "Ingen läkare tilldelad",
+    "waitForDoctor": "Vänligen vänta på att en läkare tilldelas ditt ärende.",
+    "yourDoctor": "Din läkare",
+    "noMessages": "Inga meddelanden ännu",
+    "startConversation": "Starta konversationen genom att skicka ett meddelande",
+    "writeMessage": "Skriv ditt meddelande.",
+    "read": "Läst",
+    "sent": "Skickat",
+    "retry": "Försök igen",
+    "clickToRetry": "Klicka för att skicka igen"
   },
   "onboarding": {
     "welcome": "Välkommen",
@@ -480,7 +572,72 @@
     "loading": "Laddar recept...",
     "errors": {
       "loadFailed": "Kunde inte ladda recept. Försök igen."
+    },
+    "requestModal": {
+      "title": "Begär recept",
+      "description": "Vänligen ange din nuvarande information för att begära ett recept.",
+      "weightLabel": "Nuvarande vikt (kg) *",
+      "weightPlaceholder": "Ange din nuvarande vikt",
+      "sideEffectsLabel": "Biverkningar",
+      "sideEffectsQuestion": "Upplever du några biverkningar?",
+      "sideEffectsDescLabel": "Beskrivning av biverkningar",
+      "sideEffectsPlaceholder": "Vänligen beskriv biverkningarna du upplever...",
+      "cancel": "Avbryt",
+      "submit": "Skicka begäran",
+      "submitting": "Skickar...",
+      "errorWeight": "Vänligen ange din nuvarande vikt",
+      "errorWeightInvalid": "Vänligen ange en giltig vikt",
+      "errorSideEffects": "Vänligen beskriv biverkningarna du upplever",
+      "errorSubmit": "Det gick inte att skicka receptbegäran. Försök igen."
+    },
+    "requests": {
+      "noRequests": "Inga receptförfrågningar hittades. Klicka på \"Begär recept\" för att skicka din första begäran.",
+      "previousRequests": "Tidigare förfrågningar",
+      "request": "Förfrågan",
+      "active": "AKTIV",
+      "pending": "VÄNTANDE",
+      "approved": "GODKÄND",
+      "denied": "NEKAD",
+      "underReview": "UNDER GRANSKNING",
+      "currentWeight": "Nuvarande vikt",
+      "sideEffects": "Biverkningar",
+      "sideEffectsDesc": "Beskrivning av biverkningar",
+      "medicationName": "Läkemedelsnamn",
+      "dosage": "Dosering",
+      "usageInstructions": "Användningsinstruktioner",
+      "dateIssued": "Utfärdat",
+      "validTill": "Giltigt till",
+      "submitted": "Inskickad",
+      "lastUpdated": "Senast uppdaterad",
+      "loadFailed": "Det gick inte att ladda receptförfrågningar"
     }
+  },
+  "doctorDashboard": {
+    "upcomingAppointments": "Kommande bokningar",
+    "noAppointments": "Inga bokningar",
+    "startCall": "Starta samtal",
+    "viewAllAppointments": "Visa alla bokningar",
+    "today": "Idag",
+    "tomorrow": "Imorgon",
+    "prescriptionRequests": "Receptförfrågningar",
+    "pending": "väntande",
+    "noPrescriptionRequests": "Inga receptförfrågningar",
+    "reason": "Anledning: Receptförfrågan",
+    "latestWeight": "Senaste vikt:",
+    "review": "Granska",
+    "approved": "Godkänd",
+    "loadMore": "Ladda fler",
+    "inbox": "Inkorg",
+    "noMessages": "Inga meddelanden",
+    "noMessagesYet": "Inga meddelanden ännu",
+    "newMessage": "{{count}} nytt meddelande",
+    "newMessages": "{{count}} nya meddelanden",
+    "viewAllMessages": "Visa alla meddelanden",
+    "patient": "Patient",
+    "justNow": "Just nu",
+    "minutesAgo": "{{count}}m sedan",
+    "hoursAgo": "{{count}}t sedan",
+    "daysAgo": "{{count}}d sedan"
   },
   "progress": {
     "title": "Mina framsteg",
@@ -807,6 +964,176 @@
       "returnHome": "Tillbaka till startsidan"
     },
     "infoText": "BMI (Body Mass Index) beräknas som vikt (kg) delat med längd (m) i kvadrat. Ett BMI på 27 eller högre krävs för vårt medicinska vikthanteringsprogram."
+  },
+  "privacyPolicy": {
+    "seoTitle": "Integritetspolicy – Vidacure",
+    "seoDescription": "Läs om hur Albafides Care AB (Vidacure) behandlar dina personuppgifter i enlighet med GDPR och Patientdatalagen.",
+    "title": "Integritetspolicy",
+    "lastUpdated": "Senast uppdaterad: mars 2026",
+    "intro": "Albafides Care AB, org.nr 551929-4888, med adress Stora Varvsgatan 15E, 211 77 Malmö, ansvarar för behandlingen av personuppgifter inom ramen för vår verksamhet och våra digitala tjänster under varumärket Vidacure. Vi följer EU:s dataskyddsförordning (GDPR), Patientdatalagen och övrig relevant lagstiftning.",
+    "dpoTitle": "Dataskyddsombud:",
+    "dpoText": "Vårt dataskyddsombud hjälper till att säkerställa att vi hanterar personuppgifter på ett korrekt och tryggt sätt. Du kan kontakta dataskyddsombudet via e-post: dpo@vidacure.se eller per post till Albafides Care AB, att: Dataskyddsombud, Stora Varvsgatan 15E, 211 77 Malmö.",
+    "section1": {
+      "title": "1. Vilka personuppgifter vi behandlar",
+      "intro": "Personuppgifter är information som direkt eller indirekt kan kopplas till dig som individ. Det kan exempelvis vara:",
+      "examples": [
+        "Namn, personnummer och kontaktuppgifter",
+        "Uppgifter om hälsa, livsstil och medicinsk historik",
+        "Teknisk data från våra digitala tjänster",
+        "Kommunikation med vår personal",
+        "Betalnings- och abonnemangsuppgifter"
+      ],
+      "processingDef": "Behandling av personuppgifter omfattar alla åtgärder som rör uppgifterna, såsom insamling, lagring, strukturering, analys, överföring och radering.",
+      "legalBasisIntro": "För att få behandla personuppgifter måste vi ha en rättslig grund enligt GDPR. För vår verksamhet används främst:",
+      "legalBases": [
+        "Avtal – när du använder våra tjänster",
+        "Rättslig förpliktelse – t.ex. journalföring enligt Patientdatalagen",
+        "Berättigat intresse – t.ex. för att förbättra våra tjänster",
+        "Samtycke – när det krävs för specifika ändamål"
+      ],
+      "sensitiveNote": "Vid behandling av känsliga personuppgifter, såsom hälsodata, stödjer vi oss på GDPR artikel 9, särskilt 9.2 h (hälso- och sjukvård) och 9.2 a (uttryckligt samtycke)."
+    },
+    "section2": {
+      "title": "2. Hur vi behandlar personuppgifter i olika situationer",
+      "examplesLabel": "Exempel på uppgifter:",
+      "processingLabel": "Behandling:",
+      "purposeLabel": "Ändamål:",
+      "legalBasisLabel": "Rättslig grund:",
+      "recipientsLabel": "Mottagare:",
+      "subsections": [
+        {
+          "title": "2.1 När du skapar ett konto och vi bedömer om tjänsten passar dig",
+          "examples": "Namn, personnummer, ålder, kontaktuppgifter, hälsouppgifter, livsstilsinformation, foton, teknisk data, användaruppgifter.",
+          "processing": [
+            "Insamling av uppgifter via formulär, samtal och digitala tjänster",
+            "Bedömning av om Vidacure är lämpligt för dig",
+            "Skapande av konto och identifiering",
+            "Kommunikation med dig",
+            "Lagring av uppgifter för dokumentation"
+          ],
+          "purpose": "Att kunna erbjuda konto, genomföra medicinsk bedömning och tillhandahålla våra digitala tjänster.",
+          "legalBasis": "Avtal och berättigat intresse.",
+          "recipients": "IT-leverantörer, identifieringstjänster (t.ex. BankID)."
+        },
+        {
+          "title": "2.2 När du tecknar och betalar för ett abonnemang",
+          "examples": "Personnummer, namn, kontaktuppgifter, betalningsinformation, kreditbedömning.",
+          "processing": [
+            "Hantering av betalningar",
+            "Identifiering",
+            "Administration av abonnemang",
+            "Kommunikation och dokumentation"
+          ],
+          "legalBasis": "Avtal.",
+          "recipients": "Betalningsleverantörer, IT-leverantörer, BankID, kreditupplysningsföretag."
+        },
+        {
+          "title": "2.3 När vi tillhandahåller vård och behandling",
+          "examples": "Hälsodata, provsvar, journalinformation, livsstilsuppgifter, kommunikation med vårdpersonal, foton, användaruppgifter.",
+          "processing": [
+            "Bokning och genomförande av vårdmöten",
+            "Journalföring och arkivering",
+            "Framtagning av vårdplaner",
+            "Receptförskrivning",
+            "Remisser och intyg",
+            "Kommunikation mellan dig, vårdpersonal och andra patienter (t.ex. community-funktioner)"
+          ],
+          "legalBasis": "Avtal och rättslig förpliktelse enligt Patientdatalagen.",
+          "recipients": "Laboratorier, apotek, andra vårdgivare, IT-leverantörer, recepttjänster, myndigheter när det krävs."
+        },
+        {
+          "title": "2.4 När vi arbetar med patientsäkerhet och kvalitetsutveckling",
+          "examples": "Hälsodata, användaruppgifter, avvikelsehantering, skadeutredningar.",
+          "processing": [
+            "Utredning av medicinska frågor",
+            "Kvalitetssäkring",
+            "Hantering av IVO-ärenden",
+            "Dokumentation av biverkningar"
+          ],
+          "legalBasis": "Berättigat intresse och rättsliga skyldigheter inom hälso- och sjukvård."
+        },
+        {
+          "title": "2.5 När du kontaktar kundtjänst",
+          "examples": "Kontaktuppgifter, personnummer, teknisk data, uppgifter du lämnar i ärendet.",
+          "processing": [
+            "Kommunikation",
+            "Felsökning",
+            "Dokumentation och uppföljning"
+          ],
+          "legalBasis": "Berättigat intresse."
+        },
+        {
+          "title": "2.6 När vi marknadsför våra tjänster",
+          "examples": "Kontaktuppgifter, användarbeteende, recensioner, uppgifter du lämnar i rekommendationer eller \"tipsa en vän\".",
+          "processing": [
+            "Utskick av information och erbjudanden",
+            "Analys av användarbeteende",
+            "Publicering av berättelser eller recensioner (med samtycke)",
+            "Riktad annonsering"
+          ],
+          "legalBasis": "Berättigat intresse och samtycke där det krävs."
+        },
+        {
+          "title": "2.7 När vi utvecklar och förbättrar våra tjänster",
+          "examples": "Teknisk data, användarbeteende, kommentarer, hälsodata (som anonymiseras).",
+          "processing": [
+            "Systemutveckling",
+            "Felsökning",
+            "Statistik och forskning",
+            "Anonymisering av patientdata"
+          ],
+          "legalBasis": "Berättigat intresse."
+        }
+      ]
+    },
+    "section3": {
+      "title": "3. Delning av personuppgifter",
+      "items": [
+        {
+          "title": "3.1 Medarbetare och konsulter",
+          "text": "Endast personer som behöver uppgifterna för sitt arbete får tillgång till dem."
+        },
+        {
+          "title": "3.2 Personuppgiftsbiträden",
+          "text": "Vi anlitar leverantörer för IT-drift, kundtjänst, marknadsföring, laboratorietjänster m.m. Med alla dessa har vi avtal om dataskydd, sekretess och säkerhet, som säkerställer att de endast behandlar uppgifter enligt våra instruktioner och med hög skyddsnivå."
+        },
+        {
+          "title": "3.3 Självständigt personuppgiftsansvariga",
+          "text": "I vissa fall delas uppgifter med aktörer som själva ansvarar för sin behandling, t.ex. myndigheter (Skatteverket, IVO, Försäkringskassan, Polisen), apotek, laboratorier, betalningsleverantörer och andra vårdgivare. När uppgifter delas med dessa gäller deras egna integritetspolicyer."
+        }
+      ]
+    },
+    "section4": {
+      "title": "4. Hur länge vi sparar uppgifter",
+      "items": [
+        "Journaluppgifter: 10 år enligt Patientdatalagen.",
+        "Avtals- och abonnemangsuppgifter: under avtalstiden + 6 månader.",
+        "Bokföringsuppgifter: 7 år.",
+        "Marknadsföringsuppgifter: upp till 6 månader efter avslutad aktivitet.",
+        "Uppgifter baserade på samtycke: raderas vid återkallelse eller senast efter 2 år.",
+        "Uppgifter för utveckling och forskning: anonymiseras."
+      ]
+    },
+    "section5": {
+      "title": "5. Var uppgifterna behandlas",
+      "text": "Vi strävar efter att behandla alla personuppgifter inom EU/EES. Om uppgifter överförs till länder utanför EU/EES säkerställer vi skyddsnivån genom EU-kommissionens beslut om adekvat skyddsnivå, eller standardavtalsklausuler och andra lämpliga skyddsåtgärder."
+    },
+    "section6": {
+      "title": "6. Dina rättigheter",
+      "intro": "Du har rätt att:",
+      "rights": [
+        "Få information om hur vi behandlar dina uppgifter",
+        "Begära registerutdrag",
+        "Begära rättelse av felaktiga uppgifter",
+        "Invända mot behandling som sker med stöd av berättigat intresse",
+        "Återkalla samtycke",
+        "Begära begränsning av behandling",
+        "Begära radering i vissa fall",
+        "Få ut uppgifter för dataportabilitet"
+      ],
+      "contact": "Du kan kontakta oss eller vårt dataskyddsombud för att utöva dina rättigheter.",
+      "complaint": "Du kan även lämna klagomål till Integritetsskyddsmyndigheten (IMY)."
+    }
   },
   "promo": {
     "bloodTestTitle": "Spara 200 kr",

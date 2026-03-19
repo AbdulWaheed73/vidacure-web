@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Calendar, Clock, Video } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';
@@ -8,6 +9,7 @@ import { usePatientMeetings } from '@/hooks/useDashboardQueries';
 
 export const NextAppointmentCard: React.FC = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const { data, isLoading } = usePatientMeetings();
 
   const doctorName = data?.doctor?.name || data?.doctorName || '';
@@ -16,6 +18,8 @@ export const NextAppointmentCard: React.FC = () => {
   const nextMeeting = data?.meetings
     ?.filter(m => new Date(m.startTime) > now && m.status !== 'canceled')
     .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())[0] ?? null;
+
+  const dateLocale = i18n.language === 'sv' ? 'sv-SE' : 'en-US';
 
   if (isLoading) {
     return (
@@ -36,12 +40,12 @@ export const NextAppointmentCard: React.FC = () => {
     return (
       <Card className="bg-white/95 backdrop-blur-md shadow-lg">
         <CardHeader>
-          <CardTitle className="text-lg font-manrope">Next Appointment</CardTitle>
+          <CardTitle className="text-lg font-manrope">{t('dashboard.nextAppointment')}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center py-8">
-          <p className="text-gray-500 mb-4 text-center text-sm">No upcoming appointments</p>
+          <p className="text-gray-500 mb-4 text-center text-sm">{t('dashboard.noUpcomingAppointments')}</p>
           <Button onClick={() => navigate('/appointments')} className="bg-teal-600 hover:bg-teal-700 text-white">
-            Book Appointment
+            {t('dashboard.bookAppointment')}
           </Button>
         </CardContent>
       </Card>
@@ -49,12 +53,12 @@ export const NextAppointmentCard: React.FC = () => {
   }
 
   const startDate = new Date(nextMeeting.startTime);
-  const dateStr = startDate.toLocaleDateString("en-US", {
+  const dateStr = startDate.toLocaleDateString(dateLocale, {
     weekday: "short",
     month: "short",
     day: "numeric",
   });
-  const timeStr = startDate.toLocaleTimeString("en-US", {
+  const timeStr = startDate.toLocaleTimeString(dateLocale, {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -62,7 +66,7 @@ export const NextAppointmentCard: React.FC = () => {
   return (
     <Card className="bg-white/95 backdrop-blur-md shadow-lg">
       <CardHeader>
-        <CardTitle className="text-lg font-manrope">Next Appointment</CardTitle>
+        <CardTitle className="text-lg font-manrope">{t('dashboard.nextAppointment')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center gap-3 text-sm text-gray-700">
@@ -75,10 +79,10 @@ export const NextAppointmentCard: React.FC = () => {
         </div>
         <div className="flex items-center gap-3 text-sm text-gray-700">
           <Video className="size-4 text-teal-600 shrink-0" />
-          <span>Video Call</span>
+          <span>{t('dashboard.videoCall')}</span>
         </div>
         {doctorName && (
-          <p className="text-sm text-gray-500">with Dr. {doctorName}</p>
+          <p className="text-sm text-gray-500">{t('dashboard.withDr')} {doctorName}</p>
         )}
         <Button
           variant="outline"
@@ -86,7 +90,7 @@ export const NextAppointmentCard: React.FC = () => {
           className="w-full mt-2"
           onClick={() => navigate('/appointments')}
         >
-          View Details
+          {t('dashboard.viewDetails')}
         </Button>
       </CardContent>
     </Card>

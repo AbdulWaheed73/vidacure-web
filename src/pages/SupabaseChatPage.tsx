@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../stores/authStore';
 import { SupabaseChatContainer, SupabaseDoctorChat } from '../components/SupabaseChat';
 import { Card } from '../components/ui/card';
@@ -6,12 +7,13 @@ import { SubscriptionRequired } from '../components/subscription/SubscriptionReq
 
 const SupabaseChatPage: React.FC = () => {
   const { user, isAuthenticated } = useAuthStore();
+  const { t } = useTranslation();
 
   if (!isAuthenticated || !user) {
     return (
       <div className="container mx-auto px-4 py-8">
         <Card className="p-8 text-center">
-          <p>Please log in to access the medical chat system.</p>
+          <p>{t('chat.loginRequired')}</p>
         </Card>
       </div>
     );

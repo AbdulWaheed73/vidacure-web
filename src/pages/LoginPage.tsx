@@ -6,7 +6,6 @@ import vidaCure from "../assets/vidacure_png.png";
 import { useNavigate } from "react-router-dom";
 import type { LoginPageProps } from '../types';
 
-
 export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, loading }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();

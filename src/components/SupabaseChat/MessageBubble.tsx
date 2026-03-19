@@ -1,5 +1,6 @@
 import React from 'react';
 import { Check, CheckCheck, AlertCircle, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import type { LocalMessage } from '../../types/chat-types';
 
@@ -11,6 +12,7 @@ type MessageBubbleProps = {
 };
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwnMessage, isRead, onRetry }) => {
+  const { t } = useTranslation();
   const isSystemMessage = message.senderRole === 'system' || message.messageType === 'system';
 
   const formatTime = (dateString: string) => {
@@ -35,14 +37,14 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwnMess
               <TooltipTrigger asChild>
                 <span className="ml-1 inline-flex items-center">
                   {isRead ? (
-                    <CheckCheck className="w-3.5 h-3.5 text-[#00a38a]" aria-label="Read" />
+                    <CheckCheck className="w-3.5 h-3.5 text-[#00a38a]" aria-label={t('chat.read')} />
                   ) : (
-                    <Check className="w-3.5 h-3.5 text-muted-foreground/60" aria-label="Sent" />
+                    <Check className="w-3.5 h-3.5 text-muted-foreground/60" aria-label={t('chat.sent')} />
                   )}
                 </span>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{isRead ? 'Read' : 'Sent'}</p>
+                <p>{isRead ? t('chat.read') : t('chat.sent')}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -57,11 +59,11 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwnMess
                   className="ml-1 inline-flex items-center gap-1 text-destructive hover:text-destructive/80 transition-colors"
                 >
                   <AlertCircle className="w-3.5 h-3.5" />
-                  <span className="text-xs font-medium">Retry</span>
+                  <span className="text-xs font-medium">{t('chat.retry')}</span>
                 </button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Click to retry sending</p>
+                <p>{t('chat.clickToRetry')}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

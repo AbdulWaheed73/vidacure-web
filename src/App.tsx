@@ -19,6 +19,7 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const Article = lazy(() => import("./pages/Article"));
 const PreLoginBMI = lazy(() => import("./pages/PreLoginBMI"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const PreLoginBooking = lazy(() => import("./pages/PreLoginBooking"));
 const SubscriptionSuccess = lazy(() => import("./pages/SubscriptionSuccess").then(m => ({ default: m.SubscriptionSuccess })));
 const SubscriptionCancel = lazy(() => import("./pages/SubscriptionCancel").then(m => ({ default: m.SubscriptionCancel })));
@@ -420,6 +421,9 @@ function App() {
 
         {/* About Us Route - Public */}
         <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
+
+        {/* Privacy Policy Route - Public */}
+        <Route path="/privacy" element={<PrivacyPolicy />} />
 
         {/* Article Route - Public */}
         <Route path="/article/:articleId" element={<Article />} />

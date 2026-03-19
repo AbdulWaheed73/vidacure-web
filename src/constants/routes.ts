@@ -28,6 +28,7 @@ export const ROUTES = {
   SETTINGS: '/settings',
   ABOUT: '/about',
   ABOUT_US: '/aboutus',
+  PRIVACY_POLICY: '/privacy',
   CONTACT: '/contact',
   ONBOARDING: '/onboarding',
   SUBSCRIPTION_SUCCESS: '/subscription/success',
