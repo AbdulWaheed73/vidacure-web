@@ -9,6 +9,7 @@ import { calendlyService } from '@/services/calendlyService';
 import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants';
 import { Skeleton } from '@/components/ui/skeleton';
+import { GateOverlay } from './GateOverlay';
 
 type SubscriptionRequiredProps = {
   children: React.ReactNode;
@@ -20,7 +21,7 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
   featureName = 'this feature',
 }) => {
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
   const [isMeetingGatePassed, setIsMeetingGatePassed] = useState(true);
@@ -107,75 +108,67 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
     }).format(date);
   };
 
-  // Meeting gate not passed — show meeting overlay instead of subscription overlay
+  // Meeting gate not passed — show meeting overlay
   if (!isMeetingGatePassed) {
     return (
-      <div className="relative h-full min-h-[400px]">
-        <div className="blur-sm pointer-events-none select-none">
-          {children}
-        </div>
-
-        <div className="absolute inset-0 bg-[#F0F7F4]/80 backdrop-blur-sm flex items-center justify-center">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-4 text-center">
-            <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              {meetingStatus === 'scheduled' ? (
-                <Clock className="w-8 h-8 text-amber-600" />
-              ) : (
-                <Calendar className="w-8 h-8 text-amber-600" />
-              )}
-            </div>
-
-            <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
-              {meetingStatus === 'scheduled'
-                ? 'Complete Your Consultation First'
-                : 'Doctor Consultation Required'}
-            </h2>
-
+      <>
+        <GateOverlay blurredContent={children}>
+          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
             {meetingStatus === 'scheduled' ? (
-              <>
-                <p className="text-gray-600 mb-4 font-manrope">
-                  You have a scheduled consultation with your doctor.
-                  You'll be able to access {featureName} after your meeting.
-                </p>
-                {scheduledTime && (
-                  <div className="bg-teal-50 rounded-lg p-4 mb-6">
-                    <p className="text-sm text-teal-700 font-medium">
-                      Scheduled for:
-                    </p>
-                    <p className="text-lg text-teal-800 font-semibold">
-                      {formatScheduledTime()}
-                    </p>
-                  </div>
-                )}
-                <Button
-                  onClick={() => navigate(ROUTES.PATIENT_APPOINTMENTS)}
-                  className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
-                >
-                  View Appointments
-                </Button>
-              </>
+              <Clock className="w-8 h-8 text-amber-600" />
             ) : (
-              <>
-                <p className="text-gray-600 mb-6 font-manrope">
-                  Before you can access {featureName}, you need to complete a consultation
-                  with one of our doctors to discuss your treatment plan.
-                </p>
-                <Button
-                  onClick={handleBookConsultation}
-                  disabled={isBookingLoading}
-                  className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
-                >
-                  {isBookingLoading ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                  ) : (
-                    <Calendar className="w-4 h-4 mr-2" />
-                  )}
-                  {isBookingLoading ? 'Loading...' : 'Book Consultation'}
-                </Button>
-              </>
+              <Calendar className="w-8 h-8 text-amber-600" />
             )}
           </div>
-        </div>
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
+            {meetingStatus === 'scheduled'
+              ? t('gate.completeConsultationFirst')
+              : t('gate.consultationRequired')}
+          </h2>
+
+          {meetingStatus === 'scheduled' ? (
+            <>
+              <p className="text-gray-600 mb-4 font-manrope">
+                {t('gate.consultationScheduledFeatureMessage', { featureName })}
+              </p>
+              {scheduledTime && (
+                <div className="bg-teal-50 rounded-lg p-4 mb-6">
+                  <p className="text-sm text-teal-700 font-medium">
+                    {t('gate.scheduledFor')}
+                  </p>
+                  <p className="text-lg text-teal-800 font-semibold">
+                    {formatScheduledTime()}
+                  </p>
+                </div>
+              )}
+              <Button
+                onClick={() => navigate(ROUTES.PATIENT_APPOINTMENTS)}
+                className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
+              >
+                {t('gate.viewAppointments')}
+              </Button>
+            </>
+          ) : (
+            <>
+              <p className="text-gray-600 mb-6 font-manrope">
+                {t('gate.consultationRequiredFeatureMessage', { featureName })}
+              </p>
+              <Button
+                onClick={handleBookConsultation}
+                disabled={isBookingLoading}
+                className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
+              >
+                {isBookingLoading ? (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                ) : (
+                  <Calendar className="w-4 h-4 mr-2" />
+                )}
+                {isBookingLoading ? t('gate.loading') : t('gate.bookConsultation')}
+              </Button>
+            </>
+          )}
+        </GateOverlay>
 
         <PopupModal
           url={schedulingLink || ''}
@@ -186,39 +179,31 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
           }}
           rootElement={document.getElementById('root')!}
         />
-      </div>
+      </>
     );
   }
 
   // Meeting completed but no subscription — show subscription overlay
   return (
-    <div className="relative h-full min-h-[400px]">
-      <div className="blur-sm pointer-events-none select-none">
-        {children}
+    <GateOverlay blurredContent={children}>
+      <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <Lock className="w-8 h-8 text-teal-600" />
       </div>
 
-      <div className="absolute inset-0 bg-[#F0F7F4]/80 backdrop-blur-sm flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-4 text-center">
-          <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Lock className="w-8 h-8 text-teal-600" />
-          </div>
+      <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
+        {t('gate.subscriptionRequired')}
+      </h2>
 
-          <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
-            Subscription Required
-          </h2>
+      <p className="text-gray-600 mb-6 font-manrope">
+        {t('gate.subscriptionRequiredMessage', { featureName })}
+      </p>
 
-          <p className="text-gray-600 mb-6 font-manrope">
-            Subscribe to a plan to unlock {featureName} and connect with your healthcare provider.
-          </p>
-
-          <Button
-            onClick={() => navigate(ROUTES.SUBSCRIBE)}
-            className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
-          >
-            Subscribe Now
-          </Button>
-        </div>
-      </div>
-    </div>
+      <Button
+        onClick={() => navigate(ROUTES.SUBSCRIBE)}
+        className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
+      >
+        {t('gate.subscribeNow')}
+      </Button>
+    </GateOverlay>
   );
 };

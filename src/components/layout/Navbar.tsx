@@ -190,7 +190,7 @@ export const Navbar = () => {
             <div className="hidden lg:flex items-center space-x-2 xl:space-x-4 flex-shrink-0">
               <LanguageToggle />
               <Link
-                to={ROUTES.LOGIN}
+                to={ROUTES.PRE_LOGIN_BMI}
                 className={`${darkTealText} font-normal inline-flex items-center justify-center px-2 xl:px-4 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm whitespace-nowrap`}
               >
                 {t("navbar.login")}
@@ -321,7 +321,7 @@ export const Navbar = () => {
                     <LanguageToggle />
                     <div className="flex flex-col space-y-4 w-full">
                       <Link
-                        to={ROUTES.LOGIN}
+                        to={ROUTES.PRE_LOGIN_BMI}
                         className="w-full bg-emerald-50 hover:bg-emerald-100 rounded-full text-gray-800 py-2.5 px-4 inline-flex items-center justify-center"
                       >
                         {t("navbar.login")}

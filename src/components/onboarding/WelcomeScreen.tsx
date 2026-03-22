@@ -1,8 +1,10 @@
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "./Button";
 import { OnboardingContext } from "./types";
 
 export const WelcomeScreen = () => {
+  const navigate = useNavigate();
   const context = useContext(OnboardingContext);
   if (!context) return null;
 
@@ -30,8 +32,8 @@ export const WelcomeScreen = () => {
 
       <p className="font-manrope text-[12px] text-black text-center max-w-[302px] leading-[1.2]">
         * By continuing, you agree to our{" "}
-        <span className="font-bold underline">Terms of Service</span> and{" "}
-        <span className="font-bold underline">Privacy Policy</span>.
+        <span className="font-bold underline cursor-pointer" onClick={() => navigate('/privacy')}>Terms of Service</span> and{" "}
+        <span className="font-bold underline cursor-pointer" onClick={() => navigate('/privacy')}>Privacy Policy</span>.
       </p>
     </div>
   );

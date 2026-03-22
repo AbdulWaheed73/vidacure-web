@@ -71,15 +71,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, loading }) => {
           <span className="text-black text-xs font-normal leading-relaxed">
             {t('login.termsPrefix')}
           </span>
-          <button className="text-black text-xs font-bold underline leading-relaxed hover:text-zinc-700 transition-colors">
+          <span onClick={() => navigate('/privacy')} className="text-black text-xs font-bold underline leading-relaxed hover:text-zinc-700 transition-colors cursor-pointer">
             {t('login.termsOfService')}
-          </button>
+          </span>
           <span className="text-black text-xs font-normal leading-relaxed">
             {t('login.and')}
           </span>
-          <button className="text-black text-xs font-bold underline leading-relaxed hover:text-zinc-700 transition-colors">
+          <span onClick={() => navigate('/privacy')} className="text-black text-xs font-bold underline leading-relaxed hover:text-zinc-700 transition-colors cursor-pointer">
             {t('login.privacyPolicy')}
-          </button>
+          </span>
           <span className="text-black text-xs font-normal leading-relaxed">.</span>
         </div>
       </div>

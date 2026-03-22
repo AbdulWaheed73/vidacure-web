@@ -32,7 +32,7 @@ export const patientResources: ResourceArticle[] = [
       },
       {
         heading: 'Evidence\u2011based risk profiling for cardiovascular disease, diabetes, and related conditions',
-        body: 'With overweight and obesity, the risk of cardiovascular disease, diabetes, and other chronic conditions increases. Therefore, it is important to regularly check certain blood tests to detect abnormalities early and initiate appropriate treatment in time. Our testing program is based on current evidence and guidelines for preventive health care and provides you with a clear, medically relevant picture of your health status.\n\nAfter the blood tests, a physician reviews your results and provides written medical feedback with recommendations for continued treatment. If any value deviates in a way that requires further investigation, we will refer you to your primary care provider.\n\nInstructions on how the blood testing is performed will be provided when you order your tests.',
+        body: 'With overweight and obesity, the risk of cardiovascular disease, diabetes, and other chronic conditions increases. Therefore, it is important to regularly check certain blood tests to detect abnormalities early and initiate appropriate treatment in time. Our testing program is based on current evidence and guidelines for preventive health care and provides you with a clear, medically relevant picture of your health status.\n\nAfter the blood tests, a physician reviews your results and provides written medical feedback with recommendations for continued treatment. If any value deviates in a way that requires further investigation, we will refer you to your primary care provider.',
       },
       {
         heading: 'Our Test Packages',
@@ -44,7 +44,13 @@ export const patientResources: ResourceArticle[] = [
           'Blood lipids (cholesterol, LDL, HDL, triglycerides \u2014 used to detect hyperlipidemia)',
           'Fasting glucose and HbA1c (long\u2011term blood sugar \u2014 used to screen for elevated glucose, prediabetes, or diabetes)',
           'Thyroid function test (important to rule out underactive thyroid function)',
+          'Kidney and liver function test',
+          'Current Weight',
         ],
+      },
+      {
+        heading: '',
+        body: 'In addition to these blood tests, we strongly recommend that you have your blood pressure checked at your Health Care Center or at any pharmacy that offers this service.',
       },
     ],
     contentSv: [

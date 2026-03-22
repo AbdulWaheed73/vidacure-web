@@ -5,6 +5,7 @@ import type {
   GetLabTestOrdersResponse,
   GetLabTestOrderResponse,
   CreateLabTestCheckoutResponse,
+  SyncLabTestOrdersResponse,
 } from '../types/lab-test-types';
 
 export const labTestService = {
@@ -43,6 +44,15 @@ export const labTestService = {
     const response = await api.get<GetLabTestOrderResponse>(
       `/api/lab-tests/orders/${orderId}`,
       { timeout: 20000 },
+    );
+    return response.data;
+  },
+
+  syncOrders: async (): Promise<SyncLabTestOrdersResponse> => {
+    const response = await api.post<SyncLabTestOrdersResponse>(
+      '/api/lab-tests/sync',
+      {},
+      { timeout: 60000 },
     );
     return response.data;
   },

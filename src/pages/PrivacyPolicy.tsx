@@ -1,12 +1,18 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
-import { Shield, FileText, Users, Clock, Globe, UserCheck } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Shield, FileText, Users, Clock, Globe, UserCheck, ArrowLeft } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { SEOHead } from '@/components/seo/SEOHead';
 import Navbar from '@/components/layout/Navbar';
 
-export default function PrivacyPolicy() {
+type PrivacyPolicyProps = {
+  embedded?: boolean;
+};
+
+export default function PrivacyPolicy({ embedded = false }: PrivacyPolicyProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -18,12 +24,25 @@ export default function PrivacyPolicy() {
         title={t('privacyPolicy.seoTitle')}
         description={t('privacyPolicy.seoDescription')}
       />
-      <div className="w-full shadow-2xs fixed z-50">
-        <Navbar />
-      </div>
-      <div className="min-h-screen bg-[#E6F9F6] pt-16">
+      {!embedded && (
+        <div className="w-full shadow-2xs fixed z-50">
+          <Navbar />
+        </div>
+      )}
+      <div className={`min-h-screen ${embedded ? 'bg-[#F0F7F4]' : 'bg-[#E6F9F6] pt-16'}`}>
         <div className="w-full px-4 sm:px-8 md:px-14 py-12 md:py-16">
           <div className="max-w-4xl mx-auto">
+            {/* Back button */}
+            {embedded && (
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center gap-2 text-[#005044] font-sora font-semibold text-sm mb-6 hover:opacity-80 transition-opacity"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                {t('notFound.goBack', 'Go Back')}
+              </button>
+            )}
+
             {/* Header */}
             <div className="text-center space-y-4 mb-12">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-teal-100 mb-4">

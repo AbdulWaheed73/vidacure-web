@@ -8,6 +8,7 @@ import { ProfileCard } from '../components/account/ProfileCard';
 import { DataPrivacyCard } from '../components/account/DataPrivacyCard';
 import { AccountActionsCard } from '../components/account/AccountActionsCard';
 import { SubscriptionBillingCard } from '../components/account/SubscriptionBillingCard';
+import { LanguageCard } from '../components/account/LanguageCard';
 
 type AccountPageProps = {
   user: UserType | null;
@@ -64,6 +65,8 @@ export const AccountPage: React.FC<AccountPageProps> = ({ user, onLogout }) => {
         />
 
         {user?.role === 'patient' && <SubscriptionBillingCard />}
+
+        <LanguageCard />
 
         <AccountActionsCard onLogout={onLogout} userType="patient" />
       </div>

@@ -49,6 +49,8 @@ import { usePatientMeetings, useMyProviders, useProviderMeetings } from '@/hooks
 import type { PatientMeeting } from '../types/calendly-types';
 import type { ProviderMeeting } from '../types/provider-types';
 import { useCookieConsentStore } from '@/stores/cookieConsentStore';
+import { useAuthStore } from '@/stores/authStore';
+import { CALENDLY_FREE_CONSULTATION_URL } from '@/constants';
 import { MeetingRequired } from '@/components/subscription';
 
 // Horizontal scrolling carousel for upcoming appointment cards
@@ -228,8 +230,10 @@ export const AppointmentsPage: React.FC = () => {
   const [selectedMeeting, setSelectedMeeting] = useState<PatientMeeting | null>(null);
   const [isProviderBookingLoading, setIsProviderBookingLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('doctor');
+  const [useFallbackBooking, setUseFallbackBooking] = useState(false);
   const { consent, openPreferences } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
+  const user = useAuthStore((s) => s.user);
 
   // Derive display error from query error or booking error
   const error = bookingError || (meetingsError ? t('appointments.errors.loadFailed') : null);
@@ -280,14 +284,17 @@ export const AppointmentsPage: React.FC = () => {
         if (bookingResponse.success) {
           setSchedulingLink(bookingResponse.schedulingLink);
         } else {
-          setBookingError('Failed to generate booking link');
+          // No booking link — fall back to generic URL
+          setUseFallbackBooking(true);
         }
       } else {
-        setBookingError('No appointment types available');
+        // No event types (no doctor assigned) — fall back to generic URL
+        setUseFallbackBooking(true);
       }
     } catch (err: any) {
       console.error('Booking error:', err);
-      setBookingError(err.response?.data?.error || err.response?.data?.message || 'Failed to generate booking link');
+      // Fall back to generic URL instead of showing an error
+      setUseFallbackBooking(true);
     } finally {
       setIsBookingLoading(false);
     }
@@ -879,6 +886,20 @@ export const AppointmentsPage: React.FC = () => {
             handleBookingSuccess();
           }}
           rootElement={document.getElementById('root')!}
+        />
+      )}
+
+      {/* Fallback generic booking popup (no doctor assigned) */}
+      {hasFunctionalConsent && (
+        <PopupModal
+          url={CALENDLY_FREE_CONSULTATION_URL}
+          open={useFallbackBooking}
+          onModalClose={() => {
+            setUseFallbackBooking(false);
+            handleBookingSuccess();
+          }}
+          rootElement={document.getElementById('root')!}
+          utm={user?.userId ? { utmTerm: `patient_${user.userId}` } : undefined}
         />
       )}
     </div>

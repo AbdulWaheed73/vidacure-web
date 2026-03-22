@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { RefreshCw, Users } from 'lucide-react';
 import { useDoctorPatients } from '@/hooks/useDoctorDashboardQueries';
 import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
@@ -71,6 +72,7 @@ const PatientCard: React.FC<{
 );
 
 const DoctorPatients: React.FC = () => {
+  const { t } = useTranslation();
   const { data, isLoading, refetch, isRefetching } = useDoctorPatients();
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -104,14 +106,14 @@ const DoctorPatients: React.FC = () => {
     <div className="p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <h1 className="font-sora font-bold text-2xl text-[#282828]">Patients</h1>
+        <h1 className="font-sora font-bold text-2xl text-[#282828]">{t('doctorPatients.title')}</h1>
         <button
           onClick={() => refetch()}
           disabled={isRefetching}
           className="flex items-center gap-2 bg-[#f0f7f4] text-[#005044] rounded-full px-5 py-2.5 font-sora font-semibold text-sm hover:bg-[#c0ebe5] transition-colors"
         >
           <RefreshCw className={`w-4 h-4 ${isRefetching ? 'animate-spin' : ''}`} />
-          Refresh
+          {t('doctorPatients.refresh')}
         </button>
       </div>
 
@@ -124,9 +126,9 @@ const DoctorPatients: React.FC = () => {
       ) : patients.length === 0 ? (
         <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-16 text-center">
           <Users className="w-16 h-16 text-[#c0ebe5] mx-auto mb-4" />
-          <h2 className="font-sora font-semibold text-lg text-[#282828] mb-2">No Patients Yet</h2>
+          <h2 className="font-sora font-semibold text-lg text-[#282828] mb-2">{t('doctorPatients.noPatientsYet')}</h2>
           <p className="text-[#b0b0b0] font-manrope text-sm">
-            Assigned patients will appear here
+            {t('doctorPatients.noPatientsMessage')}
           </p>
         </div>
       ) : (

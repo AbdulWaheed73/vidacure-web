@@ -6,8 +6,10 @@ import { PopupModal } from 'react-calendly';
 import { meetingService } from '@/services/meetingService';
 import { calendlyService } from '@/services/calendlyService';
 import { Button } from '@/components/ui/Button';
-import { ROUTES } from '@/constants';
+import { ROUTES, CALENDLY_FREE_CONSULTATION_URL } from '@/constants';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import { useAuthStore } from '@/stores/authStore';
+import { GateOverlay } from './GateOverlay';
 
 type MeetingRequiredProps = {
   children: React.ReactNode;
@@ -15,12 +17,14 @@ type MeetingRequiredProps = {
 
 export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) => {
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const user = useAuthStore((s) => s.user);
   const [isLoading, setIsLoading] = useState(true);
   const [isMeetingGatePassed, setIsMeetingGatePassed] = useState(false);
   const [meetingStatus, setMeetingStatus] = useState<'none' | 'scheduled' | 'completed'>('none');
   const [scheduledTime, setScheduledTime] = useState<string | null>(null);
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
+  const [useFallbackBooking, setUseFallbackBooking] = useState(false);
   const [isBookingLoading, setIsBookingLoading] = useState(false);
 
   useEffect(() => {
@@ -49,10 +53,12 @@ export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) =>
         const bookingResponse = await calendlyService.createPatientBookingLink(eventTypesResponse.eventType.type);
         if (bookingResponse.success) {
           setSchedulingLink(bookingResponse.schedulingLink);
+          return;
         }
       }
+      setUseFallbackBooking(true);
     } catch (error) {
-      console.error('Error generating booking link:', error);
+      setUseFallbackBooking(true);
     } finally {
       setIsBookingLoading(false);
     }
@@ -70,7 +76,6 @@ export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) =>
     return <>{children}</>;
   }
 
-  // Format the scheduled time if available
   const formatScheduledTime = () => {
     if (!scheduledTime) return null;
     const date = new Date(scheduledTime);
@@ -82,85 +87,85 @@ export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) =>
   };
 
   return (
-    <div className="relative h-full min-h-[400px]">
-      {/* Blurred content */}
-      <div className="blur-sm pointer-events-none select-none">
-        {children}
-      </div>
-
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-[#F0F7F4]/80 backdrop-blur-sm flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-4 text-center">
-          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            {meetingStatus === 'scheduled' ? (
-              <Clock className="w-8 h-8 text-amber-600" />
-            ) : (
-              <Calendar className="w-8 h-8 text-amber-600" />
-            )}
-          </div>
-
-          <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
-            {meetingStatus === 'scheduled'
-              ? 'Complete Your Consultation First'
-              : 'Doctor Consultation Required'}
-          </h2>
-
+    <>
+      <GateOverlay blurredContent={children}>
+        <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
           {meetingStatus === 'scheduled' ? (
-            <>
-              <p className="text-gray-600 mb-4 font-manrope">
-                You have a scheduled consultation with your doctor.
-                You'll be able to subscribe after your meeting.
-              </p>
-              {scheduledTime && (
-                <div className="bg-teal-50 rounded-lg p-4 mb-6">
-                  <p className="text-sm text-teal-700 font-medium">
-                    Scheduled for:
-                  </p>
-                  <p className="text-lg text-teal-800 font-semibold">
-                    {formatScheduledTime()}
-                  </p>
-                </div>
-              )}
-              <Button
-                onClick={() => navigate(ROUTES.PATIENT_APPOINTMENTS)}
-                className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
-              >
-                View Appointments
-              </Button>
-            </>
+            <Clock className="w-8 h-8 text-amber-600" />
           ) : (
-            <>
-              <p className="text-gray-600 mb-6 font-manrope">
-                Before you can subscribe, you need to complete a consultation
-                with one of our doctors to discuss your treatment plan.
-              </p>
-              <Button
-                onClick={handleBookConsultation}
-                disabled={isBookingLoading}
-                className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
-              >
-                {isBookingLoading ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                ) : (
-                  <Calendar className="w-4 h-4 mr-2" />
-                )}
-                {isBookingLoading ? 'Loading...' : 'Book Consultation'}
-              </Button>
-            </>
+            <Calendar className="w-8 h-8 text-amber-600" />
           )}
         </div>
-      </div>
+
+        <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
+          {meetingStatus === 'scheduled'
+            ? t('gate.completeConsultationFirst')
+            : t('gate.consultationRequired')}
+        </h2>
+
+        {meetingStatus === 'scheduled' ? (
+          <>
+            <p className="text-gray-600 mb-4 font-manrope">
+              {t('gate.consultationScheduledMessage')}
+            </p>
+            {scheduledTime && (
+              <div className="bg-teal-50 rounded-lg p-4 mb-6">
+                <p className="text-sm text-teal-700 font-medium">
+                  {t('gate.scheduledFor')}
+                </p>
+                <p className="text-lg text-teal-800 font-semibold">
+                  {formatScheduledTime()}
+                </p>
+              </div>
+            )}
+            <Button
+              onClick={() => navigate(ROUTES.PATIENT_APPOINTMENTS)}
+              className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
+            >
+              {t('gate.viewAppointments')}
+            </Button>
+          </>
+        ) : (
+          <>
+            <p className="text-gray-600 mb-6 font-manrope">
+              {t('gate.consultationRequiredMessage')}
+            </p>
+            <Button
+              onClick={handleBookConsultation}
+              disabled={isBookingLoading}
+              className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
+            >
+              {isBookingLoading ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+              ) : (
+                <Calendar className="w-4 h-4 mr-2" />
+              )}
+              {isBookingLoading ? t('gate.loading') : t('gate.bookConsultation')}
+            </Button>
+          </>
+        )}
+      </GateOverlay>
 
       <PopupModal
         url={schedulingLink || ''}
         open={!!schedulingLink}
         onModalClose={() => {
           setSchedulingLink(null);
-          // Re-check meeting status after booking
           window.location.reload();
         }}
         rootElement={document.getElementById('root')!}
       />
-    </div>
+
+      <PopupModal
+        url={CALENDLY_FREE_CONSULTATION_URL}
+        open={useFallbackBooking}
+        onModalClose={() => {
+          setUseFallbackBooking(false);
+          window.location.reload();
+        }}
+        rootElement={document.getElementById('root')!}
+        utm={user?.userId ? { utmTerm: `patient_${user.userId}` } : undefined}
+      />
+    </>
   );
 };

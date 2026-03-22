@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Info } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -67,10 +68,44 @@ type CreatePromotionDialogProps = {
   onSuccess: () => void;
 };
 
+type SubscriptionProduct = {
+  planType: string;
+  priceId: string;
+  productId: string;
+  productName: string;
+  unitAmount: number | null;
+  currency: string;
+};
+
+type LabTestPackageInfo = {
+  name: string;
+  unitAmount: number;
+  currency: string;
+};
+
 export const CreatePromotionDialog = ({ isOpen, onClose, onSuccess }: CreatePromotionDialogProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [subscriptionProducts, setSubscriptionProducts] = useState<SubscriptionProduct[]>([]);
+  const [labTestPackages, setLabTestPackages] = useState<LabTestPackageInfo[]>([]);
+  const [productsLoading, setProductsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setProductsLoading(true);
+      adminService.getSubscriptionProducts()
+        .then((data) => {
+          setSubscriptionProducts(data.products);
+          setLabTestPackages(data.labTestPackages || []);
+        })
+        .catch(() => {
+          setSubscriptionProducts([]);
+          setLabTestPackages([]);
+        })
+        .finally(() => setProductsLoading(false));
+    }
+  }, [isOpen]);
 
   const form = useForm<CreatePromotionFormValues>({
     resolver: zodResolver(createPromotionSchema),
@@ -90,6 +125,15 @@ export const CreatePromotionDialog = ({ isOpen, onClose, onSuccess }: CreateProm
 
   const discountType = form.watch('discountType');
   const duration = form.watch('duration');
+  const appliesTo = form.watch('appliesTo');
+
+  // Lab tests are one-time payments — force duration to 'once'
+  useEffect(() => {
+    if (appliesTo === 'lab_tests') {
+      form.setValue('duration', 'once');
+      form.setValue('durationInMonths', undefined);
+    }
+  }, [appliesTo, form]);
 
   const onSubmit = async (data: CreatePromotionFormValues) => {
     setIsSubmitting(true);
@@ -131,7 +175,7 @@ export const CreatePromotionDialog = ({ isOpen, onClose, onSuccess }: CreateProm
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create Promotion Code</DialogTitle>
         </DialogHeader>
@@ -214,6 +258,69 @@ export const CreatePromotionDialog = ({ isOpen, onClose, onSuccess }: CreateProm
               )}
             />
 
+            {appliesTo !== undefined && (
+              <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm">
+                <div className="flex items-center gap-2 font-medium text-blue-800 mb-1">
+                  <Info className="w-4 h-4" />
+                  Linked Products
+                </div>
+                {productsLoading ? (
+                  <p className="text-blue-600">Loading current products...</p>
+                ) : (
+                  <>
+                    {(appliesTo === 'subscriptions' || appliesTo === 'all') && (
+                      <>
+                        <p className="text-blue-800 font-medium text-xs mb-1">Subscriptions</p>
+                        {subscriptionProducts.length === 0 ? (
+                          <p className="text-red-600 font-medium text-xs">No subscription products found — check env vars</p>
+                        ) : (
+                          <ul className="space-y-1 text-blue-700 mb-2">
+                            {subscriptionProducts.map((p) => (
+                              <li key={p.priceId} className="flex items-center justify-between">
+                                <span>{p.productName} ({p.planType})</span>
+                                <span className="text-blue-500 text-xs font-mono">
+                                  {p.unitAmount ? `${(p.unitAmount / 100).toLocaleString()} ${p.currency.toUpperCase()}/mo` : '—'}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </>
+                    )}
+                    {(appliesTo === 'lab_tests' || appliesTo === 'all') && (
+                      <>
+                        <p className="text-blue-800 font-medium text-xs mb-1">Lab Tests</p>
+                        {labTestPackages.length === 0 ? (
+                          <p className="text-red-600 font-medium text-xs">No lab test packages configured</p>
+                        ) : (
+                          <ul className="space-y-1 text-blue-700">
+                            {labTestPackages.map((p) => (
+                              <li key={p.name} className="flex items-center justify-between">
+                                <span>{p.name}</span>
+                                <span className="text-blue-500 text-xs font-mono">
+                                  {(p.unitAmount / 100).toLocaleString()} {p.currency.toUpperCase()}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </>
+                    )}
+                    {appliesTo === 'subscriptions' && subscriptionProducts.length > 0 && (
+                      <p className="text-blue-500 text-xs mt-2">
+                        Coupon will be restricted to these product IDs on Stripe
+                      </p>
+                    )}
+                    {(appliesTo === 'lab_tests' || appliesTo === 'all') && labTestPackages.length > 0 && (
+                      <p className="text-blue-500 text-xs mt-2">
+                        Lab test codes use metadata labeling (soft restriction)
+                      </p>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+
             <FormField
               control={form.control}
               name="discountType"
@@ -266,30 +373,32 @@ export const CreatePromotionDialog = ({ isOpen, onClose, onSuccess }: CreateProm
               />
             )}
 
-            <FormField
-              control={form.control}
-              name="duration"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Duration</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isSubmitting}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="once">Once (single billing cycle)</SelectItem>
-                      <SelectItem value="repeating">Repeating (N months)</SelectItem>
-                      <SelectItem value="forever">Forever (all future invoices)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {appliesTo !== 'lab_tests' && (
+              <FormField
+                control={form.control}
+                name="duration"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Duration</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isSubmitting}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="once">Once (single billing cycle)</SelectItem>
+                        <SelectItem value="repeating">Repeating (N months)</SelectItem>
+                        <SelectItem value="forever">Forever (all future invoices)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
-            {duration === 'repeating' && (
+            {appliesTo !== 'lab_tests' && duration === 'repeating' && (
               <FormField
                 control={form.control}
                 name="durationInMonths"

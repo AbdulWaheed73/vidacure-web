@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { FlaskConical, TestTubes, ArrowRight, MapPin, ExternalLink } from 'lucide-react';
+import { FlaskConical, TestTubes, ArrowRight, MapPin, ExternalLink, RefreshCw, ShieldAlert } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -27,10 +27,12 @@ import {
 import { LabTestOrderStatusBadge } from '../components/LabTestOrderStatus';
 import { LabTestResults } from '../components/LabTestResults';
 import { useLabTestStore } from '../stores/labTestStore';
+import { ROUTES } from '../constants';
 import type { LabTestPackage, LabTestOrder } from '../types/lab-test-types';
 
 export const LabTestsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const {
     packages,
     orders,
@@ -39,21 +41,27 @@ export const LabTestsPage: React.FC = () => {
     isLoadingOrders,
     isLoadingOrder,
     isCreatingCheckout,
+    isSyncing,
     error,
+    consentRequired,
     fetchPackages,
     fetchOrders,
     fetchOrderById,
     createCheckoutSession,
+    syncOrders,
     clearError,
     clearSelectedOrder,
   } = useLabTestStore();
 
   const [confirmPackage, setConfirmPackage] = useState<LabTestPackage | null>(null);
   const [resultOrder, setResultOrder] = useState<LabTestOrder | null>(null);
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
 
   const isSv = i18n.language === 'sv';
 
   useEffect(() => {
+    // Reset consent state on mount so re-visiting after accepting consent works
+    useLabTestStore.setState({ consentRequired: false });
     fetchPackages();
     fetchOrders();
   }, [fetchPackages, fetchOrders]);
@@ -77,7 +85,40 @@ export const LabTestsPage: React.FC = () => {
     setResultOrder(order);
   };
 
-  const navigate = useNavigate();
+  const handleSyncOrders = async () => {
+    setSyncMessage(null);
+    const result = await syncOrders();
+    if (result) {
+      if (result.discovered > 0 || result.updated > 0) {
+        setSyncMessage(t('labTests.syncFoundResults', { discovered: result.discovered, updated: result.updated }));
+      } else {
+        setSyncMessage(t('labTests.syncUpToDate'));
+      }
+      setTimeout(() => setSyncMessage(null), 5000);
+    }
+  };
+
+  if (consentRequired) {
+    return (
+      <div className="p-4 md:p-8">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
+            <ShieldAlert className="w-12 h-12 text-amber-400 mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-gray-800 mb-2 font-manrope">{t('consent.errors.consentRequiredTitle')}</h2>
+            <p className="text-gray-500 mb-6 text-sm">
+              {t('consent.errors.consentRequiredLabTests')}
+            </p>
+            <Button
+              onClick={() => navigate(ROUTES.PATIENT_CONSENT)}
+              className="bg-amber-500 hover:bg-amber-600 text-white"
+            >
+              {t('consent.errors.reviewConsent')}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 md:p-8">
@@ -198,18 +239,20 @@ export const LabTestsPage: React.FC = () => {
                       {isSv ? pkg.descriptionSv : pkg.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-sm font-medium text-gray-700 mb-2">
-                      {t('labTests.includedAnalyses')}:
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {pkg.analyses.map((analysis) => (
-                        <Badge key={analysis.code} variant="secondary" className="text-xs">
-                          {isSv ? analysis.nameSv : analysis.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
+                  {pkg.analyses.length > 0 && (
+                    <CardContent>
+                      <p className="text-sm font-medium text-gray-700 mb-2">
+                        {t('labTests.includedAnalyses')}:
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {pkg.analyses.map((analysis) => (
+                          <Badge key={analysis.code} variant="secondary" className="text-xs">
+                            {isSv ? analysis.nameSv : analysis.name}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                  )}
                   <CardFooter className="flex items-center justify-between">
                     <span className="text-lg font-bold text-[#009689]">
                       {formatPrice(pkg.priceAmountOre, pkg.priceCurrency)}
@@ -230,6 +273,24 @@ export const LabTestsPage: React.FC = () => {
 
         {/* My Orders Tab */}
         <TabsContent value="orders">
+          <div className="flex items-center justify-between mb-4">
+            <div />
+            <div className="flex items-center gap-3">
+              {syncMessage && (
+                <span className="text-sm text-[#009689] font-medium">{syncMessage}</span>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSyncOrders}
+                disabled={isSyncing}
+                className="gap-2"
+              >
+                <RefreshCw className={`size-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                {isSyncing ? t('labTests.syncing') : t('labTests.refreshResults')}
+              </Button>
+            </div>
+          </div>
           {isLoadingOrders ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
@@ -325,7 +386,7 @@ export const LabTestsPage: React.FC = () => {
           clearSelectedOrder();
         }
       }}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-[95vw] sm:max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl">
           <DialogHeader>
             <DialogTitle>{t('labTests.results')}</DialogTitle>
             <DialogDescription>
@@ -342,9 +403,9 @@ export const LabTestsPage: React.FC = () => {
               <Skeleton className="h-6 w-full" />
             </div>
           ) : selectedOrder ? (
-            <LabTestResults results={selectedOrder.results} />
+            <LabTestResults results={selectedOrder.results} labComment={selectedOrder.labComment} statusHistory={selectedOrder.statusHistory} />
           ) : resultOrder ? (
-            <LabTestResults results={resultOrder.results} />
+            <LabTestResults results={resultOrder.results} labComment={resultOrder.labComment} statusHistory={resultOrder.statusHistory} />
           ) : null}
         </DialogContent>
       </Dialog>

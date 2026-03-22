@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { AlertCircle, MessageSquare, Search, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import {
@@ -24,7 +25,7 @@ import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
 import type { ConversationWithDetails } from '../../types/chat-types';
 
-const formatTimeAgo = (dateString: string | null | undefined) => {
+const formatTimeAgo = (dateString: string | null | undefined, t: (key: string) => string) => {
   if (!dateString) return '';
   const now = new Date();
   const date = new Date(dateString);
@@ -33,7 +34,7 @@ const formatTimeAgo = (dateString: string | null | undefined) => {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) return 'now';
+  if (diffMins < 1) return t('chat.now');
   if (diffMins < 60) return `${diffMins}m`;
   if (diffHours < 24) return `${diffHours}h`;
   if (diffDays < 7) return `${diffDays}d`;
@@ -51,6 +52,7 @@ const getInitials = (name: string) => {
 
 export const SupabaseDoctorChat: React.FC = () => {
   const { user, isAuthenticated } = useAuthStore();
+  const { t } = useTranslation();
   const [isInitializing, setIsInitializing] = useState(true);
   const [hasLoadedConversations, setHasLoadedConversations] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -92,19 +94,16 @@ export const SupabaseDoctorChat: React.FC = () => {
       }
 
       try {
-        // Use getState() for the latest Zustand state (not stale closure)
         const currentStatus = useChatStore.getState().connectionStatus;
 
         if (currentStatus === 'disconnected') {
           await connect(user.userId, user.name, 'doctor');
         } else if (currentStatus === 'connected') {
-          // Already connected — ensure conversations are loaded
           const currentConversations = useChatStore.getState().conversations;
           if (currentConversations.length === 0) {
             await useChatStore.getState().loadDoctorConversations();
           }
         }
-        // If 'connecting', another connect() is in progress — just wait for it
       } catch (err) {
         console.error('Failed to initialize chat:', err);
       } finally {
@@ -114,12 +113,9 @@ export const SupabaseDoctorChat: React.FC = () => {
     };
 
     initChat();
-    // Don't disconnect on cleanup — let Zustand state persist across navigation.
-    // The service singleton manages subscriptions and cleans up on re-subscribe.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, user?.userId]);
 
-  // Escape key to close active conversation
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape' && conversation) {
@@ -157,7 +153,6 @@ export const SupabaseDoctorChat: React.FC = () => {
 
   const DoctorChatSkeleton = () => (
     <div className="flex h-full gap-0 lg:gap-4 p-2 lg:p-4 bg-[#F0F7F4]">
-      {/* Patient list skeleton — full width on mobile, fixed sidebar on desktop */}
       <div className="w-full lg:w-[380px] lg:shrink-0 bg-white rounded-2xl shadow-sm flex flex-col overflow-hidden">
         <div className="p-4">
           <Skeleton className="h-10 w-full rounded-full" />
@@ -174,7 +169,6 @@ export const SupabaseDoctorChat: React.FC = () => {
           ))}
         </div>
       </div>
-      {/* Chat skeleton — hidden on mobile */}
       <div className="hidden lg:flex flex-1 bg-white rounded-2xl shadow-sm flex-col overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4">
           <Skeleton className="h-6 w-32" />
@@ -194,58 +188,51 @@ export const SupabaseDoctorChat: React.FC = () => {
     </div>
   );
 
-  // Loading
   if (isInitializing) {
     return <DoctorChatSkeleton />;
   }
 
-  // Not authenticated or not doctor
   if (!isAuthenticated || !user || user.role !== 'doctor') {
     return (
       <div className="flex flex-col items-center justify-center h-full">
         <AlertCircle className="w-12 h-12 text-destructive" />
-        <p className="mt-4 text-lg font-semibold">Access Denied</p>
-        <p className="mt-2 text-sm text-muted-foreground">Doctor access required</p>
+        <p className="mt-4 text-lg font-semibold">{t('chat.doctorAccessDenied')}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{t('chat.doctorAccessRequired')}</p>
       </div>
     );
   }
 
-  // Connecting
   if (connectionStatus === 'connecting') {
     return <DoctorChatSkeleton />;
   }
 
-  // Error
   if (connectionStatus === 'error' || error) {
     return (
       <div className="flex flex-col items-center justify-center h-full px-8">
         <AlertCircle className="w-12 h-12 text-destructive" />
-        <p className="mt-4 text-lg font-semibold text-destructive">Connection Error</p>
-        <p className="mt-2 text-sm text-muted-foreground text-center">{error || 'Failed to connect'}</p>
+        <p className="mt-4 text-lg font-semibold text-destructive">{t('chat.connectionError')}</p>
+        <p className="mt-2 text-sm text-muted-foreground text-center">{error || t('chat.failedToConnect')}</p>
         <Button onClick={handleRetry} className="mt-4 bg-[#00a38a] hover:bg-[#008f79]">
-          Retry
+          {t('chat.retry')}
         </Button>
       </div>
     );
   }
 
-  const selectedPatientName = conversations.find((c) => c.id === conversation?.id)?.patientName || 'Patient';
+  const selectedPatientName = conversations.find((c) => c.id === conversation?.id)?.patientName || t('doctorDashboard.patient');
 
-  // On mobile (< lg), show either the patient list or the chat — not both.
-  // On desktop (lg+), show both side by side.
   const hasMobileConversation = !!conversation;
 
   return (
     <div className="flex h-full gap-0 lg:gap-4 p-2 lg:p-4 bg-[#F0F7F4]">
       {/* Sidebar - Patient list card */}
-      {/* On mobile: hidden when a conversation is open. On desktop: always visible. */}
       <div className={`${hasMobileConversation ? 'hidden' : 'flex'} lg:flex w-full lg:w-[380px] lg:shrink-0 bg-white rounded-2xl shadow-sm flex-col overflow-hidden`}>
         {/* Search */}
         <div className="p-4">
           <div className="relative">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search patients"
+              placeholder={t('chat.searchPatients')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 h-10 rounded-full border-border bg-white"
@@ -272,7 +259,7 @@ export const SupabaseDoctorChat: React.FC = () => {
               <div className="flex flex-col items-center justify-center h-full px-4 py-8">
                 <MessageSquare className="w-10 h-10 text-muted-foreground/30" />
                 <p className="mt-3 text-sm text-muted-foreground text-center">
-                  {searchQuery ? 'No matches found' : 'No patients assigned'}
+                  {searchQuery ? t('chat.noMatchesFound') : t('chat.noPatientsAssigned')}
                 </p>
               </div>
             )
@@ -301,14 +288,14 @@ export const SupabaseDoctorChat: React.FC = () => {
                   <div className="flex-1 min-w-0 text-left">
                     <div className="flex items-center justify-between gap-2">
                       <p className={`text-sm truncate ${unreadCount > 0 ? 'font-bold text-foreground' : 'font-semibold text-foreground'}`}>
-                        {conv.patientName || 'Patient'}
+                        {conv.patientName || t('doctorDashboard.patient')}
                       </p>
                       <span className="text-xs text-muted-foreground shrink-0">
-                        {formatTimeAgo(conv.lastMessage?.createdAt || conv.lastMessageAt)}
+                        {formatTimeAgo(conv.lastMessage?.createdAt || conv.lastMessageAt, t)}
                       </span>
                     </div>
                     <p className={`text-xs truncate mt-0.5 ${unreadCount > 0 ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
-                      {conv.lastMessage?.content || 'No messages yet'}
+                      {conv.lastMessage?.content || t('chat.noMessages')}
                     </p>
                   </div>
                 </button>
@@ -319,14 +306,12 @@ export const SupabaseDoctorChat: React.FC = () => {
       </div>
 
       {/* Main chat area card */}
-      {/* On mobile: hidden when no conversation selected. On desktop: always visible. */}
       <div className={`${hasMobileConversation ? 'flex' : 'hidden'} lg:flex flex-1 bg-white rounded-2xl shadow-sm flex-col overflow-hidden`}>
         {conversation ? (
           <>
             {/* Chat header */}
             <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
               <div className="flex items-center gap-3 min-w-0">
-                {/* Back button — mobile only */}
                 <button
                   onClick={deselectConversation}
                   className="lg:hidden flex items-center justify-center h-9 w-9 rounded-full hover:bg-[#F0F7F4] transition-colors shrink-0"
@@ -346,7 +331,7 @@ export const SupabaseDoctorChat: React.FC = () => {
                     }
                   }}
                 >
-                  View Profile
+                  {t('chat.viewProfile')}
                 </Button>
               </div>
             </div>
@@ -375,7 +360,7 @@ export const SupabaseDoctorChat: React.FC = () => {
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center">
             <MessageSquare className="w-12 h-12 text-muted-foreground/30" />
-            <p className="mt-4 text-sm text-muted-foreground">Select a patient to start chatting</p>
+            <p className="mt-4 text-sm text-muted-foreground">{t('chat.selectPatient')}</p>
           </div>
         )}
       </div>

@@ -90,7 +90,7 @@ export class PaymentService {
     } else {
       return {
         name: 'Medical Program Membership',
-        price: 1495,
+        price: 1195,
         currency: 'SEK',
         interval: 'month',
         description: 'Your all-in-one access to our medical team, coaching, and support.',

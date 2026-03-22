@@ -8,7 +8,7 @@ import {
 } from '../ui/dialog';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ExternalLink, Download } from 'lucide-react';
 import { adminService } from '../../services/adminService';
 import type { PatientSubscriptionDetailsResponse } from '../../types/payment-types';
 
@@ -66,6 +66,23 @@ export const SubscriptionDetailsModal = ({
       style: 'currency',
       currency: currency.toUpperCase(),
     }).format(amount / 100);
+  };
+
+  const getInvoiceStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
+    switch (status) {
+      case 'paid':
+        return 'default';
+      case 'open':
+        return 'secondary';
+      case 'uncollectible':
+      case 'past_due':
+        return 'destructive';
+      case 'void':
+      case 'draft':
+        return 'outline';
+      default:
+        return 'secondary';
+    }
   };
 
   const getStatusBadgeVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
@@ -294,6 +311,77 @@ export const SubscriptionDetailsModal = ({
                             {data.stripeData?.defaultPaymentMethod?.id === pm.id && (
                               <Badge variant="secondary">Default</Badge>
                             )}
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Payment History (Invoices) */}
+                {data.stripeData.invoices && data.stripeData.invoices.length > 0 && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Payment History</CardTitle>
+                      <CardDescription>
+                        {data.stripeData.invoices.length} invoice(s)
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {data.stripeData.invoices.map((inv) => (
+                          <div
+                            key={inv.id}
+                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <Badge variant={getInvoiceStatusVariant(inv.status)}>
+                                  {inv.status}
+                                </Badge>
+                                <span className="text-sm font-medium text-gray-900">
+                                  {formatCurrency(inv.amount_due, inv.currency)}
+                                </span>
+                                {inv.amount_paid > 0 && inv.amount_paid < inv.amount_due && (
+                                  <span className="text-xs text-gray-500">
+                                    (paid: {formatCurrency(inv.amount_paid, inv.currency)})
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {inv.number && <span className="font-mono mr-2">{inv.number}</span>}
+                                <span>{formatDate(inv.created)}</span>
+                                {inv.period_start && inv.period_end && (
+                                  <span className="ml-2">
+                                    Period: {formatDate(inv.period_start)} – {formatDate(inv.period_end)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-1 ml-2 shrink-0">
+                              {inv.hosted_invoice_url && (
+                                <a
+                                  href={inv.hosted_invoice_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="p-1.5 text-gray-400 hover:text-gray-600 rounded"
+                                  title="View invoice"
+                                >
+                                  <ExternalLink className="w-4 h-4" />
+                                </a>
+                              )}
+                              {inv.invoice_pdf && (
+                                <a
+                                  href={inv.invoice_pdf}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="p-1.5 text-gray-400 hover:text-gray-600 rounded"
+                                  title="Download PDF"
+                                >
+                                  <Download className="w-4 h-4" />
+                                </a>
+                              )}
+                            </div>
                           </div>
                         ))}
                       </div>

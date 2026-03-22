@@ -15,8 +15,7 @@ const FooterSection = () => {
       links: [
         { name: t('footer.aboutUs'), href: ROUTES.ABOUT_US },
         { name: t('footer.ourDoctors'), href: `${ROUTES.ABOUT_US}#team` },
-        { name: t('footer.blogs'), href: '#education' },
-        { name: t('footer.careers'), href: '#' } // TODO: Add careers page route when available
+        { name: t('footer.blogs'), href: '#education' }
       ]
     },
     {
@@ -37,8 +36,7 @@ const FooterSection = () => {
       title: t('footer.legal'),
       links: [
         { name: t('footer.privacyPolicy'), href: '/privacy' },
-        { name: t('footer.termsOfService'), href: '/terms' },
-        { name: t('footer.cookiePolicy'), href: '/cookies' },
+        { name: t('footer.termsOfService'), href: '/privacy' },
         { name: t('footer.cookieSettings', 'Cookie Settings'), href: '#cookie-settings', onClick: openPreferences }
       ]
     }

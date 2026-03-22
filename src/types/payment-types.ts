@@ -83,6 +83,20 @@ export type PatientStripeData = {
   upcomingInvoice: StripeInvoice | null;
 };
 
+export type AdminInvoice = {
+  id: string;
+  number: string | null;
+  status: string;
+  amount_due: number;
+  amount_paid: number;
+  currency: string;
+  created: number;
+  period_start: number;
+  period_end: number;
+  invoice_pdf: string | null;
+  hosted_invoice_url: string | null;
+};
+
 export type PatientSubscriptionDetailsResponse = {
   patient: any;
   stripeData: {
@@ -90,6 +104,7 @@ export type PatientSubscriptionDetailsResponse = {
     defaultPaymentMethod: StripePaymentMethod | null;
     upcomingInvoice: StripeInvoice | null;
     allPaymentMethods: StripePaymentMethod[];
+    invoices: AdminInvoice[];
   } | null;
   message?: string;
 };

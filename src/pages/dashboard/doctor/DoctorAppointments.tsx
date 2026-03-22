@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Video, RefreshCw, Calendar, Clock, ChevronDown } from 'lucide-react';
 import { useDoctorMeetings } from '@/hooks/useDoctorDashboardQueries';
 import type { PatientMeeting } from '@/types/calendly-types';
@@ -7,7 +8,7 @@ const formatTime = (dateStr: string): string => {
   return new Date(dateStr).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 };
 
-const formatDate = (dateStr: string): string => {
+const formatDateLabel = (dateStr: string, t: (key: string) => string): string => {
   const date = new Date(dateStr);
   const today = new Date();
   const tomorrow = new Date(today);
@@ -20,21 +21,21 @@ const formatDate = (dateStr: string): string => {
     date.getMonth() === today.getMonth() &&
     date.getDate() === today.getDate()
   ) {
-    return 'Today';
+    return t('doctorAppointments.today');
   }
   if (
     date.getFullYear() === tomorrow.getFullYear() &&
     date.getMonth() === tomorrow.getMonth() &&
     date.getDate() === tomorrow.getDate()
   ) {
-    return 'Tomorrow';
+    return t('doctorAppointments.tomorrow');
   }
   if (
     date.getFullYear() === yesterday.getFullYear() &&
     date.getMonth() === yesterday.getMonth() &&
     date.getDate() === yesterday.getDate()
   ) {
-    return 'Yesterday';
+    return t('doctorAppointments.yesterday');
   }
   return date.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
 };
@@ -53,7 +54,7 @@ const isCurrent = (startTime: string, endTime: string | null): boolean => {
 
 // --- Upcoming appointment card (rich, actionable) ---
 
-const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({ meeting, isFirst }) => {
+const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean; t: (key: string) => string }> = ({ meeting, isFirst, t }) => {
   const live = meeting.endTime ? isCurrent(meeting.startTime, meeting.endTime) : false;
 
   if (isFirst || live) {
@@ -61,16 +62,16 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
       <div className="bg-[#005044] rounded-2xl p-4 md:p-6 text-white">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-3">
           <h3 className="font-sora font-semibold text-lg">
-            {meeting.patientName || meeting.inviteeName || 'Patient'}
+            {meeting.patientName || meeting.inviteeName || t('doctorAppointments.patient')}
           </h3>
           <div className="flex items-center gap-2 flex-wrap">
             {live && (
               <span className="bg-white/25 rounded-full px-3 py-1 text-xs font-sora font-semibold animate-pulse">
-                Live Now
+                {t('doctorAppointments.liveNow')}
               </span>
             )}
             <span className="bg-white/20 rounded-full px-3 py-1 text-sm font-sora">
-              {formatDate(meeting.startTime)}
+              {formatDateLabel(meeting.startTime, t)}
             </span>
             <span className="flex items-center gap-1.5 bg-white/20 rounded-full px-3 py-1 text-sm font-sora">
               <Video className="w-3.5 h-3.5" />
@@ -90,7 +91,7 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
               onClick={() => window.open(meeting.meetingUrl!, '_blank')}
               className="bg-white text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-white/90 transition-colors self-start md:self-auto"
             >
-              {live ? 'Start Call' : 'Join Meeting'}
+              {live ? t('doctorAppointments.startCall') : t('doctorAppointments.joinMeeting')}
             </button>
           )}
         </div>
@@ -107,7 +108,7 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
           </div>
           <div className="min-w-0">
             <h3 className="font-sora font-semibold text-[#282828]">
-              {meeting.patientName || meeting.inviteeName || 'Patient'}
+              {meeting.patientName || meeting.inviteeName || t('doctorAppointments.patient')}
             </h3>
             <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">{meeting.eventType}</p>
             {meeting.inviteeEmail && (
@@ -117,7 +118,7 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
         </div>
         <div className="flex items-center gap-2 flex-wrap flex-shrink-0 pl-13 md:pl-0">
           <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-sm font-sora font-medium">
-            {formatDate(meeting.startTime)}
+            {formatDateLabel(meeting.startTime, t)}
           </span>
           <span className="flex items-center gap-1.5 bg-[#f0f7f4] text-[#005044] rounded-full px-3 py-1 text-sm font-sora font-medium">
             <Video className="w-3.5 h-3.5" />
@@ -128,7 +129,7 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
               onClick={() => window.open(meeting.meetingUrl!, '_blank')}
               className="bg-[#005044] text-white rounded-full px-5 py-2 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors"
             >
-              Join Meeting
+              {t('doctorAppointments.joinMeeting')}
             </button>
           )}
         </div>
@@ -139,7 +140,7 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean }> = ({
 
 // --- Past appointment card (muted, informational) ---
 
-const PastCard: React.FC<{ meeting: PatientMeeting }> = ({ meeting }) => (
+const PastCard: React.FC<{ meeting: PatientMeeting; t: (key: string) => string }> = ({ meeting, t }) => (
   <div className="bg-white border border-[#ebebeb] rounded-2xl p-4 md:p-5 opacity-75 hover:opacity-100 transition-opacity">
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
       <div className="flex items-center gap-3 md:gap-4 min-w-0">
@@ -148,7 +149,7 @@ const PastCard: React.FC<{ meeting: PatientMeeting }> = ({ meeting }) => (
         </div>
         <div className="min-w-0">
           <h3 className="font-sora font-semibold text-[#282828]">
-            {meeting.patientName || meeting.inviteeName || 'Patient'}
+            {meeting.patientName || meeting.inviteeName || t('doctorAppointments.patient')}
           </h3>
           <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">{meeting.eventType}</p>
           {meeting.inviteeEmail && (
@@ -158,7 +159,7 @@ const PastCard: React.FC<{ meeting: PatientMeeting }> = ({ meeting }) => (
       </div>
       <div className="flex items-center gap-2 flex-shrink-0 pl-13 md:pl-0">
         <span className="bg-gray-100 text-[#b0b0b0] rounded-full px-3 py-1 text-sm font-sora font-medium">
-          {formatDate(meeting.startTime)}
+          {formatDateLabel(meeting.startTime, t)}
         </span>
         <span className="flex items-center gap-1.5 bg-gray-100 text-[#b0b0b0] rounded-full px-3 py-1 text-sm font-sora font-medium">
           <Clock className="w-3.5 h-3.5" />
@@ -190,6 +191,7 @@ const SkeletonRow: React.FC = () => (
 // --- Main Page ---
 
 const DoctorAppointments: React.FC = () => {
+  const { t } = useTranslation();
   const [showPast, setShowPast] = useState(true);
 
   const {
@@ -218,14 +220,14 @@ const DoctorAppointments: React.FC = () => {
     <div className="p-4 md:p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6 md:mb-8">
-        <h1 className="font-sora font-bold text-xl md:text-2xl text-[#282828]">Appointments</h1>
+        <h1 className="font-sora font-bold text-xl md:text-2xl text-[#282828]">{t('doctorAppointments.title')}</h1>
         <button
           onClick={() => refetch()}
           disabled={isRefetching}
           className="flex items-center gap-2 bg-[#f0f7f4] text-[#005044] rounded-full px-5 py-2.5 font-sora font-semibold text-sm hover:bg-[#c0ebe5] transition-colors"
         >
           <RefreshCw className={`w-4 h-4 ${isRefetching ? 'animate-spin' : ''}`} />
-          Refresh
+          {t('doctorAppointments.refresh')}
         </button>
       </div>
 
@@ -238,8 +240,8 @@ const DoctorAppointments: React.FC = () => {
       ) : allMeetings.length === 0 ? (
         <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-8 md:p-16 text-center">
           <Calendar className="w-12 h-12 md:w-16 md:h-16 text-[#c0ebe5] mx-auto mb-4" />
-          <h2 className="font-sora font-semibold text-lg text-[#282828] mb-2">No Appointments Yet</h2>
-          <p className="text-[#b0b0b0] font-manrope text-sm">Appointments will appear here once patients book with you</p>
+          <h2 className="font-sora font-semibold text-lg text-[#282828] mb-2">{t('doctorAppointments.noAppointmentsYet')}</h2>
+          <p className="text-[#b0b0b0] font-manrope text-sm">{t('doctorAppointments.noAppointmentsMessage')}</p>
         </div>
       ) : (
         <div className="space-y-8">
@@ -247,7 +249,7 @@ const DoctorAppointments: React.FC = () => {
           <section>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-2 h-2 rounded-full bg-[#005044]" />
-              <h2 className="font-sora font-bold text-lg text-[#282828]">Upcoming</h2>
+              <h2 className="font-sora font-bold text-lg text-[#282828]">{t('doctorAppointments.upcoming')}</h2>
               <span className="bg-[#f0f7f4] text-[#005044] rounded-full px-2.5 py-0.5 text-xs font-sora font-semibold">
                 {upcoming.length}
               </span>
@@ -256,12 +258,12 @@ const DoctorAppointments: React.FC = () => {
             {upcoming.length === 0 ? (
               <div className="bg-[#f0f7f4] rounded-2xl p-6 md:p-8 text-center">
                 <Calendar className="w-10 h-10 text-[#005044] mx-auto mb-3 opacity-40" />
-                <p className="text-[#005044] font-manrope text-sm opacity-60">No upcoming appointments</p>
+                <p className="text-[#005044] font-manrope text-sm opacity-60">{t('doctorAppointments.noUpcoming')}</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {upcoming.map((meeting, index) => (
-                  <UpcomingCard key={meeting.id} meeting={meeting} isFirst={index === 0} />
+                  <UpcomingCard key={meeting.id} meeting={meeting} isFirst={index === 0} t={t} />
                 ))}
               </div>
             )}
@@ -276,7 +278,7 @@ const DoctorAppointments: React.FC = () => {
               >
                 <div className="w-2 h-2 rounded-full bg-[#b0b0b0]" />
                 <h2 className="font-sora font-bold text-lg text-[#b0b0b0] group-hover:text-[#282828] transition-colors">
-                  Past
+                  {t('doctorAppointments.past')}
                 </h2>
                 <span className="bg-gray-100 text-[#b0b0b0] rounded-full px-2.5 py-0.5 text-xs font-sora font-semibold">
                   {past.length}
@@ -287,7 +289,7 @@ const DoctorAppointments: React.FC = () => {
               {showPast && (
                 <div className="space-y-3">
                   {past.map((meeting) => (
-                    <PastCard key={meeting.id} meeting={meeting} />
+                    <PastCard key={meeting.id} meeting={meeting} t={t} />
                   ))}
                 </div>
               )}
@@ -305,10 +307,10 @@ const DoctorAppointments: React.FC = () => {
                 {isFetchingNextPage ? (
                   <>
                     <RefreshCw className="w-4 h-4 animate-spin" />
-                    Loading...
+                    {t('doctorAppointments.loading')}
                   </>
                 ) : (
-                  'Load More Appointments'
+                  t('doctorAppointments.loadMore')
                 )}
               </button>
             </div>

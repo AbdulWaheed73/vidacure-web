@@ -11,6 +11,7 @@ import { useCookieConsentStore } from "./stores/cookieConsentStore";
 import { useAdminAuthStore } from "./stores/adminAuthStore";
 import { AdminTopBar } from "./components/admin/AdminTopBar";
 import { AdminProtectedRoute } from "./components/admin/AdminProtectedRoute";
+import { setNavigateRef } from "./lib/navigation";
 
 // Lazy load all pages for code splitting
 const LoginPage = lazy(() => import("./pages/LoginPage").then(m => ({ default: m.LoginPage })));
@@ -55,6 +56,12 @@ const PageLoader = () => (
   </div>
 );
 
+function NavigateRefSetter() {
+  const navigate = useNavigate();
+  setNavigateRef(navigate);
+  return null;
+}
+
 function App() {
   const {
     isAuthenticated,
@@ -72,6 +79,9 @@ function App() {
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
   const { consent } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
+
+  // Check if new patient has completed BMI check (via /get-started flow)
+  const hasCompletedBMICheck = () => !!localStorage.getItem('vidacure_pending_bmi');
 
   // Layout wrapper for authenticated routes with sidebar
   const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
@@ -99,7 +109,9 @@ function App() {
             onLogout={handleLogout}
           />
           <div className="flex-1 min-h-0 overflow-y-auto">
-            {children}
+            <div className="max-w-[1440px] mx-auto">
+              {children}
+            </div>
           </div>
         </SidebarInset>
         {/* Global Calendly Popup Modal - Only show if functional cookies accepted */}
@@ -141,6 +153,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <NavigateRefSetter />
       {/* Cookie Consent Banner */}
       <CookieBanner />
       {/* Privacy Policy Consent Modal (GDPR) */}
@@ -161,7 +174,7 @@ function App() {
           }
         />
 
-        {/* Pre-Login BMI Check - Public route for eligibility check */}
+        {/* Pre-Login BMI Check - Public route, also accessible by new patients who skipped BMI */}
         <Route
           path={ROUTES.PRE_LOGIN_BMI}
           element={
@@ -170,8 +183,10 @@ function App() {
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : (
+              ) : hasCompletedBMICheck() ? (
                 <Navigate to={ROUTES.ONBOARDING as string} replace />
+              ) : (
+                <PreLoginBMI />
               )
             ) : (
               <PreLoginBMI />
@@ -179,12 +194,18 @@ function App() {
           }
         />
 
-        {/* Pre-Login Booking - Public route for booking consultation */}
+        {/* Pre-Login Booking - Public route, also accessible by new patients */}
         <Route
           path={ROUTES.PRE_LOGIN_BOOKING}
           element={
             isAuthenticated ? (
-              <Navigate to={ROUTES.DASHBOARD as string} replace />
+              user?.role === "doctor" ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : user?.hasCompletedOnboarding ? (
+                <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : (
+                <PreLoginBooking />
+              )
             ) : (
               <PreLoginBooking />
             )
@@ -200,8 +221,10 @@ function App() {
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : (
+              ) : hasCompletedBMICheck() ? (
                 <Navigate to={ROUTES.ONBOARDING as string} replace />
+              ) : (
+                <Navigate to={ROUTES.PRE_LOGIN_BMI as string} replace />
               )
             ) : (
               <LandingPage />
@@ -221,8 +244,10 @@ function App() {
               <Navigate to={ROUTES.DASHBOARD as string} replace />
             ) : user?.hasCompletedOnboarding ? (
               <Navigate to={ROUTES.DASHBOARD as string} replace />
-            ) : (
+            ) : hasCompletedBMICheck() ? (
               <Navigate to={ROUTES.ONBOARDING as string} replace />
+            ) : (
+              <Navigate to={ROUTES.PRE_LOGIN_BMI as string} replace />
             )
           }
         />
@@ -371,7 +396,7 @@ function App() {
           }
         />
 
-        {/* Onboarding Route - Protected (without sidebar) */}
+        {/* Onboarding Route - Protected, requires BMI check first */}
         <Route
           path={ROUTES.ONBOARDING}
           element={
@@ -380,8 +405,10 @@ function App() {
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : (
+              ) : hasCompletedBMICheck() ? (
                 <OnboardingFlow user={user} />
+              ) : (
+                <Navigate to={ROUTES.PRE_LOGIN_BMI as string} replace />
               )
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />
@@ -422,8 +449,11 @@ function App() {
         {/* About Us Route - Public */}
         <Route path={ROUTES.ABOUT_US} element={<AboutUs />} />
 
-        {/* Privacy Policy Route - Public */}
-        <Route path="/privacy" element={<PrivacyPolicy />} />
+        {/* Privacy Policy Route - Public page, no navbar when authenticated */}
+        <Route
+          path="/privacy"
+          element={<PrivacyPolicy embedded={isAuthenticated} />}
+        />
 
         {/* Article Route - Public */}
         <Route path="/article/:articleId" element={<Article />} />

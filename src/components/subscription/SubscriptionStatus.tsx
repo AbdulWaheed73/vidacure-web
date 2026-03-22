@@ -6,7 +6,7 @@ import { Badge } from '../ui/badge';
 import { PaymentService } from '../../services';
 import type { SubscriptionStatus } from '../../types/payment-types';
 import { CancelSubscriptionDialog } from './CancelSubscriptionDialog';
-import { ChangePlanDialog } from './ChangePlanDialog';
+// import { ChangePlanDialog } from './ChangePlanDialog';
 
 type SubscriptionStatusProps = {
   onStatusChange?: () => void;
@@ -183,7 +183,7 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
           {isActionLoading ? t('account.billing.loading') : t('account.billing.manageBilling')}
         </Button>
 
-        {status.subscriptionStatus === 'active' && !status.subscription?.cancelAtPeriodEnd && status.planType && (
+        {/* {status.subscriptionStatus === 'active' && !status.subscription?.cancelAtPeriodEnd && status.planType && (
           <ChangePlanDialog
             currentPlanType={status.planType}
             onChanged={() => {
@@ -191,7 +191,7 @@ export const SubscriptionStatusComponent: React.FC<SubscriptionStatusProps> = ({
               onStatusChange?.();
             }}
           />
-        )}
+        )} */}
 
         {status.subscriptionStatus === 'active' && !status.subscription?.cancelAtPeriodEnd && (
           <CancelSubscriptionDialog onCancelled={() => {

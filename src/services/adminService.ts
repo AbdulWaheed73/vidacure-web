@@ -393,6 +393,25 @@ export const adminService = {
     return response.data;
   },
 
+  getSubscriptionProducts: async (): Promise<{
+    products: Array<{
+      planType: string;
+      priceId: string;
+      productId: string;
+      productName: string;
+      unitAmount: number | null;
+      currency: string;
+    }>;
+    labTestPackages: Array<{
+      name: string;
+      unitAmount: number;
+      currency: string;
+    }>;
+  }> => {
+    const response = await api.get('/api/admin/subscription-products');
+    return response.data;
+  },
+
   // ============ Calendly Lookup ============
 
   calendlyLookup: async (email: string): Promise<{

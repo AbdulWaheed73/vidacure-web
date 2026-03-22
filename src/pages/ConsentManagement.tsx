@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { ShieldCheck, History, FileText, AlertTriangle, Loader2 } from 'lucide-react';
@@ -61,6 +62,7 @@ export const ConsentManagement: React.FC = () => {
   const [isLoadingStatus, setIsLoadingStatus] = useState(true);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [actionInProgress, setActionInProgress] = useState<ConsentType | null>(null);
+  const [activeTab, setActiveTab] = useState('consents');
   const [error, setError] = useState<string | null>(null);
   const [withdrawTarget, setWithdrawTarget] = useState<ConsentType | null>(null);
 
@@ -96,6 +98,7 @@ export const ConsentManagement: React.FC = () => {
     isFetchingNextPage,
     isLoading: isLoadingAccessLog,
     isError: isAccessLogError,
+    error: accessLogError,
   } = useInfiniteQuery({
     queryKey: ['accessLog'],
     queryFn: ({ pageParam }) => getAccessLog(pageParam, 10),
@@ -149,6 +152,7 @@ export const ConsentManagement: React.FC = () => {
   };
 
   const handleTabChange = (value: string) => {
+    setActiveTab(value);
     if (value === 'history' && history.length === 0) {
       fetchHistory();
     }
@@ -199,7 +203,7 @@ export const ConsentManagement: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="consents" onValueChange={handleTabChange} className="w-full">
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
         <TabsList className="mb-6 bg-[#f0f7f4] rounded-full p-1">
           <TabsTrigger value="consents" className="rounded-full font-sora text-sm data-[state=active]:bg-white data-[state=active]:text-[#005044] data-[state=active]:shadow-sm text-[#b0b0b0]">
             {t('consent.consentsTab')}
@@ -268,6 +272,17 @@ export const ConsentManagement: React.FC = () => {
                     {/* Description */}
                     <p className="text-sm text-[#b0b0b0] font-manrope mb-3">
                       {t(consentTypeToDescriptionKey[type])}
+                      {type === 'privacy_policy' && (
+                        <>
+                          {' '}
+                          <Link
+                            to="/privacy"
+                            className="text-[#005044] underline hover:text-[#003d33] font-medium"
+                          >
+                            {t('consent.viewPrivacyPolicy')}
+                          </Link>
+                        </>
+                      )}
                     </p>
 
                     {/* Bottom row: meta + action */}
@@ -393,10 +408,27 @@ export const ConsentManagement: React.FC = () => {
             </div>
           ) : isAccessLogError ? (
             <div className="bg-white rounded-2xl border border-[#e0e0e0] p-10 md:p-16 text-center">
-              <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
-                <FileText className="size-7 text-red-300" />
-              </div>
-              <p className="text-red-500 font-sora font-semibold">{t('consent.errors.loadFailed')}</p>
+              {accessLogError && 'response' in accessLogError && (accessLogError as any).response?.status === 451 ? (
+                <>
+                  <div className="w-14 h-14 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4">
+                    <AlertTriangle className="size-7 text-amber-400" />
+                  </div>
+                  <p className="text-[#282828] font-sora font-semibold">{t('consent.errors.consentRequiredForAccessLog')}</p>
+                  <button
+                    onClick={() => setActiveTab('consents')}
+                    className="mt-4 bg-[#005044] text-white rounded-full px-6 py-2 font-sora font-semibold text-sm hover:bg-[#003d33] transition-colors"
+                  >
+                    {t('consent.errors.goToConsents')}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
+                    <FileText className="size-7 text-red-300" />
+                  </div>
+                  <p className="text-red-500 font-sora font-semibold">{t('consent.errors.loadFailed')}</p>
+                </>
+              )}
             </div>
           ) : accessLog.length === 0 ? (
             <div className="bg-white rounded-2xl border border-[#e0e0e0] p-10 md:p-16 text-center">

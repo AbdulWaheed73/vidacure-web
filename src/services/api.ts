@@ -2,6 +2,8 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { config } from '../constants';
 import { getClientType } from '../utils';
+import { navigateTo } from '../lib/navigation';
+import i18n from '../i18n';
 
 const clientType = getClientType();
 
@@ -62,12 +64,12 @@ api.interceptors.response.use(
     if (error.response?.status === 451) {
       // Only show the toast once (avoid spamming from multiple parallel 451 responses)
       if (window.location.pathname !== '/consent') {
-        toast.error('Please review and accept the latest consent terms to continue.', {
+        toast.error(i18n.t('consent.errors.toastMessage'), {
           id: 'consent-required',
           duration: 6000,
           action: {
-            label: 'Go to Consent',
-            onClick: () => { window.location.href = '/consent'; },
+            label: i18n.t('consent.errors.toastAction'),
+            onClick: () => { navigateTo('/consent'); },
           },
         });
       }

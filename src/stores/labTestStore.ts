@@ -11,12 +11,15 @@ type LabTestState = {
   isLoadingOrder: boolean;
   isPlacingOrder: boolean;
   isCreatingCheckout: boolean;
+  isSyncing: boolean;
   error: string | null;
+  consentRequired: boolean;
   fetchPackages: () => Promise<void>;
   fetchOrders: (status?: string) => Promise<void>;
   fetchOrderById: (orderId: string) => Promise<void>;
   placeOrder: (testPackageId: string) => Promise<boolean>;
   createCheckoutSession: (testPackageId: string) => Promise<string | null>;
+  syncOrders: () => Promise<{ discovered: number; updated: number } | null>;
   clearError: () => void;
   clearSelectedOrder: () => void;
 };
@@ -30,16 +33,22 @@ export const useLabTestStore = create<LabTestState>((set, get) => ({
   isLoadingOrder: false,
   isPlacingOrder: false,
   isCreatingCheckout: false,
+  isSyncing: false,
   error: null,
+  consentRequired: false,
 
   fetchPackages: async () => {
     set({ isLoadingPackages: true, error: null });
     try {
       const response = await labTestService.getTestPackages();
       set({ packages: response.packages });
-    } catch (error) {
-      console.error('Failed to fetch test packages:', error);
-      set({ error: 'Failed to load test packages' });
+    } catch (error: any) {
+      if (error.response?.status === 451) {
+        set({ consentRequired: true });
+      } else {
+        console.error('Failed to fetch test packages:', error);
+        set({ error: 'Failed to load test packages' });
+      }
     } finally {
       set({ isLoadingPackages: false });
     }
@@ -50,9 +59,13 @@ export const useLabTestStore = create<LabTestState>((set, get) => ({
     try {
       const response = await labTestService.getOrders(status);
       set({ orders: response.orders });
-    } catch (error) {
-      console.error('Failed to fetch orders:', error);
-      set({ error: 'Failed to load orders' });
+    } catch (error: any) {
+      if (error.response?.status === 451) {
+        set({ consentRequired: true });
+      } else {
+        console.error('Failed to fetch orders:', error);
+        set({ error: 'Failed to load orders' });
+      }
     } finally {
       set({ isLoadingOrders: false });
     }
@@ -99,6 +112,21 @@ export const useLabTestStore = create<LabTestState>((set, get) => ({
       return null;
     } finally {
       set({ isCreatingCheckout: false });
+    }
+  },
+
+  syncOrders: async () => {
+    set({ isSyncing: true, error: null });
+    try {
+      const response = await labTestService.syncOrders();
+      set({ orders: response.orders });
+      return { discovered: response.discovered, updated: response.updated };
+    } catch (error) {
+      console.error('Failed to sync orders:', error);
+      set({ error: 'Failed to sync orders from lab' });
+      return null;
+    } finally {
+      set({ isSyncing: false });
     }
   },
 

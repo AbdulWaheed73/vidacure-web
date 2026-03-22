@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   Dialog,
@@ -14,9 +15,13 @@ import { useConsentStore } from '../stores/consentStore';
 
 export const ConsentModal: React.FC = () => {
   const { t } = useTranslation();
+  const location = useLocation();
   const { showConsentModal, currentVersion, acceptConsent } = useConsentStore();
   const [accepted, setAccepted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Don't show consent modal on the privacy policy page
+  if (location.pathname === '/privacy') return null;
 
   const handleAccept = async () => {
     if (!accepted) return;
@@ -51,7 +56,7 @@ export const ConsentModal: React.FC = () => {
           </p>
 
           <a
-            href="/privacy-policy"
+            href="/privacy"
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-teal-600 hover:text-teal-700 underline font-manrope"

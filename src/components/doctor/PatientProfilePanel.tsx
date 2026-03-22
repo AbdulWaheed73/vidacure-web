@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
   Sheet,
@@ -40,17 +41,17 @@ type PatientProfilePanelProps = {
   onOpenChange: (open: boolean) => void;
 };
 
-const chartConfig = {
-  weight: {
-    label: 'Weight',
-    color: 'var(--chart-1)',
-  },
-} satisfies ChartConfig;
-
 // --- Weight Chart Sub-component ---
 
-const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[] }> = ({ weightHistory }) => {
+const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[]; t: (key: string) => string; dateLocale: string }> = ({ weightHistory, t, dateLocale }) => {
   const [timeRange, setTimeRange] = useState('8w');
+
+  const chartConfig = {
+    weight: {
+      label: t('doctorPatients.weight'),
+      color: 'var(--chart-1)',
+    },
+  } satisfies ChartConfig;
 
   const today = new Date();
   let daysToSubtract = 56;
@@ -73,7 +74,7 @@ const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[] }> = ({ weight
       ? Math.round((filteredData[0].weight - filteredData[filteredData.length - 1].weight) * 10) / 10
       : 0;
 
-  const weeksLabel = timeRange === '2w' ? '2 weeks' : timeRange === '4w' ? '4 weeks' : '8 weeks';
+  const weeksLabel = timeRange === '2w' ? t('doctorPatients.2weeks') : timeRange === '4w' ? t('doctorPatients.4weeks') : t('doctorPatients.8weeks');
 
   const weights = filteredData.map((d) => d.weight);
   const minWeight = weights.length > 0 ? Math.floor(Math.min(...weights) - 2) : 90;
@@ -82,8 +83,8 @@ const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[] }> = ({ weight
   if (weightHistory.length === 0) {
     return (
       <div className="bg-white rounded-2xl border border-[#e0e0e0] p-5">
-        <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">Weight progress</h3>
-        <p className="text-[#b0b0b0] text-sm font-manrope text-center py-6">No weight entries yet</p>
+        <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">{t('doctorPatients.weightProgress')}</h3>
+        <p className="text-[#b0b0b0] text-sm font-manrope text-center py-6">{t('doctorPatients.noWeightEntries')}</p>
       </div>
     );
   }
@@ -91,15 +92,15 @@ const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[] }> = ({ weight
   return (
     <div className="bg-white rounded-2xl border border-[#e0e0e0] p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-sora font-semibold text-sm text-[#282828]">Weight progress</h3>
+        <h3 className="font-sora font-semibold text-sm text-[#282828]">{t('doctorPatients.weightProgress')}</h3>
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-[130px] h-8 text-xs rounded-lg">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
-            <SelectItem value="8w" className="rounded-lg text-xs">Last 2 Months</SelectItem>
-            <SelectItem value="4w" className="rounded-lg text-xs">Last 4 Weeks</SelectItem>
-            <SelectItem value="2w" className="rounded-lg text-xs">Last 2 Weeks</SelectItem>
+            <SelectItem value="8w" className="rounded-lg text-xs">{t('doctorPatients.last2Months')}</SelectItem>
+            <SelectItem value="4w" className="rounded-lg text-xs">{t('doctorPatients.last4Weeks')}</SelectItem>
+            <SelectItem value="2w" className="rounded-lg text-xs">{t('doctorPatients.last2Weeks')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -119,7 +120,7 @@ const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[] }> = ({ weight
             tickMargin={6}
             tickFormatter={(value) => {
               const date = new Date(value);
-              return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+              return date.toLocaleDateString(dateLocale, { month: 'short', day: 'numeric' });
             }}
           />
           <YAxis
@@ -134,9 +135,9 @@ const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[] }> = ({ weight
             content={
               <ChartTooltipContent
                 labelFormatter={(value) =>
-                  new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                  new Date(value).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })
                 }
-                formatter={(value) => [`${value} kg`, 'Weight']}
+                formatter={(value) => [`${value} kg`, t('doctorPatients.weight')]}
               />
             }
           />
@@ -153,7 +154,7 @@ const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[] }> = ({ weight
       </ChartContainer>
       <div className="flex items-center text-xs text-teal-600 font-medium mt-1">
         <span>{rangeProgress > 0 ? `-${rangeProgress}` : `+${Math.abs(rangeProgress)}`} kg</span>
-        <span className="ml-1.5 text-gray-500">in the last {weeksLabel}</span>
+        <span className="ml-1.5 text-gray-500">{t('doctorPatients.inTheLast')} {weeksLabel}</span>
       </div>
     </div>
   );
@@ -168,13 +169,13 @@ const statusStyles: Record<string, string> = {
   under_review: 'bg-blue-100 text-blue-800 border-blue-200',
 };
 
-const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry }> = ({ request }) => {
+const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry; t: (key: string) => string; dateLocale: string }> = ({ request, t, dateLocale }) => {
   const style = statusStyles[request.status] ?? 'bg-gray-100 text-gray-800 border-gray-200';
   return (
     <div className="bg-white rounded-xl border border-[#e0e0e0] p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="font-sora font-medium text-sm text-[#282828]">
-          {request.medicationName ?? 'Prescription Request'}
+          {request.medicationName ?? t('doctorPatients.prescriptionRequest')}
         </span>
         <Badge className={`${style} text-[10px] px-2 py-0.5 capitalize`}>
           {request.status.replace('_', ' ')}
@@ -183,21 +184,21 @@ const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry }> = ({ req
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-[#b0b0b0] font-manrope">
         {request.dosage && (
           <>
-            <span>Dosage</span>
+            <span>{t('doctorPatients.dosage')}</span>
             <span className="text-[#282828]">{request.dosage}</span>
           </>
         )}
         {request.currentWeight && (
           <>
-            <span>Weight</span>
+            <span>{t('doctorPatients.weightLabel')}</span>
             <span className="text-[#282828]">{request.currentWeight} kg</span>
           </>
         )}
         {request.createdAt && (
           <>
-            <span>Requested</span>
+            <span>{t('doctorPatients.requested')}</span>
             <span className="text-[#282828]">
-              {new Date(request.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}
+              {new Date(request.createdAt).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })}
             </span>
           </>
         )}
@@ -208,18 +209,19 @@ const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry }> = ({ req
 
 // --- Questionnaire display ---
 
-const QUESTION_GROUPS = [
-  { label: 'Personal Info', ids: ['Q1', 'Q2', 'Q3'] },
-  { label: 'Physical Details', ids: ['Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11'] },
-  { label: 'Health Background', ids: ['Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20', 'Q21'] },
-  { label: 'Medical History', ids: ['Q22', 'Q23', 'Q24', 'Q25'] },
-];
-
-const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean }> = ({
+const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean; t: (key: string) => string }> = ({
   patientId,
   enabled,
+  t,
 }) => {
   const { data, isLoading } = useDoctorPatientQuestionnaire(patientId, enabled);
+
+  const QUESTION_GROUPS = [
+    { label: t('doctorPatients.personalInfo'), ids: ['Q1', 'Q2', 'Q3'] },
+    { label: t('doctorPatients.physicalDetails'), ids: ['Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9', 'Q10', 'Q11'] },
+    { label: t('doctorPatients.healthBackground'), ids: ['Q12', 'Q13', 'Q14', 'Q15', 'Q16', 'Q17', 'Q18', 'Q19', 'Q20', 'Q21'] },
+    { label: t('doctorPatients.medicalHistory'), ids: ['Q22', 'Q23', 'Q24', 'Q25'] },
+  ];
 
   if (isLoading) {
     return (
@@ -237,7 +239,7 @@ const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean }>
   if (answers.length === 0) {
     return (
       <div className="text-center py-10">
-        <p className="text-[#b0b0b0] font-manrope text-sm">No questionnaire data available</p>
+        <p className="text-[#b0b0b0] font-manrope text-sm">{t('doctorPatients.noQuestionnaire')}</p>
       </div>
     );
   }
@@ -256,7 +258,7 @@ const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean }>
               {groupAnswers.map((id) => (
                 <div key={id}>
                   <p className="text-xs text-[#b0b0b0] font-manrope">
-                    {QUESTION_LABELS[id as keyof typeof QUESTION_LABELS] ?? id}
+                    {t(`doctorPatients.questionLabels.${id}`, { defaultValue: QUESTION_LABELS[id as keyof typeof QUESTION_LABELS] ?? id })}
                   </p>
                   <p className="text-sm text-[#282828] font-manrope mt-0.5">
                     {answerMap.get(id) || '—'}
@@ -273,9 +275,11 @@ const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean }>
 
 // --- Lab Tests Tab ---
 
-const LabTestsTab: React.FC<{ patientId: string | null; enabled: boolean }> = ({
+const LabTestsTab: React.FC<{ patientId: string | null; enabled: boolean; t: (key: string) => string; dateLocale: string }> = ({
   patientId,
   enabled,
+  t,
+  dateLocale,
 }) => {
   const { data, isLoading } = useDoctorPatientLabOrders(patientId, enabled);
   const [resultOrder, setResultOrder] = useState<LabTestOrder | null>(null);
@@ -296,7 +300,7 @@ const LabTestsTab: React.FC<{ patientId: string | null; enabled: boolean }> = ({
     return (
       <div className="text-center py-10">
         <FlaskConical className="w-10 h-10 text-[#c0ebe5] mx-auto mb-3" />
-        <p className="text-[#b0b0b0] font-manrope text-sm">No lab test orders yet</p>
+        <p className="text-[#b0b0b0] font-manrope text-sm">{t('doctorPatients.noLabOrders')}</p>
       </div>
     );
   }
@@ -314,9 +318,9 @@ const LabTestsTab: React.FC<{ patientId: string | null; enabled: boolean }> = ({
             </div>
             <div className="flex items-center justify-between">
               <div className="text-xs text-[#b0b0b0] font-manrope space-y-0.5">
-                <p>Ordered: {new Date(order.orderedAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                <p>{t('doctorPatients.ordered')} {new Date(order.orderedAt).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                 {order.completedAt && (
-                  <p>Completed: {new Date(order.completedAt).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                  <p>{t('doctorPatients.completed')} {new Date(order.completedAt).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                 )}
               </div>
               {order.results.length > 0 && (
@@ -326,7 +330,7 @@ const LabTestsTab: React.FC<{ patientId: string | null; enabled: boolean }> = ({
                   className="text-xs"
                   onClick={() => setResultOrder(order)}
                 >
-                  View results
+                  {t('doctorPatients.viewResults')}
                 </Button>
               )}
             </div>
@@ -337,14 +341,14 @@ const LabTestsTab: React.FC<{ patientId: string | null; enabled: boolean }> = ({
       <Dialog open={!!resultOrder} onOpenChange={(open) => !open && setResultOrder(null)}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Lab Results</DialogTitle>
+            <DialogTitle>{t('doctorPatients.labResults')}</DialogTitle>
             <DialogDescription>
               {resultOrder?.testPackage.name}
               {' — '}
-              {resultOrder && new Date(resultOrder.orderedAt).toLocaleDateString()}
+              {resultOrder && new Date(resultOrder.orderedAt).toLocaleDateString(dateLocale)}
             </DialogDescription>
           </DialogHeader>
-          {resultOrder && <LabTestResults results={resultOrder.results} />}
+          {resultOrder && <LabTestResults results={resultOrder.results} labComment={resultOrder.labComment} statusHistory={resultOrder.statusHistory} />}
         </DialogContent>
       </Dialog>
     </>
@@ -359,14 +363,16 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
   onOpenChange,
 }) => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState('overview');
   const { data, isLoading } = useDoctorPatientProfile(patientId);
 
   const profile = data?.patientProfile;
+  const dateLocale = i18n.language === 'sv' ? 'sv-SE' : 'en-US';
 
   const formatDate = (dateStr: string | null): string => {
     if (!dateStr) return '—';
-    return new Date(dateStr).toLocaleDateString([], {
+    return new Date(dateStr).toLocaleDateString(dateLocale, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -381,9 +387,9 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
       >
         <SheetHeader className="p-5 pb-0">
           <SheetTitle className="font-sora font-bold text-lg text-[#282828]">
-            Profile overview
+            {t('doctorPatients.profileOverview')}
           </SheetTitle>
-          <SheetDescription className="sr-only">Patient profile details</SheetDescription>
+          <SheetDescription className="sr-only">{t('doctorPatients.profileDescription')}</SheetDescription>
         </SheetHeader>
 
         <div className="px-5 pt-3">
@@ -393,25 +399,25 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                 value="overview"
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
               >
-                Overview
+                {t('doctorPatients.tabOverview')}
               </TabsTrigger>
               <TabsTrigger
                 value="questionnaire"
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
               >
-                Questionnaire
+                {t('doctorPatients.tabQuestionnaire')}
               </TabsTrigger>
               <TabsTrigger
                 value="lab-tests"
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
               >
-                Lab Tests
+                {t('doctorPatients.tabLabTests')}
               </TabsTrigger>
               <TabsTrigger
                 value="journal"
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
               >
-                Journal
+                {t('doctorPatients.tabJournal')}
               </TabsTrigger>
             </TabsList>
 
@@ -425,29 +431,29 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                 </div>
               ) : !profile ? (
                 <p className="text-[#b0b0b0] text-sm text-center py-8">
-                  Could not load patient profile
+                  {t('doctorPatients.couldNotLoad')}
                 </p>
               ) : (
                 <>
                   {/* Patient Details */}
                   <div className="bg-[#f0f7f4] rounded-2xl p-5">
                     <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">
-                      Patient details
+                      {t('doctorPatients.patientDetails')}
                     </h3>
                     <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm font-manrope">
                       <div>
-                        <p className="text-[#b0b0b0] text-xs">Name</p>
+                        <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.name')}</p>
                         <p className="text-[#282828] font-medium">{profile.name}</p>
                       </div>
                       {profile.height && (
                         <div>
-                          <p className="text-[#b0b0b0] text-xs">Height</p>
+                          <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.height')}</p>
                           <p className="text-[#282828] font-medium">{profile.height} cm</p>
                         </div>
                       )}
                       {profile.bmi && (
                         <div>
-                          <p className="text-[#b0b0b0] text-xs">BMI</p>
+                          <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.bmi')}</p>
                           <p className="text-[#282828] font-medium">{profile.bmi}</p>
                         </div>
                       )}
@@ -455,17 +461,17 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                   </div>
 
                   {/* Weight Progress */}
-                  <WeightChart weightHistory={profile.weightHistory} />
+                  <WeightChart weightHistory={profile.weightHistory} t={t} dateLocale={dateLocale} />
 
                   {/* Prescriptions */}
                   {profile.prescriptionRequests.length > 0 && (
                     <div>
                       <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">
-                        Prescription requests
+                        {t('doctorPatients.prescriptionRequests')}
                       </h3>
                       <div className="space-y-2">
                         {profile.prescriptionRequests.map((req, i) => (
-                          <PrescriptionCard key={req.id ?? i} request={req} />
+                          <PrescriptionCard key={req.id ?? i} request={req} t={t} dateLocale={dateLocale} />
                         ))}
                       </div>
                     </div>
@@ -475,30 +481,30 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                   {profile.prescription && (
                     <div className="bg-[#f0f7f4] rounded-2xl p-5">
                       <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">
-                        Active prescription
+                        {t('doctorPatients.activePrescription')}
                       </h3>
                       <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm font-manrope">
                         {profile.prescription.medicationDetails && (
                           <>
-                            <p className="text-[#b0b0b0] text-xs">Medication</p>
+                            <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.medication')}</p>
                             <p className="text-[#282828] text-xs">{profile.prescription.medicationDetails}</p>
                           </>
                         )}
                         {profile.prescription.status && (
                           <>
-                            <p className="text-[#b0b0b0] text-xs">Status</p>
+                            <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.status')}</p>
                             <p className="text-[#282828] text-xs capitalize">{profile.prescription.status}</p>
                           </>
                         )}
                         {profile.prescription.validFrom && (
                           <>
-                            <p className="text-[#b0b0b0] text-xs">Valid from</p>
+                            <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.validFrom')}</p>
                             <p className="text-[#282828] text-xs">{formatDate(profile.prescription.validFrom)}</p>
                           </>
                         )}
                         {profile.prescription.validTo && (
                           <>
-                            <p className="text-[#b0b0b0] text-xs">Valid to</p>
+                            <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.validTo')}</p>
                             <p className="text-[#282828] text-xs">{formatDate(profile.prescription.validTo)}</p>
                           </>
                         )}
@@ -515,7 +521,7 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                     className="w-full bg-[#005044] text-white rounded-xl px-6 py-3 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors flex items-center justify-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    Send message
+                    {t('doctorPatients.sendMessage')}
                   </button>
                 </>
               )}
@@ -526,6 +532,7 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
               <QuestionnaireTab
                 patientId={patientId}
                 enabled={activeTab === 'questionnaire'}
+                t={t}
               />
             </TabsContent>
 
@@ -534,6 +541,8 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
               <LabTestsTab
                 patientId={patientId}
                 enabled={activeTab === 'lab-tests'}
+                t={t}
+                dateLocale={dateLocale}
               />
             </TabsContent>
 

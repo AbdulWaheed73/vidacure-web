@@ -1,20 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ROUTES } from "@/constants";
 import { Button } from "@/components/onboarding";
 import { pendingSessionService } from "@/services/pendingSessionService";
 import { useCookieConsentStore } from "@/stores/cookieConsentStore";
+import { useAuthStore } from "@/stores/authStore";
 import { PopupModal } from "react-calendly";
 import { ArrowLeft, Calendar, CheckCircle, AlertCircle } from "lucide-react";
-
-// Calendly URL for free consultations (update this with your actual Calendly link)
-const CALENDLY_FREE_CONSULTATION_URL = "https://calendly.com/mesudh044/meeting-for-paid-users";
+import { CALENDLY_FREE_CONSULTATION_URL } from "@/constants";
 
 const PreLoginBooking = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
   const { consent, openPreferences } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
+  const isAuthenticated = useAuthStore((s) => !!s.user);
 
   const [token, setToken] = useState<string | null>(null);
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
@@ -31,18 +33,14 @@ const PreLoginBooking = () => {
     } else if (storedToken) {
       setToken(storedToken);
     } else {
-      // No token found - redirect to BMI check
-      setError("Session expired. Please start over.");
+      setError(t('preLoginBooking.sessionExpiredMessage'));
     }
-  }, [location.state]);
+  }, [location.state, t]);
 
   // Listen for Calendly events
   useEffect(() => {
     const handleCalendlyEvent = (e: MessageEvent) => {
       if (e.data?.event === "calendly.event_scheduled") {
-        console.log("Calendly booking completed:", e.data);
-
-        // Store booking info in localStorage as backup
         const bookingData = {
           eventUri: e.data.payload?.event?.uri,
           inviteeUri: e.data.payload?.invitee?.uri,
@@ -69,7 +67,11 @@ const PreLoginBooking = () => {
   };
 
   const handleProceedToLogin = () => {
-    navigate(ROUTES.LOGIN);
+    if (isAuthenticated) {
+      navigate(ROUTES.ONBOARDING);
+    } else {
+      navigate(ROUTES.LOGIN);
+    }
   };
 
   const handleStartOver = () => {
@@ -77,7 +79,6 @@ const PreLoginBooking = () => {
     navigate(ROUTES.PRE_LOGIN_BMI);
   };
 
-  // Calendly URL (UTM params passed via utm prop, not URL)
   const calendlyUrl = CALENDLY_FREE_CONSULTATION_URL;
 
   if (error) {
@@ -89,13 +90,13 @@ const PreLoginBooking = () => {
         <div className="bg-white rounded-[24px] shadow-xl max-w-[500px] w-full p-8 text-center">
           <AlertCircle className="w-16 h-16 text-amber-500 mx-auto mb-4" />
           <h1 className="font-sora font-bold text-[24px] text-[#282828] mb-4">
-            Session Expired
+            {t('preLoginBooking.sessionExpired')}
           </h1>
           <p className="font-manrope text-[16px] text-[#666] mb-6">
             {error}
           </p>
           <Button onClick={handleStartOver} className="w-full">
-            Start Over
+            {t('preLoginBooking.startOver')}
           </Button>
         </div>
       </div>
@@ -114,7 +115,7 @@ const PreLoginBooking = () => {
           className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
-          <span className="font-manrope">Back</span>
+          <span className="font-manrope">{t('preLoginBooking.back')}</span>
         </Link>
       </div>
 
@@ -129,11 +130,10 @@ const PreLoginBooking = () => {
 
               <div className="text-center space-y-4">
                 <h1 className="font-sora font-bold text-[32px] sm:text-[40px] text-[#282828] leading-[1.2]">
-                  Book Your Consultation
+                  {t('preLoginBooking.title')}
                 </h1>
                 <p className="font-manrope text-[16px] text-[#666] leading-[1.6] max-w-[450px]">
-                  You're eligible for our medical weight management program!
-                  Book a free consultation with one of our doctors to get started.
+                  {t('preLoginBooking.description')}
                 </p>
               </div>
 
@@ -141,7 +141,7 @@ const PreLoginBooking = () => {
                 {!hasFunctionalConsent && (
                   <div className="rounded-[12px] p-4 bg-amber-50 border border-amber-200 text-center">
                     <p className="font-manrope text-[14px] text-amber-700">
-                      Cookie consent is required to use the booking system.
+                      {t('preLoginBooking.cookieRequired')}
                     </p>
                   </div>
                 )}
@@ -150,25 +150,26 @@ const PreLoginBooking = () => {
                   onClick={handleOpenCalendly}
                   className="w-full"
                 >
-                  {hasFunctionalConsent ? "Choose a Time" : "Enable Cookies to Book"}
+                  {hasFunctionalConsent ? t('preLoginBooking.chooseTime') : t('preLoginBooking.enableCookies')}
                 </Button>
               </div>
 
-              <div className="text-center space-y-2">
-                <p className="font-manrope text-[14px] text-[#666]">
-                  Already have an account?
-                </p>
-                <Link
-                  to={ROUTES.LOGIN}
-                  className="font-manrope text-[14px] text-teal-700 hover:text-teal-800 font-medium underline"
-                >
-                  Login here
-                </Link>
-              </div>
+              {!isAuthenticated && (
+                <div className="text-center space-y-2">
+                  <p className="font-manrope text-[14px] text-[#666]">
+                    {t('preLoginBooking.alreadyAccount')}
+                  </p>
+                  <Link
+                    to={ROUTES.LOGIN}
+                    className="font-manrope text-[14px] text-teal-700 hover:text-teal-800 font-medium underline"
+                  >
+                    {t('preLoginBooking.loginHere')}
+                  </Link>
+                </div>
+              )}
 
               <p className="font-manrope text-[12px] text-[#999] text-center max-w-[400px] leading-[1.5]">
-                The consultation is free and takes about 15 minutes.
-                Our doctors will discuss your health goals and recommend a personalized treatment plan.
+                {t('preLoginBooking.infoText')}
               </p>
             </div>
           ) : (
@@ -180,33 +181,35 @@ const PreLoginBooking = () => {
 
               <div className="text-center space-y-4">
                 <h1 className="font-sora font-bold text-[32px] sm:text-[40px] text-[#282828] leading-[1.2]">
-                  Booking Confirmed!
+                  {t('preLoginBooking.confirmedTitle')}
                 </h1>
                 <p className="font-manrope text-[16px] text-[#666] leading-[1.6] max-w-[450px]">
-                  Your consultation has been scheduled. You'll receive a confirmation email shortly.
+                  {t('preLoginBooking.confirmedDescription')}
                 </p>
               </div>
 
               <div className="w-full max-w-[400px] rounded-[16px] p-6 bg-teal-50 border border-teal-200">
                 <h3 className="font-sora font-semibold text-[18px] text-teal-800 mb-3">
-                  Next Steps:
+                  {t('preLoginBooking.nextSteps')}
                 </h3>
                 <ol className="space-y-2 text-left">
+                  {!isAuthenticated && (
+                    <li className="font-manrope text-[14px] text-teal-700 flex gap-2">
+                      <span className="font-bold">1.</span>
+                      <span>{t('preLoginBooking.stepLogin')}</span>
+                    </li>
+                  )}
                   <li className="font-manrope text-[14px] text-teal-700 flex gap-2">
-                    <span className="font-bold">1.</span>
-                    <span>Login with BankID to create your account</span>
+                    <span className="font-bold">{isAuthenticated ? '1.' : '2.'}</span>
+                    <span>{t('preLoginBooking.stepQuestionnaire')}</span>
                   </li>
                   <li className="font-manrope text-[14px] text-teal-700 flex gap-2">
-                    <span className="font-bold">2.</span>
-                    <span>Complete your health questionnaire</span>
+                    <span className="font-bold">{isAuthenticated ? '2.' : '3.'}</span>
+                    <span>{t('preLoginBooking.stepConsultation')}</span>
                   </li>
                   <li className="font-manrope text-[14px] text-teal-700 flex gap-2">
-                    <span className="font-bold">3.</span>
-                    <span>Attend your scheduled consultation</span>
-                  </li>
-                  <li className="font-manrope text-[14px] text-teal-700 flex gap-2">
-                    <span className="font-bold">4.</span>
-                    <span>Choose a subscription plan after your consultation</span>
+                    <span className="font-bold">{isAuthenticated ? '3.' : '4.'}</span>
+                    <span>{t('preLoginBooking.stepSubscription')}</span>
                   </li>
                 </ol>
               </div>
@@ -215,12 +218,14 @@ const PreLoginBooking = () => {
                 onClick={handleProceedToLogin}
                 className="w-full max-w-[400px]"
               >
-                Continue to Login
+                {isAuthenticated ? t('preLoginBooking.continueToOnboarding') : t('preLoginBooking.continueToLogin')}
               </Button>
 
-              <p className="font-manrope text-[12px] text-[#999] text-center max-w-[400px] leading-[1.5]">
-                Make sure to login with the same BankID to link your booking automatically.
-              </p>
+              {!isAuthenticated && (
+                <p className="font-manrope text-[12px] text-[#999] text-center max-w-[400px] leading-[1.5]">
+                  {t('preLoginBooking.bankIdReminder')}
+                </p>
+              )}
             </div>
           )}
         </div>

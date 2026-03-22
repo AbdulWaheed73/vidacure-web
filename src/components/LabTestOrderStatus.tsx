@@ -1,6 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Badge } from './ui/badge';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './ui/tooltip';
 import type { LabTestOrderStatusType } from '../types/lab-test-types';
 
 type LabTestOrderStatusProps = {
@@ -38,12 +44,25 @@ const getStatusStyle = (status: LabTestOrderStatusType): string => {
 export const LabTestOrderStatusBadge: React.FC<LabTestOrderStatusProps> = ({ status }) => {
   const { t } = useTranslation();
 
+  const tooltip = t(`labTests.statusTooltip.${status}`, '');
+
   return (
-    <Badge
-      variant="outline"
-      className={getStatusStyle(status)}
-    >
-      {t(`labTests.status.${status}`, status)}
-    </Badge>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Badge
+            variant="outline"
+            className={`${getStatusStyle(status)} cursor-help`}
+          >
+            {t(`labTests.status.${status}`, status)}
+          </Badge>
+        </TooltipTrigger>
+        {tooltip && (
+          <TooltipContent className="max-w-xs text-sm">
+            <p>{tooltip}</p>
+          </TooltipContent>
+        )}
+      </Tooltip>
+    </TooltipProvider>
   );
 };

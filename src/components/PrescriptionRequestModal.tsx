@@ -89,23 +89,25 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] rounded-2xl">
         <DialogHeader>
-          <DialogTitle>{t('prescriptions.requestModal.title')}</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-xl font-sora text-[#005044]">{t('prescriptions.requestModal.title')}</DialogTitle>
+          <DialogDescription className="font-manrope text-gray-500">
             {t('prescriptions.requestModal.description')}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+            <div className="text-sm text-red-700 bg-red-50 border border-red-200 p-3 rounded-xl font-manrope">
               {error}
             </div>
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="weight">{t('prescriptions.requestModal.weightLabel')}</Label>
+            <Label htmlFor="weight" className="text-sm font-medium font-manrope text-[#005044]">
+              {t('prescriptions.requestModal.weightLabel')}
+            </Label>
             <Input
               id="weight"
               type="number"
@@ -114,19 +116,23 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
               value={currentWeight}
               onChange={(e) => setCurrentWeight(e.target.value)}
               disabled={loading}
+              className="rounded-xl border-gray-200 focus:border-teal-500 focus:ring-teal-500"
             />
           </div>
 
           <div className="space-y-3">
-            <Label>{t('prescriptions.requestModal.sideEffectsLabel')}</Label>
+            <Label className="text-sm font-medium font-manrope text-[#005044]">
+              {t('prescriptions.requestModal.sideEffectsLabel')}
+            </Label>
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="sideEffects"
                 checked={hasSideEffects}
                 onCheckedChange={(checked) => setHasSideEffects(checked === true)}
                 disabled={loading}
+                className="data-[state=checked]:bg-teal-600 data-[state=checked]:border-teal-600"
               />
-              <Label htmlFor="sideEffects" className="text-sm font-normal">
+              <Label htmlFor="sideEffects" className="text-sm font-normal font-manrope text-gray-600">
                 {t('prescriptions.requestModal.sideEffectsQuestion')}
               </Label>
             </div>
@@ -134,7 +140,9 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
 
           {hasSideEffects && (
             <div className="space-y-2">
-              <Label htmlFor="description">{t('prescriptions.requestModal.sideEffectsDescLabel')}</Label>
+              <Label htmlFor="description" className="text-sm font-medium font-manrope text-[#005044]">
+                {t('prescriptions.requestModal.sideEffectsDescLabel')}
+              </Label>
               <Textarea
                 id="description"
                 placeholder={t('prescriptions.requestModal.sideEffectsPlaceholder')}
@@ -142,20 +150,26 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
                 onChange={(e) => setSideEffectsDescription(e.target.value)}
                 disabled={loading}
                 rows={4}
+                className="rounded-xl border-gray-200 focus:border-teal-500 focus:ring-teal-500"
               />
             </div>
           )}
 
-          <DialogFooter>
+          <DialogFooter className="gap-2 pt-2">
             <Button
               type="button"
               variant="outline"
               onClick={handleClose}
               disabled={loading}
+              className="rounded-full font-sora font-semibold border-gray-300 text-gray-600 hover:bg-gray-50"
             >
               {t('prescriptions.requestModal.cancel')}
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="rounded-full font-sora font-semibold bg-teal-600 hover:bg-teal-700 text-white"
+            >
               {loading ? t('prescriptions.requestModal.submitting') : t('prescriptions.requestModal.submit')}
             </Button>
           </DialogFooter>

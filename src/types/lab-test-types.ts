@@ -108,6 +108,7 @@ export type LabTestOrder = {
   stripePaymentIntentId?: string;
   statusHistory: LabTestStatusHistoryEntry[];
   results: LabTestResult[];
+  labComment?: string;
   orderedAt: string;
   completedAt?: string;
   createdAt: string;
@@ -137,4 +138,11 @@ export type GetLabTestOrdersResponse = {
 export type GetLabTestOrderResponse = {
   success: boolean;
   order: LabTestOrder;
+};
+
+export type SyncLabTestOrdersResponse = {
+  success: boolean;
+  orders: LabTestOrder[];
+  discovered: number;
+  updated: number;
 };

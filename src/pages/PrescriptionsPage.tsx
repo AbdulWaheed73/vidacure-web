@@ -251,15 +251,15 @@ export const PrescriptionsPage: React.FC = () => {
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
               <ShieldAlert className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-              <h2 className="text-xl font-bold text-gray-800 mb-2 font-manrope">Consent Required</h2>
+              <h2 className="text-xl font-bold text-gray-800 mb-2 font-manrope">{t('consent.errors.consentRequiredTitle')}</h2>
               <p className="text-gray-500 mb-6 text-sm">
-                Please accept the latest consent terms to access your prescriptions.
+                {t('consent.errors.consentRequiredPrescriptions')}
               </p>
               <Button
                 onClick={() => navigate(ROUTES.PATIENT_CONSENT)}
                 className="bg-amber-500 hover:bg-amber-600 text-white"
               >
-                Review Consent
+                {t('consent.errors.reviewConsent')}
               </Button>
             </div>
           </div>

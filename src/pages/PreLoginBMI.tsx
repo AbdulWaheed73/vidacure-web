@@ -5,11 +5,13 @@ import { ROUTES } from "@/constants";
 import { Button } from "@/components/onboarding";
 import { NumericInput, FormField } from "@/components/onboarding";
 import { pendingSessionService } from "@/services/pendingSessionService";
+import { useAuthStore } from "@/stores/authStore";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
 const PreLoginBMI = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const isAuthenticated = useAuthStore((s) => !!s.user);
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [bmi, setBmi] = useState<number | null>(null);
@@ -228,11 +230,18 @@ const PreLoginBMI = () => {
                     )}
                   </Button>
                 ) : (
-                  <Link to={ROUTES.HOME}>
-                    <Button variant="outline" className="w-full">
-                      {t('preLoginBMI.buttons.returnHome')}
-                    </Button>
-                  </Link>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      if (isAuthenticated) {
+                        useAuthStore.getState().logout();
+                      }
+                      navigate(ROUTES.HOME);
+                    }}
+                  >
+                    {t('preLoginBMI.buttons.returnHome')}
+                  </Button>
                 )}
               </div>
             )}
@@ -241,6 +250,16 @@ const PreLoginBMI = () => {
             <p className="font-manrope text-[12px] text-[#999] text-center max-w-[400px] leading-[1.5]">
               {t('preLoginBMI.infoText')}
             </p>
+
+            {/* Returning patient link — hide if already authenticated */}
+            {!isAuthenticated && (
+              <Link
+                to={ROUTES.LOGIN}
+                className="font-manrope text-[13px] text-[#005044] underline hover:text-[#003d33] transition-colors"
+              >
+                {t('preLoginBMI.alreadyPatient', 'Already a patient? Log in directly')}
+              </Link>
+            )}
           </div>
         </div>
       </div>

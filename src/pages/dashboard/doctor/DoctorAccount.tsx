@@ -7,6 +7,7 @@ import { exportMyData, downloadDataAsFile } from '@/services/dataExportService';
 import { ProfileCard } from '@/components/account/ProfileCard';
 import { DataPrivacyCard } from '@/components/account/DataPrivacyCard';
 import { AccountActionsCard } from '@/components/account/AccountActionsCard';
+import { LanguageCard } from '@/components/account/LanguageCard';
 
 const DoctorAccount: React.FC = () => {
   const { t } = useTranslation();
@@ -76,6 +77,8 @@ const DoctorAccount: React.FC = () => {
           onExportData={handleExportData}
           isExporting={isExporting}
         />
+
+        <LanguageCard />
 
         <AccountActionsCard onLogout={logout} userType="doctor" />
       </div>

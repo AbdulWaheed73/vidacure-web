@@ -201,7 +201,7 @@ const DoctorLabResults: React.FC = () => {
               {resultOrder && new Date(resultOrder.orderedAt).toLocaleDateString()}
             </DialogDescription>
           </DialogHeader>
-          {resultOrder && <LabTestResults results={resultOrder.results} />}
+          {resultOrder && <LabTestResults results={resultOrder.results} labComment={resultOrder.labComment} statusHistory={resultOrder.statusHistory} />}
         </DialogContent>
       </Dialog>
     </div>

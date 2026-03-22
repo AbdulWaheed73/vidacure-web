@@ -39,7 +39,7 @@ export const PromoBanner: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="mb-6 overflow-hidden rounded-xl">
+    <div className="mb-0 overflow-hidden rounded-xl max-w-[1440px] mx-auto">
       <Marquee pauseOnHover repeat={3}>
         {/* Blood Test Card (light) */}
         <div className="min-w-[320px] md:min-w-[380px] bg-white rounded-xl shadow-sm border-l-4 border-[#00A38A] p-4 flex items-center gap-4">
