@@ -209,11 +209,11 @@ const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry; t: (key: s
 
 // --- Questionnaire display ---
 
-const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean; t: (key: string) => string }> = ({
+const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean }> = ({
   patientId,
   enabled,
-  t,
 }) => {
+  const { t } = useTranslation();
   const { data, isLoading } = useDoctorPatientQuestionnaire(patientId, enabled);
 
   const QUESTION_GROUPS = [
@@ -258,7 +258,7 @@ const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean; t
               {groupAnswers.map((id) => (
                 <div key={id}>
                   <p className="text-xs text-[#b0b0b0] font-manrope">
-                    {t(`doctorPatients.questionLabels.${id}`, { defaultValue: QUESTION_LABELS[id as keyof typeof QUESTION_LABELS] ?? id })}
+                    {t([`doctorPatients.questionLabels.${id}`, QUESTION_LABELS[id as keyof typeof QUESTION_LABELS] ?? id])}
                   </p>
                   <p className="text-sm text-[#282828] font-manrope mt-0.5">
                     {answerMap.get(id) || '—'}
@@ -532,7 +532,6 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
               <QuestionnaireTab
                 patientId={patientId}
                 enabled={activeTab === 'questionnaire'}
-                t={t}
               />
             </TabsContent>
 
