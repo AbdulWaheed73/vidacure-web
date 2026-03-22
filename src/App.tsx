@@ -80,9 +80,6 @@ function App() {
   const { consent } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
 
-  // Check if new patient has completed BMI check (via /get-started flow)
-  const hasCompletedBMICheck = () => !!localStorage.getItem('vidacure_pending_bmi');
-
   // Layout wrapper for authenticated routes with sidebar
   const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
     const navigate = useNavigate();
@@ -174,38 +171,26 @@ function App() {
           }
         />
 
-        {/* Pre-Login BMI Check - Public route, also accessible by new patients who skipped BMI */}
+        {/* Pre-Login BMI Check - Public route only. Authenticated users are always sent to dashboard. */}
         <Route
           path={ROUTES.PRE_LOGIN_BMI}
           element={
             isAuthenticated ? (
-              user?.role === "doctor" ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : user?.hasCompletedOnboarding ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : hasCompletedBMICheck() ? (
-                <Navigate to={ROUTES.ONBOARDING as string} replace />
-              ) : (
-                <PreLoginBMI />
-              )
+              // Authenticated users never see the BMI checker — only accessible via "Get Started"
+              <Navigate to={ROUTES.DASHBOARD as string} replace />
             ) : (
               <PreLoginBMI />
             )
           }
         />
 
-        {/* Pre-Login Booking - Public route, also accessible by new patients */}
+        {/* Pre-Login Booking - Public route only. Authenticated users are always sent to dashboard. */}
         <Route
           path={ROUTES.PRE_LOGIN_BOOKING}
           element={
             isAuthenticated ? (
-              user?.role === "doctor" ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : user?.hasCompletedOnboarding ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : (
-                <PreLoginBooking />
-              )
+              // Authenticated users never see the booking form — only accessible via "Get Started"
+              <Navigate to={ROUTES.DASHBOARD as string} replace />
             ) : (
               <PreLoginBooking />
             )
@@ -217,14 +202,10 @@ function App() {
           path={ROUTES.HOME}
           element={
             isAuthenticated ? (
-              user?.role === "doctor" ? (
+              user?.role === "doctor" || user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : user?.hasCompletedOnboarding ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : hasCompletedBMICheck() ? (
-                <Navigate to={ROUTES.ONBOARDING as string} replace />
               ) : (
-                <Navigate to={ROUTES.PRE_LOGIN_BMI as string} replace />
+                <Navigate to={ROUTES.ONBOARDING as string} replace />
               )
             ) : (
               <LandingPage />
@@ -240,14 +221,10 @@ function App() {
               <LoginPage onLogin={login} loading={loading} />
             ) : !isAuthenticated ? (
               <LoginPage onLogin={login} loading={loading} />
-            ) : user?.role === "doctor" ? (
+            ) : user?.role === "doctor" || user?.hasCompletedOnboarding ? (
               <Navigate to={ROUTES.DASHBOARD as string} replace />
-            ) : user?.hasCompletedOnboarding ? (
-              <Navigate to={ROUTES.DASHBOARD as string} replace />
-            ) : hasCompletedBMICheck() ? (
-              <Navigate to={ROUTES.ONBOARDING as string} replace />
             ) : (
-              <Navigate to={ROUTES.PRE_LOGIN_BMI as string} replace />
+              <Navigate to={ROUTES.ONBOARDING as string} replace />
             )
           }
         />
@@ -396,7 +373,7 @@ function App() {
           }
         />
 
-        {/* Onboarding Route - Protected, requires BMI check first */}
+        {/* Onboarding Route - Protected. No BMI localStorage gate for authenticated users. */}
         <Route
           path={ROUTES.ONBOARDING}
           element={
@@ -405,10 +382,8 @@ function App() {
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : hasCompletedBMICheck() ? (
-                <OnboardingFlow user={user} />
               ) : (
-                <Navigate to={ROUTES.PRE_LOGIN_BMI as string} replace />
+                <OnboardingFlow user={user} />
               )
             ) : (
               <Navigate to={ROUTES.LOGIN} replace />
