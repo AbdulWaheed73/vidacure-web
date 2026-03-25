@@ -94,7 +94,7 @@ const DoctorLabResults: React.FC = () => {
           {/* Patient List */}
           <div className="lg:col-span-1">
             <h2 className="text-lg font-semibold text-gray-800 mb-3 font-manrope">
-              Patients
+              {t('doctorMeetings.patient')}
             </h2>
             {loadingPatients ? (
               <div className="space-y-2">

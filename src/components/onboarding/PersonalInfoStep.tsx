@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { FormField } from "./FormField";
 import { Input } from "./Input";
 import { DatePicker } from "./DatePicker";
@@ -6,6 +7,7 @@ import { RadioGroup, RadioItem } from "./RadioGroup";
 import { OnboardingContext, type PersonalInfo } from "./types";
 
 export const PersonalInfoStep = () => {
+  const { t } = useTranslation();
   const context = useContext(OnboardingContext);
   if (!context) return null;
 
@@ -13,25 +15,23 @@ export const PersonalInfoStep = () => {
   const { personalInfo } = data;
 
   const handleChange = (field: keyof PersonalInfo, value: string) => {
-    // Prevent changing fullName if it comes from BankID
     if (field === "fullName" && user?.name && personalInfo.fullName === user.name) {
       return;
     }
     updateData("personalInfo", { ...personalInfo, [field]: value });
   };
 
-  // Check if the name comes from BankID (readonly)
   const isNameFromBankID = user?.name && personalInfo.fullName === user.name;
 
   return (
     <div className="flex flex-col gap-5 sm:gap-8 w-full">
-      <FormField 
-        label="Full Name" 
+      <FormField
+        label={t('onboarding.personalInfo.fullName')}
         required
-        helperText={isNameFromBankID ? "Verified with BankID" : undefined}
+        helperText={isNameFromBankID ? t('onboarding.personalInfo.verifiedWithBankID') : undefined}
       >
         <Input
-          placeholder="Thomas Kosmala"
+          placeholder={t('onboarding.personalInfo.fullNamePlaceholder')}
           value={personalInfo.fullName}
           onChange={(e) => handleChange("fullName", e.target.value)}
           readOnly={!!isNameFromBankID}
@@ -40,9 +40,9 @@ export const PersonalInfoStep = () => {
       </FormField>
 
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-        <FormField label="Date of birth" required className="flex-1">
+        <FormField label={t('onboarding.personalInfo.dateOfBirth')} required className="flex-1">
           <DatePicker
-            placeholder="Select your date of birth"
+            placeholder={t('onboarding.personalInfo.dateOfBirthPlaceholder')}
             value={personalInfo.dateOfBirth}
             onChange={(date) => handleChange("dateOfBirth", date)}
             maxDate={new Date()}
@@ -50,7 +50,7 @@ export const PersonalInfoStep = () => {
           />
         </FormField>
 
-        <FormField label="Gender" required className="flex-1">
+        <FormField label={t('onboarding.personalInfo.gender')} required className="flex-1">
           <div className="p-3 sm:p-4 border border-[#b0b0b0] rounded-[12px]">
             <RadioGroup
               value={personalInfo.gender}
@@ -62,7 +62,7 @@ export const PersonalInfoStep = () => {
                 checked={personalInfo.gender === "male"}
                 onChange={(value) => handleChange("gender", value)}
               >
-                Male
+                {t('onboarding.personalInfo.male')}
               </RadioItem>
               <RadioItem
                 value="female"
@@ -70,17 +70,17 @@ export const PersonalInfoStep = () => {
                 checked={personalInfo.gender === "female"}
                 onChange={(value) => handleChange("gender", value)}
               >
-                Female
+                {t('onboarding.personalInfo.female')}
               </RadioItem>
             </RadioGroup>
           </div>
         </FormField>
       </div>
 
-      <FormField label="Email" required>
+      <FormField label={t('onboarding.personalInfo.email')} required>
         <Input
           type="email"
-          placeholder="your.email@example.com"
+          placeholder={t('onboarding.personalInfo.emailPlaceholder')}
           value={personalInfo.email}
           onChange={(e) => handleChange("email", e.target.value)}
         />

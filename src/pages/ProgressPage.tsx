@@ -362,7 +362,7 @@ export const ProgressPage: React.FC = () => {
                       required
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
-                      Kg
+                      {t('common.kg')}
                     </span>
                   </div>
                 </div>

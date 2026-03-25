@@ -85,13 +85,13 @@ export default function Article() {
     return (
       <div className="min-h-screen bg-[#E6F9F6] flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-3xl font-bold font-sora text-zinc-800 mb-4">Article Not Found</h1>
+          <h1 className="text-3xl font-bold font-sora text-zinc-800 mb-4">{t('notFound.title')}</h1>
           <Link
             to={ROUTES.HOME}
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-teal-600 text-white rounded-full hover:bg-teal-700 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Go Back Home
+            {t('notFound.goBack')}
           </Link>
         </div>
       </div>

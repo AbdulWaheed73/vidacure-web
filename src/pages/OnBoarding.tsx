@@ -16,6 +16,7 @@ import {
   type MedicalHistory,
 } from "@/components/onboarding";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ROUTES } from "@/constants";
 import type { User } from "@/types";
 import {
@@ -34,6 +35,7 @@ import { saveHeightEmail, submitQuestionnaire } from "@/services/questionnaire";
 // Main Onboarding Flow Component
 const OnboardingFlow = ({ user }: { user: User | null }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(0);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showErrors, setShowErrors] = useState(false);
@@ -189,6 +191,10 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
 
       // alert(`Questionnaire submitted successfully! Thank you for completing your health assessment.`);
 
+      // Clean up pre-login localStorage data
+      localStorage.removeItem('vidacure_pending_bmi');
+      localStorage.removeItem('vidacure_pending_calendly_booking');
+
       // Navigate to booking page after completing onboarding
       navigate(ROUTES.PATIENT_APPOINTMENTS);
 
@@ -231,7 +237,7 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
       case 2:
       case 3:
       case 4:
-        return "Get Started";
+        return t('onboarding.getStarted');
       default:
         return "";
     }
@@ -262,7 +268,7 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
                 {isLoading ? (
                   <div className="flex items-center justify-center py-12">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00a38a]"></div>
-                    <span className="ml-3 text-[#282828]">Loading...</span>
+                    <span className="ml-3 text-[#282828]">{t('onboarding.loading')}</span>
                   </div>
                 ) : (
                   renderStep()
@@ -273,7 +279,7 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
               {showErrors && validationErrors.length > 0 && (
                 <div className="bg-red-50 border border-red-200 rounded-[12px] p-4">
                   <h3 className="font-sora font-semibold text-red-800 mb-2">
-                    Please complete the following required fields:
+                    {t('onboarding.validationHeader')}
                   </h3>
                   <ul className="list-disc list-inside space-y-1">
                     {validationErrors.map((error, index) => (
@@ -293,7 +299,7 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
                   <div className="flex items-center justify-between">
                     {currentStep > 1 ? (
                       <Button variant="outline" onClick={handleBack} className={isLoading ? "opacity-50 cursor-not-allowed" : ""}>
-                        ← Back
+                        {t('onboarding.back')}
                       </Button>
                     ) : (
                       <div />
@@ -308,10 +314,10 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
                         {isLoading ? (
                           <>
                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                            {currentStep === 4 ? "Submitting..." : "Loading..."}
+                            {currentStep === 4 ? t('onboarding.submitting') : t('onboarding.loading')}
                           </>
                         ) : (
-                          currentStep === 4 ? "Complete" : "Next"
+                          currentStep === 4 ? t('onboarding.complete') : t('onboarding.next')
                         )}
                       </Button>
                     </div>

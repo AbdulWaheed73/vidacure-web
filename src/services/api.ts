@@ -53,9 +53,15 @@ api.interceptors.response.use(
         useAuthStore.getState().logout();
       });
 
-      // Redirect to login page (only if not already there or on admin routes)
-      const isAdminRoute = window.location.pathname.startsWith('/admin');
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/' && !isAdminRoute) {
+      // Only redirect to login for protected routes — public pages handle 401 gracefully
+      const protectedPrefixes = [
+        '/dashboard', '/appointments', '/prescriptions', '/lab-tests',
+        '/chat', '/progress', '/consent', '/account', '/specialists',
+        '/resources', '/subscribe', '/onboarding',
+      ];
+      const currentPath = window.location.pathname;
+      const isProtectedRoute = protectedPrefixes.some(prefix => currentPath.startsWith(prefix));
+      if (isProtectedRoute) {
         window.location.href = '/login';
       }
     }

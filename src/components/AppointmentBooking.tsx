@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Calendar, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { PopupModal } from 'react-calendly';
 import { Button } from '@/components/ui/Button';
@@ -15,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { calendlyService } from '@/services/calendlyService';
 import type { EventTypeOption } from '@/types/calendly-types';
 import { useCookieConsentStore } from '@/stores/cookieConsentStore';
+
 type AppointmentBookingProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -26,7 +28,7 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   onClose,
   onSuccess
 }) => {
-
+  const { t } = useTranslation();
   const [availableEventType, setAvailableEventType] = useState<EventTypeOption | null>(null);
   const [subscription, setSubscription] = useState<{planType: string | null, status: string | null} | null>(null);
   const [isLoadingTypes, setIsLoadingTypes] = useState(false);
@@ -38,9 +40,6 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
   const { consent, openPreferences } = useCookieConsentStore();
   const hasFunctionalConsent = consent?.functional ?? false;
 
-
-  // Strip utm_term from scheduling URL to prevent duplication by react-calendly
-  // react-calendly merges existing URL query params with the utm prop, causing arrays
   const { cleanSchedulingUrl, utmTerm } = useMemo(() => {
     if (!schedulingLink) return { cleanSchedulingUrl: '', utmTerm: undefined };
     try {
@@ -53,7 +52,6 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
     }
   }, [schedulingLink]);
 
-  // Load available event types and auto-generate booking link when modal opens
   useEffect(() => {
     if (isOpen && hasFunctionalConsent) {
       loadAvailableEventTypes();
@@ -62,7 +60,7 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
 
   const handleBooking = async () => {
     if (!availableEventType) {
-      setError('No appointment type available');
+      setError(t('appointmentBooking.noAppointmentType'));
       return;
     }
 
@@ -72,20 +70,17 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
 
     try {
       const response = await calendlyService.createPatientBookingLink(availableEventType.type);
-
       if (response.success) {
         setSchedulingLink(response.schedulingLink);
-        setSuccess(`${response.eventName} booking link generated successfully!`);
       }
     } catch (err: any) {
       console.error('Booking error:', err);
-      setError(err.response?.data?.error || err.response?.data?.message || 'Failed to generate booking link');
+      setError(err.response?.data?.error || err.response?.data?.message || t('appointmentBooking.bookingFailed'));
     } finally {
       setIsBooking(false);
     }
   };
 
-  // Auto-generate booking link after event types are loaded
   useEffect(() => {
     if (availableEventType && !schedulingLink && !isBooking) {
       handleBooking();
@@ -105,13 +100,11 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
       }
     } catch (err: any) {
       console.error('Error loading event types:', err);
-      setError(err.response?.data?.error || 'Failed to load appointment types');
+      setError(err.response?.data?.error || t('appointmentBooking.loadFailed'));
     } finally {
       setIsLoadingTypes(false);
     }
   };
-
-  
 
   const handleClose = () => {
     setAvailableEventType(null);
@@ -141,43 +134,40 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Calendar className="h-5 w-5 text-teal-600" />
-              Book Appointment
-              {doctorName && <span className="text-sm font-normal text-gray-600">with {doctorName}</span>}
+              {t('appointmentBooking.title')}
+              {doctorName && <span className="text-sm font-normal text-gray-600">{t('appointmentBooking.withDoctor', { doctorName })}</span>}
             </DialogTitle>
             <DialogDescription>
-              Choose an appointment type to schedule with your assigned doctor.
+              {t('appointmentBooking.description')}
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            {/* Cookie Consent Required */}
             {!hasFunctionalConsent && (
               <div className="text-center py-8">
                 <AlertCircle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Cookie Consent Required</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('appointmentBooking.cookieRequired')}</h3>
                 <p className="text-gray-600 mb-4">
-                  To book appointments, please enable functional cookies in your cookie settings.
+                  {t('appointmentBooking.cookieMessage')}
                 </p>
                 <Button
                   onClick={openPreferences}
                   className="bg-teal-600 hover:bg-teal-700"
                 >
-                  Open Cookie Settings
+                  {t('appointmentBooking.openCookieSettings')}
                 </Button>
               </div>
             )}
 
-            {/* Loading State */}
             {hasFunctionalConsent && (isLoadingTypes || isBooking) && (
               <div className="text-center py-8">
                 <div className="w-6 h-6 border-2 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                 <p className="text-gray-600">
-                  {isLoadingTypes ? 'Loading appointment types...' : 'Preparing your booking link...'}
+                  {isLoadingTypes ? t('appointmentBooking.loadingTypes') : t('appointmentBooking.preparingLink')}
                 </p>
               </div>
             )}
 
-            {/* Single Event Type Display - Only show if not booking */}
             {hasFunctionalConsent && !isLoadingTypes && !isBooking && availableEventType && (
               <div className="space-y-4">
                 <div className="p-4 border-2 border-teal-200 bg-teal-50 rounded-lg">
@@ -191,34 +181,31 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
                       </div>
                       {subscription && (
                         <p className="text-sm text-gray-600">
-                          Based on your {subscription.planType || 'free'} subscription
+                          {t('appointmentBooking.basedOnPlan', { planType: subscription.planType || 'free' })}
                         </p>
                       )}
                     </div>
                   </div>
                 </div>
 
-                {/* Upgrade prompt for free users */}
                 {availableEventType.type === 'free' && (
                   <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                     <p className="text-sm text-blue-800">
-                      💡 Upgrade to Lifestyle or Medical subscription for standard and premium appointments
+                      {t('appointmentBooking.upgradePrompt')}
                     </p>
                   </div>
                 )}
               </div>
             )}
 
-            {/* No Event Types Available */}
             {hasFunctionalConsent && !isLoadingTypes && !availableEventType && !error && (
               <div className="text-center py-8">
                 <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-2" />
-                <p className="text-gray-600">No appointment types available</p>
-                <p className="text-sm text-gray-500">Please contact support for assistance</p>
+                <p className="text-gray-600">{t('appointmentBooking.noTypes')}</p>
+                <p className="text-sm text-gray-500">{t('appointmentBooking.contactSupport')}</p>
               </div>
             )}
 
-            {/* Error Display */}
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
@@ -226,7 +213,6 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
               </Alert>
             )}
 
-            {/* Success Display */}
             {success && (
               <Alert className="border-green-200 bg-green-50">
                 <CheckCircle2 className="h-4 w-4 text-green-600" />
@@ -243,13 +229,12 @@ export const AppointmentBooking: React.FC<AppointmentBookingProps> = ({
               onClick={handleClose}
               disabled={isBooking}
             >
-              Cancel
+              {t('appointmentBooking.cancel')}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Calendly Popup Modal - Opens automatically when schedulingLink is available */}
       {hasFunctionalConsent && (
         <PopupModal
           url={cleanSchedulingUrl}

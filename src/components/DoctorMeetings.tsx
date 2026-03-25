@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Calendar, Clock, Video, RefreshCw, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -8,12 +9,15 @@ import { calendlyService } from '../services/calendlyService';
 import type { PatientMeeting } from '../types/calendly-types';
 
 export const DoctorMeetings: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const [meetings, setMeetings] = useState<PatientMeeting[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [nextPageToken, setNextPageToken] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
+
+  const dateLocale = i18n.language === 'sv' ? 'sv-SE' : 'en-GB';
 
   const loadMeetings = async (pageToken?: string) => {
     const isInitialLoad = !pageToken;
@@ -31,14 +35,11 @@ export const DoctorMeetings: React.FC = () => {
 
       if (response.success) {
         if (isInitialLoad) {
-          // Initial load: replace meetings
           setMeetings(response.meetings);
         } else {
-          // Load more: append to existing meetings
           setMeetings(prev => [...prev, ...response.meetings]);
         }
 
-        // Update pagination state
         setNextPageToken(response.pagination?.nextPageToken || null);
         setHasMore(response.pagination?.hasMore || false);
       }
@@ -50,7 +51,7 @@ export const DoctorMeetings: React.FC = () => {
       } else if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
-        setError('Failed to load meetings');
+        setError(t('doctorMeetings.loading'));
       }
     } finally {
       setIsLoading(false);
@@ -70,7 +71,7 @@ export const DoctorMeetings: React.FC = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('sv-SE', {
+    return date.toLocaleDateString(dateLocale, {
       weekday: 'short',
       year: 'numeric',
       month: 'short',
@@ -80,7 +81,7 @@ export const DoctorMeetings: React.FC = () => {
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('sv-SE', {
+    return date.toLocaleTimeString(dateLocale, {
       hour: '2-digit',
       minute: '2-digit'
     });
@@ -126,17 +127,16 @@ export const DoctorMeetings: React.FC = () => {
 
   return (
     <div className="p-8">
-      {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <Calendar className="size-8 text-teal-600" />
             <div>
               <h1 className="text-3xl font-bold text-gray-800 font-manrope">
-                My Appointments
+                {t('doctorMeetings.title')}
               </h1>
               <p className="text-sm text-gray-600 font-manrope">
-                Manage your scheduled patient appointments
+                {t('doctorMeetings.subtitle')}
               </p>
             </div>
           </div>
@@ -147,12 +147,11 @@ export const DoctorMeetings: React.FC = () => {
             className="flex items-center gap-2"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
+            {t('doctorMeetings.refresh')}
           </Button>
         </div>
       </div>
 
-      {/* Error Display */}
       {error && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
@@ -160,12 +159,11 @@ export const DoctorMeetings: React.FC = () => {
         </Alert>
       )}
 
-      {/* Meetings List */}
       {isLoading ? (
         <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-lg p-6">
           <div className="text-center py-12">
             <RefreshCw className="size-8 text-gray-400 mx-auto mb-4 animate-spin" />
-            <p className="text-gray-600 font-manrope">Loading appointments...</p>
+            <p className="text-gray-600 font-manrope">{t('doctorMeetings.loading')}</p>
           </div>
         </div>
       ) : meetings.length === 0 ? (
@@ -173,10 +171,10 @@ export const DoctorMeetings: React.FC = () => {
           <div className="text-center py-12">
             <Calendar className="size-16 text-gray-300 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-700 mb-2 font-manrope">
-              No Appointments Scheduled
+              {t('doctorMeetings.noAppointments')}
             </h2>
             <p className="text-gray-500 font-manrope">
-              You don't have any upcoming appointments
+              {t('doctorMeetings.noAppointmentsMessage')}
             </p>
           </div>
         </div>
@@ -209,7 +207,7 @@ export const DoctorMeetings: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-gray-700">
-                      Patient
+                      {t('doctorMeetings.patient')}
                     </p>
                     <p className="text-gray-900 font-medium">{meeting.inviteeName || meeting.patientName || 'Unknown'}</p>
                     <p className="text-xs text-gray-500">
@@ -219,7 +217,7 @@ export const DoctorMeetings: React.FC = () => {
 
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-gray-700">
-                      Date & Time
+                      {t('doctorMeetings.dateTime')}
                     </p>
                     <p className="text-gray-600">
                       {formatDate(meeting.startTime)}
@@ -228,13 +226,13 @@ export const DoctorMeetings: React.FC = () => {
                       {formatTime(meeting.startTime)}{meeting.endTime ? ` - ${formatTime(meeting.endTime)}` : ''}
                     </p>
                     <p className="text-xs text-gray-500">
-                      Booked: {formatDate(meeting.createdAt)}
+                      {t('doctorMeetings.booked')} {formatDate(meeting.createdAt)}
                     </p>
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-gray-700">
-                      Actions
+                      {t('doctorMeetings.actions')}
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {meeting.meetingUrl && meeting.status === 'active' && (
@@ -248,7 +246,7 @@ export const DoctorMeetings: React.FC = () => {
                           }`}
                         >
                           <Video className="w-3 h-3 mr-1" />
-                          {meeting.endTime && isCurrent(meeting.startTime, meeting.endTime) ? 'Start Call' : 'Join Meeting'}
+                          {meeting.endTime && isCurrent(meeting.startTime, meeting.endTime) ? t('doctorMeetings.startCall') : t('doctorMeetings.joinMeeting')}
                         </Button>
                       )}
                     </div>
@@ -258,7 +256,6 @@ export const DoctorMeetings: React.FC = () => {
             </Card>
           ))}
 
-          {/* Load More Button */}
           {hasMore && (
             <div className="flex justify-center pt-6">
               <Button
@@ -270,10 +267,10 @@ export const DoctorMeetings: React.FC = () => {
                 {isLoadingMore ? (
                   <>
                     <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                    Loading...
+                    {t('common.loading')}
                   </>
                 ) : (
-                  'Load More Appointments'
+                  t('doctorMeetings.loadMore')
                 )}
               </Button>
             </div>

@@ -1,9 +1,11 @@
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { FormField } from "./FormField";
 import { NumericInput } from "./NumericInput";
 import { OnboardingContext, type PhysicalDetails } from "./types";
 
 export const PhysicalDetailsStep = () => {
+  const { t } = useTranslation();
   const context = useContext(OnboardingContext);
   if (!context) return null;
 
@@ -16,10 +18,10 @@ export const PhysicalDetailsStep = () => {
 
   return (
     <div className="flex flex-col gap-5 sm:gap-8 w-full">
-      <FormField label="Height">
+      <FormField label={t('onboarding.physicalDetails.height')}>
         <div className="flex gap-2.5 items-center">
           <NumericInput
-            placeholder="e.g. 175"
+            placeholder={t('onboarding.physicalDetails.heightPlaceholder')}
             value={physicalDetails.height}
             onChange={(e) => handleChange("height", e.target.value)}
             className="flex-1"
@@ -27,15 +29,15 @@ export const PhysicalDetailsStep = () => {
             max={300}
             allowDecimal={false}
           />
-          <span className="font-manrope text-[16px] text-[#282828]">cm</span>
+          <span className="font-manrope text-[16px] text-[#282828]">{t('onboarding.physicalDetails.cm')}</span>
         </div>
       </FormField>
 
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-        <FormField label="Current Weight" className="flex-1">
+        <FormField label={t('onboarding.physicalDetails.currentWeight')} className="flex-1">
           <div className="flex gap-2.5 items-center">
             <NumericInput
-              placeholder="e.g. 70"
+              placeholder={t('onboarding.physicalDetails.currentWeightPlaceholder')}
               value={physicalDetails.currentWeight}
               onChange={(e) => handleChange("currentWeight", e.target.value)}
               className="flex-1"
@@ -43,14 +45,14 @@ export const PhysicalDetailsStep = () => {
               max={500}
               allowDecimal={true}
             />
-            <span className="font-manrope text-[16px] text-[#282828]">kg</span>
+            <span className="font-manrope text-[16px] text-[#282828]">{t('onboarding.physicalDetails.kg')}</span>
           </div>
         </FormField>
 
-        <FormField label="Goal Weight" className="flex-1">
+        <FormField label={t('onboarding.physicalDetails.goalWeight')} className="flex-1">
           <div className="flex gap-2.5 items-center">
             <NumericInput
-              placeholder="e.g. 65"
+              placeholder={t('onboarding.physicalDetails.goalWeightPlaceholder')}
               value={physicalDetails.goalWeight}
               onChange={(e) => handleChange("goalWeight", e.target.value)}
               className="flex-1"
@@ -58,16 +60,16 @@ export const PhysicalDetailsStep = () => {
               max={500}
               allowDecimal={true}
             />
-            <span className="font-manrope text-[16px] text-[#282828]">kg</span>
+            <span className="font-manrope text-[16px] text-[#282828]">{t('onboarding.physicalDetails.kg')}</span>
           </div>
         </FormField>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-        <FormField label="Lowest weight in the past" className="flex-1">
+        <FormField label={t('onboarding.physicalDetails.lowestWeight')} className="flex-1">
           <div className="flex gap-2.5 items-center">
             <NumericInput
-              placeholder="e.g. 60"
+              placeholder={t('onboarding.physicalDetails.lowestWeightPlaceholder')}
               value={physicalDetails.lowestWeight}
               onChange={(e) => handleChange("lowestWeight", e.target.value)}
               className="flex-1"
@@ -75,14 +77,14 @@ export const PhysicalDetailsStep = () => {
               max={500}
               allowDecimal={true}
             />
-            <span className="font-manrope text-[16px] text-[#282828]">kg</span>
+            <span className="font-manrope text-[16px] text-[#282828]">{t('onboarding.physicalDetails.kg')}</span>
           </div>
         </FormField>
 
-        <FormField label="Highest weight in the past" className="flex-1">
+        <FormField label={t('onboarding.physicalDetails.highestWeight')} className="flex-1">
           <div className="flex gap-2.5 items-center">
             <NumericInput
-              placeholder="e.g. 80"
+              placeholder={t('onboarding.physicalDetails.highestWeightPlaceholder')}
               value={physicalDetails.highestWeight}
               onChange={(e) => handleChange("highestWeight", e.target.value)}
               className="flex-1"
@@ -90,15 +92,15 @@ export const PhysicalDetailsStep = () => {
               max={500}
               allowDecimal={true}
             />
-            <span className="font-manrope text-[16px] text-[#282828]">kg</span>
+            <span className="font-manrope text-[16px] text-[#282828]">{t('onboarding.physicalDetails.kg')}</span>
           </div>
         </FormField>
       </div>
 
-      <FormField label="Expected weight loss with treatment">
+      <FormField label={t('onboarding.physicalDetails.expectedWeightLoss')}>
         <div className="flex gap-2.5 items-center">
           <NumericInput
-            placeholder="e.g. 10"
+            placeholder={t('onboarding.physicalDetails.expectedWeightLossPlaceholder')}
             value={physicalDetails.expectedWeightLoss}
             onChange={(e) => handleChange("expectedWeightLoss", e.target.value)}
             className="flex-1"
@@ -106,15 +108,15 @@ export const PhysicalDetailsStep = () => {
             max={100}
             allowDecimal={true}
           />
-          <span className="font-manrope text-[16px] text-[#282828]">kg</span>
+          <span className="font-manrope text-[16px] text-[#282828]">{t('onboarding.physicalDetails.kg')}</span>
         </div>
       </FormField>
 
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-        <FormField label="Waist circumference" className="flex-1">
+        <FormField label={t('onboarding.physicalDetails.waistCircumference')} className="flex-1">
           <div className="flex gap-2.5 items-center">
             <NumericInput
-              placeholder="e.g. 90"
+              placeholder={t('onboarding.physicalDetails.waistPlaceholder')}
               value={physicalDetails.waistCircumference}
               onChange={(e) =>
                 handleChange("waistCircumference", e.target.value)
@@ -124,13 +126,13 @@ export const PhysicalDetailsStep = () => {
               max={300}
               allowDecimal={false}
             />
-            <span className="font-manrope text-[16px] text-[#282828]">cm</span>
+            <span className="font-manrope text-[16px] text-[#282828]">{t('onboarding.physicalDetails.cm')}</span>
           </div>
         </FormField>
 
-        <FormField label="BMI" className="flex-1">
+        <FormField label={t('onboarding.physicalDetails.bmi')} className="flex-1">
           <NumericInput
-            placeholder="e.g. 24.5"
+            placeholder={t('onboarding.physicalDetails.bmiPlaceholder')}
             value={physicalDetails.bmi}
             onChange={(e) => handleChange("bmi", e.target.value)}
             min={0}

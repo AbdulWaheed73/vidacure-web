@@ -14,12 +14,26 @@ import { useTranslation } from "react-i18next";
 
 import Logo from "../../assets/vidacure_png.png";
 import { darkTealText, ROUTES } from "@/constants";
+import { useAuthStore } from "@/stores/authStore";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const userName = useAuthStore((s) => s.user?.name);
+
+  const getInitials = (name: string | undefined) => {
+    if (!name) return '';
+    return name
+      .split(' ')
+      .map((part) => part[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   const scrollToSection = (sectionId: string) => {
     const isHomePage = location.pathname === '/' || location.pathname === ROUTES.HOME;
@@ -189,20 +203,38 @@ export const Navbar = () => {
             {/* Desktop Auth Buttons */}
             <div className="hidden lg:flex items-center space-x-2 xl:space-x-4 flex-shrink-0">
               <LanguageToggle />
-              <Link
-                to={ROUTES.PRE_LOGIN_BMI}
-                className={`${darkTealText} font-normal inline-flex items-center justify-center px-2 xl:px-4 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm whitespace-nowrap`}
-              >
-                {t("navbar.login")}
-              </Link>
-              <Link
-                to={ROUTES.PRE_LOGIN_BMI}
-                className="h-10 px-4 xl:px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
-              >
-                <span className="text-white text-sm font-semibold font-['Sora'] leading-tight whitespace-nowrap">
-                  {t("navbar.getStarted")}
-                </span>
-              </Link>
+              {isAuthenticated ? (
+                <Link
+                  to="/dashboard"
+                  className="h-10 px-4 xl:px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
+                >
+                  <span className="text-white text-sm font-semibold font-['Sora'] leading-tight whitespace-nowrap">
+                    {t("navbar.dashboard")}
+                  </span>
+                  <Avatar className="h-7 w-7 border-2 border-white/30">
+                    <AvatarFallback className="bg-white/20 text-white text-xs font-sora font-bold">
+                      {getInitials(userName)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to={ROUTES.PRE_LOGIN_BMI}
+                    className={`${darkTealText} font-normal inline-flex items-center justify-center px-2 xl:px-4 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm whitespace-nowrap`}
+                  >
+                    {t("navbar.login")}
+                  </Link>
+                  <Link
+                    to={ROUTES.PRE_LOGIN_BMI}
+                    className="h-10 px-4 xl:px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
+                  >
+                    <span className="text-white text-sm font-semibold font-['Sora'] leading-tight whitespace-nowrap">
+                      {t("navbar.getStarted")}
+                    </span>
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile menu button */}
@@ -320,20 +352,41 @@ export const Navbar = () => {
                   <div className="flex flex-col space-y-3 pt-4 border-t min-w-full">
                     <LanguageToggle />
                     <div className="flex flex-col space-y-4 w-full">
-                      <Link
-                        to={ROUTES.PRE_LOGIN_BMI}
-                        className="w-full bg-emerald-50 hover:bg-emerald-100 rounded-full text-gray-800 py-2.5 px-4 inline-flex items-center justify-center"
-                      >
-                        {t("navbar.login")}
-                      </Link>
-                      <Link
-                        to={ROUTES.PRE_LOGIN_BMI}
-                        className="w-full h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 hover:from-teal-700 hover:to-teal-700 transition-colors"
-                      >
-                        <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
-                          {t("navbar.getStarted")}
-                        </span>
-                      </Link>
+                      {isAuthenticated ? (
+                        <Link
+                          to="/dashboard"
+                          className="w-full h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 hover:from-teal-700 hover:to-teal-700 transition-colors"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
+                            {t("navbar.dashboard")}
+                          </span>
+                          <Avatar className="h-6 w-6 border-2 border-white/30">
+                            <AvatarFallback className="bg-white/20 text-white text-[10px] font-sora font-bold">
+                              {getInitials(userName)}
+                            </AvatarFallback>
+                          </Avatar>
+                        </Link>
+                      ) : (
+                        <>
+                          <Link
+                            to={ROUTES.PRE_LOGIN_BMI}
+                            className="w-full bg-emerald-50 hover:bg-emerald-100 rounded-full text-gray-800 py-2.5 px-4 inline-flex items-center justify-center"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            {t("navbar.login")}
+                          </Link>
+                          <Link
+                            to={ROUTES.PRE_LOGIN_BMI}
+                            className="w-full h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 hover:from-teal-700 hover:to-teal-700 transition-colors"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
+                              {t("navbar.getStarted")}
+                            </span>
+                          </Link>
+                        </>
+                      )}
                     </div>
                   </div>
                 </NavigationMenuList>

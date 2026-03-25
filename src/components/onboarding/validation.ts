@@ -1,4 +1,7 @@
+import i18n from '../../i18n';
 import type { PersonalInfo, PhysicalDetails, HealthBackground, MedicalHistory } from "./types";
+
+const t = (key: string) => i18n.t(key);
 
 const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -75,73 +78,73 @@ export const getValidationErrors = (step: number, data: PersonalInfo | PhysicalD
   switch (step) {
     case 1: {
       const d = data as PersonalInfo;
-      if (!d.fullName.trim()) errors.push("Full Name is required");
-      if (!d.dateOfBirth.trim()) errors.push("Date of birth is required");
+      if (!d.fullName.trim()) errors.push(t("onboarding.validation.fullNameRequired"));
+      if (!d.dateOfBirth.trim()) errors.push(t("onboarding.validation.dobRequired"));
       else {
         const age = getAge(d.dateOfBirth);
-        if (age < 18) errors.push("You must be at least 18 years old");
-        if (age > 120) errors.push("Please enter a valid date of birth");
+        if (age < 18) errors.push(t("onboarding.validation.ageMinimum"));
+        if (age > 120) errors.push(t("onboarding.validation.dobInvalid"));
       }
-      if (!d.gender.trim()) errors.push("Gender is required");
-      if (!d.email.trim()) errors.push("Email is required");
-      else if (!isValidEmail(d.email)) errors.push("Please enter a valid email address");
+      if (!d.gender.trim()) errors.push(t("onboarding.validation.genderRequired"));
+      if (!d.email.trim()) errors.push(t("onboarding.validation.emailRequired"));
+      else if (!isValidEmail(d.email)) errors.push(t("onboarding.validation.emailInvalid"));
       break;
     }
 
     case 2: {
       const d = data as PhysicalDetails;
-      if (!d.height.trim()) errors.push("Height is required");
-      else if (toNum(d.height) < 100 || toNum(d.height) > 250) errors.push("Height must be between 100 and 250 cm");
+      if (!d.height.trim()) errors.push(t("onboarding.validation.heightRequired"));
+      else if (toNum(d.height) < 100 || toNum(d.height) > 250) errors.push(t("onboarding.validation.heightRange"));
 
-      if (!d.currentWeight.trim()) errors.push("Current Weight is required");
-      else if (toNum(d.currentWeight) < 30 || toNum(d.currentWeight) > 400) errors.push("Current weight must be between 30 and 400 kg");
+      if (!d.currentWeight.trim()) errors.push(t("onboarding.validation.currentWeightRequired"));
+      else if (toNum(d.currentWeight) < 30 || toNum(d.currentWeight) > 400) errors.push(t("onboarding.validation.currentWeightRange"));
 
-      if (!d.goalWeight.trim()) errors.push("Goal Weight is required");
-      else if (toNum(d.goalWeight) < 30 || toNum(d.goalWeight) > 400) errors.push("Goal weight must be between 30 and 400 kg");
-      else if (d.currentWeight.trim() && toNum(d.goalWeight) >= toNum(d.currentWeight)) errors.push("Goal weight must be less than current weight");
+      if (!d.goalWeight.trim()) errors.push(t("onboarding.validation.goalWeightRequired"));
+      else if (toNum(d.goalWeight) < 30 || toNum(d.goalWeight) > 400) errors.push(t("onboarding.validation.goalWeightRange"));
+      else if (d.currentWeight.trim() && toNum(d.goalWeight) >= toNum(d.currentWeight)) errors.push(t("onboarding.validation.goalWeightLess"));
 
-      if (!d.lowestWeight.trim()) errors.push("Lowest weight is required");
-      else if (toNum(d.lowestWeight) < 30 || toNum(d.lowestWeight) > 400) errors.push("Lowest weight must be between 30 and 400 kg");
+      if (!d.lowestWeight.trim()) errors.push(t("onboarding.validation.lowestWeightRequired"));
+      else if (toNum(d.lowestWeight) < 30 || toNum(d.lowestWeight) > 400) errors.push(t("onboarding.validation.lowestWeightRange"));
 
-      if (!d.highestWeight.trim()) errors.push("Highest weight is required");
-      else if (toNum(d.highestWeight) < 30 || toNum(d.highestWeight) > 400) errors.push("Highest weight must be between 30 and 400 kg");
+      if (!d.highestWeight.trim()) errors.push(t("onboarding.validation.highestWeightRequired"));
+      else if (toNum(d.highestWeight) < 30 || toNum(d.highestWeight) > 400) errors.push(t("onboarding.validation.highestWeightRange"));
 
       if (d.lowestWeight.trim() && d.highestWeight.trim() && toNum(d.lowestWeight) > toNum(d.highestWeight)) {
-        errors.push("Lowest weight cannot be greater than highest weight");
+        errors.push(t("onboarding.validation.lowestHighestMismatch"));
       }
 
-      if (!d.expectedWeightLoss.trim()) errors.push("Expected weight loss is required");
-      else if (toNum(d.expectedWeightLoss) <= 0 || toNum(d.expectedWeightLoss) > 200) errors.push("Expected weight loss must be between 1 and 200 kg");
+      if (!d.expectedWeightLoss.trim()) errors.push(t("onboarding.validation.expectedWeightLossRequired"));
+      else if (toNum(d.expectedWeightLoss) <= 0 || toNum(d.expectedWeightLoss) > 200) errors.push(t("onboarding.validation.expectedWeightLossRange"));
 
-      if (!d.waistCircumference.trim()) errors.push("Waist circumference is required");
-      else if (toNum(d.waistCircumference) < 20 || toNum(d.waistCircumference) > 250) errors.push("Waist circumference must be between 20 and 250 cm");
+      if (!d.waistCircumference.trim()) errors.push(t("onboarding.validation.waistRequired"));
+      else if (toNum(d.waistCircumference) < 20 || toNum(d.waistCircumference) > 250) errors.push(t("onboarding.validation.waistRange"));
 
-      if (!d.bmi.trim()) errors.push("BMI is required");
-      else if (toNum(d.bmi) < 10 || toNum(d.bmi) > 80) errors.push("BMI must be between 10 and 80");
+      if (!d.bmi.trim()) errors.push(t("onboarding.validation.bmiRequired"));
+      else if (toNum(d.bmi) < 10 || toNum(d.bmi) > 80) errors.push(t("onboarding.validation.bmiRange"));
       break;
     }
 
     case 3: {
       const d = data as HealthBackground;
-      if (!d.smokingStatus.trim()) errors.push("Smoking status is required");
-      if (!d.smokingAlcoholDetails.trim()) errors.push("Smoking/Alcohol details are required");
-      if (!d.physicalActivity.trim()) errors.push("Physical activity description is required");
-      if (!d.activityLevel.trim()) errors.push("Activity level is required");
-      if (!d.eatingHabits.trim()) errors.push("Eating habits description is required");
-      if (!d.sugarIntake.trim()) errors.push("Sugar intake level is required");
-      if (!d.carbohydrateIntake.trim()) errors.push("Carbohydrate intake level is required");
-      if (!d.processedFoodIntake.trim()) errors.push("Processed food intake level is required");
-      if (!d.previousWeightLoss.trim()) errors.push("Previous weight loss attempts are required");
-      if (!d.weightLossDuration.trim()) errors.push("Weight loss duration is required");
+      if (!d.smokingStatus.trim()) errors.push(t("onboarding.validation.smokingRequired"));
+      if (!d.smokingAlcoholDetails.trim()) errors.push(t("onboarding.validation.smokingAlcoholRequired"));
+      if (!d.physicalActivity.trim()) errors.push(t("onboarding.validation.physicalActivityRequired"));
+      if (!d.activityLevel.trim()) errors.push(t("onboarding.validation.activityLevelRequired"));
+      if (!d.eatingHabits.trim()) errors.push(t("onboarding.validation.eatingHabitsRequired"));
+      if (!d.sugarIntake.trim()) errors.push(t("onboarding.validation.sugarIntakeRequired"));
+      if (!d.carbohydrateIntake.trim()) errors.push(t("onboarding.validation.carbohydrateIntakeRequired"));
+      if (!d.processedFoodIntake.trim()) errors.push(t("onboarding.validation.processedFoodRequired"));
+      if (!d.previousWeightLoss.trim()) errors.push(t("onboarding.validation.previousWeightLossRequired"));
+      if (!d.weightLossDuration.trim()) errors.push(t("onboarding.validation.weightLossDurationRequired"));
       break;
     }
 
     case 4: {
       const d = data as MedicalHistory;
-      if (!d.illnesses.trim()) errors.push("Illnesses information is required");
-      if (!d.medications.trim()) errors.push("Medications information is required");
-      if (d.conditions.length === 0) errors.push("Please select at least one condition option");
-      if (d.familyHistory.length === 0) errors.push("Please select at least one family history option");
+      if (!d.illnesses.trim()) errors.push(t("onboarding.validation.illnessesRequired"));
+      if (!d.medications.trim()) errors.push(t("onboarding.validation.medicationsRequired"));
+      if (d.conditions.length === 0) errors.push(t("onboarding.validation.conditionsRequired"));
+      if (d.familyHistory.length === 0) errors.push(t("onboarding.validation.familyHistoryRequired"));
       break;
     }
   }

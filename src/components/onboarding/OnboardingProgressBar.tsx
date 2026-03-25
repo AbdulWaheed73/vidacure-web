@@ -1,15 +1,18 @@
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { OnboardingProgressBarProps } from "../../types";
 
 export const OnboardingProgressBar = ({
   currentStep,
 }: OnboardingProgressBarProps) => {
+  const { t } = useTranslation();
+
   const steps = [
-    { number: 1, label: "Your Info" },
-    { number: 2, label: "Physical Details" },
-    { number: 3, label: "Goals & Lifestyle" },
-    { number: 4, label: "Medical History" },
+    { number: 1, label: t('onboarding.steps.yourInfo') },
+    { number: 2, label: t('onboarding.steps.physicalDetails') },
+    { number: 3, label: t('onboarding.steps.goalsLifestyle') },
+    { number: 4, label: t('onboarding.steps.medicalHistory') },
   ];
 
   const progressPercent = ((currentStep - 1) / (steps.length - 1)) * 100;
@@ -17,10 +20,8 @@ export const OnboardingProgressBar = ({
   return (
     <div className="w-full py-2">
       <div className="relative flex items-start justify-between">
-        {/* Background track — vertically centered on circles */}
         <div className="absolute left-0 right-0 top-[16px] sm:top-[18px] h-[3px] bg-[#e0e0e0] rounded-full" />
 
-        {/* Animated fill track */}
         <motion.div
           className="absolute left-0 top-[16px] sm:top-[18px] h-[3px] bg-[#00a38a] rounded-full origin-left"
           initial={false}
@@ -28,7 +29,6 @@ export const OnboardingProgressBar = ({
           transition={{ duration: 0.5, ease: "easeInOut" }}
         />
 
-        {/* Each step: circle + label as one unit */}
         {steps.map((step) => {
           const isCompleted = currentStep > step.number;
           const isActive = currentStep === step.number;

@@ -1,24 +1,118 @@
-import { useEffect } from 'react';
-import { useAuthStore } from '../stores/authStore';
-import { AuthService } from '../services';
-import { pendingSessionService } from '../services/pendingSessionService';
-import { updateCsrfToken } from '../services/api';
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "../stores/authStore";
+import { AuthService } from "../services";
+import { pendingSessionService } from "../services/pendingSessionService";
+import { api, updateCsrfToken } from "../services/api";
+import { useConsentStore } from "../stores/consentStore";
+import type { User } from "../types";
+
+type AuthMeResponse = {
+  authenticated: boolean;
+  user: User | null;
+  csrfToken: string | null;
+  consentStatus?: {
+    hasAcceptedLatest: boolean;
+    currentVersion: string;
+  };
+};
+
+// Fetch auth status from /api/me
+const fetchAuthStatus = async (): Promise<AuthMeResponse> => {
+  try {
+    const response = await api.get<AuthMeResponse>("/api/me");
+    return response.data;
+  } catch (error: unknown) {
+    const axiosError = error as { response?: { status?: number } };
+    // 401 is expected for unauthenticated users — return unauthenticated state
+    if (axiosError.response?.status === 401) {
+      return { authenticated: false, user: null, csrfToken: null };
+    }
+    throw error;
+  }
+};
+
+// Link a pending Calendly booking to the authenticated patient
+const linkPendingBookingIfNeeded = async (csrfToken: string) => {
+  const token = pendingSessionService.getStoredToken();
+  if (!token) return;
+
+  try {
+    const result = await pendingSessionService.linkBookingToUser(
+      token,
+      csrfToken,
+    );
+    if (result.success) {
+      pendingSessionService.clearStoredToken();
+      localStorage.removeItem("vidacure_pending_calendly_booking");
+    }
+  } catch {
+    // Don't clear token on error — user might retry
+  }
+};
 
 export const useAuth = () => {
+  const queryClient = useQueryClient();
   const {
     isAuthenticated,
     user,
     csrfToken,
-    isLoading,
+    isLoading: storeLoading,
     error,
-    checkAuthStatus,
-    logout,
+    logout: storeLogout,
     clearError,
     setLoading,
-    setAuthData
+    setAuthData,
   } = useAuthStore();
 
-  // Handle login
+  // Check if this is a BankID callback or normal page load
+  const urlParams = new URLSearchParams(window.location.search);
+  const isAuthCallback = !!(urlParams.get("code") && urlParams.get("state"));
+  const isAuthSuccess = urlParams.get("auth") === "success";
+  const isAdminRoute = window.location.pathname.startsWith("/admin");
+
+  // React Query for /api/me — single source of truth for auth checking
+  const { data: authData, isLoading: queryLoading } = useQuery<AuthMeResponse>({
+    queryKey: ["auth", "me"],
+    queryFn: fetchAuthStatus,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: false,
+    refetchOnWindowFocus: true,
+    enabled: !isAuthCallback && !isAuthSuccess && !isAdminRoute,
+  });
+
+  // Sync React Query data to Zustand store
+  useEffect(() => {
+    if (!authData) return;
+
+    if (authData.authenticated && authData.user && authData.csrfToken) {
+      localStorage.setItem("csrfToken", authData.csrfToken);
+      updateCsrfToken(authData.csrfToken);
+      useAuthStore.setState({
+        isAuthenticated: true,
+        user: authData.user,
+        csrfToken: authData.csrfToken,
+        isLoading: false,
+      });
+
+      if (authData.consentStatus) {
+        useConsentStore.getState().setConsentFromAuth(authData.consentStatus);
+      }
+
+      if (authData.user.role === "patient") {
+        linkPendingBookingIfNeeded(authData.csrfToken);
+      }
+    } else {
+      useAuthStore.setState({
+        isAuthenticated: false,
+        user: null,
+        csrfToken: null,
+        isLoading: false,
+      });
+    }
+  }, [authData]);
+
+  // Handle login — initiates BankID flow
   const login = async () => {
     try {
       clearError();
@@ -29,18 +123,19 @@ export const useAuth = () => {
     }
   };
 
-  // Handle logout from store
+  // Handle logout
   const handleLogout = async () => {
     try {
       clearError();
       setLoading(true);
-
       await AuthService.logout();
-      logout(); // Call store logout
-
-      // Clear stored data
+      storeLogout();
       AuthService.clearUserData();
-
+      queryClient.setQueryData<AuthMeResponse>(["auth", "me"], {
+        authenticated: false,
+        user: null,
+        csrfToken: null,
+      });
     } catch {
       // ignore logout errors
     } finally {
@@ -48,146 +143,96 @@ export const useAuth = () => {
     }
   };
 
-  // Handle authentication callback
+  // Process a successful auth response (shared by callback and success redirect)
+  const processAuthResponse = async (response: AuthMeResponse) => {
+    if (!response.authenticated || !response.user) return;
+
+    if (response.user.role === "patient" && response.csrfToken) {
+      updateCsrfToken(response.csrfToken);
+      await linkPendingBookingIfNeeded(response.csrfToken);
+    }
+
+    setAuthData({
+      authenticated: response.authenticated,
+      user: response.user ?? undefined,
+      csrfToken: response.csrfToken ?? undefined,
+      consentStatus: response.consentStatus,
+    });
+    queryClient.setQueryData<AuthMeResponse>(["auth", "me"], response);
+
+    AuthService.storeUserData(response.user, response.csrfToken ?? undefined);
+  };
+
+  // Handle authentication callback (BankID return with code/state)
   const handleAuthCallback = async () => {
     try {
       clearError();
       setLoading(true);
 
-      // The backend will handle the callback and set cookies
-      // We just need to wait a moment and then check auth status
       setTimeout(async () => {
         try {
           const response = await AuthService.checkAuthStatus();
-          console.log("response in sucess 2 : ", response);
-
-          if (response.authenticated) {
-            // Link pending booking BEFORE setting auth data so dashboard sees correct state
-            if (response.user?.role === 'patient' && response.csrfToken) {
-              updateCsrfToken(response.csrfToken);
-              const token = pendingSessionService.getStoredToken();
-              if (token) {
-                try {
-                  const linkResult = await pendingSessionService.linkBookingToUser(token, response.csrfToken);
-                  if (linkResult.success) {
-                    console.log("✅ Linked pending booking during auth callback");
-                    pendingSessionService.clearStoredToken();
-                    localStorage.removeItem("vidacure_pending_calendly_booking");
-                  }
-                } catch (err) {
-                  console.warn("⚠️ Failed to link pending booking during auth callback:", err);
-                }
-              }
-            }
-
-            setAuthData(response);
-
-            // Store user data locally
-            if (response.user) {
-              AuthService.storeUserData(response.user, response.csrfToken);
-            }
-
-            // Clear URL parameters
-            window.history.replaceState({}, document.title, window.location.pathname);
-          }
+          await processAuthResponse(response);
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname,
+          );
         } catch (err) {
-          console.log('Auth check failed:', err instanceof Error ? err.message : 'Unknown error');
+          console.log(
+            "Auth check failed:",
+            err instanceof Error ? err.message : "Unknown error",
+          );
         } finally {
           setLoading(false);
         }
-      }, 1000); // Wait 1 second for backend to process
-
+      }, 1000);
     } catch {
       setLoading(false);
     }
   };
 
-  // Handle successful auth redirect
+  // Handle successful auth redirect (?auth=success)
   const handleSuccessfulAuth = async () => {
     clearError();
     setLoading(true);
-
-    // Clear URL parameters
     window.history.replaceState({}, document.title, window.location.pathname);
 
-    // Check auth status after a short delay
     setTimeout(async () => {
       try {
         const response = await AuthService.checkAuthStatus();
-        console.log("response in sucess: ", response);
-        if (response.authenticated) {
-          // Link pending booking BEFORE setting auth data so dashboard sees correct state
-          if (response.user?.role === 'patient' && response.csrfToken) {
-            updateCsrfToken(response.csrfToken);
-            const token = pendingSessionService.getStoredToken();
-            if (token) {
-              try {
-                const linkResult = await pendingSessionService.linkBookingToUser(token, response.csrfToken);
-                if (linkResult.success) {
-                  console.log("✅ Linked pending booking during auth success redirect");
-                  pendingSessionService.clearStoredToken();
-                  localStorage.removeItem("vidacure_pending_calendly_booking");
-                }
-              } catch (err) {
-                console.warn("⚠️ Failed to link pending booking during auth success redirect:", err);
-              }
-            }
-          }
-
-          setAuthData(response);
-
-          // Store user data locally (like in handleAuthCallback)
-          if (response.user) {
-            AuthService.storeUserData(response.user, response.csrfToken);
-          }
-        }
+        await processAuthResponse(response);
       } catch (err) {
-        console.log('Auth check failed:', err instanceof Error ? err.message : 'Unknown error');
+        console.log(
+          "Auth check failed:",
+          err instanceof Error ? err.message : "Unknown error",
+        );
       } finally {
         setLoading(false);
       }
     }, 500);
   };
 
-  // Only check auth status once on app startup, and handle URL parameters
+  // Handle BankID callbacks on mount
   useEffect(() => {
-    // Skip auth check if on admin routes - admin has its own auth system
-    const isAdminRoute = window.location.pathname.startsWith('/admin');
-    if (isAdminRoute) {
-      console.log("Admin route detected - skipping regular auth check");
-      return;
-    }
+    if (isAdminRoute) return;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-    const state = urlParams.get('state');
-    const auth = urlParams.get('auth');
-
-    if (code && state) {
-      // User just came back from authentication with code/state
-      console.log("Handling auth callback with code/state");
+    if (isAuthCallback) {
       handleAuthCallback();
-    } else if (auth === 'success') {
-      // User was redirected back from successful authentication
-      console.log("Handling successful auth redirect");
+    } else if (isAuthSuccess) {
       handleSuccessfulAuth();
-    } else {
-      // Normal app startup - check auth status once
-      console.log("App startup - checking auth status");
-      checkAuthStatus();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array - only run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     isAuthenticated,
     user,
     csrfToken,
-    loading: isLoading,
+    loading: storeLoading || queryLoading,
     error,
     login,
     logout: handleLogout,
-    checkAuthStatus,
     clearError,
   };
 };

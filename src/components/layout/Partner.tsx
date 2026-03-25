@@ -19,7 +19,7 @@ export default function Partner() {
                 {/* Heading */}
                 <div className="space-y-4">
                   <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-['Sora'] leading-tight text-teal-600">
-                    About us
+                    {t('partner.title')}
                   </h1>
                   <p className="text-zinc-800 text-lg font-semibold font-['Manrope']">
                     {t('partner.subtitle')}

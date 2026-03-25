@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PaymentService } from '../../services';
 import { ArrowRight, Check } from 'lucide-react';
 
@@ -15,6 +16,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
   disabled = false,
   isCurrentPlan = false
 }) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const planDetails = PaymentService.getPlanDetails(planType);
 
@@ -44,7 +46,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
       <div className="flex-1 w-full md:w-auto self-stretch p-5 sm:p-8 bg-white rounded-2xl shadow-[0px_2px_3px_0px_rgba(0,0,0,0.17)] shadow-[0px_0px_3px_0px_rgba(0,0,0,0.08)] inline-flex flex-col justify-start items-start gap-8 sm:gap-16 relative">
         {isCurrentPlan && (
           <div className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">
-            Current Plan
+            {t('subscribeCard.currentPlan')}
           </div>
         )}
 
@@ -64,7 +66,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
           </div>
 
           <div className="self-stretch flex flex-col justify-start items-start gap-3 sm:gap-4">
-            <div className="self-stretch justify-center text-zinc-800 text-base font-bold font-['Manrope'] leading-snug">Includes:</div>
+            <div className="self-stretch justify-center text-zinc-800 text-base font-bold font-['Manrope'] leading-snug">{t('subscribeCard.includes')}</div>
             <div className="self-stretch flex flex-col justify-start items-start gap-3 sm:gap-4">
               {planDetails.features.map((feature, index) => (
                 <div key={index} className="self-stretch inline-flex justify-start items-center gap-3 sm:gap-6">
@@ -86,13 +88,13 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
           {isLoading ? (
             <>
               <div className="animate-spin rounded-full h-4 w-4 border-2 border-zinc-800 border-t-transparent"></div>
-              <div className="justify-center text-zinc-800 text-sm font-semibold font-['Sora'] leading-tight">Processing...</div>
+              <div className="justify-center text-zinc-800 text-sm font-semibold font-['Sora'] leading-tight">{t('subscribeCard.processing')}</div>
             </>
           ) : isCurrentPlan ? (
             <div className="justify-center text-zinc-800 text-sm font-semibold font-['Sora'] leading-tight">Current Plan</div>
           ) : (
             <>
-              <div className="justify-center text-zinc-800 text-sm font-semibold font-['Sora'] leading-tight">Get Started</div>
+              <div className="justify-center text-zinc-800 text-sm font-semibold font-['Sora'] leading-tight">{t('subscribeCard.getStarted')}</div>
               <ArrowRight className="size-4 text-zinc-800" />
             </>
           )}
@@ -104,7 +106,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
       <div className="flex-1 w-full md:w-auto self-stretch p-5 sm:p-8 rounded-2xl shadow-[0px_2px_3px_0px_rgba(0,0,0,0.17)] inline-flex flex-col justify-start items-start gap-8 sm:gap-16 relative" style={{ backgroundColor: '#005044' }}>
         {isCurrentPlan && (
           <div className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-semibold">
-            Current Plan
+            {t('subscribeCard.currentPlan')}
           </div>
         )}
 
@@ -124,7 +126,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
           </div>
 
           <div className="self-stretch flex flex-col justify-start items-start gap-3 sm:gap-4">
-            <div className="self-stretch justify-center text-emerald-50 text-base font-bold font-['Manrope'] leading-snug">Includes:</div>
+            <div className="self-stretch justify-center text-emerald-50 text-base font-bold font-['Manrope'] leading-snug">{t('subscribeCard.includes')}</div>
             <div className="self-stretch flex flex-col justify-start items-start gap-3 sm:gap-4">
               {planDetails.features.map((feature, index) => (
                 <div key={index} className="self-stretch inline-flex justify-start items-center gap-3 sm:gap-6">
@@ -145,13 +147,13 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
             {isLoading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                <div className="justify-center text-white text-sm font-semibold font-['Sora'] leading-tight">Processing...</div>
+                <div className="justify-center text-white text-sm font-semibold font-['Sora'] leading-tight">{t('subscribeCard.processing')}</div>
               </>
             ) : isCurrentPlan ? (
               <div className="justify-center text-white text-sm font-semibold font-['Sora'] leading-tight">Current Plan</div>
             ) : (
               <>
-                <div className="justify-center text-white text-sm font-semibold font-['Sora'] leading-tight">Get Started</div>
+                <div className="justify-center text-white text-sm font-semibold font-['Sora'] leading-tight">{t('subscribeCard.getStarted')}</div>
                 <ArrowRight className="size-4 text-white" />
               </>
             )}

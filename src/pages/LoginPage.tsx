@@ -1,10 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
-import bankId from "../assets/bankId.png";
-import vidaCure from "../assets/vidacure_png.png";
+import bankId from "@/assets/bankId.png";
+import vidaCure from "@/assets/vidacure_png.png";
 import { useNavigate } from "react-router-dom";
-import type { LoginPageProps } from '../types';
+import type { LoginPageProps } from '@/types';
 
 export const LoginPage: React.FC<LoginPageProps> = ({ onLogin, loading }) => {
   const navigate = useNavigate();
