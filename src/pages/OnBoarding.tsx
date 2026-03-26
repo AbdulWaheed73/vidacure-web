@@ -28,6 +28,7 @@ import {
   transformFormDataToQuestionnaire,
 } from "@/components/onboarding";
 import { saveHeightEmail, submitQuestionnaire } from "@/services/questionnaire";
+import { useAuthStore } from "@/stores/authStore";
 
 
 
@@ -194,6 +195,14 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
       // Clean up pre-login localStorage data
       localStorage.removeItem('vidacure_pending_bmi');
       localStorage.removeItem('vidacure_pending_calendly_booking');
+
+      // Update auth store so route guards see the completed onboarding flag
+      const currentUser = useAuthStore.getState().user;
+      if (currentUser) {
+        useAuthStore.setState({
+          user: { ...currentUser, hasCompletedOnboarding: true },
+        });
+      }
 
       // Navigate to booking page after completing onboarding
       navigate(ROUTES.PATIENT_APPOINTMENTS);
