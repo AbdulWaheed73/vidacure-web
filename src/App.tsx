@@ -152,6 +152,16 @@ function App() {
     );
   };
 
+  // Guard: requires authentication + onboarding completion for patients (doctors skip onboarding)
+  const requireOnboarding = (children: React.ReactNode) => {
+    if (!isAuthenticated) return <Navigate to={ROUTES.LOGIN} replace />;
+    if (user?.role === "doctor" || user?.hasCompletedOnboarding) {
+      return <SidebarLayout>{children}</SidebarLayout>;
+    }
+    if (hasCompletedBMICheck()) return <Navigate to={ROUTES.ONBOARDING as string} replace />;
+    return <Navigate to={ROUTES.PRE_LOGIN_BMI as string} replace />;
+  };
+
   return (
     <BrowserRouter>
       <NavigateRefSetter />
@@ -238,89 +248,24 @@ function App() {
           }
         />
 
-        {/* Dashboard Routes - Protected with Sidebar */}
+        {/* Dashboard Routes - Protected with Sidebar + onboarding guard */}
         <Route
           path="/dashboard/*"
-          element={
-            isAuthenticated ? (
-              <SidebarLayout>
-                <DashboardRouter
-                  user={user}
-                  onLogout={logout}
-                  loading={loading}
-                />
-              </SidebarLayout>
-            ) : (
-              <Navigate to={ROUTES.LOGIN} replace />
-            )
-          }
+          element={requireOnboarding(
+            <DashboardRouter
+              user={user}
+              onLogout={logout}
+              loading={loading}
+            />
+          )}
         />
 
-        {/* Healthcare Routes - Protected with Sidebar */}
-        <Route
-          path="/appointments"
-          element={
-            isAuthenticated ? (
-              <SidebarLayout>
-                <AppointmentsPage />
-              </SidebarLayout>
-            ) : (
-              <Navigate to={ROUTES.LOGIN} replace />
-            )
-          }
-        />
-
-        <Route
-          path="/prescriptions"
-          element={
-            isAuthenticated ? (
-              <SidebarLayout>
-                <PrescriptionsPage />
-              </SidebarLayout>
-            ) : (
-              <Navigate to={ROUTES.LOGIN} replace />
-            )
-          }
-        />
-
-        <Route
-          path="/lab-tests"
-          element={
-            isAuthenticated ? (
-              <SidebarLayout>
-                <LabTestsPage />
-              </SidebarLayout>
-            ) : (
-              <Navigate to={ROUTES.LOGIN} replace />
-            )
-          }
-        />
-
-        <Route
-          path="/progress"
-          element={
-            isAuthenticated ? (
-              <SidebarLayout>
-                <ProgressPage />
-              </SidebarLayout>
-            ) : (
-              <Navigate to={ROUTES.LOGIN} replace />
-            )
-          }
-        />
-
-        <Route
-          path="/resources"
-          element={
-            isAuthenticated ? (
-              <SidebarLayout>
-                <ResourcesPage />
-              </SidebarLayout>
-            ) : (
-              <Navigate to={ROUTES.LOGIN} replace />
-            )
-          }
-        />
+        {/* Healthcare Routes - Protected with Sidebar + onboarding guard */}
+        <Route path="/appointments" element={requireOnboarding(<AppointmentsPage />)} />
+        <Route path="/prescriptions" element={requireOnboarding(<PrescriptionsPage />)} />
+        <Route path="/lab-tests" element={requireOnboarding(<LabTestsPage />)} />
+        <Route path="/progress" element={requireOnboarding(<ProgressPage />)} />
+        <Route path="/resources" element={requireOnboarding(<ResourcesPage />)} />
 
         <Route
           path="/account"
@@ -355,32 +300,10 @@ function App() {
         />
 
         {/* Supabase Chat Route - Main chat implementation */}
-        <Route
-          path="/supabase-chat"
-          element={
-            isAuthenticated ? (
-              <SidebarLayout>
-                <SupabaseChatPage />
-              </SidebarLayout>
-            ) : (
-              <Navigate to={ROUTES.LOGIN} replace />
-            )
-          }
-        />
+        <Route path="/supabase-chat" element={requireOnboarding(<SupabaseChatPage />)} />
 
-        {/* Subscribe Route - Protected with Sidebar */}
-        <Route
-          path={ROUTES.SUBSCRIBE}
-          element={
-            isAuthenticated ? (
-              <SidebarLayout>
-                <SubscribePage />
-              </SidebarLayout>
-            ) : (
-              <Navigate to={ROUTES.LOGIN} replace />
-            )
-          }
-        />
+        {/* Subscribe Route - Protected with Sidebar + onboarding guard */}
+        <Route path={ROUTES.SUBSCRIBE} element={requireOnboarding(<SubscribePage />)} />
 
         {/* Onboarding Route - Protected, requires BMI check first */}
         <Route
