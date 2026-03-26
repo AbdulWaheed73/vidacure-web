@@ -149,20 +149,34 @@ export const useAuth = () => {
   const processAuthResponse = async (response: AuthMeResponse) => {
     if (!response.authenticated || !response.user) return;
 
-    if (response.user.role === "patient" && response.csrfToken) {
+    let user = response.user;
+
+    if (user.role === "patient" && response.csrfToken) {
       updateCsrfToken(response.csrfToken);
+
+      // Check if there's a pending session BEFORE linking — linking clears localStorage
+      const hadPendingSession = !!pendingSessionService.getStoredToken();
       await linkPendingBookingIfNeeded(response.csrfToken);
+
+      // If linking succeeded (token was cleared), the server now has BMI/meeting data
+      // but our /api/me response is stale. Update the user flags to match.
+      const linkingSucceeded = hadPendingSession && !pendingSessionService.getStoredToken();
+      if (linkingSucceeded) {
+        user = { ...user, hasCompletedBMICheck: true, hasScheduledMeeting: true };
+      }
     }
+
+    const updatedResponse = { ...response, user };
 
     setAuthData({
       authenticated: response.authenticated,
-      user: response.user ?? undefined,
+      user,
       csrfToken: response.csrfToken ?? undefined,
       consentStatus: response.consentStatus,
     });
-    queryClient.setQueryData<AuthMeResponse>(["auth", "me"], response);
+    queryClient.setQueryData<AuthMeResponse>(["auth", "me"], updatedResponse);
 
-    AuthService.storeUserData(response.user, response.csrfToken ?? undefined);
+    AuthService.storeUserData(user, response.csrfToken ?? undefined);
   };
 
   // Handle authentication callback (BankID return with code/state)
