@@ -22,7 +22,8 @@ export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) =>
   const [isLoading, setIsLoading] = useState(true);
   const [isMeetingGatePassed, setIsMeetingGatePassed] = useState(false);
   const [meetingStatus, setMeetingStatus] = useState<'none' | 'scheduled' | 'completed'>('none');
-  const [scheduledTime, setScheduledTime] = useState<string | null>(null);
+  const [scheduledTime, setScheduledTime] = useState('');
+  const [meetingUrl, setMeetingUrl] = useState('');
   const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
   const [useFallbackBooking, setUseFallbackBooking] = useState(false);
   const [isBookingLoading, setIsBookingLoading] = useState(false);
@@ -33,7 +34,8 @@ export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) =>
         const status = await meetingService.getMeetingStatus();
         setIsMeetingGatePassed(status.isMeetingGatePassed);
         setMeetingStatus(status.meetingStatus);
-        setScheduledTime(status.scheduledMeetingTime);
+        setScheduledTime(status.scheduledMeetingTime || '');
+        setMeetingUrl(status.meetingUrl || '');
       } catch (error) {
         console.error('Error checking meeting status:', error);
         setIsMeetingGatePassed(false);
@@ -75,6 +77,12 @@ export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) =>
   if (isMeetingGatePassed) {
     return <>{children}</>;
   }
+
+  // Both Date.now() and new Date(utcString).getTime() are UTC millis — timezone-safe
+  const canJoinMeeting = () => {
+    if (!meetingUrl || !scheduledTime) return false;
+    return Date.now() >= new Date(scheduledTime).getTime() - 10 * 60 * 1000;
+  };
 
   const formatScheduledTime = () => {
     if (!scheduledTime) return null;
@@ -118,12 +126,24 @@ export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) =>
                 </p>
               </div>
             )}
-            <Button
-              onClick={() => navigate(ROUTES.PATIENT_APPOINTMENTS)}
-              className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
-            >
-              {t('gate.viewAppointments')}
-            </Button>
+            <div className="flex flex-col gap-3 items-center">
+              {meetingUrl && (
+                <Button
+                  onClick={() => window.open(meetingUrl, '_blank')}
+                  disabled={!canJoinMeeting()}
+                  className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {canJoinMeeting() ? t('gate.joinMeeting') : t('gate.joinMeetingSoon')}
+                </Button>
+              )}
+              <Button
+                onClick={() => navigate(ROUTES.PATIENT_APPOINTMENTS)}
+                variant="outline"
+                className="px-8 py-3 rounded-full font-semibold"
+              >
+                {t('gate.viewAppointments')}
+              </Button>
+            </div>
           </>
         ) : (
           <>

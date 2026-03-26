@@ -1495,6 +1495,8 @@
     "consultationScheduledFeatureMessage": "Du har en bokad konsultation med din läkare. Du kan använda {{featureName}} efter ditt möte.",
     "scheduledFor": "Bokad till:",
     "viewAppointments": "Visa bokningar",
+    "joinMeeting": "Gå med i mötet",
+    "joinMeetingSoon": "Gå med i mötet (öppnar 10 min innan)",
     "consultationRequiredMessage": "Innan du kan prenumerera behöver du genomföra en konsultation med en av våra läkare för att diskutera din behandlingsplan.",
     "consultationRequiredFeatureMessage": "Innan du kan använda {{featureName}} behöver du genomföra en konsultation med en av våra läkare för att diskutera din behandlingsplan.",
     "bookConsultation": "Boka konsultation",

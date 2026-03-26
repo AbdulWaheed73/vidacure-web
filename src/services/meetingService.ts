@@ -6,6 +6,7 @@ export type MeetingStatusResponse = {
   scheduledMeetingTime: string | null;
   completedAt: string | null;
   isMeetingGatePassed: boolean;
+  meetingUrl: string;
 };
 
 export const meetingService = {

@@ -1495,6 +1495,8 @@
     "consultationScheduledFeatureMessage": "You have a scheduled consultation with your doctor. You'll be able to access {{featureName}} after your meeting.",
     "scheduledFor": "Scheduled for:",
     "viewAppointments": "View Appointments",
+    "joinMeeting": "Join Meeting",
+    "joinMeetingSoon": "Join Meeting (opens 10 min before)",
     "consultationRequiredMessage": "Before you can subscribe, you need to complete a consultation with one of our doctors to discuss your treatment plan.",
     "consultationRequiredFeatureMessage": "Before you can access {{featureName}}, you need to complete a consultation with one of our doctors to discuss your treatment plan.",
     "bookConsultation": "Book Consultation",
