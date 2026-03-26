@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../stores/authStore";
 import { AuthService } from "../services";
@@ -65,10 +65,12 @@ export const useAuth = () => {
     setAuthData,
   } = useAuthStore();
 
-  // Check if this is a BankID callback or normal page load
+  // Capture auth callback flags ONCE on mount via ref — prevents them from
+  // flipping to false after URL params are stripped, which would enable
+  // React Query and cause a race condition with the manual auth handler.
   const urlParams = new URLSearchParams(window.location.search);
-  const isAuthCallback = !!(urlParams.get("code") && urlParams.get("state"));
-  const isAuthSuccess = urlParams.get("auth") === "success";
+  const [isAuthCallback] = useState(() => !!(urlParams.get("code") && urlParams.get("state")));
+  const [isAuthSuccess] = useState(() => urlParams.get("auth") === "success");
   const isAdminRoute = window.location.pathname.startsWith("/admin");
 
   // React Query for /api/me — single source of truth for auth checking
@@ -168,26 +170,19 @@ export const useAuth = () => {
     try {
       clearError();
       setLoading(true);
-
-      setTimeout(async () => {
-        try {
-          const response = await AuthService.checkAuthStatus();
-          await processAuthResponse(response);
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname,
-          );
-        } catch (err) {
-          console.log(
-            "Auth check failed:",
-            err instanceof Error ? err.message : "Unknown error",
-          );
-        } finally {
-          setLoading(false);
-        }
-      }, 1000);
-    } catch {
+      const response = await AuthService.checkAuthStatus();
+      await processAuthResponse(response);
+      window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname,
+      );
+    } catch (err) {
+      console.log(
+        "Auth check failed:",
+        err instanceof Error ? err.message : "Unknown error",
+      );
+    } finally {
       setLoading(false);
     }
   };
@@ -196,21 +191,18 @@ export const useAuth = () => {
   const handleSuccessfulAuth = async () => {
     clearError();
     setLoading(true);
-    window.history.replaceState({}, document.title, window.location.pathname);
-
-    setTimeout(async () => {
-      try {
-        const response = await AuthService.checkAuthStatus();
-        await processAuthResponse(response);
-      } catch (err) {
-        console.log(
-          "Auth check failed:",
-          err instanceof Error ? err.message : "Unknown error",
-        );
-      } finally {
-        setLoading(false);
-      }
-    }, 500);
+    try {
+      const response = await AuthService.checkAuthStatus();
+      await processAuthResponse(response);
+    } catch (err) {
+      console.log(
+        "Auth check failed:",
+        err instanceof Error ? err.message : "Unknown error",
+      );
+    } finally {
+      window.history.replaceState({}, document.title, window.location.pathname);
+      setLoading(false);
+    }
   };
 
   // Handle BankID callbacks on mount
