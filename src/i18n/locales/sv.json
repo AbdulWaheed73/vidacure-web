@@ -56,8 +56,8 @@
     "medicalDescription": "Din allt-i-ett tillgång till vår medicinska behandling och personligt livsstilscoachingteam. Ingen bindningstid — avsluta när du vill.",
     "includes": "Inkluderar:",
     "getStarted": "Kom igång",
-    "promoLabel": "{{discount}} rabatt — använd kod vid betalning",
-    "promoSave": "Spara {{discount}}",
+    "promoLabel": "{{discount}} rabatt i 3 månader — använd kod vid betalning",
+    "promoSave": "Spara {{discount}}/mån",
     "features": {
       "initialAssessment": "Initial hälsobedömning & läkarkonsultation",
       "personalizedPlan": "Recept förskrivning",
@@ -1613,8 +1613,8 @@
     "includes": "Inkluderar:",
     "processing": "Bearbetar...",
     "getStarted": "Kom igång",
-    "promoOff": "rabatt — använd kod vid betalning",
-    "promoSave": "Spara {{discount}}"
+    "promoOff": "rabatt i 3 månader — använd kod vid betalning",
+    "promoSave": "Spara {{discount}}/mån"
   },
   "subscribe": {
     "title": "Välj din plan",

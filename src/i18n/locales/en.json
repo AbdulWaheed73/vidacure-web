@@ -56,8 +56,8 @@
     "medicalDescription": "Your all-in-one access to our medical treatment and personal lifestyle coaching team. No obligation — cancel anytime.",
     "includes": "Includes:",
     "getStarted": "Get Started",
-    "promoLabel": "{{discount}} off — use code at checkout",
-    "promoSave": "Save {{discount}}",
+    "promoLabel": "{{discount}} off for 3 months — use code at checkout",
+    "promoSave": "Save {{discount}}/mo",
     "features": {
       "initialAssessment": "Initial Health Assessment & doctor consultation",
       "personalizedPlan": "medication prescription",
@@ -1613,8 +1613,8 @@
     "includes": "Includes:",
     "processing": "Processing...",
     "getStarted": "Get Started",
-    "promoOff": "off — use code at checkout",
-    "promoSave": "Save {{discount}}"
+    "promoOff": "off for 3 months — use code at checkout",
+    "promoSave": "Save {{discount}}/mo"
   },
   "subscribe": {
     "title": "Choose Your Plan",
