@@ -24,6 +24,15 @@ export const deleteAccount = async (): Promise<DeletionResponse> => {
   return response.data;
 };
 
+/**
+ * Cancel a pending deletion request within the 30-day grace period
+ */
+export const cancelDeletion = async (): Promise<{ success: boolean; message: string }> => {
+  const response = await api.post('/api/users/me/cancel-deletion');
+  return response.data;
+};
+
 export default {
-  deleteAccount
+  deleteAccount,
+  cancelDeletion
 };

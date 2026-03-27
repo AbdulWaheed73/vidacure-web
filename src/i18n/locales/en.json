@@ -45,15 +45,19 @@
     "medicationFeature": "We manage the entire prescription process, with your approved medication prescribed to you and give you a personal health care coaching.",
     "messagingFeature": "Enjoy unlimited messaging with your personal care team for continuous support, coaching, and answers to all your questions.",
     "lifestyleBadge": "Lifestyle Program Membership",
-    "lifestylePrice": "795",
+    "lifestylePrice": "495",
+    "lifestyleOriginalPrice": "695",
     "lifestyleCurrency": "SEK/mo",
-    "lifestyleDescription": "Your access to medical treatment and support.",
+    "lifestyleDescription": "Your access to medical treatment and support. No obligation — cancel anytime.",
     "medicalBadge": "Medical Program Membership",
-    "medicalPrice": "1195",
+    "medicalPrice": "895",
+    "medicalOriginalPrice": "1095",
     "medicalCurrency": "SEK/mo",
-    "medicalDescription": "Your all-in-one access to our medical treatment and personal lifestyle coaching team based.",
+    "medicalDescription": "Your all-in-one access to our medical treatment and personal lifestyle coaching team. No obligation — cancel anytime.",
     "includes": "Includes:",
     "getStarted": "Get Started",
+    "promoLabel": "{{discount}} off — use code at checkout",
+    "promoSave": "Save {{discount}}",
     "features": {
       "initialAssessment": "Initial Health Assessment & doctor consultation",
       "personalizedPlan": "medication prescription",
@@ -520,6 +524,7 @@
       "high": "High",
       "previousWeightLoss": "Previous weight loss attempts",
       "previousWeightLossPlaceholder": "Results",
+      "weightLossDuration": "Duration of results",
       "weightLossDurationPlaceholder": "How long did the results last?"
     },
     "medicalHistory": {
@@ -618,6 +623,13 @@
     "noOrders": "No lab test orders yet",
     "noOrdersMessage": "Your lab test orders and results will appear here",
     "includedAnalyses": "Included analyses",
+    "includedTests": "Included tests:",
+    "testItems": [
+      "Blood lipids (cholesterol, LDL, HDL, triglycerides — used to detect hyperlipidemia)",
+      "Fasting glucose and HbA1c (long-term blood sugar — used to screen for elevated glucose, prediabetes, or diabetes)",
+      "Thyroid function test (important to rule out underactive thyroid function)",
+      "Kidney and liver function test"
+    ],
     "viewResults": "View Results",
     "results": "Results",
     "noResults": "No results available yet",
@@ -1573,7 +1585,13 @@
     "logoutSoon": "You will be logged out in a few seconds...",
     "logoutNow": "Logout Now",
     "deleteButton": "Delete Account",
-    "deleteFailed": "Failed to delete account"
+    "deleteFailed": "Failed to delete account",
+    "pendingDeletionTitle": "Account Deletion Pending",
+    "pendingDeletionMessage": "Your account is scheduled for deletion. You have until {{date}} to cancel this request.",
+    "cancelDeletion": "Cancel Deletion",
+    "cancelling": "Cancelling...",
+    "cancelSuccess": "Deletion cancelled successfully!",
+    "cancelFailed": "Failed to cancel deletion. Please try again."
   },
   "doctorMeetings": {
     "title": "My Appointments",
@@ -1594,7 +1612,14 @@
     "currentPlan": "Current Plan",
     "includes": "Includes:",
     "processing": "Processing...",
-    "getStarted": "Get Started"
+    "getStarted": "Get Started",
+    "promoOff": "off — use code at checkout",
+    "promoSave": "Save {{discount}}"
+  },
+  "subscribe": {
+    "title": "Choose Your Plan",
+    "description": "Select a subscription plan to unlock all features and get access to your personal healthcare team.",
+    "cancelAnytime": "Cancel anytime. No long-term commitments."
   },
   "common": {
     "loading": "Loading...",

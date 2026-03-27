@@ -73,6 +73,7 @@ export type Invoice = {
   currency: string;
   status: string;
   planType: string | null;
+  label: string | null;
   invoicePdf: string | null;
   receiptUrl: string | null;
 };

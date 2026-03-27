@@ -45,15 +45,19 @@
     "medicationFeature": "Vi hanterar hela receptprocessen, med din godkända medicin ordinerat till dig och ge dig en personlig hälsovårdscoaching.",
     "messagingFeature": "Njut av obegränsade meddelanden med ditt personliga vårdteam för kontinuerligt stöd, coaching och svar på alla dina frågor.",
     "lifestyleBadge": "Livsstilsprogram medlemskap",
-    "lifestylePrice": "795",
+    "lifestylePrice": "495",
+    "lifestyleOriginalPrice": "695",
     "lifestyleCurrency": "SEK/mån",
-    "lifestyleDescription": "Din tillgång till medicinsk behandling och stöd.",
+    "lifestyleDescription": "Din tillgång till medicinsk behandling och stöd. Ingen bindningstid — avsluta när du vill.",
     "medicalBadge": "Medicinskt program medlemskap",
-    "medicalPrice": "1195",
+    "medicalPrice": "895",
+    "medicalOriginalPrice": "1095",
     "medicalCurrency": "SEK/mån",
-    "medicalDescription": "Din allt-i-ett tillgång till vår medicinska behandling och personlig livsstilscoachingsteam.",
+    "medicalDescription": "Din allt-i-ett tillgång till vår medicinska behandling och personligt livsstilscoachingteam. Ingen bindningstid — avsluta när du vill.",
     "includes": "Inkluderar:",
     "getStarted": "Kom igång",
+    "promoLabel": "{{discount}} rabatt — använd kod vid betalning",
+    "promoSave": "Spara {{discount}}",
     "features": {
       "initialAssessment": "Initial hälsobedömning & läkarkonsultation",
       "personalizedPlan": "Recept förskrivning",
@@ -520,6 +524,7 @@
       "high": "Högt",
       "previousWeightLoss": "Tidigare viktminskningsförsök",
       "previousWeightLossPlaceholder": "Resultat",
+      "weightLossDuration": "Resultatens varaktighet",
       "weightLossDurationPlaceholder": "Hur länge varade resultaten?"
     },
     "medicalHistory": {
@@ -618,6 +623,13 @@
     "noOrders": "Inga labbbeställningar ännu",
     "noOrdersMessage": "Dina labbbeställningar och resultat visas här",
     "includedAnalyses": "Inkluderade analyser",
+    "includedTests": "Inkluderade tester:",
+    "testItems": [
+      "Blodfetter (kolesterol, LDL, HDL, triglycerider — avslöjar om man har hyperlipidemi)",
+      "Faste-glukos och HbA1c (långtidssocker — dessa tas för att screena för förhöjt blodsocker, prediabetes eller diabetes)",
+      "Sköldkörtelprov (viktigt att utesluta underfunktion av sköldkörtel)",
+      "Njur- och leverfunktionstest"
+    ],
     "viewResults": "Visa resultat",
     "results": "Resultat",
     "noResults": "Inga resultat tillgängliga ännu",
@@ -1573,7 +1585,13 @@
     "logoutSoon": "Du kommer att loggas ut om några sekunder...",
     "logoutNow": "Logga ut nu",
     "deleteButton": "Radera konto",
-    "deleteFailed": "Kunde inte radera kontot"
+    "deleteFailed": "Kunde inte radera kontot",
+    "pendingDeletionTitle": "Kontoradering pågår",
+    "pendingDeletionMessage": "Ditt konto är schemalagt för radering. Du har till {{date}} att avbryta denna begäran.",
+    "cancelDeletion": "Avbryt radering",
+    "cancelling": "Avbryter...",
+    "cancelSuccess": "Radering avbruten!",
+    "cancelFailed": "Kunde inte avbryta radering. Försök igen."
   },
   "doctorMeetings": {
     "title": "Mina bokningar",
@@ -1594,7 +1612,14 @@
     "currentPlan": "Nuvarande plan",
     "includes": "Inkluderar:",
     "processing": "Bearbetar...",
-    "getStarted": "Kom igång"
+    "getStarted": "Kom igång",
+    "promoOff": "rabatt — använd kod vid betalning",
+    "promoSave": "Spara {{discount}}"
+  },
+  "subscribe": {
+    "title": "Välj din plan",
+    "description": "Välj en prenumeration för att låsa upp alla funktioner och få tillgång till ditt personliga vårdteam.",
+    "cancelAnytime": "Avsluta när du vill. Inga långsiktiga åtaganden."
   },
   "common": {
     "loading": "Laddar...",

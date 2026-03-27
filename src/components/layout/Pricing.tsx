@@ -1,7 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, Stethoscope, Pill, MessageCircle, ArrowRight } from 'lucide-react';
+import { Check, Stethoscope, Pill, MessageCircle, ArrowRight, Copy } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { ROUTES } from '@/constants';
 
 const PricingSection = () => {
@@ -44,6 +46,7 @@ const PricingSection = () => {
 
   type PricingCardProps = {
     price: string;
+    originalPrice: string;
     currency: string;
     description: string;
     features: string[];
@@ -55,6 +58,7 @@ const PricingSection = () => {
 
   const PricingCard = ({
     price,
+    originalPrice,
     currency,
     description,
     features,
@@ -62,70 +66,134 @@ const PricingSection = () => {
     isPrimary = false,
     badge,
     onButtonClick
-  }: PricingCardProps) => (
-    <Card className={`${isPrimary ? 'bg-teal-800 text-white border-teal-700' : 'bg-white'} rounded-2xl shadow-lg h-full`}>
-      <CardContent className="p-8 flex flex-col gap-8 h-full">
-        <div className="flex flex-col gap-8">
-          {/* Header with Badge */}
-          <div className="pb-4 border-b border-opacity-30 border-gray-400">
-            <div className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
-              isPrimary 
-                ? 'bg-gradient-to-r from-teal-600 to-teal-600 text-emerald-50' 
-                : 'border border-gray-400 text-gray-800'
-            }`}>
-              {badge}
-            </div>
-          </div>
+  }: PricingCardProps) => {
+    const [copied, setCopied] = useState(false);
+    const promoCode = 'PLAN200';
+    const promoDiscount = '200 SEK';
 
-          {/* Pricing */}
+    const handleCopyCode = () => {
+      navigator.clipboard.writeText(promoCode);
+      toast.success(t('promo.codeCopied'));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    };
+
+    return (
+      <Card className={`${isPrimary ? 'bg-teal-800 text-white border-teal-700' : 'bg-white'} rounded-2xl shadow-lg h-full`}>
+        <CardContent className="p-8 flex flex-col gap-8 h-full">
           <div className="flex flex-col gap-8">
-            <div className="flex items-baseline">
-              <span className={`text-5xl font-bold font-sora ${isPrimary ? 'text-white' : 'text-gray-800'}`}>
-                {price}
-              </span>
-              <span className={`text-2xl font-bold font-sora ml-2 ${isPrimary ? 'text-white' : 'text-gray-800'}`}>
-                {currency}
-              </span>
+            {/* Header with Badge */}
+            <div className="pb-4 border-b border-opacity-30 border-gray-400">
+              <div className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
+                isPrimary
+                  ? 'bg-gradient-to-r from-teal-600 to-teal-600 text-emerald-50'
+                  : 'border border-gray-400 text-gray-800'
+              }`}>
+                {badge}
+              </div>
             </div>
-            <p className={`text-xl font-bold font-sora ${isPrimary ? 'text-white' : 'text-gray-800'}`}>
-              {description}
-            </p>
-          </div>
 
-          {/* Features */}
-          <div className="flex flex-col gap-4">
-            <p className={`font-bold font-manrope ${isPrimary ? 'text-emerald-50' : 'text-gray-800'}`}>
-              {t('pricing.includes')}
-            </p>
-            <div className="flex flex-col gap-4">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-center gap-6">
-                  <Check className={`w-5 h-5 flex-shrink-0 ${isPrimary ? 'text-emerald-50' : 'text-gray-400'}`} />
-                  <span className={`font-manrope ${isPrimary ? 'text-emerald-50' : 'text-gray-800'}`}>
-                    {feature}
+            {/* Pricing */}
+            <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                  <span className={`text-xl font-sora font-semibold line-through decoration-2 ${
+                    isPrimary ? 'text-white/40 decoration-red-400/70' : 'text-gray-400 decoration-red-400/70'
+                  }`}>
+                    {originalPrice} {currency}
+                  </span>
+                  <span className={`text-xs font-bold font-manrope px-2 py-1 rounded-full ${
+                    isPrimary
+                      ? 'bg-emerald-400 text-teal-900'
+                      : 'bg-teal-100 text-teal-700'
+                  }`}>
+                    -200 SEK
                   </span>
                 </div>
-              ))}
+                <div className="flex items-baseline">
+                  <span className={`text-5xl font-bold font-sora ${isPrimary ? 'text-white' : 'text-gray-800'}`}>
+                    {price}
+                  </span>
+                  <span className={`text-2xl font-bold font-sora ml-2 ${isPrimary ? 'text-white' : 'text-gray-800'}`}>
+                    {currency}
+                  </span>
+                </div>
+              </div>
+              <p className={`text-xl font-bold font-sora ${isPrimary ? 'text-white' : 'text-gray-800'}`}>
+                {description}
+              </p>
+            </div>
+
+            {/* Features */}
+            <div className="flex flex-col gap-4">
+              <p className={`font-bold font-manrope ${isPrimary ? 'text-emerald-50' : 'text-gray-800'}`}>
+                {t('pricing.includes')}
+              </p>
+              <div className="flex flex-col gap-4">
+                {features.map((feature, index) => (
+                  <div key={index} className="flex items-center gap-6">
+                    <Check className={`w-5 h-5 flex-shrink-0 ${isPrimary ? 'text-emerald-50' : 'text-gray-400'}`} />
+                    <span className={`font-manrope ${isPrimary ? 'text-emerald-50' : 'text-gray-800'}`}>
+                      {feature}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Promo Code Display */}
+            <div className={`rounded-xl p-4 relative overflow-hidden ${
+              isPrimary
+                ? 'bg-gradient-to-r from-emerald-600 to-teal-500'
+                : 'bg-gradient-to-r from-teal-600 to-teal-500'
+            }`}>
+              <div className="absolute -right-3 -top-3 w-20 h-20 rounded-full bg-white/10" />
+              <div className="absolute -right-1 -bottom-4 w-14 h-14 rounded-full bg-white/5" />
+              <div className="flex items-center justify-between relative">
+                <div className="flex flex-col gap-1">
+                  <span className="text-white/80 text-xs font-manrope font-medium uppercase tracking-wide">
+                    {t('pricing.promoLabel', { discount: promoDiscount })}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono font-bold tracking-widest text-lg text-white">
+                      {promoCode}
+                    </span>
+                    <span className="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+                      {t('pricing.promoSave', { discount: promoDiscount })}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={handleCopyCode}
+                  className="p-2.5 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white"
+                >
+                  {copied ? (
+                    <Check className="w-4 h-4" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Button */}
-        <div className="mt-auto">
-          <button
-            onClick={onButtonClick}
-            className={`w-full h-11 px-6 py-2.5 rounded-full flex items-center justify-center gap-2.5 font-semibold text-sm transition-colors duration-200 ${
-              isPrimary
-                ? 'bg-white text-gray-800 hover:bg-gray-100'
-                : 'bg-emerald-50 text-gray-800 hover:bg-emerald-100'
-            }`}>
-            {buttonText}
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      </CardContent>
-    </Card>
-  );
+          {/* Button */}
+          <div className="mt-auto">
+            <button
+              onClick={onButtonClick}
+              className={`w-full h-11 px-6 py-2.5 rounded-full flex items-center justify-center gap-2.5 font-semibold text-sm transition-colors duration-200 ${
+                isPrimary
+                  ? 'bg-white text-gray-800 hover:bg-gray-100'
+                  : 'bg-emerald-50 text-gray-800 hover:bg-emerald-100'
+              }`}>
+              {buttonText}
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
 
   return (
     <div className=" px-4 pt-20 sm:px-6 lg:px-14">
@@ -171,6 +239,7 @@ const PricingSection = () => {
               <PricingCard
                 badge={t('pricing.lifestyleBadge')}
                 price={t('pricing.lifestylePrice')}
+                originalPrice={t('pricing.lifestyleOriginalPrice')}
                 currency={t('pricing.lifestyleCurrency')}
                 description={t('pricing.lifestyleDescription')}
                 features={lifestyleFeatures}
@@ -183,6 +252,7 @@ const PricingSection = () => {
               <PricingCard
                 badge={t('pricing.medicalBadge')}
                 price={t('pricing.medicalPrice')}
+                originalPrice={t('pricing.medicalOriginalPrice')}
                 currency={t('pricing.medicalCurrency')}
                 description={t('pricing.medicalDescription')}
                 features={medicalFeatures}
@@ -230,6 +300,7 @@ const PricingSection = () => {
               <PricingCard
                 badge={t('pricing.lifestyleBadge')}
                 price={t('pricing.lifestylePrice')}
+                originalPrice={t('pricing.lifestyleOriginalPrice')}
                 currency={t('pricing.lifestyleCurrency')}
                 description={t('pricing.lifestyleDescription')}
                 features={lifestyleFeatures}
@@ -240,6 +311,7 @@ const PricingSection = () => {
               <PricingCard
                 badge={t('pricing.medicalBadge')}
                 price={t('pricing.medicalPrice')}
+                originalPrice={t('pricing.medicalOriginalPrice')}
                 currency={t('pricing.medicalCurrency')}
                 description={t('pricing.medicalDescription')}
                 features={medicalFeatures}

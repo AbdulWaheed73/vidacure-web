@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { FlaskConical, TestTubes, ArrowRight, MapPin, ExternalLink, RefreshCw, ShieldAlert } from 'lucide-react';
+import { FlaskConical, TestTubes, ArrowRight, MapPin, ExternalLink, RefreshCw, ShieldAlert, Copy } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -239,31 +240,81 @@ export const LabTestsPage: React.FC = () => {
                       {isSv ? pkg.descriptionSv : pkg.description}
                     </CardDescription>
                   </CardHeader>
-                  {pkg.analyses.length > 0 && (
-                    <CardContent>
-                      <p className="text-sm font-medium text-gray-700 mb-2">
-                        {t('labTests.includedAnalyses')}:
+                  <CardContent className="space-y-4">
+                    <div>
+                      <p className="text-sm font-semibold text-gray-700 mb-2">
+                        {t('labTests.includedTests')}
                       </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {pkg.analyses.map((analysis) => (
-                          <Badge key={analysis.code} variant="secondary" className="text-xs">
-                            {isSv ? analysis.nameSv : analysis.name}
-                          </Badge>
+                      <ul className="space-y-1.5">
+                        {(t('labTests.testItems', { returnObjects: true }) as string[]).map((item, i) => (
+                          <li key={i} className="flex items-start gap-2 text-xs text-gray-600 font-manrope">
+                            <span className="text-[#009689] mt-0.5">•</span>
+                            <span>{item}</span>
+                          </li>
                         ))}
+                      </ul>
+                    </div>
+                    {pkg.analyses.length > 0 && (
+                      <div>
+                        <p className="text-xs font-medium text-gray-500 mb-1.5">
+                          {t('labTests.includedAnalyses')}:
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {pkg.analyses.map((analysis) => (
+                            <Badge key={analysis.code} variant="secondary" className="text-xs">
+                              {isSv ? analysis.nameSv : analysis.name}
+                            </Badge>
+                          ))}
+                        </div>
                       </div>
-                    </CardContent>
-                  )}
-                  <CardFooter className="flex items-center justify-between">
-                    <span className="text-lg font-bold text-[#009689]">
-                      {formatPrice(pkg.priceAmountOre, pkg.priceCurrency)}
-                    </span>
-                    <Button
-                      onClick={() => setConfirmPackage(pkg)}
-                      disabled={isCreatingCheckout}
-                      className="bg-[#009689] hover:bg-[#005044] text-white"
-                    >
-                      {t('labTests.orderTest')}
-                    </Button>
+                    )}
+                  </CardContent>
+                  <CardFooter className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex flex-col">
+                        {pkg.originalPriceAmountOre && (
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold text-gray-400 line-through decoration-2 decoration-red-400/70">
+                              {formatPrice(pkg.originalPriceAmountOre, pkg.priceCurrency)}
+                            </span>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-700">
+                              -{formatPrice(pkg.originalPriceAmountOre - pkg.priceAmountOre, pkg.priceCurrency)}
+                            </span>
+                          </div>
+                        )}
+                        <span className="text-lg font-bold text-[#009689]">
+                          {formatPrice(pkg.priceAmountOre, pkg.priceCurrency)}
+                        </span>
+                      </div>
+                      <Button
+                        onClick={() => setConfirmPackage(pkg)}
+                        disabled={isCreatingCheckout}
+                        className="bg-[#009689] hover:bg-[#005044] text-white"
+                      >
+                        {t('labTests.orderTest')}
+                      </Button>
+                    </div>
+                    <div className="w-full rounded-xl p-3 relative overflow-hidden bg-gradient-to-r from-teal-600 to-teal-500">
+                      <div className="absolute -right-3 -top-3 w-16 h-16 rounded-full bg-white/10" />
+                      <div className="flex items-center justify-between relative">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-white/80 text-[10px] font-manrope font-medium uppercase tracking-wide">
+                            {t('pricing.promoLabel', { discount: '200 SEK' })}
+                          </span>
+                          <span className="font-mono font-bold tracking-widest text-sm text-white">BLOD200</span>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigator.clipboard.writeText('BLOD200');
+                            toast.success(t('promo.codeCopied'));
+                          }}
+                          className="p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
                   </CardFooter>
                 </Card>
               ))}

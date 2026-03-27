@@ -84,7 +84,7 @@ export const BillingHistory: React.FC = () => {
               {formatAmount(invoice.amount, invoice.currency)}
             </span>
             <span className="text-sm text-gray-500 font-manrope hidden md:inline">
-              {getPlanLabel(invoice.planType)}
+              {invoice.label || getPlanLabel(invoice.planType)}
             </span>
           </div>
           <div className="flex items-center gap-2 md:gap-3 shrink-0">

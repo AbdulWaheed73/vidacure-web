@@ -153,7 +153,7 @@ export const HealthBackgroundStep = () => {
           />
         </FormField>
 
-        <FormField label="" className="flex-1">
+        <FormField label={t('onboarding.healthBackground.weightLossDuration')} className="flex-1">
           <Textarea
             placeholder={t('onboarding.healthBackground.weightLossDurationPlaceholder')}
             value={healthBackground.weightLossDuration}
