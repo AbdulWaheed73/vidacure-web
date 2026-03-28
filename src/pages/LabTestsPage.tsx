@@ -299,7 +299,7 @@ export const LabTestsPage: React.FC = () => {
                       <div className="flex items-center justify-between relative">
                         <div className="flex flex-col gap-0.5">
                           <span className="text-white/80 text-[10px] font-manrope font-medium uppercase tracking-wide">
-                            {t('pricing.promoLabel', { discount: '200 SEK' })}
+                            {t('pricing.promoLabel', { discount: '50%' })}
                           </span>
                           <span className="font-mono font-bold tracking-widest text-sm text-white">BLOD200</span>
                         </div>
