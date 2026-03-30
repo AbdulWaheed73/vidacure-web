@@ -278,7 +278,7 @@ export const LabTestsPage: React.FC = () => {
                               {formatPrice(pkg.originalPriceAmountOre, pkg.priceCurrency)}
                             </span>
                             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-700">
-                              -{formatPrice(pkg.originalPriceAmountOre - pkg.priceAmountOre, pkg.priceCurrency)}
+                              -50%
                             </span>
                           </div>
                         )}
