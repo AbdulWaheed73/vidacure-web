@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from 'recharts';
@@ -27,6 +27,7 @@ import {
   useDoctorPatientProfile,
   useDoctorPatientQuestionnaire,
   useDoctorPatientLabOrders,
+  useDoctorUnassignedPatientQuestionnaire,
 } from '@/hooks/useDoctorDashboardQueries';
 import { JournalTab } from '@/components/doctor/JournalTab';
 import { QUESTION_LABELS } from '@/components/onboarding/questionMapping';
@@ -39,6 +40,7 @@ type PatientProfilePanelProps = {
   patientId: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  isUnassigned?: boolean;
 };
 
 // --- Weight Chart Sub-component ---
@@ -209,12 +211,15 @@ const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry; t: (key: s
 
 // --- Questionnaire display ---
 
-const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean }> = ({
+const QuestionnaireTab: React.FC<{ patientId: string | null; enabled: boolean; isUnassigned?: boolean }> = ({
   patientId,
   enabled,
+  isUnassigned = false,
 }) => {
   const { t } = useTranslation();
-  const { data, isLoading } = useDoctorPatientQuestionnaire(patientId, enabled);
+  const assignedQuery = useDoctorPatientQuestionnaire(patientId, enabled && !isUnassigned);
+  const unassignedQuery = useDoctorUnassignedPatientQuestionnaire(patientId, enabled && isUnassigned);
+  const { data, isLoading } = isUnassigned ? unassignedQuery : assignedQuery;
 
   const QUESTION_GROUPS = [
     { label: t('doctorPatients.personalInfo'), ids: ['Q1', 'Q2', 'Q3'] },
@@ -361,11 +366,16 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
   patientId,
   open,
   onOpenChange,
+  isUnassigned = false,
 }) => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const [activeTab, setActiveTab] = useState('overview');
-  const { data, isLoading } = useDoctorPatientProfile(patientId);
+  const [activeTab, setActiveTab] = useState(isUnassigned ? 'questionnaire' : 'overview');
+  const { data, isLoading } = useDoctorPatientProfile(isUnassigned ? null : patientId);
+
+  useEffect(() => {
+    setActiveTab(isUnassigned ? 'questionnaire' : 'overview');
+  }, [isUnassigned]);
 
   const profile = data?.patientProfile;
   const dateLocale = i18n.language === 'sv' ? 'sv-SE' : 'en-US';
@@ -395,30 +405,36 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
         <div className="px-5 pt-3">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="!bg-transparent w-full justify-start gap-2 border-b border-[#e0e0e0] rounded-none p-0 h-auto">
-              <TabsTrigger
-                value="overview"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
-              >
-                {t('doctorPatients.tabOverview')}
-              </TabsTrigger>
+              {!isUnassigned && (
+                <TabsTrigger
+                  value="overview"
+                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
+                >
+                  {t('doctorPatients.tabOverview')}
+                </TabsTrigger>
+              )}
               <TabsTrigger
                 value="questionnaire"
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
               >
                 {t('doctorPatients.tabQuestionnaire')}
               </TabsTrigger>
-              <TabsTrigger
-                value="lab-tests"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
-              >
-                {t('doctorPatients.tabLabTests')}
-              </TabsTrigger>
-              <TabsTrigger
-                value="journal"
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
-              >
-                {t('doctorPatients.tabJournal')}
-              </TabsTrigger>
+              {!isUnassigned && (
+                <>
+                  <TabsTrigger
+                    value="lab-tests"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
+                  >
+                    {t('doctorPatients.tabLabTests')}
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="journal"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
+                  >
+                    {t('doctorPatients.tabJournal')}
+                  </TabsTrigger>
+                </>
+              )}
             </TabsList>
 
             {/* Overview Tab */}
@@ -532,6 +548,7 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
               <QuestionnaireTab
                 patientId={patientId}
                 enabled={activeTab === 'questionnaire'}
+                isUnassigned={isUnassigned}
               />
             </TabsContent>
 

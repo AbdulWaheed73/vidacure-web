@@ -22,7 +22,6 @@ const AboutUs = lazy(() => import("./pages/AboutUs"));
 const Article = lazy(() => import("./pages/Article"));
 const PreLoginBMI = lazy(() => import("./pages/PreLoginBMI"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
-const PreLoginBooking = lazy(() => import("./pages/PreLoginBooking"));
 const SubscriptionSuccess = lazy(() => import("./pages/SubscriptionSuccess").then(m => ({ default: m.SubscriptionSuccess })));
 const SubscriptionCancel = lazy(() => import("./pages/SubscriptionCancel").then(m => ({ default: m.SubscriptionCancel })));
 const LabTestPaymentSuccess = lazy(() => import("./pages/LabTestPaymentSuccess").then(m => ({ default: m.LabTestPaymentSuccess })));
@@ -82,7 +81,9 @@ function App() {
   const hasFunctionalConsent = consent?.functional ?? false;
 
   // Check if new patient has completed BMI check — server state first, localStorage fallback for pre-login flow
-  const hasCompletedBMICheck = () => user?.hasCompletedBMICheck || !!localStorage.getItem('vidacure_pending_bmi');
+  const hasCompletedBMICheck = () => {
+    return user?.hasCompletedBMICheck || !!localStorage.getItem('vidacure_pending_bmi');
+  };
 
   // Layout wrapper for authenticated routes with sidebar
   const SidebarLayout = ({ children }: { children: React.ReactNode }) => {
@@ -154,6 +155,9 @@ function App() {
 
   // Guard: requires authentication + onboarding completion for patients (doctors skip onboarding)
   const requireOnboarding = (children: React.ReactNode) => {
+    // Wait for auth hydration before deciding — otherwise a hard refresh on a
+    // protected route briefly sees isAuthenticated=false and bounces through /login.
+    if (loading) return <PageLoader />;
     if (!isAuthenticated) return <Navigate to={ROUTES.LOGIN} replace />;
     if (user?.role === "doctor" || user?.hasCompletedOnboarding) {
       return <SidebarLayout>{children}</SidebarLayout>;
@@ -194,6 +198,8 @@ function App() {
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
               ) : user?.hasCompletedOnboarding ? (
                 <Navigate to={ROUTES.DASHBOARD as string} replace />
+              ) : user?.role === "patient" && !!localStorage.getItem('vidacure_pending_bmi') ? (
+                <Navigate to={ROUTES.ONBOARDING as string} replace />
               ) : hasCompletedBMICheck() ? (
                 <Navigate to={ROUTES.ONBOARDING as string} replace />
               ) : (
@@ -201,26 +207,6 @@ function App() {
               )
             ) : (
               <PreLoginBMI />
-            )
-          }
-        />
-
-        {/* Pre-Login Booking - Public route, also accessible by new patients */}
-        <Route
-          path={ROUTES.PRE_LOGIN_BOOKING}
-          element={
-            isAuthenticated ? (
-              user?.role === "doctor" ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : user?.hasCompletedOnboarding ? (
-                <Navigate to={ROUTES.DASHBOARD as string} replace />
-              ) : hasCompletedBMICheck() || user?.hasScheduledMeeting ? (
-                <Navigate to={ROUTES.ONBOARDING as string} replace />
-              ) : (
-                <PreLoginBooking />
-              )
-            ) : (
-              <PreLoginBooking />
             )
           }
         />

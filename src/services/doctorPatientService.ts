@@ -29,4 +29,16 @@ export const doctorPatientService = {
     });
     return response.data;
   },
+
+  getUnassignedPatients: async (): Promise<DoctorPatientListResponse> => {
+    const response = await api.get('/api/doctor/unassigned-patients');
+    return response.data;
+  },
+
+  getUnassignedPatientQuestionnaire: async (
+    patientId: string
+  ): Promise<PatientQuestionnaireResponse> => {
+    const response = await api.get(`/api/doctor/unassigned-patient-questionnaire/${patientId}`);
+    return response.data;
+  },
 };

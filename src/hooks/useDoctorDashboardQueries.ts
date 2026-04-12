@@ -67,6 +67,21 @@ export const useDoctorPatients = () => {
   });
 };
 
+export const useDoctorUnassignedPatients = () => {
+  return useQuery({
+    queryKey: queryKeys.doctorUnassignedPatients,
+    queryFn: () => doctorPatientService.getUnassignedPatients(),
+  });
+};
+
+export const useDoctorUnassignedPatientQuestionnaire = (patientId: string | null, enabled: boolean) => {
+  return useQuery({
+    queryKey: queryKeys.doctorUnassignedPatientQuestionnaire(patientId ?? ''),
+    queryFn: () => doctorPatientService.getUnassignedPatientQuestionnaire(patientId!),
+    enabled: !!patientId && enabled,
+  });
+};
+
 export const useDoctorPatientProfile = (patientId: string | null) => {
   return useQuery({
     queryKey: queryKeys.doctorPatientProfile(patientId ?? ''),

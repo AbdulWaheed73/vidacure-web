@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, Stethoscope, Pill, MessageCircle, ArrowRight, Copy } from 'lucide-react';
+import { Check, Stethoscope, Pill, MessageCircle, ArrowRight, Copy, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +22,10 @@ const PricingSection = () => {
     {
       icon: <MessageCircle className="w-6 h-6 text-teal-700" />,
       text: t('pricing.messagingFeature')
+    },
+    {
+      icon: <X className="w-6 h-6 text-teal-700" />,
+      text: t('pricing.noCommitmentFeature')
     }
   ];
 
@@ -31,7 +35,8 @@ const PricingSection = () => {
     t('pricing.features.personalizedLifestylePlan'),
     t('pricing.features.medicalCheckins'),
     t('pricing.features.unlimitedMessaging'),
-    t('pricing.features.progressTracking')
+    t('pricing.features.progressTracking'),
+    t('pricing.features.labTestingAndMiniCheck')
   ];
 
   const medicalFeatures = [
@@ -41,7 +46,8 @@ const PricingSection = () => {
     t('pricing.features.medicalCheckins'),
     t('pricing.features.glp1Medication'),
     t('pricing.features.unlimitedMessaging'),
-    t('pricing.features.progressTracking')
+    t('pricing.features.progressTracking'),
+    t('pricing.features.labTestingAndMiniCheck')
   ];
 
   type PricingCardProps = {

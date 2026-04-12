@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "../stores/authStore";
 import { AuthService } from "../services";
-import { pendingSessionService } from "../services/pendingSessionService";
 import { api, updateCsrfToken } from "../services/api";
 import { useConsentStore } from "../stores/consentStore";
 import type { User } from "../types";
@@ -32,24 +31,6 @@ const fetchAuthStatus = async (): Promise<AuthMeResponse> => {
   }
 };
 
-// Link a pending Calendly booking to the authenticated patient
-const linkPendingBookingIfNeeded = async (csrfToken: string) => {
-  const token = pendingSessionService.getStoredToken();
-  if (!token) return;
-
-  try {
-    const result = await pendingSessionService.linkBookingToUser(
-      token,
-      csrfToken,
-    );
-    if (result.success) {
-      pendingSessionService.clearStoredToken();
-      localStorage.removeItem("vidacure_pending_calendly_booking");
-    }
-  } catch {
-    // Don't clear token on error — user might retry
-  }
-};
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
@@ -101,9 +82,6 @@ export const useAuth = () => {
         useConsentStore.getState().setConsentFromAuth(authData.consentStatus);
       }
 
-      if (authData.user.role === "patient") {
-        linkPendingBookingIfNeeded(authData.csrfToken);
-      }
     } else {
       useAuthStore.setState({
         isAuthenticated: false,
@@ -153,17 +131,6 @@ export const useAuth = () => {
 
     if (user.role === "patient" && response.csrfToken) {
       updateCsrfToken(response.csrfToken);
-
-      // Check if there's a pending session BEFORE linking — linking clears localStorage
-      const hadPendingSession = !!pendingSessionService.getStoredToken();
-      await linkPendingBookingIfNeeded(response.csrfToken);
-
-      // If linking succeeded (token was cleared), the server now has BMI/meeting data
-      // but our /api/me response is stale. Update the user flags to match.
-      const linkingSucceeded = hadPendingSession && !pendingSessionService.getStoredToken();
-      if (linkingSucceeded) {
-        user = { ...user, hasCompletedBMICheck: true, hasScheduledMeeting: true };
-      }
     }
 
     const updatedResponse = { ...response, user };

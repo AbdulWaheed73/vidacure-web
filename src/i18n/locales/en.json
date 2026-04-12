@@ -44,6 +44,7 @@
     "doctorFeature": "Receive ongoing care from a board-certified doctor who creates your plan, manages your prescriptions, and safely guides your progress.",
     "medicationFeature": "We manage the entire prescription process, with your approved medication prescribed to you and give you a personal health care coaching.",
     "messagingFeature": "Enjoy unlimited messaging with your personal care team for continuous support, coaching, and answers to all your questions.",
+    "noCommitmentFeature": "There are no binding terms for your membership.",
     "lifestyleBadge": "Lifestyle Program Membership",
     "lifestylePrice": "495",
     "lifestyleOriginalPrice": "695",
@@ -68,7 +69,8 @@
       "nutritionCoaching": "Nutrition & workout coaching",
       "doctorConsultation": "Initial Doctor Consultation",
       "treatmentPlan": "Personalized Treatment Plan",
-      "glp1Medication": "Medication Prescription"
+      "glp1Medication": "Medication Prescription",
+      "labTestingAndMiniCheck": "Lab testing and mini health check"
     }
   },
   "faq": {
@@ -177,11 +179,11 @@
     "titleJourney": "journey",
     "step1": {
       "title": "Online Consult",
-      "description": "Tell us about your health history in a short online form. You'll then have a private consultation with a board-certified doctor to see if you're a candidate. Sometimes we ask you to leave blood samples to make the evaluation correct."
+      "description": "Tell us about your health history in a short online form. You'll then have a private consultation with a board-certified doctor to see if you're a candidate. To evaluate your health and ensure your treatment, you will need to provide blood samples and have your blood pressure measured at a laboratory. Once the test results are ready, your doctor will get back to you with prescriptions and a treatment plan."
     },
     "step2": {
       "title": "Get Your Custom Plan",
-      "description": "Your doctor reviews your health profile. You have two options to choose:\n\n• Medical treatment program - Monthly consultations with your doctor\n• Lifestyle program - Regular follow-up and training with a health coach to guide you on nutrition and workout"
+      "description": "Your doctor reviews your health profile. You have two options to choose:\n\n• Lifestyle program - Regular follow-up and training with a health coach to guide you on nutrition and workout"
     },
     "step3": {
       "title": "Receive Treatment & Support - All the way long",
@@ -784,6 +786,11 @@
     "refresh": "Refresh",
     "noPatientsYet": "No Patients Yet",
     "noPatientsMessage": "Assigned patients will appear here",
+    "myPatients": "My Patients",
+    "newPatients": "Unassigned",
+    "noNewPatients": "No Unassigned Patients",
+    "noNewPatientsMessage": "Patients with completed questionnaires who are not yet assigned to a doctor will appear here",
+    "newPatientsTooltip": "Patients who have booked a meeting but have not been assigned to a doctor yet",
     "profileOverview": "Profile overview",
     "profileDescription": "Patient profile details",
     "tabOverview": "Overview",

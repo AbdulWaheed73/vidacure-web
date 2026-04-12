@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { RefreshCw, Users } from 'lucide-react';
-import { useDoctorPatients } from '@/hooks/useDoctorDashboardQueries';
+import { RefreshCw, Users, Info } from 'lucide-react';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { useDoctorPatients, useDoctorUnassignedPatients } from '@/hooks/useDoctorDashboardQueries';
 import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
 import type { DoctorPatientListItem } from '@/types/doctor-patient-types';
 
@@ -73,12 +74,17 @@ const PatientCard: React.FC<{
 
 const DoctorPatients: React.FC = () => {
   const { t } = useTranslation();
+  const [viewMode, setViewMode] = useState<'assigned' | 'unassigned'>('assigned');
   const { data, isLoading, refetch, isRefetching } = useDoctorPatients();
+  const { data: unassignedData, isLoading: unassignedLoading, refetch: refetchUnassigned, isRefetching: isRefetchingUnassigned } = useDoctorUnassignedPatients();
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const patients = data?.patients ?? [];
+  const patients = viewMode === 'assigned' ? (data?.patients ?? []) : (unassignedData?.patients ?? []);
+  const currentLoading = viewMode === 'assigned' ? isLoading : unassignedLoading;
+  const currentRefetching = viewMode === 'assigned' ? isRefetching : isRefetchingUnassigned;
+  const handleRefetch = viewMode === 'assigned' ? refetch : refetchUnassigned;
 
   // Auto-open profile panel when navigated with ?patientId=
   useEffect(() => {
@@ -105,19 +111,51 @@ const DoctorPatients: React.FC = () => {
   return (
     <div className="p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-4">
         <h1 className="font-sora font-bold text-2xl text-[#282828]">{t('doctorPatients.title')}</h1>
         <button
-          onClick={() => refetch()}
-          disabled={isRefetching}
+          onClick={() => handleRefetch()}
+          disabled={currentRefetching}
           className="flex items-center gap-2 bg-[#f0f7f4] text-[#005044] rounded-full px-5 py-2.5 font-sora font-semibold text-sm hover:bg-[#c0ebe5] transition-colors"
         >
-          <RefreshCw className={`w-4 h-4 ${isRefetching ? 'animate-spin' : ''}`} />
-          {t('doctorPatients.refresh')}
+          <RefreshCw className={`w-4 h-4 ${currentRefetching ? 'animate-spin' : ''}`} />
+          <span className="hidden sm:inline">{t('doctorPatients.refresh')}</span>
         </button>
       </div>
 
-      {isLoading ? (
+      {/* Toggle */}
+      <div className="flex bg-white rounded-full p-1 border border-[#e0e0e0] shadow-sm w-fit mb-6">
+        <button
+          onClick={() => setViewMode('assigned')}
+          className={`px-5 py-2 rounded-full text-sm font-sora font-semibold transition-all ${
+            viewMode === 'assigned'
+              ? 'bg-[#005044] text-white shadow-md'
+              : 'bg-transparent text-[#282828] hover:bg-[#f0f7f4]'
+          }`}
+        >
+          {t('doctorPatients.myPatients')}
+        </button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={() => setViewMode('unassigned')}
+              className={`px-5 py-2 rounded-full text-sm font-sora font-semibold transition-all flex items-center gap-1.5 ${
+                viewMode === 'unassigned'
+                  ? 'bg-[#005044] text-white shadow-md'
+                  : 'bg-transparent text-[#282828] hover:bg-[#f0f7f4]'
+              }`}
+            >
+              {t('doctorPatients.newPatients')}
+              <Info className={`w-3.5 h-3.5 ${viewMode === 'unassigned' ? 'text-white/70' : 'text-[#b0b0b0]'}`} />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="max-w-[220px]">
+            {t('doctorPatients.newPatientsTooltip')}
+          </TooltipContent>
+        </Tooltip>
+      </div>
+
+      {currentLoading ? (
         <div className="space-y-4">
           {[1, 2, 3, 4].map((i) => (
             <SkeletonRow key={i} />
@@ -126,9 +164,11 @@ const DoctorPatients: React.FC = () => {
       ) : patients.length === 0 ? (
         <div className="bg-white rounded-[20px] shadow-[0px_4px_10px_0px_rgba(0,0,0,0.08)] p-16 text-center">
           <Users className="w-16 h-16 text-[#c0ebe5] mx-auto mb-4" />
-          <h2 className="font-sora font-semibold text-lg text-[#282828] mb-2">{t('doctorPatients.noPatientsYet')}</h2>
+          <h2 className="font-sora font-semibold text-lg text-[#282828] mb-2">
+            {viewMode === 'assigned' ? t('doctorPatients.noPatientsYet') : t('doctorPatients.noNewPatients')}
+          </h2>
           <p className="text-[#b0b0b0] font-manrope text-sm">
-            {t('doctorPatients.noPatientsMessage')}
+            {viewMode === 'assigned' ? t('doctorPatients.noPatientsMessage') : t('doctorPatients.noNewPatientsMessage')}
           </p>
         </div>
       ) : (
@@ -147,6 +187,7 @@ const DoctorPatients: React.FC = () => {
         patientId={selectedPatientId}
         open={sheetOpen}
         onOpenChange={handleSheetClose}
+        isUnassigned={viewMode === 'unassigned'}
       />
     </div>
   );

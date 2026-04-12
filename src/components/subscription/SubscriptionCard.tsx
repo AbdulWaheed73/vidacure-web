@@ -40,6 +40,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         t('pricing.features.medicalCheckins'),
         t('pricing.features.unlimitedMessaging'),
         t('pricing.features.progressTracking'),
+        t('pricing.features.labTestingAndMiniCheck'),
       ]
     : [
         t('pricing.features.doctorConsultation'),
@@ -49,6 +50,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         t('pricing.features.glp1Medication'),
         t('pricing.features.unlimitedMessaging'),
         t('pricing.features.progressTracking'),
+        t('pricing.features.labTestingAndMiniCheck'),
       ];
 
   const handleCopyCode = () => {

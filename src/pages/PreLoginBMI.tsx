@@ -4,9 +4,8 @@ import { useTranslation } from "react-i18next";
 import { ROUTES } from "@/constants";
 import { Button } from "@/components/onboarding";
 import { NumericInput, FormField } from "@/components/onboarding";
-import { pendingSessionService } from "@/services/pendingSessionService";
 import { useAuthStore } from "@/stores/authStore";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 const PreLoginBMI = () => {
   const navigate = useNavigate();
@@ -17,8 +16,6 @@ const PreLoginBMI = () => {
   const [bmi, setBmi] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [eligibilityStatus, setEligibilityStatus] = useState<'not_eligible' | 'conditional' | 'eligible'>('not_eligible');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // Calculate BMI when height and weight are provided
   useEffect(() => {
@@ -48,55 +45,19 @@ const PreLoginBMI = () => {
     }
   }, [height, weight]);
 
-  const handleContinue = async () => {
+  const handleContinue = () => {
+    console.log('[PreLoginBMI] handleContinue fired', { eligibilityStatus, bmi, isAuthenticated });
     if (eligibilityStatus === 'not_eligible' || !bmi) return;
 
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const bmiData = {
-        height: parseFloat(height),
-        weight: parseFloat(weight),
-        bmi: bmi,
-      };
-
-      // Create pending session on server
-      const response = await pendingSessionService.createPendingSession(bmiData);
-
-      if (response.success) {
-        // Store token and BMI data locally
-        pendingSessionService.storeToken(response.token);
-        pendingSessionService.storeBmiData(bmiData);
-
-        // Navigate to booking page with token
-        navigate(ROUTES.PRE_LOGIN_BOOKING, {
-          state: { token: response.token }
-        });
-      } else {
-        setError(t('preLoginBMI.errors.sessionFailed'));
-      }
-    } catch (err: unknown) {
-      console.error("Error creating pending session:", err);
-
-      // Extract actual error message from axios error response
-      if (err && typeof err === 'object' && 'response' in err) {
-        const axiosError = err as { response?: { data?: { error?: string }, status?: number } };
-        const serverError = axiosError.response?.data?.error;
-        const status = axiosError.response?.status;
-
-        if (status === 429) {
-          setError(t('preLoginBMI.errors.rateLimited', 'Too many requests. Please wait a few minutes and try again.'));
-        } else if (serverError) {
-          setError(serverError);
-        } else {
-          setError(t('preLoginBMI.errors.genericError'));
-        }
-      } else {
-        setError(t('preLoginBMI.errors.genericError'));
-      }
-    } finally {
-      setIsLoading(false);
+    localStorage.setItem('vidacure_pending_bmi', JSON.stringify({
+      height: parseFloat(height),
+      weight: parseFloat(weight),
+      bmi,
+    }));
+    if (isAuthenticated) {
+      window.location.href = ROUTES.ONBOARDING;
+    } else {
+      navigate(ROUTES.LOGIN);
     }
   };
 
@@ -201,14 +162,6 @@ const PreLoginBMI = () => {
                 </div>
               )}
 
-              {/* Error Message */}
-              {error && (
-                <div className="rounded-[12px] p-4 bg-red-50 border border-red-200">
-                  <p className="font-manrope text-[14px] text-red-700 text-center">
-                    {error}
-                  </p>
-                </div>
-              )}
             </div>
 
             {/* Action Buttons */}
@@ -217,17 +170,9 @@ const PreLoginBMI = () => {
                 {eligibilityStatus !== 'not_eligible' ? (
                   <Button
                     onClick={handleContinue}
-                    disabled={isLoading}
                     className="w-full"
                   >
-                    {isLoading ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        {t('preLoginBMI.buttons.pleaseWait')}
-                      </span>
-                    ) : (
-                      t('preLoginBMI.buttons.bookConsultation')
-                    )}
+                    {t('preLoginBMI.buttons.continue', 'Continue')}
                   </Button>
                 ) : (
                   <Button

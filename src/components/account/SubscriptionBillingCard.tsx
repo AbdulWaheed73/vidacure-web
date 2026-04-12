@@ -1,10 +1,13 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { CreditCard } from 'lucide-react';
 import { SubscriptionStatusComponent } from '../subscription/SubscriptionStatus';
 import { BillingHistory } from '../subscription/BillingHistory';
+import { Button } from '../ui/Button';
 
 export const SubscriptionBillingCard = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <div className="bg-white rounded-[20px] shadow-sm border border-gray-100 p-4 md:p-6 col-span-1 lg:col-span-3">
@@ -13,6 +16,14 @@ export const SubscriptionBillingCard = () => {
         <h3 className="text-lg font-semibold text-gray-800 font-sora">
           {t('account.billing.title')}
         </h3>
+        <Button
+          onClick={() => navigate('/subscribe')}
+          variant="outline"
+          size="sm"
+          className="font-manrope bg-white ml-auto"
+        >
+          {t('account.billing.viewPlans', 'View Plans')}
+        </Button>
       </div>
 
       <SubscriptionStatusComponent />

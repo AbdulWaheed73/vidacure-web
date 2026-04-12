@@ -1,4 +1,4 @@
-import { ArrowRight, Stethoscope, FlaskConical, UserCheck, TrendingUp, Heart, Brain, CheckCircle } from 'lucide-react';
+import { ArrowRight, Stethoscope, FlaskConical, UserCheck, TrendingUp, Heart, Brain } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -215,7 +215,7 @@ export default function AboutUs() {
                   </p>
 
                   {/* Program Section */}
-                  <div className="pt-4 mt-4 border-t border-zinc-100">
+                  {/* <div className="pt-4 mt-4 border-t border-zinc-100">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
                       <h4 className="text-base sm:text-lg font-semibold font-['Sora'] text-teal-600">
                         {t('partner.teamMembers.giedre.programTitle')}
@@ -238,7 +238,7 @@ export default function AboutUs() {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </div> */}
                 </div>
               </CardContent>
             </Card>

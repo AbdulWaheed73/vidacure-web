@@ -25,6 +25,8 @@ export const queryKeys = {
   doctorPrescriptions: ['doctorPrescriptions'] as const,
   doctorConversations: ['doctorConversations'] as const,
   doctorPatients: ['doctorPatients'] as const,
+  doctorUnassignedPatients: ['doctorUnassignedPatients'] as const,
+  doctorUnassignedPatientQuestionnaire: (patientId: string) => ['doctorUnassignedPatientQuestionnaire', patientId] as const,
   doctorPatientProfile: (patientId: string) => ['doctorPatientProfile', patientId] as const,
   doctorPatientQuestionnaire: (patientId: string) => ['doctorPatientQuestionnaire', patientId] as const,
   doctorPatientLabOrders: (patientId: string) => ['doctorPatientLabOrders', patientId] as const,

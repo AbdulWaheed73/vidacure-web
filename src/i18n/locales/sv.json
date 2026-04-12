@@ -44,6 +44,7 @@
     "doctorFeature": "Få löpande vård från en legitimerad läkare som skapar din plan, hanterar dina recept och säkert vägleder dina framsteg.",
     "medicationFeature": "Vi hanterar hela receptprocessen, med din godkända medicin ordinerat till dig och ge dig en personlig hälsovårdscoaching.",
     "messagingFeature": "Njut av obegränsade meddelanden med ditt personliga vårdteam för kontinuerligt stöd, coaching och svar på alla dina frågor.",
+    "noCommitmentFeature": "Det finns inga bindningstider gällande ditt medlemskap.",
     "lifestyleBadge": "Livsstilsprogram medlemskap",
     "lifestylePrice": "495",
     "lifestyleOriginalPrice": "695",
@@ -68,7 +69,8 @@
       "nutritionCoaching": "Närings- och träningscoaching",
       "doctorConsultation": "Initial läkarkonsultation",
       "treatmentPlan": "Personlig behandlingsplan",
-      "glp1Medication": "Recept förskrivning"
+      "glp1Medication": "Recept förskrivning",
+      "labTestingAndMiniCheck": "Provtagning och mini-hälsokontroll"
     }
   },
   "faq": {
@@ -177,11 +179,11 @@
     "titleJourney": "resa",
     "step1": {
       "title": "Online konsultation",
-      "description": "Berätta om din hälsohistoria i ett kort onlineformulär. Du kommer sedan att ha en privat konsultation med en legitimerad läkare för att se om du är en kandidat. Ibland ber vi dig att lämna blodprover för att göra utvärderingen korrekt."
+      "description": "Berätta om din hälsohistoria i ett kort onlineformulär. Du kommer sedan att ha en privat konsultation med en legitimerad läkare för att se om du är en kandidat. För att utvärdera din hälsa och säkerställa din behandling kommer du att få lämna blodprover och mäta ditt blodtryck på ett laboratorium. När provsvaren är klara kommer din läkare att återkomma till dig med recept och en behandlingsplan."
     },
     "step2": {
       "title": "Få din anpassade plan",
-      "description": "Din läkare granskar din hälsoprofil. Du har två alternativ att välja mellan:\n\n• Månatliga konsultationer med din läkare och medicinering\n• Medicinskt behandlingsprogram - Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning\n• Livsstilsprogram Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning"
+      "description": "Din läkare granskar din hälsoprofil. Du har två alternativ att välja mellan:\n\n• Medicinskt behandlingsprogram - Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning\n• Livsstilsprogram Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning"
     },
     "step3": {
       "title": "Ta emot behandling och stöd - Hela vägen",
@@ -784,6 +786,11 @@
     "refresh": "Uppdatera",
     "noPatientsYet": "Inga patienter ännu",
     "noPatientsMessage": "Tilldelade patienter visas här",
+    "myPatients": "Mina patienter",
+    "newPatients": "Ej tilldelade",
+    "noNewPatients": "Inga ej tilldelade patienter",
+    "noNewPatientsMessage": "Patienter med ifyllda frågeformulär som ännu inte tilldelats en läkare visas här",
+    "newPatientsTooltip": "Patienter som har bokat ett möte men ännu inte tilldelats en läkare",
     "profileOverview": "Profilöversikt",
     "profileDescription": "Patientprofildetaljer",
     "tabOverview": "Översikt",
