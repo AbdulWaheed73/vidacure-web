@@ -1554,12 +1554,13 @@
     "hypnotherapyCTA": "Or get started with hypnotherapy →"
   },
   "hypnotherapist": {
-    "badge": "One-Time Program",
+    "badge": "3-Month Program",
     "title": "Mind-Body Recode Program",
     "subtitle": "by Giedre Gaizauskaite-Poe",
-    "price": "5,400",
+    "price": "1,795",
     "currency": "SEK",
-    "oneTimePayment": "One-time payment",
+    "billingPeriod": "/month for 3 months",
+    "oneTimePayment": "3-month subscription",
     "description": "Rewire your mind for sustainable weight loss with Rapid Transformational Therapy® and personal coaching.",
     "purchaseProgram": "Purchase Program",
     "getStarted": "Get Started",

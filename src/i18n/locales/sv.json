@@ -1554,12 +1554,13 @@
     "hypnotherapyCTA": "Eller kom igång med hypnoterapi →"
   },
   "hypnotherapist": {
-    "badge": "Engångsköp",
+    "badge": "3-månadersprogram",
     "title": "Mind-Body Recode-programmet",
     "subtitle": "av Giedre Gaizauskaite-Poe",
-    "price": "5 400",
+    "price": "1 795",
     "currency": "SEK",
-    "oneTimePayment": "Engångsbetalning",
+    "billingPeriod": "/månad i 3 månader",
+    "oneTimePayment": "3-månadersprenumeration",
     "description": "Koppla om ditt sinne för hållbar viktminskning med Rapid Transformational Therapy® och personlig coaching.",
     "purchaseProgram": "Köp programmet",
     "getStarted": "Kom igång",

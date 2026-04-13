@@ -88,12 +88,15 @@ export const HypnotherapistCard = ({ mode, layout = 'vertical' }: Hypnotherapist
                   {t('hypnotherapist.subtitle')}
                 </p>
               </div>
-              <div className="flex items-baseline gap-2">
+              <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-white text-4xl sm:text-5xl font-bold font-sora leading-tight">
                   {t('hypnotherapist.price')}
                 </span>
                 <span className="text-white text-xl sm:text-2xl font-bold font-sora">
                   {t('hypnotherapist.currency')}
+                </span>
+                <span className="text-emerald-100/90 text-base sm:text-lg font-medium font-sora">
+                  {t('hypnotherapist.billingPeriod')}
                 </span>
               </div>
               <p className="text-emerald-50/90 text-base font-medium font-sora leading-relaxed">
@@ -189,12 +192,15 @@ export const HypnotherapistCard = ({ mode, layout = 'vertical' }: Hypnotherapist
 
       <CardContent className="space-y-6">
         {/* Price */}
-        <div className="flex items-baseline gap-2">
+        <div className="flex items-baseline gap-2 flex-wrap">
           <span className="text-white text-4xl sm:text-5xl font-bold font-sora leading-tight">
             {t('hypnotherapist.price')}
           </span>
           <span className="text-white text-xl sm:text-2xl font-bold font-sora">
             {t('hypnotherapist.currency')}
+          </span>
+          <span className="text-emerald-100/90 text-base sm:text-lg font-medium font-sora">
+            {t('hypnotherapist.billingPeriod')}
           </span>
         </div>
 
