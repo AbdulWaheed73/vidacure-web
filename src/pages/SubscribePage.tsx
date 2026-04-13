@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Sparkles } from 'lucide-react';
 import { SubscriptionCard } from '@/components/subscription/SubscriptionCard';
 import { MeetingRequired } from '@/components/subscription/MeetingRequired';
+import { HypnotherapistCard } from '@/components/subscription/HypnotherapistCard';
 
 export const SubscribePage: React.FC = () => {
   const { t } = useTranslation();
@@ -30,6 +31,11 @@ export const SubscribePage: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-6 md:gap-8 justify-center items-stretch">
           <SubscriptionCard planType="lifestyle" />
           <SubscriptionCard planType="medical" />
+        </div>
+
+        {/* Hypnotherapist Program */}
+        <div className="mt-8 sm:mt-10">
+          <HypnotherapistCard mode="checkout" layout="horizontal" />
         </div>
 
         {/* Additional Info */}

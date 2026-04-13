@@ -162,6 +162,15 @@ export const MeetingRequired: React.FC<MeetingRequiredProps> = ({ children }) =>
               )}
               {isBookingLoading ? t('gate.loading') : t('gate.bookConsultation')}
             </Button>
+
+            {localStorage.getItem('vidacure_hypno_intent') && (
+              <button
+                onClick={() => navigate(ROUTES.SUBSCRIBE_HYPNOTHERAPIST)}
+                className="mt-3 text-sm text-teal-600 hover:text-teal-700 font-medium font-manrope underline underline-offset-2"
+              >
+                {t('gate.hypnotherapyCTA')}
+              </button>
+            )}
           </>
         )}
       </GateOverlay>

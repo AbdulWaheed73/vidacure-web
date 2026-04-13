@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
@@ -140,6 +140,21 @@ const FooterSection = () => {
     </a>
   );
 
+  const ContactBlock = ({ align = 'left' }: { align?: 'left' | 'center' }) => (
+    <div className={`flex flex-col gap-2 ${align === 'center' ? 'items-center text-center' : ''}`}>
+      <span className="text-white text-sm font-medium font-inter uppercase tracking-wider">
+        {t('footer.contactUs', 'Contact Us')}
+      </span>
+      <a
+        href="mailto:info@vidacure.se"
+        className="inline-flex items-center gap-2 text-amber-200 hover:text-amber-100 text-base font-semibold font-inter transition-colors duration-200"
+      >
+        <Mail className="size-4" />
+        info@vidacure.se
+      </a>
+    </div>
+  );
+
   return (
     <footer className="bg-teal-800 text-white">
       {/* Logo - Desktop only, positioned absolutely */}
@@ -191,14 +206,7 @@ const FooterSection = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-8">
-                  {/* {certifications.map((cert, index) => (
-                    <img
-                      key={index}
-                      className={cert.className}
-                      src={cert.src}
-                      alt={cert.alt}
-                    />
-                  ))} */}
+                  <ContactBlock align="left" />
                 </div>
               </div>
             </div>
@@ -228,6 +236,7 @@ const FooterSection = () => {
             {/* Mobile Bottom Section */}
             <div className="mt-16">
               <div className="py-8 border-t border-emerald-50 flex flex-col items-center gap-8">
+                <ContactBlock align="center" />
                 <div className="flex flex-col items-center gap-4">
                   <p className="text-emerald-50 text-base font-normal font-inter leading-relaxed text-center">
                     {t('footer.copyright')}

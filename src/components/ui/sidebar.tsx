@@ -228,7 +228,7 @@ const Sidebar = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "group peer hidden md:flex shrink-0 flex-col h-svh text-sidebar-foreground overflow-hidden",
+          "group peer hidden lg:flex shrink-0 flex-col h-svh text-sidebar-foreground overflow-hidden",
           "transition-[width] duration-300 ease-in-out",
           isCollapsed && collapsible === "offcanvas"
             ? "w-0"

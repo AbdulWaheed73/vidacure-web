@@ -1,5 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Check, Stethoscope, Pill, MessageCircle, ArrowRight, Copy, X } from 'lucide-react';
+import { HypnotherapistCard } from '@/components/subscription/HypnotherapistCard';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -160,11 +161,11 @@ const PricingSection = () => {
                   <span className="text-white/80 text-xs font-manrope font-medium uppercase tracking-wide">
                     {t('pricing.promoLabel', { discount: promoDiscount })}
                   </span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     <span className="font-mono font-bold tracking-widest text-lg text-white">
                       {promoCode}
                     </span>
-                    <span className="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+                    <span className="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase whitespace-nowrap shrink-0">
                       {t('pricing.promoSave', { discount: promoDiscount })}
                     </span>
                   </div>
@@ -267,6 +268,12 @@ const PricingSection = () => {
                 onButtonClick={() => navigate(ROUTES.PRE_LOGIN_BMI)}
               />
             </div>
+
+          </div>
+
+          {/* Hypnotherapist Card - Desktop */}
+          <div className="hidden lg:block mt-8">
+            <HypnotherapistCard mode="landing" layout="horizontal" />
           </div>
 
           {/* Mobile/Tablet Layout */}
@@ -325,6 +332,9 @@ const PricingSection = () => {
                 isPrimary={true}
                 onButtonClick={() => navigate(ROUTES.PRE_LOGIN_BMI)}
               />
+
+              {/* Hypnotherapist Card - Mobile */}
+              <HypnotherapistCard mode="landing" />
             </div>
           </div>
         </div>

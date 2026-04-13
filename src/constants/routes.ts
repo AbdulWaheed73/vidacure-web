@@ -34,6 +34,8 @@ export const ROUTES = {
   SUBSCRIPTION_SUCCESS: '/subscription/success',
   SUBSCRIPTION_CANCELED: '/subscription/canceled',
   SUBSCRIBE: '/subscribe',
+  SUBSCRIBE_HYPNOTHERAPIST: '/subscribe/hypnotherapist',
+  HYPNOTHERAPIST_PAYMENT_SUCCESS: '/subscribe/hypnotherapist/success',
   LAB_TEST_PAYMENT_SUCCESS: '/lab-tests/payment-success',
   LAB_TEST_PAYMENT_CANCELED: '/lab-tests/payment-canceled'
 } as const;

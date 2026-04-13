@@ -178,7 +178,7 @@
     "titleWeight": "viktminsknings",
     "titleJourney": "resa",
     "step1": {
-      "title": "Online konsultation",
+      "title": "Konsultation",
       "description": "Berätta om din hälsohistoria i ett kort onlineformulär. Du kommer sedan att ha en privat konsultation med en legitimerad läkare för att se om du är en kandidat. För att utvärdera din hälsa och säkerställa din behandling kommer du att få lämna blodprover och mäta ditt blodtryck på ett laboratorium. När provsvaren är klara kommer din läkare att återkomma till dig med recept och en behandlingsplan."
     },
     "step2": {
@@ -326,6 +326,7 @@
     "privacyPolicy": "Integritetspolicy",
     "termsOfService": "Användarvillkor",
     "cookiePolicy": "Cookie-policy",
+    "contactUs": "Kontakta oss",
     "copyright": "© 2025 Vidacure, Inc. Alla rättigheter förbehållna"
   },
   "sidebar": {
@@ -501,6 +502,7 @@
       "waistPlaceholder": "t.ex. 90",
       "bmi": "BMI",
       "bmiPlaceholder": "t.ex. 24,5",
+      "bmiAutoHint": "Beräknas automatiskt från din längd och nuvarande vikt.",
       "cm": "cm",
       "kg": "kg"
     },
@@ -1167,6 +1169,9 @@
       "cancelNotice": "Din prenumeration avslutas den {{date}}. Du kan fortfarande använda alla tjänster fram till dess.",
       "expiredNotice": "Din prenumeration har avslutats. Prenumerera igen för att få tillgång till alla tjänster.",
       "resubscribe": "Prenumerera igen",
+      "viewPlans": "Visa planer",
+      "labTest": "Labbtest",
+      "oneTimePayment": "Engångsbetalning",
       "changePlan": "Byt plan",
       "changePlanTitle": "Byt din plan",
       "changePlanDescription": "Byt mellan våra tillgängliga planer. Du omdirigeras till kassan för att betala den nya planen.",
@@ -1285,8 +1290,8 @@
       "description": "En konsultation med en läkare behövs för att gå vidare med din behandlingsplan."
     },
     "conditional": {
-      "title": "Ytterligare bedömning krävs",
-      "description": "Med detta BMI behöver du ytterligare bedömning av ditt blodtryck och blodprover för att avgöra om du är berättigad till behandling. Vänligen boka en konsultation!"
+      "title": "Du kan kvalificera dig — låt oss bekräfta",
+      "description": "En konsultation med vår läkare bekräftar behörigheten med en snabb blodtryckskontroll och blodprover. Boka en kostnadsfri konsultation för att ta nästa steg."
     },
     "notEligible": {
       "title": "Du uppfyller inte kriterierna ännu.",
@@ -1300,8 +1305,31 @@
     "buttons": {
       "bookConsultation": "Boka din konsultation",
       "pleaseWait": "Vänligen vänta...",
+      "continue": "Fortsätt",
       "returnHome": "Tillbaka till startsidan"
     },
+    "whatHappensNext": {
+      "title": "Så går det till",
+      "step1": {
+        "title": "Skapa ditt konto",
+        "description": "Registrera dig på cirka 30 sekunder — vi skyddar dina uppgifter."
+      },
+      "step2": {
+        "title": "Berätta lite om dig",
+        "description": "Ett kort hälsoformulär hjälper oss att matcha dig med rätt vård."
+      },
+      "step3": {
+        "title": "Träffa din läkare",
+        "description": "Boka en kostnadsfri första konsultation för att diskutera dina mål.",
+        "freeBadge": "GRATIS"
+      },
+      "step4": {
+        "title": "Hitta din plan",
+        "description": "Vi matchar dig med det abonnemang som passar dina behov bäst."
+      }
+    },
+    "eligibilityHint": "Notera — vårt medicinska program kräver ett BMI på 27 eller högre. Du ser din behörighet så snart du fyller i dina uppgifter nedan.",
+    "notEligibleSoft": "Vårt medicinska viktminskningsprogram är utformat för specifika kliniska kriterier som kanske inte passar dig idag. Vänligen kontakta din vanliga vårdgivare för personlig rådgivning.",
     "infoText": "BMI (Body Mass Index) beräknas som vikt (kg) delat med längd (m) i kvadrat. Ett BMI på 27 eller högre krävs för vårt medicinska vikthanteringsprogram.",
     "alreadyPatient": "Redan patient? Logga in direkt"
   },
@@ -1522,7 +1550,28 @@
     "loading": "Laddar...",
     "subscriptionRequired": "Prenumeration krävs",
     "subscriptionRequiredMessage": "Prenumerera på en plan för att låsa upp {{featureName}} och få kontakt med din vårdgivare.",
-    "subscribeNow": "Prenumerera nu"
+    "subscribeNow": "Prenumerera nu",
+    "hypnotherapyCTA": "Eller kom igång med hypnoterapi →"
+  },
+  "hypnotherapist": {
+    "badge": "Engångsköp",
+    "title": "Mind-Body Recode-programmet",
+    "subtitle": "av Giedre Gaizauskaite-Poe",
+    "price": "5 400",
+    "currency": "SEK",
+    "oneTimePayment": "Engångsbetalning",
+    "description": "Koppla om ditt sinne för hållbar viktminskning med Rapid Transformational Therapy® och personlig coaching.",
+    "purchaseProgram": "Köp programmet",
+    "getStarted": "Kom igång",
+    "bookAppointment": "Boka ett möte",
+    "bookingAdvisory": "Vi rekommenderar att du bokar ett introduktionsmöte med Giedre innan du köper programmet.",
+    "disclaimer": "Detta köp gäller enbart hypnoterapitjänster och ger inte tillgång till Vidacure-plattformen.",
+    "alreadyPurchased": "Du har redan köpt detta program",
+    "pageTitle": "Mind-Body Recode-programmet",
+    "pageDescription": "Ett personligt hypnoterapiprogram utformat för att hjälpa dig skapa permanenta förändringar för hållbar viktminskning.",
+    "successTitle": "Köpet bekräftat!",
+    "successMessage": "Tack för ditt köp av Mind-Body Recode-programmet. Giedre kommer att kontakta dig inom kort för att boka din första session.",
+    "goToDashboard": "Gå till instrumentpanelen"
   },
   "subscriptionSuccess": {
     "processing": "Bearbetar din prenumeration...",
@@ -1621,7 +1670,8 @@
     "processing": "Bearbetar...",
     "getStarted": "Kom igång",
     "promoOff": "rabatt i 3 månader — använd kod vid betalning",
-    "promoSave": "Spara {{discount}}/mån"
+    "promoSave": "Spara {{discount}}/mån",
+    "checkoutError": "Det gick inte att starta betalningen. Försök igen."
   },
   "subscribe": {
     "title": "Välj din plan",

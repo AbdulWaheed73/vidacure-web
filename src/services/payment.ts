@@ -111,6 +111,14 @@ export class PaymentService {
   }
 
   /**
+   * Create Stripe checkout session for hypnotherapist one-time purchase
+   */
+  static async createHypnotherapistCheckout(): Promise<CreateCheckoutSessionResponse> {
+    const response = await api.post('/api/payment/hypnotherapist-checkout');
+    return response.data;
+  }
+
+  /**
    * Format price for display
    */
   static formatPrice(price: number, currency: string = 'SEK'): string {

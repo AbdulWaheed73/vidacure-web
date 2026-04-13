@@ -36,6 +36,8 @@ const ResourcesPage = lazy(() => import("./pages/ResourcesPage").then(m => ({ de
 const AccountPage = lazy(() => import("./pages/AccountPage").then(m => ({ default: m.AccountPage })));
 const SupabaseChatPage = lazy(() => import("./pages/SupabaseChatPage"));
 const SubscribePage = lazy(() => import("./pages/SubscribePage"));
+const HypnotherapistSubscribePage = lazy(() => import("./pages/HypnotherapistSubscribePage"));
+const HypnotherapistPaymentSuccess = lazy(() => import("./pages/HypnotherapistPaymentSuccess").then(m => ({ default: m.HypnotherapistPaymentSuccess })));
 const OnboardingFlow = lazy(() => import("./pages/OnBoarding"));
 const DashboardRouter = lazy(() => import("./pages/dashboard/DashboardRouter"));
 const ConsentManagement = lazy(() => import("./pages/ConsentManagement").then(m => ({ default: m.ConsentManagement })));
@@ -290,6 +292,12 @@ function App() {
 
         {/* Subscribe Route - Protected with Sidebar + onboarding guard */}
         <Route path={ROUTES.SUBSCRIBE} element={requireOnboarding(<SubscribePage />)} />
+
+        {/* Hypnotherapist Purchase - Protected with onboarding but NO MeetingRequired */}
+        <Route path={ROUTES.SUBSCRIBE_HYPNOTHERAPIST} element={requireOnboarding(<HypnotherapistSubscribePage />)} />
+
+        {/* Hypnotherapist Payment Success */}
+        <Route path={ROUTES.HYPNOTHERAPIST_PAYMENT_SUCCESS} element={<HypnotherapistPaymentSuccess />} />
 
         {/* Onboarding Route - Protected, requires BMI check first */}
         <Route

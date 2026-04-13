@@ -43,6 +43,14 @@ export const BillingHistory: React.FC = () => {
     return '-';
   };
 
+  const translateInvoiceLabel = (label: string | null | undefined) => {
+    if (!label) return null;
+    if (label === 'Mind-Body Recode Program') return t('hypnotherapist.title');
+    if (label === 'Lab Test') return t('account.billing.labTest', 'Lab Test');
+    if (label === 'One-time payment') return t('account.billing.oneTimePayment', 'One-time payment');
+    return label;
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-3">
@@ -84,7 +92,7 @@ export const BillingHistory: React.FC = () => {
               {formatAmount(invoice.amount, invoice.currency)}
             </span>
             <span className="text-sm text-gray-500 font-manrope hidden md:inline">
-              {invoice.label || getPlanLabel(invoice.planType)}
+              {translateInvoiceLabel(invoice.label) || getPlanLabel(invoice.planType)}
             </span>
           </div>
           <div className="flex items-center gap-2 md:gap-3 shrink-0">

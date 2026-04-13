@@ -178,7 +178,7 @@
     "titleWeight": "weight loss",
     "titleJourney": "journey",
     "step1": {
-      "title": "Online Consult",
+      "title": "Consultation",
       "description": "Tell us about your health history in a short online form. You'll then have a private consultation with a board-certified doctor to see if you're a candidate. To evaluate your health and ensure your treatment, you will need to provide blood samples and have your blood pressure measured at a laboratory. Once the test results are ready, your doctor will get back to you with prescriptions and a treatment plan."
     },
     "step2": {
@@ -326,6 +326,7 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "cookiePolicy": "Cookie Policy",
+    "contactUs": "Contact Us",
     "copyright": "© 2025 Vidacure, Inc. All rights reserved"
   },
   "sidebar": {
@@ -501,6 +502,7 @@
       "waistPlaceholder": "e.g. 90",
       "bmi": "BMI",
       "bmiPlaceholder": "e.g. 24.5",
+      "bmiAutoHint": "Auto-calculated from your height and current weight.",
       "cm": "cm",
       "kg": "kg"
     },
@@ -1167,6 +1169,9 @@
       "cancelNotice": "Your subscription will end on {{date}}. You can still use all services until then.",
       "expiredNotice": "Your subscription has ended. Resubscribe to regain access to all services.",
       "resubscribe": "Resubscribe",
+      "viewPlans": "View Plans",
+      "labTest": "Lab Test",
+      "oneTimePayment": "One-time payment",
       "changePlan": "Change Plan",
       "changePlanTitle": "Change Your Plan",
       "changePlanDescription": "Switch between our available plans. You'll be redirected to checkout to pay for the new plan.",
@@ -1285,8 +1290,8 @@
       "description": "A consultation with a doctor is needed to proceed with your treatment plan."
     },
     "conditional": {
-      "title": "Further assessment required",
-      "description": "With this BMI, you need further assessment of your blood pressure and blood tests to determine if you are eligible for treatment. Please book a consultation!"
+      "title": "You may qualify — let's confirm",
+      "description": "A consultation with our doctor will confirm eligibility with a quick blood pressure check and blood tests. Book a free consultation to take the next step."
     },
     "notEligible": {
       "title": "You don't meet the criteria yet.",
@@ -1300,8 +1305,31 @@
     "buttons": {
       "bookConsultation": "Book Your Consultation",
       "pleaseWait": "Please wait...",
+      "continue": "Continue",
       "returnHome": "Return to Home"
     },
+    "whatHappensNext": {
+      "title": "What Happens Next",
+      "step1": {
+        "title": "Create your account",
+        "description": "Sign up in about 30 seconds — we keep your information private and secure."
+      },
+      "step2": {
+        "title": "Share a bit about yourself",
+        "description": "A short health questionnaire helps us match you with the right care."
+      },
+      "step3": {
+        "title": "Meet your doctor",
+        "description": "Book a complimentary first consultation to discuss your goals.",
+        "freeBadge": "FREE"
+      },
+      "step4": {
+        "title": "Find your plan",
+        "description": "We'll match you with the subscription plan that fits your needs best."
+      }
+    },
+    "eligibilityHint": "Heads up — our medical program requires a BMI of 27 or higher. You'll see your eligibility as soon as you enter your details below.",
+    "notEligibleSoft": "Our medical weight management program is designed around specific clinical criteria that may not be the right fit for you today. Please consult your regular healthcare provider for personalised guidance.",
     "infoText": "BMI (Body Mass Index) is calculated as weight (kg) divided by height (m) squared. A BMI of 27 or higher is required for our medical weight management program.",
     "alreadyPatient": "Already a patient? Log in directly"
   },
@@ -1522,7 +1550,28 @@
     "loading": "Loading...",
     "subscriptionRequired": "Subscription Required",
     "subscriptionRequiredMessage": "Subscribe to a plan to unlock {{featureName}} and connect with your healthcare provider.",
-    "subscribeNow": "Subscribe Now"
+    "subscribeNow": "Subscribe Now",
+    "hypnotherapyCTA": "Or get started with hypnotherapy →"
+  },
+  "hypnotherapist": {
+    "badge": "One-Time Program",
+    "title": "Mind-Body Recode Program",
+    "subtitle": "by Giedre Gaizauskaite-Poe",
+    "price": "5,400",
+    "currency": "SEK",
+    "oneTimePayment": "One-time payment",
+    "description": "Rewire your mind for sustainable weight loss with Rapid Transformational Therapy® and personal coaching.",
+    "purchaseProgram": "Purchase Program",
+    "getStarted": "Get Started",
+    "bookAppointment": "Book an Appointment",
+    "bookingAdvisory": "We recommend booking an introductory session with Giedre before purchasing the program.",
+    "disclaimer": "This purchase is for hypnotherapy services only and does not grant access to the Vidacure platform.",
+    "alreadyPurchased": "You have already purchased this program",
+    "pageTitle": "Mind-Body Recode Program",
+    "pageDescription": "A personalised hypnotherapy program designed to help you create permanent changes for sustainable weight loss.",
+    "successTitle": "Purchase Confirmed!",
+    "successMessage": "Thank you for purchasing the Mind-Body Recode Program. Giedre will be in touch with you shortly to schedule your first session.",
+    "goToDashboard": "Go to Dashboard"
   },
   "subscriptionSuccess": {
     "processing": "Processing your subscription...",
@@ -1621,7 +1670,8 @@
     "processing": "Processing...",
     "getStarted": "Get Started",
     "promoOff": "off for 3 months — use code at checkout",
-    "promoSave": "Save {{discount}}/mo"
+    "promoSave": "Save {{discount}}/mo",
+    "checkoutError": "Failed to start checkout. Please try again."
   },
   "subscribe": {
     "title": "Choose Your Plan",

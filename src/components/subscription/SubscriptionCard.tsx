@@ -71,9 +71,11 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         const { url } = await PaymentService.createCheckoutSession(planType);
         window.location.href = url;
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error creating checkout session:', error);
-      alert('Failed to start checkout. Please try again.');
+      const err = error as { response?: { data?: { error?: string; message?: string } } };
+      const serverMessage = err?.response?.data?.message || err?.response?.data?.error;
+      toast.error(serverMessage || t('subscribeCard.checkoutError', 'Failed to start checkout. Please try again.'));
     } finally {
       setIsLoading(false);
     }
@@ -170,9 +172,9 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
               <span className="text-white/80 text-xs font-manrope font-medium uppercase tracking-wide">
                 {t('pricing.promoLabel', { discount: promoDiscount })}
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                 <span className="font-mono font-bold tracking-widest text-lg text-white">{promoCode}</span>
-                <span className="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">
+                <span className="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase whitespace-nowrap shrink-0">
                   {t('pricing.promoSave', { discount: promoDiscount })}
                 </span>
               </div>
