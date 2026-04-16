@@ -8,6 +8,7 @@ import { PaymentService } from '../services';
 import { queryKeys } from '../lib/queryClient';
 import { Button } from '../components/ui/Button';
 import { ROUTES } from '../constants';
+import { MeetingRequired } from '../components/subscription/MeetingRequired';
 import type { DashboardPageProps } from '../types';
 
 
@@ -21,45 +22,47 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   });
 
   return (
-    <div className="p-4 md:p-8">
-      {/* <PromoBanner /> */}
+    <MeetingRequired>
+      <div className="p-4 md:p-8">
+        {/* <PromoBanner /> */}
 
-      {/* Active subscription — show full dashboard */}
-      {!subscriptionLoading && subscriptionStatus?.hasSubscription && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Row 1: Weight Progress (2 cols) + Next Appointment (1 col) */}
-          <WeightProgressCard />
-          <NextAppointmentCard />
+        {/* Active subscription — show full dashboard */}
+        {!subscriptionLoading && subscriptionStatus?.hasSubscription && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Row 1: Weight Progress (2 cols) + Next Appointment (1 col) */}
+            <WeightProgressCard />
+            <NextAppointmentCard />
 
-          {/* Row 2: Prescription + BMI + Goals */}
-          <PrescriptionCard />
-          <BMICard />
-          <GoalsCard />
-        </div>
-      )}
-
-      {/* No subscription — show subscribe prompt */}
-      {!subscriptionLoading && !subscriptionStatus?.hasSubscription && (
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
-            <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Sparkles className="w-8 h-8 text-teal-600" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
-              {t('dashboard.choosePlan')}
-            </h2>
-            <p className="text-gray-600 mb-6 font-manrope">
-              {t('dashboard.subscribePrompt')}
-            </p>
-            <Button
-              onClick={() => navigate(ROUTES.SUBSCRIBE)}
-              className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
-            >
-              {t('dashboard.subscribeCTA')}
-            </Button>
+            {/* Row 2: Prescription + BMI + Goals */}
+            <PrescriptionCard />
+            <BMICard />
+            <GoalsCard />
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* No subscription — show subscribe prompt (only reachable after meeting gate passes) */}
+        {!subscriptionLoading && !subscriptionStatus?.hasSubscription && (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
+              <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Sparkles className="w-8 h-8 text-teal-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
+                {t('dashboard.choosePlan')}
+              </h2>
+              <p className="text-gray-600 mb-6 font-manrope">
+                {t('dashboard.subscribePrompt')}
+              </p>
+              <Button
+                onClick={() => navigate(ROUTES.SUBSCRIBE)}
+                className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
+              >
+                {t('dashboard.subscribeCTA')}
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </MeetingRequired>
   );
 };
