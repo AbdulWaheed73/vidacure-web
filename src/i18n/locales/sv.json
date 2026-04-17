@@ -59,6 +59,7 @@
     "getStarted": "Kom igång",
     "promoLabel": "{{discount}} rabatt i 3 månader — använd kod vid betalning",
     "promoSave": "Spara {{discount}}/mån",
+    "maintenanceNote": "Underhållsprogrammets pris blir lägre",
     "features": {
       "initialAssessment": "Initial hälsobedömning & läkarkonsultation",
       "personalizedPlan": "Recept förskrivning",

@@ -59,6 +59,7 @@
     "getStarted": "Get Started",
     "promoLabel": "{{discount}} off for 3 months — use code at checkout",
     "promoSave": "Save {{discount}}/mo",
+    "maintenanceNote": "Maintenance program pricing will be lower",
     "features": {
       "initialAssessment": "Initial Health Assessment & doctor consultation",
       "personalizedPlan": "medication prescription",

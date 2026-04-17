@@ -284,6 +284,38 @@ const PreLoginBMI = () => {
                     : "bg-amber-50 border-amber-200"
                 }`}
               >
+                <div
+                  className={`flex flex-col items-center gap-1 pb-3 mb-1 border-b ${
+                    eligibilityStatus === "eligible"
+                      ? "border-emerald-200"
+                      : eligibilityStatus === "conditional"
+                      ? "border-sky-200"
+                      : "border-amber-200"
+                  }`}
+                >
+                  <span
+                    className={`font-manrope text-[12px] sm:text-[13px] uppercase tracking-[0.12em] font-semibold ${
+                      eligibilityStatus === "eligible"
+                        ? "text-emerald-700"
+                        : eligibilityStatus === "conditional"
+                        ? "text-sky-700"
+                        : "text-amber-800"
+                    }`}
+                  >
+                    {t("preLoginBMI.yourBmi").replace(":", "")}
+                  </span>
+                  <span
+                    className={`font-sora font-bold text-[40px] sm:text-[48px] leading-none ${
+                      eligibilityStatus === "eligible"
+                        ? "text-emerald-800"
+                        : eligibilityStatus === "conditional"
+                        ? "text-sky-800"
+                        : "text-amber-900"
+                    }`}
+                  >
+                    {bmi}
+                  </span>
+                </div>
                 <h3
                   className={`font-sora font-semibold text-[16px] sm:text-[18px] ${
                     eligibilityStatus === "eligible"

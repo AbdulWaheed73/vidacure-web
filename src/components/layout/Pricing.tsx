@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { Check, Stethoscope, Pill, MessageCircle, ArrowRight, Copy, X } from 'lucide-react';
+import { Check, Stethoscope, Pill, MessageCircle, ArrowRight, Copy, X, TrendingDown } from 'lucide-react';
 import { HypnotherapistCard } from '@/components/subscription/HypnotherapistCard';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -124,6 +124,14 @@ const PricingSection = () => {
                   <span className={`text-2xl font-bold font-sora ml-2 ${isPrimary ? 'text-white' : 'text-gray-800'}`}>
                     {currency}
                   </span>
+                </div>
+                <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium font-manrope w-fit ${
+                  isPrimary
+                    ? 'bg-white/10 text-emerald-50 ring-1 ring-white/20'
+                    : 'bg-teal-50 text-teal-800 ring-1 ring-teal-200'
+                }`}>
+                  <TrendingDown className="w-3 h-3 shrink-0" />
+                  <span>{t('pricing.maintenanceNote')}</span>
                 </div>
               </div>
               <p className={`text-xl font-bold font-sora ${isPrimary ? 'text-white' : 'text-gray-800'}`}>

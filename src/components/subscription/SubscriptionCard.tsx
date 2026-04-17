@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PaymentService } from '../../services';
-import { ArrowRight, Check, Copy } from 'lucide-react';
+import { ArrowRight, Check, Copy, TrendingDown } from 'lucide-react';
 import { toast } from 'sonner';
 
 type SubscriptionCardProps = {
@@ -131,6 +131,14 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
               <span className={`text-xl sm:text-2xl font-bold font-sora leading-loose ${
                 isPrimary ? 'text-white' : 'text-zinc-800'
               }`}>{currency}</span>
+            </div>
+            <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-medium font-manrope w-fit ${
+              isPrimary
+                ? 'bg-white/10 text-emerald-50 ring-1 ring-white/20'
+                : 'bg-teal-50 text-teal-800 ring-1 ring-teal-200'
+            }`}>
+              <TrendingDown className="w-3 h-3 shrink-0" />
+              <span>{t('pricing.maintenanceNote')}</span>
             </div>
           </div>
           <div className={`self-stretch justify-center text-lg sm:text-xl font-bold font-sora leading-relaxed ${
