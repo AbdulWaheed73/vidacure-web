@@ -5,7 +5,7 @@ import { RefreshCw, Users, Info } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { useDoctorPatients, useDoctorUnassignedPatients } from '@/hooks/useDoctorDashboardQueries';
 import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
-import type { DoctorPatientListItem } from '@/types/doctor-patient-types';
+import type { DoctorPatientListItem, SubscriptionPlan, SubscriptionStatus } from '@/types/doctor-patient-types';
 
 const formatDate = (dateStr: string | null): string => {
   if (!dateStr) return '—';
@@ -14,6 +14,66 @@ const formatDate = (dateStr: string | null): string => {
     month: 'short',
     day: 'numeric',
   });
+};
+
+const ACTIVE_STATUSES: SubscriptionStatus[] = ['active', 'trialing'];
+const WARNING_STATUSES: SubscriptionStatus[] = ['past_due', 'unpaid'];
+
+const SubscriptionBadge: React.FC<{
+  status: SubscriptionStatus | null;
+  plan: SubscriptionPlan | null;
+}> = ({ status, plan }) => {
+  const { t } = useTranslation();
+
+  if (!status || !ACTIVE_STATUSES.includes(status) || !plan) {
+    const isWarning = status && WARNING_STATUSES.includes(status);
+    const label = status
+      ? t(`doctorPatients.subscription.status.${status}`)
+      : t('doctorPatients.subscription.noSubscription');
+
+    return (
+      <span
+        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-sora font-semibold border ${
+          isWarning
+            ? 'bg-amber-50 text-amber-700 border-amber-200'
+            : 'bg-gray-100 text-gray-500 border-gray-200'
+        }`}
+      >
+        <span
+          className={`w-1.5 h-1.5 rounded-full ${
+            isWarning ? 'bg-amber-500' : 'bg-gray-400'
+          }`}
+        />
+        {label}
+      </span>
+    );
+  }
+
+  const planLabel = t(`doctorPatients.subscription.plan.${plan}`);
+  const isMedical = plan === 'medical';
+  const isTrial = status === 'trialing';
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-sora font-semibold border ${
+        isMedical
+          ? 'bg-[#005044] text-white border-[#005044]'
+          : 'bg-[#f0f7f4] text-[#005044] border-[#c0ebe5]'
+      }`}
+    >
+      <span
+        className={`w-1.5 h-1.5 rounded-full ${
+          isMedical ? 'bg-[#c0ebe5]' : 'bg-[#005044]'
+        }`}
+      />
+      {planLabel}
+      {isTrial && (
+        <span className={`opacity-80 font-manrope font-medium ${isMedical ? 'text-white' : 'text-[#005044]'}`}>
+          · {t('doctorPatients.subscription.status.trialing')}
+        </span>
+      )}
+    </span>
+  );
 };
 
 const SkeletonRow: React.FC = () => (
@@ -47,9 +107,15 @@ const PatientCard: React.FC<{
         </span>
       </div>
       <div className="min-w-0">
-        <h3 className="font-sora font-semibold text-[#282828]">
-          {patient.name}
-        </h3>
+        <div className="flex items-center gap-2 flex-wrap">
+          <h3 className="font-sora font-semibold text-[#282828]">
+            {patient.name}
+          </h3>
+          <SubscriptionBadge
+            status={patient.subscriptionStatus}
+            plan={patient.subscriptionPlan}
+          />
+        </div>
         {patient.email && (
           <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5 truncate">
             {patient.email}

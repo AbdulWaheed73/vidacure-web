@@ -794,6 +794,22 @@
     "noNewPatients": "No Unassigned Patients",
     "noNewPatientsMessage": "Patients with completed questionnaires who are not yet assigned to a doctor will appear here",
     "newPatientsTooltip": "Patients who have booked a meeting but have not been assigned to a doctor yet",
+    "subscription": {
+      "noSubscription": "No subscription",
+      "plan": {
+        "lifestyle": "Lifestyle",
+        "medical": "Medical"
+      },
+      "status": {
+        "active": "Active",
+        "trialing": "Trial",
+        "past_due": "Past due",
+        "unpaid": "Unpaid",
+        "canceled": "Canceled",
+        "incomplete": "Incomplete",
+        "incomplete_expired": "Expired"
+      }
+    },
     "profileOverview": "Profile overview",
     "profileDescription": "Patient profile details",
     "tabOverview": "Overview",

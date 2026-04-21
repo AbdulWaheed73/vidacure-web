@@ -1,3 +1,14 @@
+export type SubscriptionStatus =
+  | 'incomplete'
+  | 'incomplete_expired'
+  | 'trialing'
+  | 'active'
+  | 'past_due'
+  | 'canceled'
+  | 'unpaid';
+
+export type SubscriptionPlan = 'lifestyle' | 'medical';
+
 export type DoctorPatientListItem = {
   id: string;
   name: string;
@@ -10,6 +21,8 @@ export type DoctorPatientListItem = {
   bmi: number | null;
   createdAt: string | null;
   updatedAt: string | null;
+  subscriptionStatus: SubscriptionStatus | null;
+  subscriptionPlan: SubscriptionPlan | null;
 };
 
 export type DoctorPatientListResponse = {

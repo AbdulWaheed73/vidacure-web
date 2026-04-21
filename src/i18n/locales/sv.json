@@ -794,6 +794,22 @@
     "noNewPatients": "Inga ej tilldelade patienter",
     "noNewPatientsMessage": "Patienter med ifyllda frågeformulär som ännu inte tilldelats en läkare visas här",
     "newPatientsTooltip": "Patienter som har bokat ett möte men ännu inte tilldelats en läkare",
+    "subscription": {
+      "noSubscription": "Ingen prenumeration",
+      "plan": {
+        "lifestyle": "Livsstil",
+        "medical": "Medicinsk"
+      },
+      "status": {
+        "active": "Aktiv",
+        "trialing": "Provperiod",
+        "past_due": "Förfallen",
+        "unpaid": "Obetald",
+        "canceled": "Avslutad",
+        "incomplete": "Ofullständig",
+        "incomplete_expired": "Utgången"
+      }
+    },
     "profileOverview": "Profilöversikt",
     "profileDescription": "Patientprofildetaljer",
     "tabOverview": "Översikt",
