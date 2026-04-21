@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { TrendingUp, ShieldAlert, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants';
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
+import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -220,14 +220,20 @@ export const ProgressPage: React.FC = () => {
             </Select>
           </CardHeader>
           <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6 flex-1 flex flex-col">
-            <div className="flex-1 min-h-[250px] lg:min-h-0">
+            <div className="h-[250px] md:h-[320px] lg:flex-1 lg:h-auto lg:min-h-[280px] w-full">
               {loading ? (
                 <div className="h-full w-full flex items-center justify-center">
                   <p className="text-gray-500">{t('progress.loadingHistory')}</p>
                 </div>
               ) : (
                 <ChartContainer config={chartConfig} className="aspect-auto h-full w-full">
-                <LineChart accessibilityLayer data={filteredData} margin={{ left: 12, right: 12, top: 12, bottom: 12 }}>
+                <AreaChart accessibilityLayer data={filteredData} margin={{ left: 4, right: 8, top: 12, bottom: 4 }}>
+                  <defs>
+                    <linearGradient id="progressWeightGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--color-weight)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--color-weight)" stopOpacity={0.05} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid vertical={false} />
                   <XAxis
                     dataKey="date"
@@ -245,12 +251,13 @@ export const ProgressPage: React.FC = () => {
                   <YAxis
                     tickLine={false}
                     axisLine={false}
-                    tickMargin={8}
+                    tickMargin={6}
                     domain={[minWeight, maxWeight]}
-                    tickFormatter={(value) => `${value} kg`}
+                    tickFormatter={(value) => `${value}`}
+                    width={32}
                   />
-                  <ChartTooltip 
-                    content={<ChartTooltipContent 
+                  <ChartTooltip
+                    content={<ChartTooltipContent
                       labelFormatter={(value) => {
                         return new Date(value).toLocaleDateString("en-US", {
                           month: "short",
@@ -259,17 +266,18 @@ export const ProgressPage: React.FC = () => {
                         });
                       }}
                       formatter={(value) => [`${value} kg`, t('progress.weight')]}
-                    />} 
+                    />}
                   />
-                  <Line
+                  <Area
                     dataKey="weight"
                     type="monotone"
                     stroke="var(--color-weight)"
-                    strokeWidth={3}
-                    dot={{ fill: "var(--color-weight)", strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, stroke: "var(--color-weight)", strokeWidth: 2, fill: "white" }}
+                    strokeWidth={2}
+                    fill="url(#progressWeightGradient)"
+                    dot={{ fill: "var(--color-weight)", strokeWidth: 2, r: 3 }}
+                    activeDot={{ r: 5, stroke: "var(--color-weight)", strokeWidth: 2, fill: "white" }}
                   />
-                </LineChart>
+                </AreaChart>
               </ChartContainer>
               )}
             </div>
