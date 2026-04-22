@@ -708,7 +708,9 @@
     "saving": "Sparar...",
     "saved": "Sparad",
     "placeholder": "Börja skriva behandlingsplanen...",
-    "by": "Av"
+    "by": "Av",
+    "edit": "Redigera",
+    "cancel": "Avbryt"
   },
   "prescriptions": {
     "title": "Recept",

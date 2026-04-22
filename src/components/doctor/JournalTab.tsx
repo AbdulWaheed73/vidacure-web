@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
+import DOMPurify from 'dompurify';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/Button';
 import {
   useDoctorPatientJournal,
   useUpsertDoctorPatientJournal,
@@ -16,6 +18,7 @@ import {
   List,
   ListOrdered,
   Pilcrow,
+  Pencil,
 } from 'lucide-react';
 
 type JournalTabProps = {
@@ -23,11 +26,18 @@ type JournalTabProps = {
   enabled: boolean;
 };
 
+const hasJournalContent = (html?: string | null) => {
+  if (!html) return false;
+  const stripped = html.replace(/<[^>]*>/g, '').trim();
+  return stripped.length > 0;
+};
+
 export const JournalTab: React.FC<JournalTabProps> = ({ patientId, enabled }) => {
   const { t } = useTranslation();
   const { data, isLoading } = useDoctorPatientJournal(patientId, enabled);
   const upsertMutation = useUpsertDoctorPatientJournal();
   const [saved, setSaved] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -55,12 +65,20 @@ export const JournalTab: React.FC<JournalTabProps> = ({ patientId, enabled }) =>
     }
   }, [data?.journal?.content, editor]);
 
-  // Reset editor when patientId changes
+  // Reset editor and view mode when patientId changes
   useEffect(() => {
     if (editor && !editor.isDestroyed) {
       editor.commands.setContent('');
     }
+    setIsEditing(false);
   }, [patientId, editor]);
+
+  // If there's no existing journal content, drop straight into edit mode
+  useEffect(() => {
+    if (!isLoading && !hasJournalContent(data?.journal?.content)) {
+      setIsEditing(true);
+    }
+  }, [isLoading, data?.journal?.content]);
 
   const handleSave = () => {
     if (!editor || !patientId) return;
@@ -70,10 +88,18 @@ export const JournalTab: React.FC<JournalTabProps> = ({ patientId, enabled }) =>
       {
         onSuccess: () => {
           setSaved(true);
+          setIsEditing(false);
           setTimeout(() => setSaved(false), 2000);
         },
       }
     );
+  };
+
+  const handleCancelEdit = () => {
+    if (editor && !editor.isDestroyed && data?.journal?.content) {
+      editor.commands.setContent(data.journal.content);
+    }
+    setIsEditing(false);
   };
 
   if (isLoading) {
@@ -95,6 +121,45 @@ export const JournalTab: React.FC<JournalTabProps> = ({ patientId, enabled }) =>
       hour: '2-digit',
       minute: '2-digit',
     });
+
+  const timestamps = journal && (
+    <div className="text-xs text-[#b0b0b0] font-manrope text-right space-y-0.5">
+      <p>
+        {t('treatmentJournal.created')}: {formatDate(journal.createdAt)}
+      </p>
+      {journal.updatedAt !== journal.createdAt && (
+        <p>
+          {t('treatmentJournal.lastUpdated')}: {formatDate(journal.updatedAt)}
+        </p>
+      )}
+    </div>
+  );
+
+  if (!isEditing && hasJournalContent(journal?.content)) {
+    return (
+      <div className="space-y-4 p-1">
+        <div className="flex items-center justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsEditing(true)}
+            className="border-[#e0e0e0] text-[#005044] rounded-xl font-sora font-semibold hover:bg-[#E6F7F5] hover:text-[#005044]"
+          >
+            <Pencil className="w-4 h-4" />
+            {t('treatmentJournal.edit')}
+          </Button>
+          {timestamps}
+        </div>
+
+        <div
+          className="journal-content border border-[#e0e0e0] rounded-xl bg-white p-4 font-manrope text-[#282828] text-sm"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(journal!.content),
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 p-1">
@@ -153,32 +218,34 @@ export const JournalTab: React.FC<JournalTabProps> = ({ patientId, enabled }) =>
         <EditorContent editor={editor} />
       </div>
 
-      {/* Save button + timestamps */}
+      {/* Save / Cancel + timestamps */}
       <div className="flex items-center justify-between">
-        <button
-          onClick={handleSave}
-          disabled={upsertMutation.isPending}
-          className="bg-[#005044] text-white rounded-xl px-6 py-2.5 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors disabled:opacity-50"
-        >
-          {upsertMutation.isPending
-            ? t('treatmentJournal.saving')
-            : saved
-              ? t('treatmentJournal.saved')
-              : t('treatmentJournal.save')}
-        </button>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={handleSave}
+            disabled={upsertMutation.isPending}
+            className="bg-[#005044] text-white rounded-xl px-6 font-sora font-semibold hover:bg-[#004038]"
+          >
+            {upsertMutation.isPending
+              ? t('treatmentJournal.saving')
+              : saved
+                ? t('treatmentJournal.saved')
+                : t('treatmentJournal.save')}
+          </Button>
+          {hasJournalContent(journal?.content) && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleCancelEdit}
+              disabled={upsertMutation.isPending}
+              className="border-[#e0e0e0] text-[#282828] rounded-xl px-5 font-sora font-semibold"
+            >
+              {t('treatmentJournal.cancel')}
+            </Button>
+          )}
+        </div>
 
-        {journal && (
-          <div className="text-xs text-[#b0b0b0] font-manrope text-right space-y-0.5">
-            <p>
-              {t('treatmentJournal.created')}: {formatDate(journal.createdAt)}
-            </p>
-            {journal.updatedAt !== journal.createdAt && (
-              <p>
-                {t('treatmentJournal.lastUpdated')}: {formatDate(journal.updatedAt)}
-              </p>
-            )}
-          </div>
-        )}
+        {timestamps}
       </div>
     </div>
   );

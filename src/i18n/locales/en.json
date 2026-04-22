@@ -708,7 +708,9 @@
     "saving": "Saving...",
     "saved": "Saved successfully",
     "placeholder": "Start writing the treatment plan...",
-    "by": "By"
+    "by": "By",
+    "edit": "Edit",
+    "cancel": "Cancel"
   },
   "prescriptions": {
     "title": "Prescriptions",
