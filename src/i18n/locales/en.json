@@ -452,7 +452,8 @@
     "noPatientsAssigned": "No patients assigned",
     "selectPatient": "Select a patient to start chatting",
     "viewProfile": "View Profile",
-    "now": "now"
+    "now": "now",
+    "noConversationForPatient": "No conversation with this patient yet"
   },
   "onboarding": {
     "getStarted": "Get Started",
@@ -816,6 +817,7 @@
     "profileDescription": "Patient profile details",
     "tabOverview": "Overview",
     "tabQuestionnaire": "Questionnaire",
+    "tabChat": "Chat",
     "tabLabTests": "Lab Tests",
     "tabJournal": "Journal",
     "couldNotLoad": "Could not load patient profile",

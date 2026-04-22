@@ -22,7 +22,7 @@ const SupabaseChatPage: React.FC = () => {
   // Doctors — the DoctorChat component handles its own card layout
   if (user.role === 'doctor') {
     return (
-      <div className="h-full">
+      <div className="h-[calc(100dvh-80px)]">
         <SupabaseDoctorChat />
       </div>
     );
@@ -31,7 +31,7 @@ const SupabaseChatPage: React.FC = () => {
   // Patient view with subscription check
   return (
     <SubscriptionRequired featureName="Chat">
-      <div className="h-full flex flex-col p-4 bg-[#F0F7F4]">
+      <div className="h-[calc(100dvh-80px)] flex flex-col p-4 bg-[#F0F7F4]">
         <div className="flex-1 min-h-0 bg-white rounded-2xl shadow-sm overflow-hidden">
           <SupabaseChatContainer />
         </div>

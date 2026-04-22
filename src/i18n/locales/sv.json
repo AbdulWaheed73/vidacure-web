@@ -452,7 +452,8 @@
     "noPatientsAssigned": "Inga patienter tilldelade",
     "selectPatient": "Välj en patient för att börja chatta",
     "viewProfile": "Visa profil",
-    "now": "nu"
+    "now": "nu",
+    "noConversationForPatient": "Ingen konversation med denna patient ännu"
   },
   "onboarding": {
     "getStarted": "Kom igång",
@@ -816,6 +817,7 @@
     "profileDescription": "Patientprofildetaljer",
     "tabOverview": "Översikt",
     "tabQuestionnaire": "Frågeformulär",
+    "tabChat": "Chatt",
     "tabLabTests": "Labbprover",
     "tabJournal": "Journal",
     "couldNotLoad": "Kunde inte ladda patientprofil",

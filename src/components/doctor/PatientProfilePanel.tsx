@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
@@ -30,6 +29,7 @@ import {
   useDoctorUnassignedPatientQuestionnaire,
 } from '@/hooks/useDoctorDashboardQueries';
 import { JournalTab } from '@/components/doctor/JournalTab';
+import { PatientChatTab } from '@/components/SupabaseChat/PatientChatTab';
 import { QUESTION_LABELS } from '@/components/onboarding/questionMapping';
 import { LabTestOrderStatusBadge } from '@/components/LabTestOrderStatus';
 import { LabTestResults } from '@/components/LabTestResults';
@@ -368,7 +368,6 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
   onOpenChange,
   isUnassigned = false,
 }) => {
-  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState(isUnassigned ? 'questionnaire' : 'overview');
   const { data, isLoading } = useDoctorPatientProfile(isUnassigned ? null : patientId);
@@ -393,7 +392,7 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-full sm:w-[450px] sm:max-w-[450px] overflow-y-auto p-0"
+        className="w-full sm:w-[540px] sm:max-w-[540px] md:w-[600px] md:max-w-[600px] lg:w-[680px] lg:max-w-[680px] xl:w-[760px] xl:max-w-[760px] overflow-y-auto p-0"
       >
         <SheetHeader className="p-5 pb-0">
           <SheetTitle className="font-sora font-bold text-lg text-[#282828]">
@@ -402,13 +401,13 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
           <SheetDescription className="sr-only">{t('doctorPatients.profileDescription')}</SheetDescription>
         </SheetHeader>
 
-        <div className="px-5 pt-3">
+        <div className="px-3 sm:px-5 pt-3">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="!bg-transparent w-full justify-start gap-2 border-b border-[#e0e0e0] rounded-none p-0 h-auto">
+            <TabsList className="!bg-transparent w-full justify-start gap-1 sm:gap-2 border-b border-[#e0e0e0] rounded-none p-0 h-auto overflow-x-auto flex-nowrap [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
               {!isUnassigned && (
                 <TabsTrigger
                   value="overview"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
+                  className="shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-2 sm:px-3 pb-2 text-xs sm:text-sm font-sora font-medium"
                 >
                   {t('doctorPatients.tabOverview')}
                 </TabsTrigger>
@@ -422,14 +421,20 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
               {!isUnassigned && (
                 <>
                   <TabsTrigger
+                    value="chat"
+                    className="shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-2 sm:px-3 pb-2 text-xs sm:text-sm font-sora font-medium"
+                  >
+                    {t('doctorPatients.tabChat')}
+                  </TabsTrigger>
+                  <TabsTrigger
                     value="lab-tests"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
+                    className="shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-2 sm:px-3 pb-2 text-xs sm:text-sm font-sora font-medium"
                   >
                     {t('doctorPatients.tabLabTests')}
                   </TabsTrigger>
                   <TabsTrigger
                     value="journal"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
+                    className="shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-2 sm:px-3 pb-2 text-xs sm:text-sm font-sora font-medium"
                   >
                     {t('doctorPatients.tabJournal')}
                   </TabsTrigger>
@@ -528,12 +533,9 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                     </div>
                   )}
 
-                  {/* Send Message Button */}
+                  {/* Send Message Button — opens the in-sheet Chat tab */}
                   <button
-                    onClick={() => {
-                      onOpenChange(false);
-                      navigate('/supabase-chat');
-                    }}
+                    onClick={() => setActiveTab('chat')}
                     className="w-full bg-[#005044] text-white rounded-xl px-6 py-3 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors flex items-center justify-center gap-2"
                   >
                     <MessageCircle className="w-4 h-4" />
@@ -549,6 +551,14 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                 patientId={patientId}
                 enabled={activeTab === 'questionnaire'}
                 isUnassigned={isUnassigned}
+              />
+            </TabsContent>
+
+            {/* Chat Tab */}
+            <TabsContent value="chat" className="mt-4 pb-6">
+              <PatientChatTab
+                patientId={patientId}
+                enabled={activeTab === 'chat'}
               />
             </TabsContent>
 
