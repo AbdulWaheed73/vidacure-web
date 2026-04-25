@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
@@ -32,7 +33,6 @@ type PrescriptionFormValues = {
   dosage: string;
   usageInstructions: string;
   dateIssued: string;
-  validTill: string;
 };
 
 export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailModalProps> = ({
@@ -50,28 +50,16 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
     dosage: z.string().min(1, t('doctorPrescriptionModal.validationDosage')),
     usageInstructions: z.string().min(1, t('doctorPrescriptionModal.validationUsageInstructions')),
     dateIssued: z.string().min(1, t('doctorPrescriptionModal.validationDateIssued')),
-    validTill: z.string().min(1, t('doctorPrescriptionModal.validationValidTill')),
-  }).refine(
-    (data) => {
-      if (data.dateIssued && data.validTill) {
-        return new Date(data.validTill) > new Date(data.dateIssued);
-      }
-      return true;
-    },
-    {
-      message: t('doctorPrescriptionModal.validationDateOrder'),
-      path: ['validTill'],
-    }
-  );
+  });
 
   const form = useForm<PrescriptionFormValues>({
     resolver: zodResolver(prescriptionFormSchema),
+    mode: 'onTouched',
     defaultValues: {
       medicationName: '',
       dosage: '',
       usageInstructions: '',
       dateIssued: '',
-      validTill: '',
     },
   });
 
@@ -88,7 +76,6 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
         dosage: values.dosage.trim(),
         usageInstructions: values.usageInstructions.trim(),
         dateIssued: values.dateIssued,
-        validTill: values.validTill,
       });
       form.reset();
       onOpenChange(false);
@@ -98,6 +85,15 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleApproveClick = async () => {
+    const valid = await form.trigger();
+    if (!valid) {
+      toast.error(t('doctorPrescriptionModal.fillRequiredFields'));
+      return;
+    }
+    await handleApprove(form.getValues());
   };
 
   const handleClose = () => {
@@ -266,42 +262,23 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
                       </FormItem>
                     )}
                   />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <FormField
-                      control={form.control}
-                      name="dateIssued"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-xs font-manrope text-[#282828]">{t('doctorPrescriptionModal.dateIssued')}</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="date"
-                              className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="validTill"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-xs font-manrope text-[#282828]">{t('doctorPrescriptionModal.validTill')}</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="date"
-                              className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="dateIssued"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs font-manrope text-[#282828]">{t('doctorPrescriptionModal.dateIssued')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="date"
+                            className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 {submitError && (
@@ -373,7 +350,7 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
           {request.status === PrescriptionRequestStatus.PENDING && (
             <Button
               type="button"
-              onClick={form.handleSubmit(handleApprove)}
+              onClick={handleApproveClick}
               disabled={loading}
               className="bg-[#005044] hover:bg-[#004038] text-white rounded-full font-sora w-full sm:w-auto"
             >

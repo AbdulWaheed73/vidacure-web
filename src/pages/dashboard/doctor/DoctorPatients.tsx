@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { RefreshCw, Users, Info } from 'lucide-react';
+import { RefreshCw, Users, Info, Search, X } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import { Input } from '@/components/ui/input';
 import { useDoctorPatients, useDoctorUnassignedPatients } from '@/hooks/useDoctorDashboardQueries';
 import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
 import type { DoctorPatientListItem, SubscriptionPlan, SubscriptionStatus } from '@/types/doctor-patient-types';
@@ -146,8 +147,17 @@ const DoctorPatients: React.FC = () => {
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const patients = viewMode === 'assigned' ? (data?.patients ?? []) : (unassignedData?.patients ?? []);
+  const allPatients = viewMode === 'assigned' ? (data?.patients ?? []) : (unassignedData?.patients ?? []);
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const patients = normalizedQuery
+    ? allPatients.filter((p) =>
+        [p.name, p.givenName, p.familyName, p.email]
+          .filter(Boolean)
+          .some((field) => field!.toLowerCase().includes(normalizedQuery))
+      )
+    : allPatients;
   const currentLoading = viewMode === 'assigned' ? isLoading : unassignedLoading;
   const currentRefetching = viewMode === 'assigned' ? isRefetching : isRefetchingUnassigned;
   const handleRefetch = viewMode === 'assigned' ? refetch : refetchUnassigned;
@@ -187,6 +197,28 @@ const DoctorPatients: React.FC = () => {
           <RefreshCw className={`w-4 h-4 ${currentRefetching ? 'animate-spin' : ''}`} />
           <span className="hidden sm:inline">{t('doctorPatients.refresh')}</span>
         </button>
+      </div>
+
+      {/* Search */}
+      <div className="relative mb-4 max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#b0b0b0] pointer-events-none" />
+        <Input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder={t('doctorPatients.searchPlaceholder')}
+          className="pl-9 pr-9 h-11 rounded-full bg-white border-[#e0e0e0] font-manrope text-sm focus-visible:border-[#005044] focus-visible:ring-[#c0ebe5]"
+        />
+        {searchQuery && (
+          <button
+            type="button"
+            onClick={() => setSearchQuery('')}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#b0b0b0] hover:text-[#005044] transition-colors"
+            aria-label={t('doctorPatients.clearSearch')}
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       {/* Toggle */}

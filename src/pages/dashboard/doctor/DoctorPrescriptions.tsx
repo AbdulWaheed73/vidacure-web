@@ -6,7 +6,9 @@ import { useDoctorPrescriptions, useApprovePrescription } from '@/hooks/useDocto
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
 import type { DoctorPrescriptionRequest } from '@/types/doctor-prescription-types';
 import { PrescriptionRequestDetailModal } from '@/components/PrescriptionRequestDetailModal';
-import { RefreshCw } from 'lucide-react';
+import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
+import { Button } from '@/components/ui/Button';
+import { RefreshCw, ArrowUpRight } from 'lucide-react';
 
 const DoctorPrescriptions = () => {
   const { t } = useTranslation();
@@ -14,6 +16,18 @@ const DoctorPrescriptions = () => {
   const approveMutation = useApprovePrescription();
   const [selectedRequest, setSelectedRequest] = useState<DoctorPrescriptionRequest | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [profilePatientId, setProfilePatientId] = useState<string | null>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const openPatientProfile = (patientId: string) => {
+    setProfilePatientId(patientId);
+    setProfileOpen(true);
+  };
+
+  const handleProfileOpenChange = (open: boolean) => {
+    setProfileOpen(open);
+    if (!open) setProfilePatientId(null);
+  };
 
   const requests = data?.data?.prescriptionRequests ?? [];
 
@@ -42,7 +56,6 @@ const DoctorPrescriptions = () => {
       dosage: string;
       usageInstructions: string;
       dateIssued: string;
-      validTill: string;
     }
   ) => {
     await approveMutation.mutateAsync({ requestId, prescriptionData });
@@ -135,9 +148,15 @@ const DoctorPrescriptions = () => {
                     className="bg-white border border-[#e0e0e0] rounded-2xl p-4 md:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3 hover:border-[#c0ebe5] transition-colors"
                   >
                     <div>
-                      <h3 className="font-sora font-semibold text-[#282828]">
+                      <Button
+                        variant="link"
+                        onClick={() => openPatientProfile(request.patient.id)}
+                        title={t('doctorPrescriptions.viewPatientProfile')}
+                        className="group h-auto p-0 font-sora font-semibold text-[#005044] underline-offset-2 decoration-[#c0ebe5] decoration-2 hover:decoration-[#005044] !no-underline hover:!underline gap-1"
+                      >
                         {request.patient.name}
-                      </h3>
+                        <ArrowUpRight className="size-3.5 opacity-70 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+                      </Button>
                       <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">
                         {request.hasSideEffects ? t('doctorPrescriptions.sideEffectsReported') : t('doctorPrescriptions.prescriptionRequest')}
                       </p>
@@ -179,9 +198,15 @@ const DoctorPrescriptions = () => {
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div>
-                        <h3 className="font-sora font-semibold text-[#282828]">
+                        <Button
+                          variant="link"
+                          onClick={() => openPatientProfile(request.patient.id)}
+                          title={t('doctorPrescriptions.viewPatientProfile')}
+                          className="group h-auto p-0 font-sora font-semibold text-[#005044] underline-offset-2 decoration-[#c0ebe5] decoration-2 hover:decoration-[#005044] !no-underline hover:!underline gap-1"
+                        >
                           {request.patient.name}
-                        </h3>
+                          <ArrowUpRight className="size-3.5 opacity-70 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+                        </Button>
                         <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">
                           {request.hasSideEffects ? t('doctorPrescriptions.sideEffectsReported') : t('doctorPrescriptions.prescriptionRequest')}
                         </p>
@@ -243,6 +268,12 @@ const DoctorPrescriptions = () => {
         onOpenChange={setModalOpen}
         request={selectedRequest}
         onApprove={handleApprove}
+      />
+
+      <PatientProfilePanel
+        patientId={profilePatientId}
+        open={profileOpen}
+        onOpenChange={handleProfileOpenChange}
       />
     </div>
   );

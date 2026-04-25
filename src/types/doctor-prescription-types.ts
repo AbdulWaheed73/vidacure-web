@@ -29,7 +29,6 @@ export type PrescriptionRequestDetailModalProps = {
     dosage: string;
     usageInstructions: string;
     dateIssued: string;
-    validTill: string;
   }) => Promise<void>;
 };
 

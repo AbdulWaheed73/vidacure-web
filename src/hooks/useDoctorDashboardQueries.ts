@@ -39,7 +39,6 @@ export const useApprovePrescription = () => {
         dosage: string;
         usageInstructions: string;
         dateIssued: string;
-        validTill: string;
       };
     }) =>
       doctorPrescriptionService.updatePrescriptionRequestStatus(

@@ -21,7 +21,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { MessageCircle, FlaskConical } from 'lucide-react';
+import { MessageCircle, FlaskConical, Copy, Check } from 'lucide-react';
+import { toast } from 'sonner';
 import {
   useDoctorPatientProfile,
   useDoctorPatientQuestionnaire,
@@ -370,6 +371,7 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState(isUnassigned ? 'questionnaire' : 'overview');
+  const [ssnCopied, setSsnCopied] = useState(false);
   const { data, isLoading } = useDoctorPatientProfile(isUnassigned ? null : patientId);
 
   useEffect(() => {
@@ -465,6 +467,26 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                       <div>
                         <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.name')}</p>
                         <p className="text-[#282828] font-medium">{profile.name}</p>
+                      </div>
+                      <div>
+                        <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.ssn')}</p>
+                        <div className="flex items-center gap-1">
+                          <p className="text-[#282828] font-medium font-mono">{profile.ssn}</p>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-6 text-[#005044] hover:text-[#004038] hover:bg-[#c0ebe5]/50"
+                            aria-label={t('doctorPatients.copySsn')}
+                            onClick={() => {
+                              navigator.clipboard.writeText(profile.ssn);
+                              setSsnCopied(true);
+                              toast.success(t('doctorPatients.ssnCopied'));
+                              setTimeout(() => setSsnCopied(false), 1500);
+                            }}
+                          >
+                            {ssnCopied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+                          </Button>
+                        </div>
                       </div>
                       {profile.height && (
                         <div>
