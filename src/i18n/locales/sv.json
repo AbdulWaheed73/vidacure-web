@@ -371,6 +371,16 @@
     "goBack": "Gå tillbaka"
   },
   "dashboard": {
+    "completePhone": {
+      "title": "Lägg till ditt telefonnummer",
+      "description": "Vi behöver ditt telefonnummer för att kunna hålla dig uppdaterad om din behandling och dina bokningar.",
+      "cta": "Lägg till telefon",
+      "modalTitle": "Lägg till ditt telefonnummer",
+      "save": "Spara",
+      "saving": "Sparar…",
+      "cancel": "Avbryt",
+      "saveFailed": "Kunde inte spara telefonnumret. Försök igen."
+    },
     "choosePlan": "💎 Välj din plan",
     "subscribePrompt": "Prenumerera för att låsa upp alla funktioner och anslut till ditt vårdteam.",
     "subscribeCTA": "Visa planer",
@@ -485,7 +495,9 @@
       "male": "Man",
       "female": "Kvinna",
       "email": "E-post",
-      "emailPlaceholder": "din.epost@exempel.com"
+      "emailPlaceholder": "din.epost@exempel.com",
+      "phone": "Telefonnummer",
+      "phonePlaceholder": "+46 70 123 45 67"
     },
     "physicalDetails": {
       "height": "Längd",
@@ -565,6 +577,8 @@
       "genderRequired": "Kön krävs",
       "emailRequired": "E-post krävs",
       "emailInvalid": "Ange en giltig e-postadress",
+      "phoneRequired": "Telefonnummer krävs",
+      "phoneInvalid": "Ange ett giltigt svenskt telefonnummer (t.ex. +46701234567)",
       "heightRequired": "Längd krävs",
       "heightRange": "Längden måste vara mellan 100 och 250 cm",
       "currentWeightRequired": "Nuvarande vikt krävs",
@@ -828,6 +842,9 @@
     "ssn": "Personnummer (SSN)",
     "copySsn": "Kopiera personnummer",
     "ssnCopied": "Personnummer kopierat",
+    "phone": "Telefon",
+    "copyPhone": "Kopiera telefonnummer",
+    "phoneCopied": "Telefonnummer kopierat",
     "height": "Längd",
     "bmi": "BMI",
     "weightProgress": "Viktutveckling",

@@ -9,12 +9,16 @@ import type {
 /**
  * Submit complete questionnaire to backend
  */
-export const submitQuestionnaire = async (questionnaire: QuestionnaireAnswer[]): Promise<QuestionnaireResponse> => {
+export const submitQuestionnaire = async (
+  questionnaire: QuestionnaireAnswer[],
+  phone: string,
+): Promise<QuestionnaireResponse> => {
   try {
     const response = await api.post('/api/patient/questionnaire', {
-      questionnaire
+      questionnaire,
+      phone,
     });
-    
+
     return response.data;
   } catch (error: any) {
     console.error('Error submitting questionnaire:', error);
@@ -57,19 +61,6 @@ export const updateQuestionnaire = async (updates: QuestionnaireAnswer[]): Promi
   }
 };
 
-/**
- * Save questionnaire progress (auto-save functionality)
- */
-export const saveQuestionnaireProgress = async (questionnaire: QuestionnaireAnswer[]): Promise<void> => {
-  try {
-    await submitQuestionnaire(questionnaire);
-  } catch (error) {
-    // Don't throw error for auto-save failures, just log
-    console.warn('Auto-save failed:', error);
-  }
-};
-
-
 export const saveHeightEmail = async (email: string, height: string) => {
   try {
     await api.patch('/api/patient/profile', {
@@ -79,4 +70,8 @@ export const saveHeightEmail = async (email: string, height: string) => {
   } catch {
     console.log('erroe saving the email or height !');
   }
+};
+
+export const savePhone = async (phone: string): Promise<void> => {
+  await api.patch('/api/patient/profile', { phone });
 };

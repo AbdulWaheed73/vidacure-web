@@ -371,6 +371,16 @@
     "goBack": "Go Back"
   },
   "dashboard": {
+    "completePhone": {
+      "title": "Add your phone number",
+      "description": "We need your phone number to keep you updated about your treatment and appointments.",
+      "cta": "Add phone",
+      "modalTitle": "Add your phone number",
+      "save": "Save",
+      "saving": "Saving…",
+      "cancel": "Cancel",
+      "saveFailed": "Could not save phone number. Please try again."
+    },
     "choosePlan": "💎 Choose Your Plan",
     "subscribePrompt": "Subscribe to unlock all features and connect with your healthcare team.",
     "subscribeCTA": "View Plans",
@@ -485,7 +495,9 @@
       "male": "Male",
       "female": "Female",
       "email": "Email",
-      "emailPlaceholder": "your.email@example.com"
+      "emailPlaceholder": "your.email@example.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+46 70 123 45 67"
     },
     "physicalDetails": {
       "height": "Height",
@@ -565,6 +577,8 @@
       "genderRequired": "Gender is required",
       "emailRequired": "Email is required",
       "emailInvalid": "Please enter a valid email address",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Please enter a valid Swedish phone number (e.g. +46701234567)",
       "heightRequired": "Height is required",
       "heightRange": "Height must be between 100 and 250 cm",
       "currentWeightRequired": "Current Weight is required",
@@ -828,6 +842,9 @@
     "ssn": "Social Security Number",
     "copySsn": "Copy social security number",
     "ssnCopied": "Social security number copied",
+    "phone": "Phone",
+    "copyPhone": "Copy phone number",
+    "phoneCopied": "Phone number copied",
     "height": "Height",
     "bmi": "BMI",
     "weightProgress": "Weight progress",

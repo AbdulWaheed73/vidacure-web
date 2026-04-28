@@ -77,14 +77,25 @@ export const PersonalInfoStep = () => {
         </FormField>
       </div>
 
-      <FormField label={t('onboarding.personalInfo.email')} required>
-        <Input
-          type="email"
-          placeholder={t('onboarding.personalInfo.emailPlaceholder')}
-          value={personalInfo.email}
-          onChange={(e) => handleChange("email", e.target.value)}
-        />
-      </FormField>
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
+        <FormField label={t('onboarding.personalInfo.email')} required className="flex-1">
+          <Input
+            type="email"
+            placeholder={t('onboarding.personalInfo.emailPlaceholder')}
+            value={personalInfo.email}
+            onChange={(e) => handleChange("email", e.target.value)}
+          />
+        </FormField>
+
+        <FormField label={t('onboarding.personalInfo.phone')} required className="flex-1">
+          <Input
+            type="tel"
+            placeholder={t('onboarding.personalInfo.phonePlaceholder')}
+            value={personalInfo.phone}
+            onChange={(e) => handleChange("phone", e.target.value)}
+          />
+        </FormField>
+      </div>
     </div>
   );
 };

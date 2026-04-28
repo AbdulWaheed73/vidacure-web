@@ -4,6 +4,7 @@ export type PatientProfile = {
   givenName: string;
   familyName: string;
   email?: string;
+  phone?: string;
   dateOfBirth?: string;
   gender?: "male" | "female" | "other";
   height?: number;
@@ -21,6 +22,7 @@ export type PatientProfileResponse = {
 
 export type UpdatePatientProfileData = {
   email?: string;
+  phone?: string;
   height?: number;
   goalWeight?: number;
 };

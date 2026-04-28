@@ -8,6 +8,11 @@ const isValidEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
+export const isValidSwedishPhone = (value: string): boolean => {
+  const cleaned = value.replace(/[\s\-()]/g, "");
+  return /^(\+46\d{8,9}|0\d{8,9})$/.test(cleaned);
+};
+
 const getAge = (dateOfBirth: string): number => {
   const dob = new Date(dateOfBirth);
   const today = new Date();
@@ -22,8 +27,9 @@ const getAge = (dateOfBirth: string): number => {
 const toNum = (val: string): number => parseFloat(val) || 0;
 
 export const validatePersonalInfo = (data: PersonalInfo): boolean => {
-  if (!data.fullName.trim() || !data.dateOfBirth.trim() || !data.gender.trim() || !data.email.trim()) return false;
+  if (!data.fullName.trim() || !data.dateOfBirth.trim() || !data.gender.trim() || !data.email.trim() || !data.phone.trim()) return false;
   if (!isValidEmail(data.email)) return false;
+  if (!isValidSwedishPhone(data.phone)) return false;
   const age = getAge(data.dateOfBirth);
   if (age < 18 || age > 120) return false;
   return true;
@@ -88,6 +94,8 @@ export const getValidationErrors = (step: number, data: PersonalInfo | PhysicalD
       if (!d.gender.trim()) errors.push(t("onboarding.validation.genderRequired"));
       if (!d.email.trim()) errors.push(t("onboarding.validation.emailRequired"));
       else if (!isValidEmail(d.email)) errors.push(t("onboarding.validation.emailInvalid"));
+      if (!d.phone.trim()) errors.push(t("onboarding.validation.phoneRequired"));
+      else if (!isValidSwedishPhone(d.phone)) errors.push(t("onboarding.validation.phoneInvalid"));
       break;
     }
 

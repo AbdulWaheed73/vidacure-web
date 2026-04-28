@@ -372,6 +372,7 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
   const { t, i18n } = useTranslation();
   const [activeTab, setActiveTab] = useState(isUnassigned ? 'questionnaire' : 'overview');
   const [ssnCopied, setSsnCopied] = useState(false);
+  const [phoneCopied, setPhoneCopied] = useState(false);
   const { data, isLoading } = useDoctorPatientProfile(isUnassigned ? null : patientId);
 
   useEffect(() => {
@@ -488,6 +489,28 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                           </Button>
                         </div>
                       </div>
+                      {profile.phone && (
+                        <div>
+                          <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.phone')}</p>
+                          <div className="flex items-center gap-1">
+                            <p className="text-[#282828] font-medium">{profile.phone}</p>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="size-6 text-[#005044] hover:text-[#004038] hover:bg-[#c0ebe5]/50"
+                              aria-label={t('doctorPatients.copyPhone')}
+                              onClick={() => {
+                                navigator.clipboard.writeText(profile.phone!);
+                                setPhoneCopied(true);
+                                toast.success(t('doctorPatients.phoneCopied'));
+                                setTimeout(() => setPhoneCopied(false), 1500);
+                              }}
+                            >
+                              {phoneCopied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                       {profile.height && (
                         <div>
                           <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.height')}</p>

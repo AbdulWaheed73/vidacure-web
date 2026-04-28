@@ -6,6 +6,7 @@ export type PersonalInfo = {
   dateOfBirth: string;
   gender: "male" | "female" | "other" | "";
   email: string;
+  phone: string;
 }
 
 export type PhysicalDetails = {

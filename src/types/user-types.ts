@@ -10,6 +10,8 @@ export type User = {
   hasCompletedOnboarding?: boolean;
   hasCompletedBMICheck?: boolean;
   hasScheduledMeeting?: boolean;
+  email?: string;
+  phone?: string;
 }
 
 export type AuthState = {

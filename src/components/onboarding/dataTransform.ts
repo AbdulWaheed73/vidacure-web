@@ -53,6 +53,7 @@ export const transformQuestionnaireToFormData = (questionnaire: QuestionnaireAns
       dateOfBirth: '',
       gender: '',
       email: '',
+      phone: '',
     },
     physicalDetails: {
       height: '',

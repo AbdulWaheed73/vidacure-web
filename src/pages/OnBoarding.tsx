@@ -47,6 +47,7 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
       dateOfBirth: "",
       gender: "",
       email: "",
+      phone: "",
     },
     physicalDetails: {
       height: "",
@@ -164,28 +165,25 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
     try {
       setIsLoading(true);
 
-      // Separate email from questionnaire data
-      const { email, ...personalInfoWithoutEmail } = data.personalInfo;
+      // Separate email and phone from questionnaire data
+      const { email, phone, ...personalInfoWithoutContact } = data.personalInfo;
       const { height } = data.physicalDetails;
 
-      const dataWithoutEmail: OnboardingData = {
+      const dataWithoutContact: OnboardingData = {
         ...data,
         personalInfo: {
-          ...personalInfoWithoutEmail,
-          email: "" // Exclude email from questionnaire
+          ...personalInfoWithoutContact,
+          email: "", // Exclude from questionnaire
+          phone: "",
         }
       };
 
-      const questionnaire = transformFormDataToQuestionnaire(dataWithoutEmail);
+      const questionnaire = transformFormDataToQuestionnaire(dataWithoutContact);
 
       // First update profile with email and height (required before submitting questionnaire)
-      // await api.patch('/api/patient/profile', {
-      //   email,
-      //   height: height ? parseFloat(height) : undefined
-      // });
       await saveHeightEmail(email, height);
-      // Then submit questionnaire
-      await submitQuestionnaire(questionnaire);
+      // Then submit questionnaire (phone is persisted as part of this request)
+      await submitQuestionnaire(questionnaire, phone);
 
       // Refresh auth status to get updated hasCompletedOnboarding flag
       // await checkAuthStatus();

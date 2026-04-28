@@ -65,6 +65,7 @@ export type DoctorPatientProfile = {
   givenName: string | null;
   familyName: string | null;
   email: string | null;
+  phone: string | null;
   ssn: string;
   dateOfBirth: string | null;
   gender: string | null;
