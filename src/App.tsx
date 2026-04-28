@@ -293,7 +293,7 @@ function App() {
         {/* Subscribe Route - Protected with Sidebar + onboarding guard */}
         <Route path={ROUTES.SUBSCRIBE} element={requireOnboarding(<SubscribePage />)} />
 
-        {/* Hypnotherapist Purchase - Protected with onboarding but NO MeetingRequired */}
+        {/* Hypnotherapist Purchase - Protected with onboarding */}
         <Route path={ROUTES.SUBSCRIBE_HYPNOTHERAPIST} element={requireOnboarding(<HypnotherapistSubscribePage />)} />
 
         {/* Hypnotherapist Payment Success */}

@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Video } from 'lucide-react';
-import { useDoctorMeetings, useDoctorPrescriptions, useDoctorConversations } from '@/hooks/useDoctorDashboardQueries';
+import { Video, ArrowUpRight } from 'lucide-react';
+import { useDoctorMeetings, useDoctorPrescriptions, useDoctorConversations, useApprovePrescription } from '@/hooks/useDoctorDashboardQueries';
 import { useChatUnreadCounts } from '@/hooks/useChatQueries';
+import { PrescriptionRequestDetailModal } from '@/components/PrescriptionRequestDetailModal';
+import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
+import { Button } from '@/components/ui/Button';
 import type { DashboardPageProps } from '../types';
 import type { PatientMeeting } from '@/types/calendly-types';
 import type { DoctorPrescriptionRequest } from '@/types/doctor-prescription-types';
@@ -110,14 +113,23 @@ const AppointmentCard: React.FC<{ meeting: PatientMeeting; t: (key: string) => s
   </div>
 );
 
-const PrescriptionRow: React.FC<{ request: DoctorPrescriptionRequest; onReview: () => void; t: (key: string) => string }> = ({
-  request,
-  onReview,
-  t,
-}) => (
+const PrescriptionRow: React.FC<{
+  request: DoctorPrescriptionRequest;
+  onReview: () => void;
+  onOpenPatient: () => void;
+  t: (key: string) => string;
+}> = ({ request, onReview, onOpenPatient, t }) => (
   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-4 border-b border-[#e0e0e0] last:border-b-0">
     <div>
-      <h4 className="font-sora font-semibold text-base md:text-lg text-[#282828]">{request.patient.name}</h4>
+      <Button
+        variant="link"
+        onClick={onOpenPatient}
+        title={t('doctorPrescriptions.viewPatientProfile')}
+        className="group h-auto p-0 font-sora font-semibold text-base md:text-lg text-[#282828] underline-offset-2 decoration-[#c0ebe5] decoration-2 hover:decoration-[#005044] !no-underline hover:!underline gap-1"
+      >
+        {request.patient.name}
+        <ArrowUpRight className="size-3.5 opacity-70 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
+      </Button>
       <p className="text-[#b0b0b0] text-sm font-manrope mt-0.5">{t('doctorDashboard.reason')}</p>
       <p className="text-[#b0b0b0] text-sm font-manrope">{t('doctorDashboard.latestWeight')} {request.currentWeight} kg</p>
     </div>
@@ -200,6 +212,39 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
   const { data: meetingsData, isLoading: meetingsLoading } = useDoctorMeetings();
   const { data: prescriptionsData, isLoading: prescriptionsLoading } = useDoctorPrescriptions({ limit: 3 });
   const { data: conversationsData, isLoading: conversationsLoading } = useDoctorConversations();
+  const approveMutation = useApprovePrescription();
+
+  const [selectedRequest, setSelectedRequest] = useState<DoctorPrescriptionRequest | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [profilePatientId, setProfilePatientId] = useState<string | null>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const handleReview = (request: DoctorPrescriptionRequest) => {
+    setSelectedRequest(request);
+    setModalOpen(true);
+  };
+
+  const openPatientProfile = (patientId: string) => {
+    setProfilePatientId(patientId);
+    setProfileOpen(true);
+  };
+
+  const handleProfileOpenChange = (open: boolean) => {
+    setProfileOpen(open);
+    if (!open) setProfilePatientId(null);
+  };
+
+  const handleApprove = async (
+    requestId: string,
+    prescriptionData: {
+      medicationName: string;
+      dosage: string;
+      usageInstructions: string;
+      dateIssued: string;
+    }
+  ) => {
+    await approveMutation.mutateAsync({ requestId, prescriptionData });
+  };
 
   const now = new Date();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -289,7 +334,8 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
                 <PrescriptionRow
                   key={request._id}
                   request={request}
-                  onReview={() => navigate('/dashboard/doctor/prescriptions')}
+                  onReview={() => handleReview(request)}
+                  onOpenPatient={() => openPatientProfile(request.patient.id)}
                   t={t}
                 />
               ))}
@@ -345,6 +391,19 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
           </div>
         </div>
       </div>
+
+      <PrescriptionRequestDetailModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        request={selectedRequest}
+        onApprove={handleApprove}
+      />
+
+      <PatientProfilePanel
+        patientId={profilePatientId}
+        open={profileOpen}
+        onOpenChange={handleProfileOpenChange}
+      />
     </div>
   );
 };

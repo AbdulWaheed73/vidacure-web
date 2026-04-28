@@ -8,7 +8,6 @@ import { PaymentService } from '../services';
 import { queryKeys } from '../lib/queryClient';
 import { Button } from '../components/ui/Button';
 import { ROUTES } from '../constants';
-import { MeetingRequired } from '../components/subscription/MeetingRequired';
 import type { DashboardPageProps } from '../types';
 
 
@@ -22,8 +21,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
   });
 
   return (
-    <MeetingRequired>
-      <div className="p-4 md:p-8">
+    <div className="p-4 md:p-8">
         {/* <PromoBanner /> */}
 
         {/* Active subscription — show full dashboard */}
@@ -62,7 +60,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
             </div>
           </div>
         )}
-      </div>
-    </MeetingRequired>
+    </div>
   );
 };

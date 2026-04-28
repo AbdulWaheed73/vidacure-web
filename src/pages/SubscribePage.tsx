@@ -2,15 +2,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Sparkles } from 'lucide-react';
 import { SubscriptionCard } from '@/components/subscription/SubscriptionCard';
-import { MeetingRequired } from '@/components/subscription/MeetingRequired';
 import { HypnotherapistCard } from '@/components/subscription/HypnotherapistCard';
 
 export const SubscribePage: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <MeetingRequired>
-      <div className="px-4 py-6 sm:px-6 sm:py-8 md:p-8 max-w-5xl mx-auto">
+    <div className="px-4 py-6 sm:px-6 sm:py-8 md:p-8 max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -47,8 +45,7 @@ export const SubscribePage: React.FC = () => {
             )}
           </p>
         </div>
-      </div>
-    </MeetingRequired>
+    </div>
   );
 };
 

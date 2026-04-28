@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Lock, Clock, Calendar } from 'lucide-react';
-import { PopupModal } from 'react-calendly';
+import { Lock } from 'lucide-react';
 import { PaymentService } from '@/services';
-import { meetingService } from '@/services/meetingService';
-import { calendlyService } from '@/services/calendlyService';
 import { Button } from '@/components/ui/Button';
 import { ROUTES } from '@/constants';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,27 +18,15 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
   featureName = 'this feature',
 }) => {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
-  const [isMeetingGatePassed, setIsMeetingGatePassed] = useState(true);
-  const [meetingStatus, setMeetingStatus] = useState<'none' | 'scheduled' | 'completed'>('none');
-  const [scheduledTime, setScheduledTime] = useState<string | null>(null);
-  const [schedulingLink, setSchedulingLink] = useState<string | null>(null);
-  const [isBookingLoading, setIsBookingLoading] = useState(false);
 
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        const [subStatus, mtgStatus] = await Promise.all([
-          PaymentService.getSubscriptionStatus(),
-          meetingService.getMeetingStatus(),
-        ]);
-
+        const subStatus = await PaymentService.getSubscriptionStatus();
         setHasActiveSubscription(subStatus.hasSubscription);
-        setIsMeetingGatePassed(mtgStatus.isMeetingGatePassed);
-        setMeetingStatus(mtgStatus.meetingStatus);
-        setScheduledTime(mtgStatus.scheduledMeetingTime);
       } catch (error) {
         console.error('Error checking status:', error);
         setHasActiveSubscription(false);
@@ -52,23 +37,6 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
 
     checkStatus();
   }, []);
-
-  const handleBookConsultation = async () => {
-    setIsBookingLoading(true);
-    try {
-      const eventTypesResponse = await calendlyService.getAvailableEventTypes();
-      if (eventTypesResponse.success && eventTypesResponse.eventType) {
-        const bookingResponse = await calendlyService.createPatientBookingLink(eventTypesResponse.eventType.type);
-        if (bookingResponse.success) {
-          setSchedulingLink(bookingResponse.schedulingLink);
-        }
-      }
-    } catch (error) {
-      console.error('Error generating booking link:', error);
-    } finally {
-      setIsBookingLoading(false);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -98,101 +66,6 @@ export const SubscriptionRequired: React.FC<SubscriptionRequiredProps> = ({
     return <>{children}</>;
   }
 
-  const formatScheduledTime = () => {
-    if (!scheduledTime) return null;
-    const date = new Date(scheduledTime);
-    const locale = i18n.language === 'sv' ? 'sv-SE' : 'en-GB';
-    return new Intl.DateTimeFormat(locale, {
-      dateStyle: 'long',
-      timeStyle: 'short',
-    }).format(date);
-  };
-
-  // Meeting gate not passed — show meeting overlay
-  if (!isMeetingGatePassed) {
-    return (
-      <>
-        <GateOverlay blurredContent={children}>
-          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            {meetingStatus === 'scheduled' ? (
-              <Clock className="w-8 h-8 text-amber-600" />
-            ) : (
-              <Calendar className="w-8 h-8 text-amber-600" />
-            )}
-          </div>
-
-          <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
-            {meetingStatus === 'scheduled'
-              ? t('gate.completeConsultationFirst')
-              : t('gate.consultationRequired')}
-          </h2>
-
-          {meetingStatus === 'scheduled' ? (
-            <>
-              <p className="text-gray-600 mb-4 font-manrope">
-                {t('gate.consultationScheduledFeatureMessage', { featureName })}
-              </p>
-              {scheduledTime && (
-                <div className="bg-teal-50 rounded-lg p-4 mb-6">
-                  <p className="text-sm text-teal-700 font-medium">
-                    {t('gate.scheduledFor')}
-                  </p>
-                  <p className="text-lg text-teal-800 font-semibold">
-                    {formatScheduledTime()}
-                  </p>
-                </div>
-              )}
-              <Button
-                onClick={() => navigate(ROUTES.PATIENT_APPOINTMENTS)}
-                className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
-              >
-                {t('gate.viewAppointments')}
-              </Button>
-            </>
-          ) : (
-            <>
-              <p className="text-gray-600 mb-6 font-manrope">
-                {t('gate.consultationRequiredFeatureMessage', { featureName })}
-              </p>
-              <Button
-                onClick={handleBookConsultation}
-                disabled={isBookingLoading}
-                className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
-              >
-                {isBookingLoading ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                ) : (
-                  <Calendar className="w-4 h-4 mr-2" />
-                )}
-                {isBookingLoading ? t('gate.loading') : t('gate.bookConsultation')}
-              </Button>
-
-              {localStorage.getItem('vidacure_hypno_intent') && (
-                <button
-                  onClick={() => navigate(ROUTES.SUBSCRIBE_HYPNOTHERAPIST)}
-                  className="mt-3 text-sm text-teal-600 hover:text-teal-700 font-medium font-manrope underline underline-offset-2"
-                >
-                  {t('gate.hypnotherapyCTA')}
-                </button>
-              )}
-            </>
-          )}
-        </GateOverlay>
-
-        <PopupModal
-          url={schedulingLink || ''}
-          open={!!schedulingLink}
-          onModalClose={() => {
-            setSchedulingLink(null);
-            window.location.reload();
-          }}
-          rootElement={document.getElementById('root')!}
-        />
-      </>
-    );
-  }
-
-  // Meeting completed but no subscription — show subscription overlay
   return (
     <GateOverlay blurredContent={children}>
       <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">

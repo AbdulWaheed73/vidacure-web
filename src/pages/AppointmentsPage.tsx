@@ -51,7 +51,6 @@ import type { ProviderMeeting } from '../types/provider-types';
 import { useCookieConsentStore } from '@/stores/cookieConsentStore';
 import { useAuthStore } from '@/stores/authStore';
 import { CALENDLY_FREE_CONSULTATION_URL } from '@/constants';
-import { MeetingRequired } from '@/components/subscription';
 
 // Horizontal scrolling carousel for upcoming appointment cards
 const UpcomingAppointmentsCarousel: React.FC<{
@@ -412,7 +411,6 @@ export const AppointmentsPage: React.FC = () => {
   ].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
   return (
-    <MeetingRequired>
     <div className="p-4 md:p-8">
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
@@ -903,6 +901,5 @@ export const AppointmentsPage: React.FC = () => {
         />
       )}
     </div>
-    </MeetingRequired>
   );
 };
