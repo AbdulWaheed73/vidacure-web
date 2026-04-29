@@ -919,7 +919,7 @@
     "medicationPlaceholder": "e.g., Wegovy",
     "dosage": "Dosage *",
     "dosagePlaceholder": "e.g., 2.4mg weekly",
-    "usageInstructions": "Notes *",
+    "usageInstructions": "Notes",
     "usagePlaceholder": "Notes for the patient...",
     "dateIssued": "Date Issued *",
     "validTill": "Valid Till *",

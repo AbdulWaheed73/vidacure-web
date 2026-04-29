@@ -27,7 +27,7 @@ export type PrescriptionRequestDetailModalProps = {
   onApprove: (requestId: string, prescriptionData: {
     medicationName: string;
     dosage: string;
-    usageInstructions: string;
+    usageInstructions?: string;
     dateIssued: string;
   }) => Promise<void>;
 };

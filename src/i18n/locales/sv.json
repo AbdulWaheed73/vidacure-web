@@ -919,7 +919,7 @@
     "medicationPlaceholder": "t.ex. Wegovy",
     "dosage": "Dosering *",
     "dosagePlaceholder": "t.ex. 2,4 mg per vecka",
-    "usageInstructions": "Anteckningar *",
+    "usageInstructions": "Anteckningar",
     "usagePlaceholder": "Anteckningar till patienten...",
     "dateIssued": "Utfärdat *",
     "validTill": "Giltigt till *",

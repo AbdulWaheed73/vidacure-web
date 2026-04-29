@@ -48,7 +48,7 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
   const prescriptionFormSchema = z.object({
     medicationName: z.string().min(1, t('doctorPrescriptionModal.validationMedicationName')),
     dosage: z.string().min(1, t('doctorPrescriptionModal.validationDosage')),
-    usageInstructions: z.string().min(1, t('doctorPrescriptionModal.validationUsageInstructions')),
+    usageInstructions: z.string().optional(),
     dateIssued: z.string().min(1, t('doctorPrescriptionModal.validationDateIssued')),
   });
 
@@ -74,7 +74,7 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
       await onApprove(request._id, {
         medicationName: values.medicationName.trim(),
         dosage: values.dosage.trim(),
-        usageInstructions: values.usageInstructions.trim(),
+        usageInstructions: values.usageInstructions?.trim() || undefined,
         dateIssued: values.dateIssued,
       });
       form.reset();
