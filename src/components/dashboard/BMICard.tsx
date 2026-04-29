@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { usePatientProfile, useWeightHistory } from '@/hooks/useDashboardQueries';
 import { ConsentRequiredCard, isConsentError } from './ConsentRequiredCard';
+import { calculateBMI, formatBMI } from '@/lib/bmi';
 
 type BMICategory = {
   key: string;
@@ -22,10 +23,6 @@ const bmiCategories: BMICategory[] = [
   { key: "overweight", color: "#fbbf24", min: 25, max: 29.9 },
   { key: "obese", color: "#f87171", min: 30, max: 100 },
 ];
-
-const calculateBMI = (weightKg: number, heightCm: number) => {
-  return Math.round((weightKg / (heightCm * heightCm)) * 10000 * 10) / 10;
-};
 
 const getBMICategory = (bmi: number): BMICategory => {
   return bmiCategories.find(c => bmi >= c.min && bmi <= c.max) || bmiCategories[3];
@@ -48,8 +45,8 @@ export const BMICard: React.FC = () => {
   if (height && history.length > 0) {
     const latestWeight = history[0].weight;
     const firstWeight = history[history.length - 1].weight;
-    currentBMI = calculateBMI(latestWeight, height);
-    startingBMI = calculateBMI(firstWeight, height);
+    currentBMI = calculateBMI(height, latestWeight);
+    startingBMI = calculateBMI(height, firstWeight);
   }
 
   if (isConsentError(profileError) || isConsentError(weightError)) {
@@ -137,7 +134,7 @@ export const BMICard: React.FC = () => {
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-bold text-gray-800">{currentBMI}</span>
+            <span className="text-3xl font-bold text-gray-800">{formatBMI(currentBMI)}</span>
           </div>
         </div>
 
@@ -150,7 +147,7 @@ export const BMICard: React.FC = () => {
 
         {startingBMI !== null && startingBMI !== currentBMI && (
           <p className="text-xs text-gray-500 mt-2">
-            {t('dashboard.downFrom')} {startingBMI} {t('dashboard.atStart')}
+            {t('dashboard.downFrom')} {formatBMI(startingBMI)} {t('dashboard.atStart')}
           </p>
         )}
       </CardContent>

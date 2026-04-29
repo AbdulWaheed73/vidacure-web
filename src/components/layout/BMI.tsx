@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Minus, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ROUTES } from "@/constants/routes";
+import { buildBmiResult, BMI_DEBOUNCE_MS } from "@/lib/bmi";
 
 export const BMI = () => {
   const { t } = useTranslation();
@@ -12,31 +13,16 @@ export const BMI = () => {
   const [age, setAge] = useState(28);
   const [weight, setWeight] = useState(100);
   const [height, setHeight] = useState(182);
+  const [result, setResult] = useState(() => buildBmiResult(182, 100));
 
-  // Calculate BMI
-  const calculateBMI = () => {
-    const heightInMeters = height / 100;
-    const bmi = weight / (heightInMeters * heightInMeters);
-    return bmi.toFixed(1);
-  };
-
-  const getBMICategory = (bmi: number) => {
-    if (bmi < 18.5) return t("bmi.categories.underweight");
-    if (bmi < 25) return t("bmi.categories.normal");
-    if (bmi < 30) return t("bmi.categories.overweight");
-    return t("bmi.categories.obese");
-  };
-
-  const getBMITier = (bmi: number): 'notEligible' | 'conditional' | 'eligible' => {
-    if (bmi < 27) return 'notEligible';
-    if (bmi < 30) return 'conditional';
-    return 'eligible';
-  };
-
-  const bmi = calculateBMI();
-  const bmiValue = parseFloat(bmi);
-  const category = getBMICategory(bmiValue);
-  const tier = getBMITier(bmiValue);
+  // Debounce the calc so dragging the height slider or holding the +/-
+  // buttons doesn't recompute on every event. Same window as PreLoginBMI.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setResult(buildBmiResult(height, weight));
+    }, BMI_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [height, weight]);
 
   const handleGetStarted = () => {
     navigate(ROUTES.PRE_LOGIN_BMI);
@@ -283,14 +269,23 @@ export const BMI = () => {
 
             {/* BMI Result */}
             <div className="pt-4 flex flex-col justify-start items-center gap-4">
-              <h2 className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold font-['Sora'] text-center">
-                {t('bmi.result')} {bmi} ({category})
-              </h2>
+              {result && (
+                <h2 className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold font-['Sora'] text-center">
+                  {t('bmi.result')} {result.display} ({t(`bmi.categories.${result.category}`)})
+                </h2>
+              )}
+              {!result && (
+                <h2 className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold font-['Sora'] text-center">
+                  {t('bmi.result')}
+                </h2>
+              )}
 
-              {/* Tier-based messaging */}
-              <p className="text-emerald-100 text-lg font-medium font-['Manrope'] text-center max-w-xl">
-                {t(`bmi.tiers.${tier}`)}
-              </p>
+              {/* Tier-based messaging — only when BMI is in a valid range. */}
+              {result && (
+                <p className="text-emerald-100 text-lg font-medium font-['Manrope'] text-center max-w-xl">
+                  {t(`bmi.tiers.${result.tier}`)}
+                </p>
+              )}
 
               <div className="max-w-2xl text-center">
                 <span className="text-emerald-50 text-base font-normal font-['Manrope'] leading-snug">
