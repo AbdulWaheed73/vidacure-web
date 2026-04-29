@@ -37,7 +37,7 @@ export const useApprovePrescription = () => {
       prescriptionData: {
         medicationName: string;
         dosage: string;
-        usageInstructions: string;
+        usageInstructions?: string;
         dateIssued: string;
       };
     }) =>

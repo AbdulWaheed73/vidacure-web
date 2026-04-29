@@ -239,7 +239,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
     prescriptionData: {
       medicationName: string;
       dosage: string;
-      usageInstructions: string;
+      usageInstructions?: string;
       dateIssued: string;
     }
   ) => {

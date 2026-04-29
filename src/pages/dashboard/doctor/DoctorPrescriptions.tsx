@@ -54,7 +54,7 @@ const DoctorPrescriptions = () => {
     prescriptionData: {
       medicationName: string;
       dosage: string;
-      usageInstructions: string;
+      usageInstructions?: string;
       dateIssued: string;
     }
   ) => {
