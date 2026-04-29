@@ -29,6 +29,7 @@ import {
 } from "@/components/onboarding";
 import { saveHeightEmail, submitQuestionnaire } from "@/services/questionnaire";
 import { useAuthStore } from "@/stores/authStore";
+import { toast } from "sonner";
 
 
 
@@ -207,7 +208,10 @@ const OnboardingFlow = ({ user }: { user: User | null }) => {
 
     } catch (error: any) {
       console.error('Submission error:', error);
-      alert(`Submission failed: ${error.message}. Please try again.`);
+      toast.error(error.message || 'Submission failed. Please try again.');
+      if (error.message?.toLowerCase().includes('email')) {
+        setCurrentStep(1);
+      }
     } finally {
       setIsLoading(false);
     }

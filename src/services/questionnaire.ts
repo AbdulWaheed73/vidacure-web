@@ -67,8 +67,8 @@ export const saveHeightEmail = async (email: string, height: string) => {
       email,
       height: height ? parseFloat(height) : undefined,
     });
-  } catch {
-    console.log('erroe saving the email or height !');
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error || 'Failed to save email or height');
   }
 };
 
