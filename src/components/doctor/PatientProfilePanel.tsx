@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
   Sheet,
@@ -21,7 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { MessageCircle, FlaskConical, Copy, Check } from 'lucide-react';
+import { MessageCircle, FlaskConical, Copy, Check, ArrowUpRight } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   useDoctorPatientProfile,
@@ -370,6 +371,7 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
   isUnassigned = false,
 }) => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(isUnassigned ? 'questionnaire' : 'overview');
   const [ssnCopied, setSsnCopied] = useState(false);
   const [phoneCopied, setPhoneCopied] = useState(false);
@@ -532,9 +534,17 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                   {/* Prescriptions */}
                   {profile.prescriptionRequests.length > 0 && (
                     <div>
-                      <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">
+                      <Button
+                        variant="link"
+                        onClick={() => {
+                          onOpenChange(false);
+                          navigate('/dashboard/doctor/prescriptions');
+                        }}
+                        className="font-sora font-semibold text-sm text-[#1F7A5C] hover:text-[#155c44] mb-3 px-0 h-auto"
+                      >
                         {t('doctorPatients.prescriptionRequests')}
-                      </h3>
+                        <ArrowUpRight className="size-4" />
+                      </Button>
                       <div className="space-y-2">
                         {profile.prescriptionRequests.map((req, i) => (
                           <PrescriptionCard key={req.id ?? i} request={req} t={t} dateLocale={dateLocale} />
