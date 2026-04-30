@@ -73,7 +73,7 @@ export class PaymentService {
   static getPlanDetails(planType: 'lifestyle' | 'medical') {
     if (planType === 'lifestyle') {
       return {
-        name: 'Lifestyle Program Membership',
+        name: 'Medical Program Membership',
         price: 495,
         originalPrice: 695,
         currency: 'SEK',
@@ -90,7 +90,7 @@ export class PaymentService {
       };
     } else {
       return {
-        name: 'Medical Program Membership',
+        name: 'Lifestyle Program Membership',
         price: 895,
         originalPrice: 1095,
         currency: 'SEK',
