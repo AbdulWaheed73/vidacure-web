@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/Button';
 import {
   useDoctorPatientJournal,
   useUpsertDoctorPatientJournal,
+  useDoctorUnassignedPatientJournal,
+  useUpsertDoctorUnassignedPatientJournal,
 } from '@/hooks/useDoctorDashboardQueries';
 import {
   Bold,
@@ -24,6 +26,7 @@ import {
 type JournalTabProps = {
   patientId: string | null;
   enabled: boolean;
+  isUnassigned?: boolean;
 };
 
 const hasJournalContent = (html?: string | null) => {
@@ -32,10 +35,14 @@ const hasJournalContent = (html?: string | null) => {
   return stripped.length > 0;
 };
 
-export const JournalTab: React.FC<JournalTabProps> = ({ patientId, enabled }) => {
+export const JournalTab: React.FC<JournalTabProps> = ({ patientId, enabled, isUnassigned = false }) => {
   const { t } = useTranslation();
-  const { data, isLoading } = useDoctorPatientJournal(patientId, enabled);
-  const upsertMutation = useUpsertDoctorPatientJournal();
+  const assignedQuery = useDoctorPatientJournal(patientId, enabled && !isUnassigned);
+  const unassignedQuery = useDoctorUnassignedPatientJournal(patientId, enabled && isUnassigned);
+  const { data, isLoading } = isUnassigned ? unassignedQuery : assignedQuery;
+  const assignedMutation = useUpsertDoctorPatientJournal();
+  const unassignedMutation = useUpsertDoctorUnassignedPatientJournal();
+  const upsertMutation = isUnassigned ? unassignedMutation : assignedMutation;
   const [saved, setSaved] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -55,23 +62,19 @@ export const JournalTab: React.FC<JournalTabProps> = ({ patientId, enabled }) =>
     },
   });
 
-  // Sync content when data loads
+  // Sync content into editor whenever fresh data arrives or we re-enter edit mode
   useEffect(() => {
-    if (editor && data?.journal?.content && !editor.isDestroyed) {
-      const currentContent = editor.getHTML();
-      if (currentContent === '<p></p>' || currentContent === '') {
-        editor.commands.setContent(data.journal.content);
-      }
+    if (!editor || editor.isDestroyed) return;
+    const incoming = data?.journal?.content ?? '';
+    if (editor.getHTML() !== incoming) {
+      editor.commands.setContent(incoming, { emitUpdate: false });
     }
-  }, [data?.journal?.content, editor]);
+  }, [data?.journal?.content, editor, isEditing]);
 
-  // Reset editor and view mode when patientId changes
+  // Reset to view mode when switching patients
   useEffect(() => {
-    if (editor && !editor.isDestroyed) {
-      editor.commands.setContent('');
-    }
     setIsEditing(false);
-  }, [patientId, editor]);
+  }, [patientId]);
 
   // If there's no existing journal content, drop straight into edit mode
   useEffect(() => {
@@ -135,34 +138,35 @@ export const JournalTab: React.FC<JournalTabProps> = ({ patientId, enabled }) =>
     </div>
   );
 
-  if (!isEditing && hasJournalContent(journal?.content)) {
-    return (
-      <div className="space-y-4 p-1">
-        <div className="flex items-center justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setIsEditing(true)}
-            className="border-[#e0e0e0] text-[#005044] rounded-xl font-sora font-semibold hover:bg-[#E6F7F5] hover:text-[#005044]"
-          >
-            <Pencil className="w-4 h-4" />
-            {t('treatmentJournal.edit')}
-          </Button>
-          {timestamps}
-        </div>
-
-        <div
-          className="journal-content border border-[#e0e0e0] rounded-xl bg-white p-4 font-manrope text-[#282828] text-sm"
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(journal!.content),
-          }}
-        />
-      </div>
-    );
-  }
+  const inViewMode = !isEditing && hasJournalContent(journal?.content);
 
   return (
     <div className="space-y-4 p-1">
+      {inViewMode && (
+        <>
+          <div className="flex items-center justify-between">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsEditing(true)}
+              className="border-[#e0e0e0] text-[#005044] rounded-xl font-sora font-semibold hover:bg-[#E6F7F5] hover:text-[#005044]"
+            >
+              <Pencil className="w-4 h-4" />
+              {t('treatmentJournal.edit')}
+            </Button>
+            {timestamps}
+          </div>
+
+          <div
+            className="journal-content border border-[#e0e0e0] rounded-xl bg-white p-4 font-manrope text-[#282828] text-sm"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(journal!.content),
+            }}
+          />
+        </>
+      )}
+
+      <div className={inViewMode ? 'hidden' : 'space-y-4'}>
       {/* Toolbar */}
       {editor && (
         <div className="flex items-center gap-1 border border-[#e0e0e0] rounded-lg p-1.5 bg-white">
@@ -246,6 +250,7 @@ export const JournalTab: React.FC<JournalTabProps> = ({ patientId, enabled }) =>
         </div>
 
         {timestamps}
+      </div>
       </div>
     </div>
   );

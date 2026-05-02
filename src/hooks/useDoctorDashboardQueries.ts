@@ -132,3 +132,24 @@ export const useUpsertDoctorPatientJournal = () => {
     },
   });
 };
+
+export const useDoctorUnassignedPatientJournal = (patientId: string | null, enabled: boolean) => {
+  return useQuery({
+    queryKey: queryKeys.doctorUnassignedPatientJournal(patientId ?? ''),
+    queryFn: () => treatmentJournalService.getUnassignedDoctorPatientJournal(patientId!),
+    enabled: !!patientId && enabled,
+  });
+};
+
+export const useUpsertDoctorUnassignedPatientJournal = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ patientId, content }: { patientId: string; content: string }) =>
+      treatmentJournalService.upsertUnassignedDoctorPatientJournal(patientId, content),
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({
+        queryKey: queryKeys.doctorUnassignedPatientJournal(variables.patientId),
+      });
+    },
+  });
+};

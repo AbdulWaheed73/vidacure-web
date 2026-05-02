@@ -437,14 +437,14 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                   >
                     {t('doctorPatients.tabLabTests')}
                   </TabsTrigger>
-                  <TabsTrigger
-                    value="journal"
-                    className="shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-2 sm:px-3 pb-2 text-xs sm:text-sm font-sora font-medium"
-                  >
-                    {t('doctorPatients.tabJournal')}
-                  </TabsTrigger>
                 </>
               )}
+              <TabsTrigger
+                value="journal"
+                className="shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-2 sm:px-3 pb-2 text-xs sm:text-sm font-sora font-medium"
+              >
+                {t('doctorPatients.tabJournal')}
+              </TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
@@ -632,6 +632,7 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
               <JournalTab
                 patientId={patientId}
                 enabled={activeTab === 'journal'}
+                isUnassigned={isUnassigned}
               />
             </TabsContent>
           </Tabs>
