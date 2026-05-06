@@ -45,16 +45,16 @@
     "medicationFeature": "Vi hanterar hela receptprocessen, med din godkända medicin ordinerat till dig och ge dig en personlig hälsovårdscoaching.",
     "messagingFeature": "Njut av obegränsade meddelanden med ditt personliga vårdteam för kontinuerligt stöd, coaching och svar på alla dina frågor.",
     "noCommitmentFeature": "Det finns inga bindningstider gällande ditt medlemskap.",
-    "lifestyleBadge": "Livsstilsprogram medlemskap",
+    "lifestyleBadge": "Medicinskt program medlemskap",
     "lifestylePrice": "495",
     "lifestyleOriginalPrice": "695",
     "lifestyleCurrency": "SEK/mån",
-    "lifestyleDescription": "Din tillgång till medicinsk behandling och stöd. Ingen bindningstid — avsluta när du vill.",
-    "medicalBadge": "Medicinskt program medlemskap",
+    "lifestyleDescription": "Din allt-i-ett tillgång till vår medicinska behandling och personligt livsstilscoachingteam. Ingen bindningstid — avsluta när du vill.",
+    "medicalBadge": "Livsstilsprogram medlemskap",
     "medicalPrice": "895",
     "medicalOriginalPrice": "1095",
     "medicalCurrency": "SEK/mån",
-    "medicalDescription": "Din allt-i-ett tillgång till vår medicinska behandling och personligt livsstilscoachingteam. Ingen bindningstid — avsluta när du vill.",
+    "medicalDescription": "Din tillgång till medicinsk behandling och stöd. Ingen bindningstid — avsluta när du vill.",
     "includes": "Inkluderar:",
     "getStarted": "Kom igång",
     "promoLabel": "{{discount}} rabatt i 3 månader — använd kod vid betalning",
@@ -814,8 +814,8 @@
     "subscription": {
       "noSubscription": "Ingen prenumeration",
       "plan": {
-        "lifestyle": "Livsstil",
-        "medical": "Medicinsk"
+        "lifestyle": "Medicinsk",
+        "medical": "Livsstil"
       },
       "status": {
         "active": "Aktiv",
@@ -1205,8 +1205,8 @@
       "canceled": "Avbruten",
       "pastDue": "Förfallen",
       "period": "Nuvarande period",
-      "lifestyle": "Livsstilsprogram",
-      "medical": "Medicinskt program",
+      "lifestyle": "Medicinskt program",
+      "medical": "Livsstilsprogram",
       "empty": "Ingen faktureringshistorik ännu",
       "fetchError": "Det gick inte att ladda faktureringshistorik. Försök igen.",
       "manageBilling": "Hantera fakturering",

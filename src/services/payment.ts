@@ -73,12 +73,12 @@ export class PaymentService {
   static getPlanDetails(planType: 'lifestyle' | 'medical') {
     if (planType === 'lifestyle') {
       return {
-        name: 'Lifestyle Program Membership',
+        name: 'Medical Program Membership',
         price: 495,
         originalPrice: 695,
         currency: 'SEK',
         interval: 'month',
-        description: 'Your access to expert coaching and support for a healthier lifestyle.',
+        description: 'Your all-in-one access to our medical team, coaching, and support.',
         features: [
           'Initial Health Assessment',
           'Personalized Lifestyle Plan',
@@ -90,12 +90,12 @@ export class PaymentService {
       };
     } else {
       return {
-        name: 'Medical Program Membership',
+        name: 'Lifestyle Program Membership',
         price: 895,
         originalPrice: 1095,
         currency: 'SEK',
         interval: 'month',
-        description: 'Your all-in-one access to our medical team, coaching, and support.',
+        description: 'Your access to expert coaching and support for a healthier lifestyle.',
         features: [
           ' Initial Doctor Consultation',
           'Personalized Treatment Plan',
