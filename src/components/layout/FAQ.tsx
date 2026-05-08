@@ -54,14 +54,6 @@ const FAQSection = () => {
           question: t('faq.questions.aboutMedication.alcohol.question'),
           answer: t('faq.questions.aboutMedication.alcohol.answer'),
         },
-        {
-          question: t('faq.questions.aboutMedication.commonSideEffects.question'),
-          answer: t('faq.questions.aboutMedication.commonSideEffects.answer'),
-        },
-        {
-          question: t('faq.questions.aboutMedication.lesserCommonSideEffects.question'),
-          answer: t('faq.questions.aboutMedication.lesserCommonSideEffects.answer'),
-        },
       ],
     },
     {
@@ -117,26 +109,26 @@ const FAQSection = () => {
   };
 
   return (
-    <div className=" py-8 px-4 sm:py-12 sm:px-6 lg:py-20 lg:px-14">
+    <div className="bg-teal-800 py-8 px-4 sm:py-12 sm:px-6 lg:py-20 lg:px-14">
       <div className="max-w-7xl mx-auto">
         {/* Desktop Layout */}
         <div className="hidden lg:block">
           {/* Header */}
           <div className="text-center mb-12 max-w-3xl mx-auto">
-            <h1 className="text-zinc-800 text-5xl font-bold font-sora leading-[56.40px] mb-4">
+            <h1 className="text-white text-5xl font-bold font-sora leading-[56.40px] mb-4">
               {t('faq.title')}
             </h1>
-            <p className="text-zinc-800 text-base font-normal font-manrope leading-snug mb-8">
+            <p className="text-white text-base font-normal font-manrope leading-snug mb-8">
               {t('faq.introduction')}
             </p>
             <Link
               to={ROUTES.PRE_LOGIN_BMI}
-              className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full inline-flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors duration-200 group"
+              className="h-11 px-6 py-2.5 bg-white rounded-full inline-flex justify-center items-center gap-2.5 hover:bg-gray-100 transition-colors duration-200 group"
             >
-              <span className="text-white text-sm font-semibold font-sora leading-tight">
+              <span className="text-teal-800 text-sm font-semibold font-sora leading-tight">
                 {t('faq.helpButton')}
               </span>
-              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform duration-200" />
+              <ArrowRight className="w-4 h-4 text-teal-800 group-hover:translate-x-1 transition-transform duration-200" />
             </Link>
           </div>
 
@@ -144,7 +136,7 @@ const FAQSection = () => {
           <div className="space-y-8">
             {faqCategories.map((category, categoryIndex) => (
               <div key={categoryIndex}>
-                <h3 className="text-teal-600 text-lg font-semibold font-sora mb-4">
+                <h3 className="text-white text-lg font-semibold font-sora mb-4">
                   {category.title}
                 </h3>
                 <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -176,21 +168,21 @@ const FAQSection = () => {
             {/* Header */}
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-4">
-                <h1 className="text-zinc-800 text-3xl sm:text-4xl font-bold font-sora leading-10 text-center">
+                <h1 className="text-white text-3xl sm:text-4xl font-bold font-sora leading-10 text-center">
                   {t('faq.title')}
                 </h1>
-                <p className="text-zinc-800 text-base font-normal font-manrope leading-snug text-center">
+                <p className="text-white text-base font-normal font-manrope leading-snug text-center">
                   {t('faq.introduction')}
                 </p>
               </div>
               <Link
                 to={ROUTES.PRE_LOGIN_BMI}
-                className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors duration-200 group self-center"
+                className="h-11 px-6 py-2.5 bg-white rounded-full flex justify-center items-center gap-2.5 hover:bg-gray-100 transition-colors duration-200 group self-center"
               >
-                <span className="text-white text-sm font-semibold font-sora leading-tight">
+                <span className="text-teal-800 text-sm font-semibold font-sora leading-tight">
                   {t('faq.helpButton')}
                 </span>
-                <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform duration-200" />
+                <ArrowRight className="w-4 h-4 text-teal-800 group-hover:translate-x-1 transition-transform duration-200" />
               </Link>
             </div>
 
@@ -198,7 +190,7 @@ const FAQSection = () => {
             <div className="space-y-6">
               {faqCategories.map((category, categoryIndex) => (
                 <div key={categoryIndex}>
-                  <h3 className="text-teal-600 text-lg font-semibold font-sora mb-4">
+                  <h3 className="text-white text-lg font-semibold font-sora mb-4">
                     {category.title}
                   </h3>
                   <div className="space-y-3">

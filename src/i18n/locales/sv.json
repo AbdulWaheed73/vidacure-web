@@ -14,6 +14,7 @@
     "faq": "Vanliga frågor",
     "login": "Logga in",
     "getStarted": "Kom igång",
+    "myPage": "Mina sidor",
     "dashboard": "Instrumentpanel"
   },
   "hero": {
@@ -75,9 +76,9 @@
     }
   },
   "faq": {
-    "title": "Frågor och svar",
+    "title": "FAQ",
     "helpButton": "Behöver du fortfarande hjälp? Kontakta oss",
-    "introduction": "Vårt program är enkelt, transparent och Effektivt. Du får medicinsk expertis, personlig coaching och kontinuerlig uppföljning — utan dolda kostnader, krångliga steg eller osäkra villkor. Vi hjälper dig att spara tid, bygga kunskap och skapa långsiktiga, hälsosamma vanor som håller över tid.",
+    "introduction": "Vårt program är enkelt, transparent och effektivt. Du får medicinsk expertis, personlig coaching och kontinuerlig uppföljning — utan dolda kostnader, krångliga steg eller osäkra villkor. Vi hjälper dig att spara tid, bygga kunskap och skapa långsiktiga, hälsosamma vanor som håller över tid.",
     "questions": {
       "aboutProgram": {
         "title": "Om Vårt Program",
@@ -126,7 +127,7 @@
         }
       },
       "results": {
-        "title": "Resultat & Förväntningar",
+        "title": "Resultat och Förväntningar",
         "expectations": {
           "question": "Vilka resultat kan jag förvänta mig?",
           "answer": "Resultaten varierar, men många av våra patienter går ner 10–20 % av sin kroppsvikt, ibland upp till 25–30 kg, när medicin kombineras med livsstilsförändringar och regelbunden coaching."
@@ -195,9 +196,9 @@
   "know": {
     "title": "Visste du att",
     "statistics": {
-      "stat1": "I Sverige klassificeras nu 1 av 2 vuxna som överviktiga eller levande med fetma.",
+      "stat1": "I Sverige klassificeras nu 1 av 2 vuxna som överviktiga, samt 1 av 5 med fetma.",
       "stat1Unit": "av",
-      "stat2": "av personer som går ner i vikt genom traditionell bantning enbart återfår den inom några år.",
+      "stat2": "av personer som går ner i vikt enbart genom traditionell bantning återfår den inom några år.",
       "stat3": "En genomsnittlig viktminskning på 15% med vårt program förbättrar drastiskt hjärthälsan och minskar diabetesrisken."
     }
   },
@@ -225,8 +226,8 @@
       },
       "marcus": {
         "name": "Marcus Flink",
-        "title": "Hälsocoach",
-        "description": "Marcus Flink är utbildad fysioterapeut med stort intresse för longevity (att leva väl, länge). Som fysioterapeut har Marcus arbetat med många olika patientgrupper samt med svenska surflandslaget. Som forskare har Marcus medförfattat en rikstäckande studie där digital gruppträning jämfördes med traditionell gruppträning för hjärtinfarktspatienter. Resultatet visar att digitala grupper är fullt genomförbart, säkert och ger liknande upplevelser och effekter som traditionell gruppträning ger.",
+        "title": "Hälsocoach och forskare",
+        "description": "Marcus Flink är legitimerad fysioterapeut med stort intresse för longevity (att leva väl, länge). Som fysioterapeut har Marcus arbetat med många olika patientgrupper samt med svenska surflandslaget. Som forskare har Marcus medförfattat en rikstäckande studie där digital gruppträning jämfördes med traditionell gruppträning för hjärtinfarktspatienter. Resultatet visar att digitala grupper är fullt genomförbart, säkert och ger liknande upplevelser och effekter som traditionell gruppträning ger.",
         "description2": "Problemet är att de här digitala gruppträningarna borde funnits i de hjärtsjuka patienternas liv många år tidigare, då kunde möjligen hjärtinfarkten undvikits. I kombination med kunskap om digitala grupper och Marcus erfarenhet av hälsocoaching kommer hälsofrämjande insatser kunna sättas in så fort riskfaktorer för framtida hjärtinfarkt råder. Det innebär att personer med högt blodtryck, övervikt och fysisk inaktivitet bör, och nu kan få den hjälp som hälsocoaching via digitala grupper erbjuder.",
         "coachingTitle": "När du väljer hälsocoaching med Marcus",
         "coachingDescription": "När du väljer att medverka i hälsocoaching med Marcus kommer du att vara med i digitala gruppbesök varannan vecka i 6 månader. Varje besök är strukturerat för att täcka bio-, psyko- och sociala faktorer som påverkar din vikt och hälsa. Individuella mål kommer att utformas och följas upp. För att underlätta måluppfyllelse kommer en gemenskap skapas oavsett var du befinner dig geografiskt. Du ges möjligheter att dela med dig av din resa och du kommer märka att du inte är ensam. Varje gruppbesök avslutas med rörelse i någon form och tro det eller ej, det kommer bli kul! Inget krav på att synas i bild men det kan bidra till att främja gruppdynamiken.",
@@ -246,7 +247,7 @@
         "programIncludes": [
           "Introduktionsmöte (1 timme)",
           "1 RTT®-session (2 timmar)",
-          "1 skräddarsydd 100% individualiserad ljudinspelning som speglar vår session — en inspelning du lyssnar på dagligen",
+          "1 skräddarsydd 100% individualiserad ljudinspelning som speglar vår session, en inspelning du lyssnar på dagligen",
           "2 × 1-timmes coachingsessioner mot din ljusa framtid",
           "1-timmes coaching och 30-minuters samtal i slutet av cykeln",
           "Uppföljningskontakt via e-post"
@@ -267,7 +268,7 @@
       "testimonial4": "Vill uttrycka min djupaste tacksamhet för det stödet jag har fått av dr. Selma, en exceptionell och mycket insiktsfull läkare som verkligen har förändrat mitt liv. När jag först började min medicinska behandling, var jag osäker och hade många frågor, men redan från början var Dr. Selma tydlig med vad jag kunde förvänta mig. Hon förklarade noggrant att medicinen inte är en slutlig lösning utan snarare ett verktyg, en startpunkt för att göra hållbara förändringar i min livsstil. Under hela processen har hon varit en ständig källa till stöd och inspiration och med hennes vägledning har jag lyckats gå ner 20 kg. Men det är inte bara viktnedgången, som har gjort skillnad. Dr. Selma har gett mig insikt i vad som krävs för att göra varaktiga förändringar som kommer att bära mig vidare. Nu, 20 kg lättare och med en helt ny syn på min hälsa, ser jag inte längre behandlingen som slutet på min resa. Tack för allt dr. Selma. Tack för att du trodde på mig och för att du hjälpte mig att tro på mig själv."
     },
     "names": {
-      "name1": "Anonymous",
+      "name1": "Anne",
       "name2": "Peter",
       "name3": "Laura",
       "name4": "Mirela"
@@ -315,7 +316,7 @@
     "company": "Företag",
     "aboutUs": "Om oss",
     "ourDoctors": "Våra läkare",
-    "blogs": "Bloggar",
+    "blogs": "Artiklar",
     "careers": "Karriärer",
     "platform": "Plattform",
     "forDoctors": "För läkare",
@@ -327,8 +328,11 @@
     "privacyPolicy": "Integritetspolicy",
     "termsOfService": "Användarvillkor",
     "cookiePolicy": "Cookie-policy",
+    "cookieSettings": "Cookie inställningar",
     "contactUs": "Kontakta oss",
-    "copyright": "© 2025 Vidacure, Inc. Alla rättigheter förbehållna"
+    "copyright": "© 2025 Vidacure, Inc. Alla rättigheter förbehållna",
+    "legalCopyright": "© 2026 Vidacure. Alla rättigheter förbehållna. Org nr: 5591294888",
+    "legalDisclaimer": "Albafides Care AB är en godkänd vårdgivare och bedriver verksamhet i enlighet med hälso- och sjukvårdslagen, dataskyddsförordningen (GDPR – General Data Protection Regulation), patientdatalagen samt patientsäkerhetslagen. Vårt egenutvecklade journalsystem och app är registrerade hos Inspektionen för vård och omsorg (IVO)."
   },
   "sidebar": {
     "dashboard": "Instrumentpanel",
@@ -1366,7 +1370,7 @@
       "step3": {
         "title": "Träffa din läkare",
         "description": "Boka en kostnadsfri första konsultation för att diskutera dina mål.",
-        "freeBadge": "GRATIS"
+        "freeBadge": "Kostnadsfri"
       },
       "step4": {
         "title": "Hitta din plan",
@@ -1611,7 +1615,7 @@
     "getStarted": "Kom igång",
     "bookAppointment": "Boka ett möte",
     "bookingAdvisory": "Vi rekommenderar att du bokar ett introduktionsmöte med Giedre innan du köper programmet.",
-    "disclaimer": "Detta köp gäller enbart hypnoterapitjänster och ger inte tillgång till Vidacure-plattformen.",
+    "disclaimer": "Detta köp gäller enbart hypnoterapitjänster och ger inte tillgång till det medicinska programmet.",
     "alreadyPurchased": "Du har redan köpt detta program",
     "pageTitle": "Mind-Body Recode-programmet",
     "pageDescription": "Ett personligt hypnoterapiprogram utformat för att hjälpa dig skapa permanenta förändringar för hållbar viktminskning.",

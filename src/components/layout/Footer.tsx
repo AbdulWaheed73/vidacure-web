@@ -1,4 +1,10 @@
-import { Facebook, Twitter, Instagram, Linkedin, Mail } from 'lucide-react';
+import { Facebook, Instagram, Mail } from 'lucide-react';
+
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.79a8.16 8.16 0 0 0 4.77 1.52V6.85a4.85 4.85 0 0 1-1.84-.16Z"/>
+  </svg>
+);
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
@@ -22,7 +28,7 @@ const FooterSection = () => {
       title: t('footer.platform'),
       links: [
         { name: t('footer.forDoctors'), href: ROUTES.LOGIN },
-        { name: t('footer.forPatients'), href: ROUTES.LOGIN }
+        { name: t('footer.forPatients'), href: ROUTES.PRE_LOGIN_BMI }
       ]
     },
     {
@@ -44,9 +50,8 @@ const FooterSection = () => {
 
   const socialIcons = [
     { icon: Facebook, href: "https://facebook.com/vidacure", label: "Facebook" },
-    { icon: Twitter, href: "https://twitter.com/vidacure", label: "Twitter" },
     { icon: Instagram, href: "https://instagram.com/vidacure", label: "Instagram" },
-    { icon: Linkedin, href: "https://linkedin.com/company/vidacure", label: "LinkedIn" }
+    { icon: TikTokIcon, href: "https://tiktok.com/@vidacure", label: "TikTok" }
   ];
 
   // const certifications = [
@@ -194,6 +199,14 @@ const FooterSection = () => {
 
             {/* Desktop Bottom Section */}
             <div className="pt-16">
+              <div className="pb-8 flex flex-col gap-3">
+                <p className="text-emerald-50 text-base font-normal font-inter leading-relaxed">
+                  {t('footer.legalCopyright')}
+                </p>
+                <p className="text-emerald-50 text-sm font-normal font-inter leading-relaxed max-w-5xl">
+                  {t('footer.legalDisclaimer')}
+                </p>
+              </div>
               <div className="py-8 border-t border-emerald-50 flex justify-between items-center">
                 <div className="flex flex-col gap-4">
                   <p className="text-emerald-50 text-base font-normal font-inter leading-relaxed">
@@ -235,6 +248,14 @@ const FooterSection = () => {
 
             {/* Mobile Bottom Section */}
             <div className="mt-16">
+              <div className="pb-8 flex flex-col gap-3 text-center">
+                <p className="text-emerald-50 text-base font-normal font-inter leading-relaxed">
+                  {t('footer.legalCopyright')}
+                </p>
+                <p className="text-emerald-50 text-sm font-normal font-inter leading-relaxed">
+                  {t('footer.legalDisclaimer')}
+                </p>
+              </div>
               <div className="py-8 border-t border-emerald-50 flex flex-col items-center gap-8">
                 <ContactBlock align="center" />
                 <div className="flex flex-col items-center gap-4">

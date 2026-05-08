@@ -9,11 +9,6 @@ const TestimonialSection = () => {
   
   const testimonials = [
     {
-      id: 1,
-      text: t('testimonial.testimonials.testimonial1'),
-      name: t('testimonial.names.name1')
-    },
-    {
       id: 2,
       text: t('testimonial.testimonials.testimonial2'),
       name: t('testimonial.names.name2')
@@ -27,6 +22,11 @@ const TestimonialSection = () => {
       id: 4,
       text: t('testimonial.testimonials.testimonial4'),
       name: t('testimonial.names.name4')
+    },
+    {
+      id: 1,
+      text: t('testimonial.testimonials.testimonial1'),
+      name: t('testimonial.names.name1')
     }
   ];
 
@@ -89,7 +89,7 @@ const TestimonialSection = () => {
                   </div>
 
                   <p className="text-zinc-800 text-base font-bold font-manrope">
-                    -- {testimonials[currentTestimonial].name}
+                    {testimonials[currentTestimonial].name}
                   </p>
                 </div>
               </div>
@@ -109,7 +109,7 @@ const TestimonialSection = () => {
                 </div>
 
                 <p className="text-zinc-800 text-base font-bold font-manrope">
-                  -- {testimonials[currentTestimonial].name}
+                  {testimonials[currentTestimonial].name}
                 </p>
 
                 {/* Mobile Navigation */}

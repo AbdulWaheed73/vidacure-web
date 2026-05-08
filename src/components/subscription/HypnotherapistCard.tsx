@@ -75,9 +75,6 @@ export const HypnotherapistCard = ({ mode, layout = 'vertical' }: Hypnotherapist
                   <Sparkles className="size-3.5" />
                   {t('hypnotherapist.badge')}
                 </Badge>
-                <span className="text-emerald-200/70 text-xs font-medium font-manrope uppercase tracking-wide">
-                  {t('hypnotherapist.oneTimePayment')}
-                </span>
               </div>
               <Separator className="bg-emerald-50/20" />
               <div>
@@ -116,23 +113,25 @@ export const HypnotherapistCard = ({ mode, layout = 'vertical' }: Hypnotherapist
                   <Calendar className="size-4" />
                   {t('hypnotherapist.bookAppointment')}
                 </Button>
-                <Button
-                  onClick={handleClick}
-                  disabled={isLoading}
-                  className="rounded-full bg-white text-zinc-800 hover:bg-emerald-50 font-sora font-semibold px-6 h-11"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="size-4 animate-spin" />
-                      {t('subscribeCard.processing')}
-                    </>
-                  ) : (
-                    <>
-                      {mode === 'landing' ? t('hypnotherapist.getStarted') : t('hypnotherapist.purchaseProgram')}
-                      <ArrowRight className="size-4" />
-                    </>
-                  )}
-                </Button>
+                {mode !== 'landing' && (
+                  <Button
+                    onClick={handleClick}
+                    disabled={isLoading}
+                    className="rounded-full bg-white text-zinc-800 hover:bg-emerald-50 font-sora font-semibold px-6 h-11"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="size-4 animate-spin" />
+                        {t('subscribeCard.processing')}
+                      </>
+                    ) : (
+                      <>
+                        {t('hypnotherapist.purchaseProgram')}
+                        <ArrowRight className="size-4" />
+                      </>
+                    )}
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -177,9 +176,6 @@ export const HypnotherapistCard = ({ mode, layout = 'vertical' }: Hypnotherapist
             <Sparkles className="size-3.5" />
             {t('hypnotherapist.badge')}
           </Badge>
-          <span className="text-emerald-200/70 text-xs font-medium font-manrope uppercase tracking-wide">
-            {t('hypnotherapist.oneTimePayment')}
-          </span>
         </div>
         <Separator className="bg-emerald-50/20" />
         <CardTitle className="text-white text-2xl sm:text-3xl font-sora">
@@ -248,23 +244,25 @@ export const HypnotherapistCard = ({ mode, layout = 'vertical' }: Hypnotherapist
             <Calendar className="size-4" />
             {t('hypnotherapist.bookAppointment')}
           </Button>
-          <Button
-            onClick={handleClick}
-            disabled={isLoading}
-            className="rounded-full bg-white text-zinc-800 hover:bg-emerald-50 font-sora font-semibold px-6 h-11"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="size-4 animate-spin" />
-                {t('subscribeCard.processing')}
-              </>
-            ) : (
-              <>
-                {mode === 'landing' ? t('hypnotherapist.getStarted') : t('hypnotherapist.purchaseProgram')}
-                <ArrowRight className="size-4" />
-              </>
-            )}
-          </Button>
+          {mode !== 'landing' && (
+            <Button
+              onClick={handleClick}
+              disabled={isLoading}
+              className="rounded-full bg-white text-zinc-800 hover:bg-emerald-50 font-sora font-semibold px-6 h-11"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  {t('subscribeCard.processing')}
+                </>
+              ) : (
+                <>
+                  {t('hypnotherapist.purchaseProgram')}
+                  <ArrowRight className="size-4" />
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </CardFooter>
     </Card>

@@ -220,18 +220,18 @@ export const Navbar = () => {
               ) : (
                 <>
                   <Link
-                    to={ROUTES.LOGIN}
-                    className={`${darkTealText} font-normal inline-flex items-center justify-center px-2 xl:px-4 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm whitespace-nowrap`}
-                  >
-                    {t("navbar.login")}
-                  </Link>
-                  <Link
                     to={ROUTES.PRE_LOGIN_BMI}
                     className="h-10 px-4 xl:px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 self-start hover:from-teal-700 hover:to-teal-700 transition-colors"
                   >
                     <span className="text-white text-sm font-semibold font-['Sora'] leading-tight whitespace-nowrap">
                       {t("navbar.getStarted")}
                     </span>
+                  </Link>
+                  <Link
+                    to={ROUTES.LOGIN}
+                    className={`${darkTealText} font-normal inline-flex items-center justify-center px-2 xl:px-4 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm whitespace-nowrap`}
+                  >
+                    {t("navbar.myPage")}
                   </Link>
                 </>
               )}
@@ -370,13 +370,6 @@ export const Navbar = () => {
                       ) : (
                         <>
                           <Link
-                            to={ROUTES.LOGIN}
-                            className="w-full bg-emerald-50 hover:bg-emerald-100 rounded-full text-gray-800 py-2.5 px-4 inline-flex items-center justify-center"
-                            onClick={() => setIsOpen(false)}
-                          >
-                            {t("navbar.login")}
-                          </Link>
-                          <Link
                             to={ROUTES.PRE_LOGIN_BMI}
                             className="w-full h-10 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 hover:from-teal-700 hover:to-teal-700 transition-colors"
                             onClick={() => setIsOpen(false)}
@@ -384,6 +377,13 @@ export const Navbar = () => {
                             <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
                               {t("navbar.getStarted")}
                             </span>
+                          </Link>
+                          <Link
+                            to={ROUTES.LOGIN}
+                            className="w-full bg-emerald-50 hover:bg-emerald-100 rounded-full text-gray-800 py-2.5 px-4 inline-flex items-center justify-center"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            {t("navbar.myPage")}
                           </Link>
                         </>
                       )}

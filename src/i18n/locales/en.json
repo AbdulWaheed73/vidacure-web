@@ -14,6 +14,7 @@
     "faq": "FAQ",
     "login": "Login",
     "getStarted": "Get Started",
+    "myPage": "My page",
     "dashboard": "Dashboard"
   },
   "hero": {
@@ -75,7 +76,7 @@
     }
   },
   "faq": {
-    "title": "Frequently Asked Questions",
+    "title": "FAQ",
     "helpButton": "Still need help? Get in touch",
     "introduction": "Our program is straightforward, transparent, and supportive. You get medical expertise, personalized coaching, and ongoing follow-up — without unnecessary costs, complicated steps, or hidden conditions. We help you save time, build knowledge, and create long-term healthy lifestyle habits that truly last.",
     "questions": {
@@ -126,7 +127,7 @@
         }
       },
       "results": {
-        "title": "Results & Expectations",
+        "title": "Results and Expectations",
         "expectations": {
           "question": "What kind of results can I expect?",
           "answer": "Results vary from person to person. Many of our patients lose 10–20% of their body weight, sometimes as much as 25–30 kg, when combining medication with lifestyle changes and regular coaching."
@@ -195,7 +196,7 @@
   "know": {
     "title": "Do You Know",
     "statistics": {
-      "stat1": "In Sweden, 1 in 2 adults is now classified as overweight or living with obesity.",
+      "stat1": "In Sweden, 1 in 2 adults is now classified as overweight, and 1 in 5 lives with obesity.",
       "stat1Unit": "in",
       "stat2": "of people who lose weight through traditional dieting alone regain it within a few years.",
       "stat3": "A 15% average weight loss with our program dramatically improves heart health and lowers diabetes risk."
@@ -225,8 +226,8 @@
       },
       "marcus": {
         "name": "Marcus Flink",
-        "title": "Health Coach",
-        "description": "Marcus Flink is a trained physiotherapist with a strong interest in longevity (living well, for a long time). As a physiotherapist, Marcus has worked with many different patient groups as well as with the Swedish national surf team. As a researcher, Marcus co-authored a nationwide study comparing digital group training with traditional group training for heart attack patients. The results show that digital groups are fully feasible, safe, and provide similar experiences and effects as traditional group training.",
+        "title": "Health Coach and Researcher",
+        "description": "Marcus Flink is a licensed physiotherapist with a strong interest in longevity (living well, for a long time). As a physiotherapist, Marcus has worked with many different patient groups as well as with the Swedish national surf team. As a researcher, Marcus co-authored a nationwide study comparing digital group training with traditional group training for heart attack patients. The results show that digital groups are fully feasible, safe, and provide similar experiences and effects as traditional group training.",
         "description2": "The problem is that these digital group training sessions should have been available in heart patients' lives many years earlier — then perhaps the heart attack could have been avoided. Combined with knowledge of digital groups and Marcus's experience in health coaching, health-promoting interventions can now be implemented as soon as risk factors for future heart attacks are present. This means that people with high blood pressure, obesity, and physical inactivity should, and now can, receive the help that health coaching through digital groups offers.",
         "coachingTitle": "When you choose health coaching with Marcus",
         "coachingDescription": "When you choose to participate in health coaching with Marcus, you will be part of digital group sessions every two weeks for 6 months. Each session is structured to cover bio-, psycho-, and social factors that affect your weight and health. Individual goals will be designed and followed up on. To facilitate goal achievement, a community will be created regardless of where you are geographically. You will be given opportunities to share your journey and you will notice that you are not alone. Each group session ends with some form of movement and believe it or not, it will be fun! No requirement to be visible on camera, but it can help promote group dynamics.",
@@ -246,7 +247,7 @@
         "programIncludes": [
           "Intake session (1h)",
           "1 RTT® session (2h)",
-          "1 tailor-made 100% individualized audio recording to reflect our session — a recording you will listen to daily",
+          "1 tailor-made 100% individualized audio recording to reflect our session, a recording you will listen to daily",
           "2 × 1-hour coaching sessions towards your bright future",
           "1-hour coaching and 30-min call at the end of the cycle",
           "Email follow-up contact"
@@ -267,7 +268,7 @@
       "testimonial4": "I want to express my deepest gratitude for the support I have received from Dr. Selma — an exceptional and deeply insightful physician who has truly changed my life. When I first began my medical treatment, I was uncertain and had many questions, but from the very beginning, Dr. Selma was clear about what I could expect. She carefully explained that the medication is not a final solution, but rather a tool — a starting point for making sustainable changes in my lifestyle. Throughout the entire process, she has been a constant source of support and inspiration, and with her guidance, I have managed to lose 20 kg. But it's not just the weight loss that has made a difference. Dr. Selma has given me a true understanding of what it takes to make lasting changes that will carry me forward. Now, 20 kg lighter and with a completely new outlook on my health, I no longer see the treatment as the end of my journey. Thank you for everything, Dr. Selma. Thank you for believing in me — and for helping me believe in myself."
     },
     "names": {
-      "name1": "Anonymous",
+      "name1": "Anne",
       "name2": "Peter",
       "name3": "Laura",
       "name4": "Mirela"
@@ -315,7 +316,7 @@
     "company": "Company",
     "aboutUs": "About Us",
     "ourDoctors": "Our Doctors",
-    "blogs": "Blogs",
+    "blogs": "Articles",
     "careers": "Careers",
     "platform": "Platform",
     "forDoctors": "For Doctors",
@@ -327,8 +328,11 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "cookiePolicy": "Cookie Policy",
+    "cookieSettings": "Cookie Settings",
     "contactUs": "Contact Us",
-    "copyright": "© 2025 Vidacure, Inc. All rights reserved"
+    "copyright": "© 2025 Vidacure, Inc. All rights reserved",
+    "legalCopyright": "© 2026 Vidacure. All rights reserved. Org nr: 5591294888",
+    "legalDisclaimer": "Albafides Care AB is an approved healthcare provider operating in accordance with the Swedish Health and Medical Services Act, the General Data Protection Regulation (GDPR), the Patient Data Act, and the Patient Safety Act. Our in-house developed medical journal system and app are registered with the Health and Social Care Inspectorate (IVO)."
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -1611,7 +1615,7 @@
     "getStarted": "Get Started",
     "bookAppointment": "Book an Appointment",
     "bookingAdvisory": "We recommend booking an introductory session with Giedre before purchasing the program.",
-    "disclaimer": "This purchase is for hypnotherapy services only and does not grant access to the Vidacure platform.",
+    "disclaimer": "This purchase is for hypnotherapy services only and does not grant access to the medical program.",
     "alreadyPurchased": "You have already purchased this program",
     "pageTitle": "Mind-Body Recode Program",
     "pageDescription": "A personalised hypnotherapy program designed to help you create permanent changes for sustainable weight loss.",
