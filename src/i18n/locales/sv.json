@@ -19,7 +19,8 @@
   },
   "hero": {
     "newWay": "Ett nytt sätt att gå ner i vikt",
-    "title": "Hållbar viktminskning med medicinsk vetenskap som grund.",
+    "title": "Hållbar viktminskning",
+    "titleSubtext": "med medicinsk vetenskap som grund.",
     "description": "Vårt program kombinerar godkända mediciner med personlig coaching från ett dedikerat vårdteam för att hjälpa dig uppnå och bibehålla en hälsosam vikt.",
     "getStarted": "Kom igång",
     "feature1": "Effektiv viktminskning upp till 25-30 kg",
@@ -180,18 +181,19 @@
     "titleWeight": "viktminsknings",
     "titleJourney": "resa",
     "step1": {
-      "title": "Konsultation",
-      "description": "Berätta om din hälsohistoria i ett kort onlineformulär. Du kommer sedan att ha en privat konsultation med en legitimerad läkare för att se om du är en kandidat. För att utvärdera din hälsa och säkerställa din behandling kommer du att få lämna blodprover och mäta ditt blodtryck på ett laboratorium. När provsvaren är klara kommer din läkare att återkomma till dig med recept och en behandlingsplan."
+      "title": "1. Konsultation",
+      "description": "Berätta om din hälsohistoria i ett kort onlineformulär. Du kommer sedan att ha en privat konsultation med en legitimerad läkare för att se om du är en kandidat. För att utvärdera din hälsa och säkerställa din behandling kommer du att få lämna blodprover och mäta ditt blodtryck på ett laboratorium. När provsvaren är klara kommer din läkare att återkomma till dig med recept och en behandlingsplan.",
+      "cta": "Boka fri konsultation"
     },
     "step2": {
-      "title": "Få din anpassade plan",
+      "title": "2. Få din anpassade plan",
       "description": "Din läkare granskar din hälsoprofil. Du har två alternativ att välja mellan:\n\n• Medicinskt behandlingsprogram - Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning\n• Livsstilsprogram Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning"
     },
     "step3": {
-      "title": "Ta emot behandling och stöd - Hela vägen",
-      "description": "Ditt dedikerade vårdteam ger löpande stöd för att vägleda dig, justera din plan och fira din framgång.\n\nVi strävar efter att behandla dig, ge dig det nödvändiga stödet med livsstilsförändringar och utbilda dig om att övervinna fetma och ha en hälsosam livsstil. Njut av din resa med viktminskning och förbättrad hälsa. Du får ditt recept online och kan börja din behandling."
+      "title": "3. Ta emot behandling och stöd - Hela vägen",
+      "description": "Ditt dedikerade vårdteam ger löpande stöd för att vägleda dig, justera din plan och fira din framgång.\n\nVi strävar efter att behandla dig, ge dig det nödvändiga stödet med livsstilsförändringar och utbilda dig om att övervinna fetma och ha en hälsosam livsstil. Du får ditt recept online och kan börja din behandling. Njut av din resa med viktminskning och förbättrad hälsa."
     },
-    "ctaButton": "Se om du kvalificerar dig"
+    "ctaButton": "Kom igång"
   },
   "know": {
     "title": "Visste du att",
@@ -199,7 +201,7 @@
       "stat1": "I Sverige klassificeras nu 1 av 2 vuxna som överviktiga, samt 1 av 5 med fetma.",
       "stat1Unit": "av",
       "stat2": "av personer som går ner i vikt enbart genom traditionell bantning återfår den inom några år.",
-      "stat3": "En genomsnittlig viktminskning på 15% med vårt program förbättrar drastiskt hjärthälsan och minskar diabetesrisken."
+      "stat3": "Studier har visat att en viktminskning på 15% förbättrar drastiskt hjärthälsan och minskar diabetesrisken."
     }
   },
   "partner": {

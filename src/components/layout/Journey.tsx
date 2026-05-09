@@ -1,6 +1,8 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '@/constants';
 import { cloudinaryImages, cloudinaryImagesMobile } from '@/constants/cloudinary';
 
 export default function WeightLossSteps() {
@@ -11,7 +13,8 @@ export default function WeightLossSteps() {
       title: t('journey.step1.title'),
       description: t('journey.step1.description'),
       image: cloudinaryImages.journeyStep1,
-      imageMobile: cloudinaryImagesMobile.journeyStep1
+      imageMobile: cloudinaryImagesMobile.journeyStep1,
+      cta: { label: t('journey.step1.cta'), to: ROUTES.PRE_LOGIN_BMI }
     },
     {
       title: t('journey.step2.title'),
@@ -89,6 +92,17 @@ export default function WeightLossSteps() {
                         </p>
                       )}
                     </div>
+                    {step.cta && (
+                      <Link
+                        to={step.cta.to}
+                        className="self-start mt-4 h-11 px-6 py-2.5 bg-teal-600 hover:bg-teal-700 rounded-full inline-flex items-center gap-2.5 transition-colors"
+                      >
+                        <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
+                          {step.cta.label}
+                        </span>
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </Link>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -134,6 +148,17 @@ export default function WeightLossSteps() {
                         </p>
                       )}
                     </div>
+                    {step.cta && (
+                      <Link
+                        to={step.cta.to}
+                        className="self-start mt-2 h-11 px-6 py-2.5 bg-teal-600 hover:bg-teal-700 rounded-full inline-flex items-center gap-2.5 transition-colors"
+                      >
+                        <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
+                          {step.cta.label}
+                        </span>
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </Link>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -143,22 +168,15 @@ export default function WeightLossSteps() {
 
         {/* CTA Button */}
         <div className="flex justify-center mt-12 lg:mt-16">
-          <a
-            href="#bmi"
-            onClick={(e) => {
-              e.preventDefault();
-              const element = document.getElementById('bmi');
-              if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }
-            }}
+          <Link
+            to={ROUTES.PRE_LOGIN_BMI}
             className="h-11 px-6 py-2.5 bg-zinc-800 rounded-full flex justify-center items-center gap-2.5 hover:bg-zinc-700 transition-colors cursor-pointer"
           >
             <span className="text-white text-sm font-semibold font-['Sora'] leading-tight">
               {t('journey.ctaButton')}
             </span>
             <ArrowRight className="w-4 h-4 text-white" />
-          </a>
+          </Link>
         </div>
       </div>
     </div>

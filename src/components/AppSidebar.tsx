@@ -141,7 +141,7 @@ export function AppSidebar({ user }: { user: User | null }) {
     >
       {/* Logo Header */}
       <SidebarHeader className="px-4 py-8 bg-[#F0F7F4] md:transition-[padding] md:duration-300 md:ease-in-out group-data-[collapsible=icon]:px-1 group-data-[collapsible=icon]:py-4">
-        <div className="p-2 flex justify-start items-center gap-2.5 md:transition-[padding,justify-content] md:duration-300 md:ease-in-out group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0">
+        <Link to={ROUTES.HOME} className="p-2 flex justify-start items-center gap-2.5 md:transition-[padding,justify-content] md:duration-300 md:ease-in-out group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-0">
           <img
             className="w-36 h-5 shrink-0 md:transition-[width,opacity] md:duration-300 md:ease-in-out group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:opacity-0"
             src={Vidacure}
@@ -152,7 +152,7 @@ export function AppSidebar({ user }: { user: User | null }) {
             src={VidacureIcon}
             alt="Vidacure"
           />
-        </div>
+        </Link>
       </SidebarHeader>
 
       {/* Navigation Content */}

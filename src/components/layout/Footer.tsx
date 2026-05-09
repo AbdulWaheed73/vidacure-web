@@ -164,13 +164,13 @@ const FooterSection = () => {
     <footer className="bg-teal-800 text-white">
       {/* Logo - Desktop only, positioned absolutely */}
       <div className="hidden lg:block relative">
-        <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-10">
-          <img 
-            className="w-36 h-6" 
+        <Link to={ROUTES.HOME} className="absolute top-10 left-1/2 transform -translate-x-1/2 z-10">
+          <img
+            className="w-36 h-6"
             src={footer}
             alt="Vidacure Logo"
           />
-        </div>
+        </Link>
       </div>
 
       <div className="px-5 py-8 lg:px-20 lg:pt-28 lg:pb-20">

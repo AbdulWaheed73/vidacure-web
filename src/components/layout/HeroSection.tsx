@@ -107,6 +107,9 @@ export const HeroSection = () => {
                   </CardDescription>
                   <CardTitle className="text-zinc-800 text-3xl md:text-4xl font-bold font-['Sora'] leading-tight md:leading-10">
                     {t('hero.title')}
+                    <span className="block text-lg md:text-xl font-semibold leading-snug mt-2">
+                      {t('hero.titleSubtext')}
+                    </span>
                   </CardTitle>
                 </div>
                 <CardDescription className="text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
@@ -189,6 +192,9 @@ export const HeroSection = () => {
                   </CardDescription>
                   <CardTitle className="text-zinc-800 text-5xl font-bold font-['Sora'] leading-[56.40px]">
                     {t('hero.title')}
+                    <span className="block text-xl md:text-2xl font-semibold leading-snug mt-2">
+                      {t('hero.titleSubtext')}
+                    </span>
                   </CardTitle>
                 </div>
                 <CardDescription className="text-teal-700 text-base font-normal font-['Manrope'] leading-snug">
