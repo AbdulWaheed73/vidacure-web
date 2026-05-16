@@ -5,9 +5,63 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants';
 import { cloudinaryImages, cloudinaryImagesMobile } from '@/constants/cloudinary';
 
+const renderInline = (text: string) => {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, idx) =>
+    part.startsWith('**') && part.endsWith('**') ? (
+      <strong key={idx} className="font-semibold">{part.slice(2, -2)}</strong>
+    ) : (
+      <span key={idx}>{part}</span>
+    )
+  );
+};
+
+const renderDescription = (description: string) => {
+  if (!description.includes('•')) {
+    return (
+      <p className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug whitespace-pre-line">
+        {description}
+      </p>
+    );
+  }
+
+  const lines = description.split('\n');
+  const elements: React.ReactNode[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    if (trimmed.startsWith('•')) {
+      const name = trimmed.substring(1).trim();
+      const descLines: string[] = [];
+      let j = i + 1;
+      while (j < lines.length && lines[j].trim() && !lines[j].trim().startsWith('•')) {
+        descLines.push(lines[j].trim());
+        j++;
+      }
+      elements.push(
+        <div key={i} className="flex gap-2 mt-3">
+          <span className="flex-shrink-0">•</span>
+          <div className="flex flex-col gap-1">
+            <span>{renderInline(name)}</span>
+            {descLines.length > 0 && <span>{renderInline(descLines.join(' '))}</span>}
+          </div>
+        </div>
+      );
+      i = j;
+    } else {
+      elements.push(
+        <p key={i} className={trimmed ? '' : 'h-2'}>{renderInline(line)}</p>
+      );
+      i++;
+    }
+  }
+  return <div className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">{elements}</div>;
+};
+
 export default function WeightLossSteps() {
   const { t } = useTranslation();
-  
+
   const steps = [
     {
       title: t('journey.step1.title'),
@@ -73,24 +127,7 @@ export default function WeightLossSteps() {
                       </h3>
                     </div>
                     <div className="pr-6">
-                      {step.description.includes('•') ? (
-                        <div className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
-                          {step.description.split('\n').map((line, idx) => (
-                            line.trim().startsWith('•') ? (
-                              <div key={idx} className="flex gap-2 mt-2">
-                                <span className="flex-shrink-0">•</span>
-                                <span>{line.trim().substring(1).trim()}</span>
-                              </div>
-                            ) : (
-                              <p key={idx} className={line.trim() ? '' : 'h-2'}>{line}</p>
-                            )
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug whitespace-pre-line">
-                          {step.description}
-                        </p>
-                      )}
+                      {renderDescription(step.description)}
                     </div>
                     {step.cta && (
                       <Link
@@ -129,24 +166,7 @@ export default function WeightLossSteps() {
                       </h3>
                     </div>
                     <div className="pr-6">
-                      {step.description.includes('•') ? (
-                        <div className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug">
-                          {step.description.split('\n').map((line, idx) => (
-                            line.trim().startsWith('•') ? (
-                              <div key={idx} className="flex gap-2 mt-2">
-                                <span className="flex-shrink-0">•</span>
-                                <span>{line.trim().substring(1).trim()}</span>
-                              </div>
-                            ) : (
-                              <p key={idx} className={line.trim() ? '' : 'h-2'}>{line}</p>
-                            )
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-zinc-800 text-base font-normal font-['Manrope'] leading-snug whitespace-pre-line">
-                          {step.description}
-                        </p>
-                      )}
+                      {renderDescription(step.description)}
                     </div>
                     {step.cta && (
                       <Link

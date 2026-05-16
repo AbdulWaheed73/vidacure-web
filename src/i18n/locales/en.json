@@ -15,7 +15,7 @@
     "login": "Login",
     "getStarted": "Get Started",
     "myPage": "My page",
-    "dashboard": "Dashboard"
+    "dashboard": "My Pages"
   },
   "hero": {
     "newWay": "A new way to lose weight",
@@ -182,15 +182,15 @@
     "titleJourney": "journey",
     "step1": {
       "title": "1. Consultation",
-      "description": "Tell us about your health history in a short online form. You'll then have a private consultation with a board-certified doctor to see if you're a candidate. To evaluate your health and ensure your treatment, you will need to provide blood samples and have your blood pressure measured at a laboratory. Once the test results are ready, your doctor will get back to you with prescriptions and a treatment plan.",
+      "description": "Tell us about your health history in a short online form. You'll then have a consultation with a board-certified doctor to see if you're a candidate. To evaluate your health and ensure your treatment, you will need to provide blood samples and have your blood pressure measured at a laboratory. Once the test results are ready, your doctor will get back to you with prescriptions and a treatment plan.",
       "cta": "Book free consultation"
     },
     "step2": {
       "title": "2. Get Your Custom Plan",
-      "description": "Your doctor reviews your health profile. You have two options to choose:\n\n• Lifestyle program - Regular follow-up and training with a health coach to guide you on nutrition and workout"
+      "description": "Your doctor reviews your health profile. You have two options to choose:\n\n• **Medical treatment program**\nRegular follow-up and training with a health coach to guide you on nutrition and workout\n\n• **Lifestyle program**\nRegular follow-up and training with a health coach to guide you on nutrition and workout"
     },
     "step3": {
-      "title": "3. Receive Treatment & Support - All the way long",
+      "title": "3. Receive treatment and support all the way",
       "description": "Your dedicated care team provides ongoing support to guide you, adjust your plan, and celebrate your success.\n\nWe aim to treat you, give you the necessary support with lifestyle changes and educate you about overcoming obesity and having a healthy lifestyle. You receive your prescription online and can start your treatment. Enjoy your journey of losing weight and improving your health."
     },
     "ctaButton": "Get Started"
@@ -207,7 +207,7 @@
   "partner": {
     "title": "About us!",
     "titleHighlight": "Welcome to Vidacure!",
-    "subtitle": "Personalized. Science-based. Designed for you.",
+    "subtitle": "Competence. Accessibility. Sustainable results",
     "intro": "Losing weight isn't just about eating less or exercising more — it's about understanding your body and giving it the right support. At Vidacure, we help you take control of your health with a proven, medical approach to weight loss.",
     "whyChooseTitle": "Why Choose Us?",
     "reasons": {

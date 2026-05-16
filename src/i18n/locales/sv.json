@@ -15,7 +15,7 @@
     "login": "Logga in",
     "getStarted": "Kom igång",
     "myPage": "Mina sidor",
-    "dashboard": "Instrumentpanel"
+    "dashboard": "Mina sidor"
   },
   "hero": {
     "newWay": "Ett nytt sätt att gå ner i vikt",
@@ -182,15 +182,15 @@
     "titleJourney": "resa",
     "step1": {
       "title": "1. Konsultation",
-      "description": "Berätta om din hälsohistoria i ett kort onlineformulär. Du kommer sedan att ha en privat konsultation med en legitimerad läkare för att se om du är en kandidat. För att utvärdera din hälsa och säkerställa din behandling kommer du att få lämna blodprover och mäta ditt blodtryck på ett laboratorium. När provsvaren är klara kommer din läkare att återkomma till dig med recept och en behandlingsplan.",
+      "description": "Berätta om din hälsohistoria i ett kort onlineformulär. Du kommer sedan att ha en konsultation med en legitimerad läkare för att se om du är en kandidat. För att utvärdera din hälsa och säkerställa din behandling kommer du att få lämna blodprover och mäta ditt blodtryck på ett laboratorium. När provsvaren är klara kommer din läkare att återkomma till dig med recept och en behandlingsplan.",
       "cta": "Boka fri konsultation"
     },
     "step2": {
       "title": "2. Få din anpassade plan",
-      "description": "Din läkare granskar din hälsoprofil. Du har två alternativ att välja mellan:\n\n• Medicinskt behandlingsprogram - Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning\n• Livsstilsprogram Regelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning"
+      "description": "Din läkare granskar din hälsoprofil. Du har två alternativ att välja mellan:\n\n• **Medicinskt behandlingsprogram**\nRegelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning\n\n• **Livsstilsprogram**\nRegelbunden uppföljning och träning med en hälsocoach som vägleder dig om näring och träning"
     },
     "step3": {
-      "title": "3. Ta emot behandling och stöd - Hela vägen",
+      "title": "3. Ta emot behandling och stöd hela vägen",
       "description": "Ditt dedikerade vårdteam ger löpande stöd för att vägleda dig, justera din plan och fira din framgång.\n\nVi strävar efter att behandla dig, ge dig det nödvändiga stödet med livsstilsförändringar och utbilda dig om att övervinna fetma och ha en hälsosam livsstil. Du får ditt recept online och kan börja din behandling. Njut av din resa med viktminskning och förbättrad hälsa."
     },
     "ctaButton": "Kom igång"
@@ -207,7 +207,7 @@
   "partner": {
     "title": "Om oss!",
     "titleHighlight": "Välkommen till Vidacure!",
-    "subtitle": "Personligt. Vetenskapsbaserat. Skapat för dig.",
+    "subtitle": "Kompetens. Tillgänglighet. Hållbara resultatet",
     "intro": "Att gå ner i vikt handlar inte bara om att äta mindre eller träna mer – det handlar om att förstå din kropp och ge den rätt stöd. På Vidacure hjälper vi dig att ta kontroll över din hälsa med en beprövad, medicinsk metod för viktminskning.",
     "whyChooseTitle": "Varför välja oss?",
     "reasons": {

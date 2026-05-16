@@ -11,10 +11,12 @@ import {
   MessageCircle,
   FlaskConical,
   ShieldCheck,
+  LogOut,
 } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarGroup,
   SidebarGroupContent,
@@ -23,11 +25,13 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '../constants';
 import { useChatUnreadCounts } from '../hooks/useChatQueries';
 import { useChatStore, selectUnreadCounts } from '../stores/chatStore';
 import { useConsentStore } from '../stores/consentStore';
+import { useAuthStore } from '../stores/authStore';
 import type { User } from '../types';
 import Vidacure from "../assets/vidacure_png.png";
 import VidacureIcon from "/v_black.png";
@@ -37,6 +41,7 @@ export function AppSidebar({ user }: { user: User | null }) {
   const { t } = useTranslation();
   const { setOpenMobile } = useSidebar();
   const hasAcceptedConsent = useConsentStore((s) => s.hasAcceptedLatest);
+  const logout = useAuthStore((s) => s.logout);
 
   // Server-side unread counts (works even before chat page is opened)
   // Skip when consent not accepted — the API would return 451 anyway
@@ -205,6 +210,20 @@ export function AppSidebar({ user }: { user: User | null }) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      {/* Footer with Logout */}
+      <SidebarFooter className="p-4 bg-[#F0F7F4] border-t border-zinc-300 md:transition-[padding] md:duration-300 md:ease-in-out group-data-[collapsible=icon]:p-2">
+        <Button
+          variant="outline"
+          onClick={() => logout()}
+          className="w-full flex items-center justify-center gap-2 font-manrope font-semibold border-zinc-400 hover:bg-[#E6F7F5] hover:text-[#005044] group-data-[collapsible=icon]:px-0"
+        >
+          <LogOut className="h-4 w-4 shrink-0" />
+          <span className="md:transition-[opacity,max-width] md:duration-300 md:ease-in-out max-w-48 opacity-100 group-data-[collapsible=icon]:max-w-0 group-data-[collapsible=icon]:opacity-0 overflow-hidden whitespace-nowrap">
+            {t('account.logout')}
+          </span>
+        </Button>
+      </SidebarFooter>
     </Sidebar>
   );
 }
