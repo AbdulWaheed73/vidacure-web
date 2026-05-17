@@ -131,23 +131,6 @@ export const PhysicalDetailsStep = () => {
       </FormField>
 
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
-        <FormField label={t('onboarding.physicalDetails.waistCircumference')} className="flex-1">
-          <div className="flex gap-2.5 items-center">
-            <NumericInput
-              placeholder={t('onboarding.physicalDetails.waistPlaceholder')}
-              value={physicalDetails.waistCircumference}
-              onChange={(e) =>
-                handleChange("waistCircumference", e.target.value)
-              }
-              className="flex-1"
-              min={0}
-              max={300}
-              allowDecimal={false}
-            />
-            <span className="font-manrope text-[16px] text-[#282828]">{t('onboarding.physicalDetails.cm')}</span>
-          </div>
-        </FormField>
-
         <FormField label={t('onboarding.physicalDetails.bmi')} className="flex-1">
           {/* Auto-calculated from height + current weight above — read-only
               so users can't enter a conflicting value. */}

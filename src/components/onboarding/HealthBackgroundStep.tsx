@@ -18,11 +18,11 @@ export const HealthBackgroundStep = () => {
     updateData("healthBackground", { ...healthBackground, [field]: value });
   };
 
-  const intakeLevels = [
-    { value: "low", label: t('onboarding.healthBackground.low') },
-    { value: "moderate", label: t('onboarding.healthBackground.moderate') },
-    { value: "high", label: t('onboarding.healthBackground.high') },
-  ];
+  // const intakeLevels = [
+  //   { value: "low", label: t('onboarding.healthBackground.low') },
+  //   { value: "moderate", label: t('onboarding.healthBackground.moderate') },
+  //   { value: "high", label: t('onboarding.healthBackground.high') },
+  // ];
 
   return (
     <div className="flex flex-col gap-5 sm:gap-8 w-full">
@@ -54,21 +54,22 @@ export const HealthBackgroundStep = () => {
       </div>
 
       <FormField label={t('onboarding.healthBackground.smokingAlcohol')}>
-        <Textarea
-          placeholder={t('onboarding.healthBackground.smokingAlcoholPlaceholder')}
-          value={healthBackground.smokingAlcoholDetails}
-          onChange={(e) =>
-            handleChange("smokingAlcoholDetails", e.target.value)
-          }
-        />
-      </FormField>
-
-      <FormField label={t('onboarding.healthBackground.physicalActivity')}>
-        <Textarea
-          placeholder={t('onboarding.healthBackground.physicalActivityPlaceholder')}
-          value={healthBackground.physicalActivity}
-          onChange={(e) => handleChange("physicalActivity", e.target.value)}
-        />
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 flex-wrap">
+          {[
+            { value: "no", label: t('onboarding.healthBackground.no') },
+            { value: "daily", label: t('onboarding.healthBackground.alcoholDaily') },
+            { value: "weekly", label: t('onboarding.healthBackground.alcoholWeekly') },
+            { value: "social", label: t('onboarding.healthBackground.alcoholSocialOccasional') },
+          ].map((opt) => (
+            <ActivityLevelButton
+              key={opt.value}
+              value={opt.value}
+              label={opt.label}
+              isSelected={healthBackground.smokingAlcoholDetails === opt.value}
+              onClick={() => handleChange("smokingAlcoholDetails", opt.value)}
+            />
+          ))}
+        </div>
       </FormField>
 
       <FormField label={t('onboarding.healthBackground.activityLevel')}>
@@ -100,48 +101,6 @@ export const HealthBackgroundStep = () => {
           value={healthBackground.eatingHabits}
           onChange={(e) => handleChange("eatingHabits", e.target.value)}
         />
-      </FormField>
-
-      <FormField label={t('onboarding.healthBackground.sugarIntake')}>
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          {intakeLevels.map((level) => (
-            <ActivityLevelButton
-              key={level.value}
-              value={level.value}
-              label={level.label}
-              isSelected={healthBackground.sugarIntake === level.value}
-              onClick={() => handleChange("sugarIntake", level.value)}
-            />
-          ))}
-        </div>
-      </FormField>
-
-      <FormField label={t('onboarding.healthBackground.carbohydrateIntake')}>
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          {intakeLevels.map((level) => (
-            <ActivityLevelButton
-              key={level.value}
-              value={level.value}
-              label={level.label}
-              isSelected={healthBackground.carbohydrateIntake === level.value}
-              onClick={() => handleChange("carbohydrateIntake", level.value)}
-            />
-          ))}
-        </div>
-      </FormField>
-
-      <FormField label={t('onboarding.healthBackground.processedFoodIntake')}>
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          {intakeLevels.map((level) => (
-            <ActivityLevelButton
-              key={level.value}
-              value={level.value}
-              label={level.label}
-              isSelected={healthBackground.processedFoodIntake === level.value}
-              onClick={() => handleChange("processedFoodIntake", level.value)}
-            />
-          ))}
-        </div>
       </FormField>
 
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">

@@ -1,11 +1,11 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { User } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { useDoctorProfile } from '@/hooks/useDoctorDashboardQueries';
-import { exportMyData, downloadDataAsFile } from '@/services/dataExportService';
+// import { exportMyData, downloadDataAsFile } from '@/services/dataExportService';
 import { ProfileCard } from '@/components/account/ProfileCard';
-import { DataPrivacyCard } from '@/components/account/DataPrivacyCard';
+// import { DataPrivacyCard } from '@/components/account/DataPrivacyCard';
 import { AccountActionsCard } from '@/components/account/AccountActionsCard';
 import { LanguageCard } from '@/components/account/LanguageCard';
 
@@ -13,22 +13,22 @@ const DoctorAccount: React.FC = () => {
   const { t } = useTranslation();
   const { logout } = useAuthStore();
   const { data, isLoading } = useDoctorProfile();
-  const [isExporting, setIsExporting] = useState(false);
-
   const profile = data?.profile;
+  // const [isExporting, setIsExporting] = useState(false);
 
-  const handleExportData = async () => {
-    try {
-      setIsExporting(true);
-      const exportData = await exportMyData();
-      downloadDataAsFile(exportData);
-    } catch (error: unknown) {
-      console.error('Failed to export data:', error);
-      alert(t('account.exportError') || 'Failed to export data. Please try again.');
-    } finally {
-      setIsExporting(false);
-    }
-  };
+
+  // const handleExportData = async () => {
+  //   try {
+  //     setIsExporting(true);
+  //     const exportData = await exportMyData();
+  //     downloadDataAsFile(exportData);
+  //   } catch (error: unknown) {
+  //     console.error('Failed to export data:', error);
+  //     alert(t('account.exportError') || 'Failed to export data. Please try again.');
+  //   } finally {
+  //     setIsExporting(false);
+  //   }
+  // };
 
   if (isLoading) {
     return (
@@ -73,10 +73,10 @@ const DoctorAccount: React.FC = () => {
           />
         )}
 
-        <DataPrivacyCard
+        {/* <DataPrivacyCard
           onExportData={handleExportData}
           isExporting={isExporting}
-        />
+        /> */}
 
         <LanguageCard />
 

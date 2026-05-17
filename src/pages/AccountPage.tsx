@@ -1,11 +1,11 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { User } from 'lucide-react';
 import type { User as UserType } from '../types';
-import { exportMyData, downloadDataAsFile } from '../services/dataExportService';
-import { useConsentStore } from '../stores/consentStore';
+// import { exportMyData, downloadDataAsFile } from '../services/dataExportService';
+// import { useConsentStore } from '../stores/consentStore';
 import { ProfileCard } from '../components/account/ProfileCard';
-import { DataPrivacyCard } from '../components/account/DataPrivacyCard';
+// import { DataPrivacyCard } from '../components/account/DataPrivacyCard';
 import { AccountActionsCard } from '../components/account/AccountActionsCard';
 import { SubscriptionBillingCard } from '../components/account/SubscriptionBillingCard';
 import { LanguageCard } from '../components/account/LanguageCard';
@@ -17,21 +17,21 @@ type AccountPageProps = {
 
 export const AccountPage: React.FC<AccountPageProps> = ({ user, onLogout }) => {
   const { t } = useTranslation();
-  const [isExporting, setIsExporting] = useState(false);
-  const { hasAcceptedLatest, currentVersion } = useConsentStore();
+  // const [isExporting, setIsExporting] = useState(false);
+  // const { hasAcceptedLatest, currentVersion } = useConsentStore();
 
-  const handleExportData = async () => {
-    try {
-      setIsExporting(true);
-      const data = await exportMyData();
-      downloadDataAsFile(data);
-    } catch (error: unknown) {
-      console.error('Failed to export data:', error);
-      alert(t('account.exportError') || 'Failed to export data. Please try again.');
-    } finally {
-      setIsExporting(false);
-    }
-  };
+  // const handleExportData = async () => {
+  //   try {
+  //     setIsExporting(true);
+  //     const data = await exportMyData();
+  //     downloadDataAsFile(data);
+  //   } catch (error: unknown) {
+  //     console.error('Failed to export data:', error);
+  //     alert(t('account.exportError') || 'Failed to export data. Please try again.');
+  //   } finally {
+  //     setIsExporting(false);
+  //   }
+  // };
 
   return (
     <div className="p-4 md:p-8">
@@ -56,13 +56,13 @@ export const AccountPage: React.FC<AccountPageProps> = ({ user, onLogout }) => {
           />
         )}
 
-        <DataPrivacyCard
+        {/* <DataPrivacyCard
           onExportData={handleExportData}
           isExporting={isExporting}
           showConsent
           hasAcceptedLatest={hasAcceptedLatest}
           currentVersion={currentVersion}
-        />
+        /> */}
 
         {user?.role === 'patient' && <SubscriptionBillingCard />}
 

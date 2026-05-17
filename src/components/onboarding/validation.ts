@@ -38,7 +38,7 @@ export const validatePersonalInfo = (data: PersonalInfo): boolean => {
 export const validatePhysicalDetails = (data: PhysicalDetails): boolean => {
   if (!data.height.trim() || !data.currentWeight.trim() || !data.goalWeight.trim() ||
       !data.lowestWeight.trim() || !data.highestWeight.trim() || !data.expectedWeightLoss.trim() ||
-      !data.waistCircumference.trim() || !data.bmi.trim()) return false;
+      !data.bmi.trim()) return false;
   const h = toNum(data.height);
   const cw = toNum(data.currentWeight);
   const gw = toNum(data.goalWeight);
@@ -58,12 +58,8 @@ export const validateHealthBackground = (data: HealthBackground): boolean => {
   return !!(
     data.smokingStatus.trim() &&
     data.smokingAlcoholDetails.trim() &&
-    data.physicalActivity.trim() &&
     data.activityLevel.trim() &&
     data.eatingHabits.trim() &&
-    data.sugarIntake.trim() &&
-    data.carbohydrateIntake.trim() &&
-    data.processedFoodIntake.trim() &&
     data.previousWeightLoss.trim() &&
     data.weightLossDuration.trim()
   );
@@ -124,9 +120,6 @@ export const getValidationErrors = (step: number, data: PersonalInfo | PhysicalD
       if (!d.expectedWeightLoss.trim()) errors.push(t("onboarding.validation.expectedWeightLossRequired"));
       else if (toNum(d.expectedWeightLoss) <= 0 || toNum(d.expectedWeightLoss) > 200) errors.push(t("onboarding.validation.expectedWeightLossRange"));
 
-      if (!d.waistCircumference.trim()) errors.push(t("onboarding.validation.waistRequired"));
-      else if (toNum(d.waistCircumference) < 20 || toNum(d.waistCircumference) > 250) errors.push(t("onboarding.validation.waistRange"));
-
       if (!d.bmi.trim()) errors.push(t("onboarding.validation.bmiRequired"));
       else if (toNum(d.bmi) < 10 || toNum(d.bmi) > 80) errors.push(t("onboarding.validation.bmiRange"));
       break;
@@ -136,12 +129,8 @@ export const getValidationErrors = (step: number, data: PersonalInfo | PhysicalD
       const d = data as HealthBackground;
       if (!d.smokingStatus.trim()) errors.push(t("onboarding.validation.smokingRequired"));
       if (!d.smokingAlcoholDetails.trim()) errors.push(t("onboarding.validation.smokingAlcoholRequired"));
-      if (!d.physicalActivity.trim()) errors.push(t("onboarding.validation.physicalActivityRequired"));
       if (!d.activityLevel.trim()) errors.push(t("onboarding.validation.activityLevelRequired"));
       if (!d.eatingHabits.trim()) errors.push(t("onboarding.validation.eatingHabitsRequired"));
-      if (!d.sugarIntake.trim()) errors.push(t("onboarding.validation.sugarIntakeRequired"));
-      if (!d.carbohydrateIntake.trim()) errors.push(t("onboarding.validation.carbohydrateIntakeRequired"));
-      if (!d.processedFoodIntake.trim()) errors.push(t("onboarding.validation.processedFoodRequired"));
       if (!d.previousWeightLoss.trim()) errors.push(t("onboarding.validation.previousWeightLossRequired"));
       if (!d.weightLossDuration.trim()) errors.push(t("onboarding.validation.weightLossDurationRequired"));
       break;

@@ -16,19 +16,14 @@ export type PhysicalDetails = {
   lowestWeight: string;
   highestWeight: string;
   expectedWeightLoss: string;
-  waistCircumference: string;
   bmi: string;
 }
 
 export type HealthBackground = {
   smokingStatus: "yes" | "no" | "";
   smokingAlcoholDetails: string;
-  physicalActivity: string;
   activityLevel: "sedentary" | "active" | "very-active" | "";
   eatingHabits: string;
-  sugarIntake: "low" | "moderate" | "high" | "";
-  carbohydrateIntake: "low" | "moderate" | "high" | "";
-  processedFoodIntake: "low" | "moderate" | "high" | "";
   previousWeightLoss: string;
   weightLossDuration: string;
 }

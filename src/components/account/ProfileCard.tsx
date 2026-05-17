@@ -69,7 +69,7 @@ export const ProfileCard = ({
   }, [ssnVisible]);
 
   return (
-    <div className="bg-[#005044] rounded-[20px] p-5 md:p-8 text-white col-span-1 lg:col-span-2">
+    <div className="bg-[#005044] rounded-[20px] p-5 md:p-8 text-white col-span-1 lg:col-span-3">
       <div className="flex items-center gap-4 md:gap-5">
         <div className="w-12 h-12 md:w-16 md:h-16 bg-white/20 rounded-full flex items-center justify-center text-lg md:text-xl font-sora font-bold shrink-0">
           {initials}
