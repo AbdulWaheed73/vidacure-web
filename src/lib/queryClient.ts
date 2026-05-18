@@ -36,4 +36,5 @@ export const queryKeys = {
   patientJournal: ['patientJournal'] as const,
   myProviders: ['myProviders'] as const,
   providerMeetings: ['providerMeetings'] as const,
+  adminSuggestions: ['admin', 'suggestions'] as const,
 };

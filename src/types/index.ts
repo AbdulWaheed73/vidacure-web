@@ -16,3 +16,4 @@ export * from './doctor-types';
 export * from './provider-types';
 export * from './promotion-types';
 export * from './treatment-journal-types';
+export * from './suggestion-types';

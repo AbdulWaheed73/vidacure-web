@@ -10,6 +10,7 @@ import {
   FileText,
   Shield,
   Tag,
+  Lightbulb,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -104,6 +105,11 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
       title: 'Deletion Logs',
       value: 'deletion-logs',
       icon: FileText,
+    },
+    {
+      title: 'Suggestions',
+      value: 'suggestions',
+      icon: Lightbulb,
     },
   ];
 

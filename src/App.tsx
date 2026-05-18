@@ -33,6 +33,7 @@ const PrescriptionsPage = lazy(() => import("./pages/PrescriptionsPage").then(m 
 const LabTestsPage = lazy(() => import("./pages/LabTestsPage").then(m => ({ default: m.LabTestsPage })));
 const ProgressPage = lazy(() => import("./pages/ProgressPage").then(m => ({ default: m.ProgressPage })));
 const ResourcesPage = lazy(() => import("./pages/ResourcesPage").then(m => ({ default: m.ResourcesPage })));
+const SuggestionsPage = lazy(() => import("./pages/SuggestionsPage").then(m => ({ default: m.SuggestionsPage })));
 const AccountPage = lazy(() => import("./pages/AccountPage").then(m => ({ default: m.AccountPage })));
 const SupabaseChatPage = lazy(() => import("./pages/SupabaseChatPage"));
 const SubscribePage = lazy(() => import("./pages/SubscribePage"));
@@ -254,6 +255,7 @@ function App() {
         <Route path="/lab-tests" element={requireOnboarding(<LabTestsPage />)} />
         <Route path="/progress" element={requireOnboarding(<ProgressPage />)} />
         <Route path="/resources" element={requireOnboarding(<ResourcesPage />)} />
+        <Route path="/suggestions" element={requireOnboarding(<SuggestionsPage />)} />
 
         <Route
           path="/account"

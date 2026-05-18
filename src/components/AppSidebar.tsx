@@ -11,6 +11,7 @@ import {
   MessageCircle,
   FlaskConical,
   ShieldCheck,
+  Lightbulb,
   LogOut,
 } from 'lucide-react';
 import {
@@ -86,6 +87,11 @@ export function AppSidebar({ user }: { user: User | null }) {
       url: ROUTES.DOCTOR_ACCOUNT,
       icon: UserIcon,
     },
+    {
+      title: t('sidebar.suggestions'),
+      url: ROUTES.DOCTOR_SUGGESTIONS,
+      icon: Lightbulb,
+    },
   ];
 
   const patientMenuItems = [
@@ -133,6 +139,11 @@ export function AppSidebar({ user }: { user: User | null }) {
       title: t('sidebar.account'),
       url: '/account',
       icon: UserIcon,
+    },
+    {
+      title: t('sidebar.suggestions'),
+      url: ROUTES.PATIENT_SUGGESTIONS,
+      icon: Lightbulb,
     },
   ];
 

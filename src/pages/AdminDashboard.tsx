@@ -11,6 +11,7 @@ import { AuditLogsView } from '@/components/admin/AuditLogsView';
 import { DeleteUserDialog } from '@/components/admin/DeleteUserDialog';
 import { ProvidersView } from '@/components/admin/ProvidersView';
 import { PromotionsView } from '@/components/admin/PromotionsView';
+import { SuggestionsView } from '@/components/admin/SuggestionsView';
 import { adminService } from '@/services/adminService';
 import type { Patient, Doctor, DashboardStats } from '@/services/adminService';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -277,6 +278,10 @@ export const AdminDashboard = () => {
 
         <TabsContent value="deletion-logs" className="space-y-4">
           <DeletionLogsView />
+        </TabsContent>
+
+        <TabsContent value="suggestions" className="space-y-4">
+          <SuggestionsView />
         </TabsContent>
       </Tabs>
       )}

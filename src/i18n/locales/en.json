@@ -348,7 +348,24 @@
     "resources": "Resources",
     "account": "Account",
     "labTests": "Lab Tests",
-    "consent": "Consent"
+    "consent": "Consent",
+    "suggestions": "Suggestions"
+  },
+  "suggestions": {
+    "pageTitle": "Suggest an improvement",
+    "pageSubtitle": "Got an idea that would make Vidacure better? Let us know.",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Summarize your idea in one line",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe your suggestion in more detail",
+    "submit": "Send suggestion",
+    "submitting": "Sending...",
+    "submitSuccess": "Thanks! Your suggestion has been submitted.",
+    "submitError": "Could not send the suggestion. Please try again.",
+    "titleRequired": "Title is required",
+    "titleTooLong": "Title must be at most 120 characters",
+    "descriptionRequired": "Description is required",
+    "descriptionTooLong": "Description must be at most 2000 characters"
   },
   "topbar": {
     "goodMorning": "Good Morning",

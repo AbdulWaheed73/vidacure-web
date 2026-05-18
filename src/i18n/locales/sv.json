@@ -348,7 +348,24 @@
     "resources": "Resurser",
     "account": "Konto",
     "labTests": "Labbprover",
-    "consent": "Samtycke"
+    "consent": "Samtycke",
+    "suggestions": "Förslag"
+  },
+  "suggestions": {
+    "pageTitle": "Föreslå en förbättring",
+    "pageSubtitle": "Har du en idé som skulle göra Vidacure bättre? Berätta för oss.",
+    "titleLabel": "Titel",
+    "titlePlaceholder": "Sammanfatta din idé i en mening",
+    "descriptionLabel": "Beskrivning",
+    "descriptionPlaceholder": "Beskriv ditt förslag mer detaljerat",
+    "submit": "Skicka förslag",
+    "submitting": "Skickar...",
+    "submitSuccess": "Tack! Ditt förslag har skickats.",
+    "submitError": "Det gick inte att skicka förslaget. Försök igen.",
+    "titleRequired": "Titel krävs",
+    "titleTooLong": "Titel får vara högst 120 tecken",
+    "descriptionRequired": "Beskrivning krävs",
+    "descriptionTooLong": "Beskrivning får vara högst 2000 tecken"
   },
   "topbar": {
     "goodMorning": "God morgon",
