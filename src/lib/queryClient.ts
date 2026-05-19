@@ -37,4 +37,5 @@ export const queryKeys = {
   myProviders: ['myProviders'] as const,
   providerMeetings: ['providerMeetings'] as const,
   adminSuggestions: ['admin', 'suggestions'] as const,
+  labTestOrders: ['labTestOrders'] as const,
 };

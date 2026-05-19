@@ -5,3 +5,4 @@ export { BMICard } from './BMICard';
 export { GoalsCard } from './GoalsCard';
 export { ConsentRequiredCard, isConsentError } from './ConsentRequiredCard';
 export { PromoBanner } from './PromoBanner';
+export { OnboardingJourney } from './OnboardingJourney';

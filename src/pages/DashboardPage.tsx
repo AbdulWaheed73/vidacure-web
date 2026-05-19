@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Sparkles, Phone } from 'lucide-react';
-import { WeightProgressCard, NextAppointmentCard, PrescriptionCard, BMICard, GoalsCard } from '../components/dashboard';
+import { Phone } from 'lucide-react';
+import { WeightProgressCard, NextAppointmentCard, PrescriptionCard, BMICard, GoalsCard, OnboardingJourney } from '../components/dashboard';
 import { PaymentService } from '../services';
 import { queryKeys } from '../lib/queryClient';
 import { Button } from '../components/ui/Button';
 import { Alert, AlertTitle, AlertDescription } from '../components/ui/Alert';
 import { CompletePhoneModal } from '../components/CompletePhoneModal';
 import { usePatientProfile } from '../hooks/useDashboardQueries';
-import { ROUTES } from '../constants';
 import type { DashboardPageProps } from '../types';
 
 
 export const DashboardPage: React.FC<DashboardPageProps> = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const { data: subscriptionStatus, isLoading: subscriptionLoading } = useQuery({
     queryKey: queryKeys.subscriptionStatus,
@@ -68,26 +65,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = () => {
           </div>
         )}
 
-        {/* No subscription — show subscribe prompt (only reachable after meeting gate passes) */}
+        {/* No subscription — show 3-step onboarding journey */}
         {!subscriptionLoading && !subscriptionStatus?.hasSubscription && (
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md text-center">
-              <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Sparkles className="w-8 h-8 text-teal-600" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-3 font-sora">
-                {t('dashboard.choosePlan')}
-              </h2>
-              <p className="text-gray-600 mb-6 font-manrope">
-                {t('dashboard.subscribePrompt')}
-              </p>
-              <Button
-                onClick={() => navigate(ROUTES.SUBSCRIBE)}
-                className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-full font-semibold"
-              >
-                {t('dashboard.subscribeCTA')}
-              </Button>
-            </div>
+          <div className="flex items-start justify-center min-h-[400px] pt-2 md:pt-6">
+            <OnboardingJourney />
           </div>
         )}
     </div>
