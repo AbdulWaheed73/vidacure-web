@@ -27,6 +27,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   };
 
   const currentLang = i18n.language.startsWith('sv') ? 'SV' : 'EN';
+  const nextLangLabel = currentLang === 'EN' ? 'SV' : 'EN';
 
   // Generate dynamic greeting based on time of day
   const getGreeting = () => {
@@ -66,6 +67,17 @@ export const TopBar: React.FC<TopBarProps> = ({
 
       {/* Right Section */}
       <div className="flex items-center gap-2 md:gap-3 lg:gap-6 shrink-0">
+        {/* Language Toggle */}
+        <Button
+          variant="ghost"
+          onClick={toggleLanguage}
+          aria-label={`Switch to ${nextLangLabel}`}
+          className="h-9 md:h-11 px-2.5 md:px-3 flex items-center gap-1.5 text-zinc-800 hover:bg-zinc-100 rounded-full"
+        >
+          <Globe className="size-5 md:size-5" />
+          <span className="text-sm font-semibold font-manrope">{currentLang}</span>
+        </Button>
+
         {/* Book Appointment Button — patients only */}
         {user?.role !== 'doctor' && (
           <Button
@@ -97,10 +109,6 @@ export const TopBar: React.FC<TopBarProps> = ({
             <DropdownMenuItem onClick={onProfileClick}>
               <User className="mr-2 h-4 w-4" />
               <span>{t('topbar.profile')}</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={toggleLanguage}>
-              <Globe className="mr-2 h-4 w-4" />
-              <span>{currentLang === 'EN' ? 'Svenska' : 'English'}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onLogout}>
