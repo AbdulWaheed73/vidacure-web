@@ -124,7 +124,7 @@ export const adminService = {
     includeStripeData: boolean = false,
     status?: string
   ): Promise<PaginatedPatientsResponse> => {
-    const params: Record<string, any> = { page, limit, includeStripeData };
+    const params: Record<string, string | number | boolean> = { page, limit, includeStripeData };
     if (status && status !== 'all') params.status = status;
     const response = await api.get('/api/admin/patients', { params });
     return response.data;
