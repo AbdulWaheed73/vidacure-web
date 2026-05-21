@@ -12,7 +12,6 @@ import {
   ClipboardList,
   Stethoscope,
   Sparkles,
-  Info,
   Loader2,
 } from "lucide-react";
 
@@ -164,17 +163,6 @@ const PreLoginBMI = () => {
               </h1>
               <p className="font-manrope text-[16px] text-[#666] leading-[1.6] max-w-[450px]">
                 {t("preLoginBMI.description")}
-              </p>
-            </div>
-
-            {/* Upfront eligibility hint — sets expectations before the user
-                enters any data. No BMI number is shown back later, but the
-                criterion is stated here so users aren't surprised if they
-                turn out not to qualify. */}
-            <div className="w-full max-w-[500px] flex items-start gap-2.5 rounded-[12px] border border-[#E8EDEC] bg-[#F7F9F9] px-3.5 py-2.5">
-              <Info className="size-4 shrink-0 text-[#005044] mt-0.5" />
-              <p className="font-manrope text-[13px] text-[#555] leading-relaxed">
-                {t("preLoginBMI.eligibilityHint")}
               </p>
             </div>
 

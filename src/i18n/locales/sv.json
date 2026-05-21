@@ -1365,7 +1365,7 @@
   "preLoginBMI": {
     "backToHome": "Tillbaka till startsidan",
     "title": "Kontrollera din behörighet",
-    "description": "Ange din längd och vikt för att se om du kvalificerar dig för vårt medicinska vikthanteringsprogram.",
+    "description": "Ange din längd och vikt för att se om du kvalificerar dig.",
     "height": "Längd",
     "heightPlaceholder": "t.ex. 175",
     "heightUnit": "cm",
@@ -1400,23 +1400,22 @@
       "title": "Så går det till",
       "step1": {
         "title": "Skapa ditt konto",
-        "description": "Registrera dig på cirka 30 sekunder — vi skyddar dina uppgifter."
+        "description": "Registrera dig på cirka 30 sekunder."
       },
       "step2": {
         "title": "Berätta lite om dig",
-        "description": "Ett kort hälsoformulär hjälper oss att matcha dig med rätt vård."
+        "description": "Ett kort hälsoformulär."
       },
       "step3": {
         "title": "Träffa din läkare",
-        "description": "Boka en kostnadsfri första konsultation för att diskutera dina mål.",
+        "description": "Boka en kostnadsfri första konsultation.",
         "freeBadge": "Kostnadsfri"
       },
       "step4": {
         "title": "Hitta din plan",
-        "description": "Vi matchar dig med det abonnemang som passar dina behov bäst."
+        "description": "Vi matchar dig med rätt plan."
       }
     },
-    "eligibilityHint": "Notera — vårt medicinska program kräver ett BMI på 27 eller högre. Du ser din behörighet så snart du fyller i dina uppgifter nedan.",
     "notEligibleSoft": "Vårt medicinska viktminskningsprogram är utformat för specifika kliniska kriterier som kanske inte passar dig idag. Vänligen kontakta din vanliga vårdgivare för personlig rådgivning.",
     "infoText": "BMI (Body Mass Index) beräknas som vikt (kg) delat med längd (m) i kvadrat. Ett BMI på 27 eller högre krävs för vårt medicinska vikthanteringsprogram.",
     "alreadyPatient": "Redan patient? Logga in direkt"

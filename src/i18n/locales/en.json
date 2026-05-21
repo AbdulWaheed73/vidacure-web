@@ -1365,7 +1365,7 @@
   "preLoginBMI": {
     "backToHome": "Back to Home",
     "title": "Check Your Eligibility",
-    "description": "Enter your height and weight to see if you qualify for our medical weight management program.",
+    "description": "Enter your height and weight to see if you qualify.",
     "height": "Height",
     "heightPlaceholder": "e.g. 175",
     "heightUnit": "cm",
@@ -1400,23 +1400,22 @@
       "title": "What Happens Next",
       "step1": {
         "title": "Create your account",
-        "description": "Sign up in about 30 seconds — we keep your information private and secure."
+        "description": "Sign up in about 30 seconds."
       },
       "step2": {
         "title": "Share a bit about yourself",
-        "description": "A short health questionnaire helps us match you with the right care."
+        "description": "A short health questionnaire."
       },
       "step3": {
         "title": "Meet your doctor",
-        "description": "Book a complimentary first consultation to discuss your goals.",
+        "description": "Book a free first consultation.",
         "freeBadge": "FREE"
       },
       "step4": {
         "title": "Find your plan",
-        "description": "We'll match you with the subscription plan that fits your needs best."
+        "description": "We match you with the right plan."
       }
     },
-    "eligibilityHint": "Heads up — our medical program requires a BMI of 27 or higher. You'll see your eligibility as soon as you enter your details below.",
     "notEligibleSoft": "Our medical weight management program is designed around specific clinical criteria that may not be the right fit for you today. Please consult your regular healthcare provider for personalised guidance.",
     "infoText": "BMI (Body Mass Index) is calculated as weight (kg) divided by height (m) squared. A BMI of 27 or higher is required for our medical weight management program.",
     "alreadyPatient": "Already a patient? Log in directly"
