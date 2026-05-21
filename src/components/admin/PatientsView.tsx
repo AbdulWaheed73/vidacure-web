@@ -9,7 +9,24 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/badge';
-import { RefreshCw, Eye, Trash2, CheckCircle, Clock, XCircle, Stethoscope } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RefreshCw, Eye, Trash2, CheckCircle, Clock, XCircle, Stethoscope, MailWarning } from 'lucide-react';
 import type { Patient, Doctor } from '@/services/adminService';
 import { adminService } from '@/services/adminService';
 import { SubscriptionDetailsModal } from './SubscriptionDetailsModal';
@@ -30,6 +47,8 @@ type PatientsViewProps = {
   };
   onPageChange?: (page: number) => void;
   onRefresh?: () => void;
+  statusFilter?: string;
+  onStatusFilterChange?: (status: string) => void;
 };
 
 const formatDate = (dateString: string) => {
@@ -74,11 +93,50 @@ export const PatientsView = ({
   pagination,
   onPageChange,
   onRefresh,
+  statusFilter = 'all',
+  onStatusFilterChange,
 }: PatientsViewProps) => {
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null);
   const [approvingPatientId, setApprovingPatientId] = useState<string | null>(null);
   const [approvalError, setApprovalError] = useState<string | null>(null);
   const [providerModalPatient, setProviderModalPatient] = useState<Patient | null>(null);
+  const [emailDialogPatient, setEmailDialogPatient] = useState<Patient | null>(null);
+  const [emailRecipient, setEmailRecipient] = useState('');
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [emailDialogError, setEmailDialogError] = useState<string | null>(null);
+  const [emailFeedback, setEmailFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const openEmailDialog = (patient: Patient) => {
+    setEmailDialogPatient(patient);
+    setEmailRecipient(patient.email || '');
+    setEmailDialogError(null);
+  };
+
+  const closeEmailDialog = () => {
+    setEmailDialogPatient(null);
+    setEmailRecipient('');
+    setEmailDialogError(null);
+  };
+
+  const handleSendPaymentFailedEmail = async () => {
+    if (!emailDialogPatient) return;
+    const recipient = emailRecipient.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient)) {
+      setEmailDialogError('Please enter a valid email address');
+      return;
+    }
+    setIsSendingEmail(true);
+    setEmailDialogError(null);
+    try {
+      const result = await adminService.sendPaymentFailedEmail(emailDialogPatient._id, recipient);
+      setEmailFeedback({ type: 'success', message: `Email sent to ${result.sentTo}` });
+      closeEmailDialog();
+    } catch (err: any) {
+      setEmailDialogError(err.response?.data?.error || 'Failed to send email');
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
 
   const handleViewDetails = (patient: Patient) => {
     setSelectedPatient({ id: patient._id, name: patient.name });
@@ -137,9 +195,27 @@ export const PatientsView = ({
 
   return (
     <div className="space-y-4">
-      {/* Refresh Stripe Data Button */}
-      {onRefreshStripeData && (
-        <div className="flex justify-end">
+      {/* Filter + Refresh row */}
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        {onStatusFilterChange ? (
+          <Select value={statusFilter} onValueChange={onStatusFilterChange}>
+            <SelectTrigger className="w-56">
+              <SelectValue placeholder="Filter by subscription status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Subscriptions</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="trialing">Trialing</SelectItem>
+              <SelectItem value="past_due">Past Due</SelectItem>
+              <SelectItem value="canceled">Canceled</SelectItem>
+              <SelectItem value="unpaid">Unpaid</SelectItem>
+              <SelectItem value="incomplete">Incomplete</SelectItem>
+              <SelectItem value="none">No Subscription</SelectItem>
+            </SelectContent>
+          </Select>
+        ) : <div />}
+
+        {onRefreshStripeData && (
           <Button
             variant="outline"
             size="sm"
@@ -149,6 +225,25 @@ export const PatientsView = ({
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoadingStripeData ? 'animate-spin' : ''}`} />
             {isLoadingStripeData ? 'Loading Stripe Data...' : 'Refresh from Stripe'}
           </Button>
+        )}
+      </div>
+
+      {/* Email feedback */}
+      {emailFeedback && (
+        <div
+          className={`px-4 py-3 rounded relative border ${
+            emailFeedback.type === 'success'
+              ? 'bg-green-50 border-green-200 text-green-700'
+              : 'bg-red-50 border-red-200 text-red-700'
+          }`}
+        >
+          {emailFeedback.message}
+          <button
+            className="absolute top-0 right-0 px-4 py-3"
+            onClick={() => setEmailFeedback(null)}
+          >
+            ×
+          </button>
         </div>
       )}
 
@@ -282,6 +377,15 @@ export const PatientsView = ({
                       >
                         Reassign
                       </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => openEmailDialog(patient)}
+                        className="text-amber-700 hover:text-amber-800 hover:bg-amber-50"
+                        title="Send 'payment failed' email"
+                      >
+                        <MailWarning className="h-4 w-4" />
+                      </Button>
                       {onDelete && (
                         <Button
                           variant="ghost"
@@ -355,6 +459,59 @@ export const PatientsView = ({
           }}
         />
       )}
+
+      {/* Send Payment Failed Email Dialog */}
+      <Dialog open={!!emailDialogPatient} onOpenChange={(open) => !open && closeEmailDialog()}>
+        <DialogContent className="sm:max-w-[480px]">
+          <DialogHeader>
+            <DialogTitle>Send "payment failed" email</DialogTitle>
+            <DialogDescription>
+              {emailDialogPatient
+                ? `To ${emailDialogPatient.name}. The recipient is pre-filled from their account — edit it below if you need to send it elsewhere.`
+                : ''}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-2 py-2">
+            <Label htmlFor="payment-failed-email">Recipient email</Label>
+            <Input
+              id="payment-failed-email"
+              type="email"
+              value={emailRecipient}
+              onChange={(e) => {
+                setEmailRecipient(e.target.value);
+                if (emailDialogError) setEmailDialogError(null);
+              }}
+              placeholder="patient@example.com"
+              disabled={isSendingEmail}
+            />
+            {emailDialogPatient?.email && emailRecipient.trim() !== emailDialogPatient.email && (
+              <p className="text-xs text-amber-700">
+                Differs from the email on file ({emailDialogPatient.email}).
+              </p>
+            )}
+            {emailDialogError && (
+              <p className="text-sm text-red-600">{emailDialogError}</p>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={closeEmailDialog} disabled={isSendingEmail}>
+              Cancel
+            </Button>
+            <Button onClick={handleSendPaymentFailedEmail} disabled={isSendingEmail}>
+              {isSendingEmail ? (
+                <>
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                'Send email'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -16,7 +16,7 @@ import { adminService } from '@/services/adminService';
 import type { Patient, Doctor, DashboardStats } from '@/services/adminService';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Alert } from '@/components/ui/Alert';
-import { Users, UserPlus, Activity, UserX, Stethoscope } from 'lucide-react';
+import { Users, UserPlus, Activity, UserX, Stethoscope, AlertTriangle } from 'lucide-react';
 
 export const AdminDashboard = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -35,6 +35,7 @@ export const AdminDashboard = () => {
     totalCount: 0,
     totalPages: 0,
   });
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   // Delete user state
   const [deleteTarget, setDeleteTarget] = useState<{
@@ -59,7 +60,7 @@ export const AdminDashboard = () => {
 
       const [statsData, patientsData, doctorsData] = await Promise.all([
         adminService.getDashboardStats(),
-        adminService.getAllPatients(pagination.page, pagination.limit),
+        adminService.getAllPatients(pagination.page, pagination.limit, false, statusFilter),
         adminService.getAllDoctors(),
       ]);
 
@@ -77,7 +78,12 @@ export const AdminDashboard = () => {
 
   useEffect(() => {
     fetchData();
-  }, [pagination.page]);
+  }, [pagination.page, statusFilter]);
+
+  const handleStatusFilterChange = (newStatus: string) => {
+    setStatusFilter(newStatus);
+    setPagination((prev) => ({ ...prev, page: 1 }));
+  };
 
   const handleReassign = (patient: Patient) => {
     setSelectedPatient(patient);
@@ -113,7 +119,8 @@ export const AdminDashboard = () => {
       const patientsData = await adminService.getAllPatients(
         pagination.page,
         pagination.limit,
-        true // includeStripeData
+        true, // includeStripeData
+        statusFilter
       );
 
       setPatients(patientsData.patients);
@@ -211,6 +218,30 @@ export const AdminDashboard = () => {
               </CardContent>
             </Card>
 
+            <Card
+              className={stats?.pastDueSubscriptions ? 'cursor-pointer border-amber-200 bg-amber-50' : ''}
+              onClick={() => {
+                if (!stats?.pastDueSubscriptions) return;
+                setActiveTab('patients');
+                handleStatusFilterChange('past_due');
+              }}
+            >
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Past Due Subscriptions
+                </CardTitle>
+                <AlertTriangle className={`h-4 w-4 ${stats?.pastDueSubscriptions ? 'text-amber-600' : 'text-muted-foreground'}`} />
+              </CardHeader>
+              <CardContent>
+                <div className={`text-2xl font-bold ${stats?.pastDueSubscriptions ? 'text-amber-700' : ''}`}>
+                  {stats?.pastDueSubscriptions || 0}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Failed payments being retried
+                </p>
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
@@ -246,6 +277,8 @@ export const AdminDashboard = () => {
                 pagination={pagination}
                 onPageChange={handlePageChange}
                 onRefresh={fetchData}
+                statusFilter={statusFilter}
+                onStatusFilterChange={handleStatusFilterChange}
               />
             </CardContent>
           </Card>

@@ -26,6 +26,7 @@ export type DashboardStats = {
   totalDoctors: number;
   unassignedPatients: number;
   activeSubscriptions: number;
+  pastDueSubscriptions: number;
   totalProviders: number;
 };
 
@@ -120,11 +121,12 @@ export const adminService = {
   getAllPatients: async (
     page: number = 1,
     limit: number = 20,
-    includeStripeData: boolean = false
+    includeStripeData: boolean = false,
+    status?: string
   ): Promise<PaginatedPatientsResponse> => {
-    const response = await api.get('/api/admin/patients', {
-      params: { page, limit, includeStripeData }
-    });
+    const params: Record<string, any> = { page, limit, includeStripeData };
+    if (status && status !== 'all') params.status = status;
+    const response = await api.get('/api/admin/patients', { params });
     return response.data;
   },
 
@@ -160,6 +162,15 @@ export const adminService = {
    */
   getPatientSubscriptionDetails: async (patientId: string): Promise<PatientSubscriptionDetailsResponse> => {
     const response = await api.get(`/api/admin/patients/${patientId}/subscription-details`);
+    return response.data;
+  },
+
+  /**
+   * Manually send a "payment failed" email to a patient.
+   * Optionally override the recipient email address.
+   */
+  sendPaymentFailedEmail: async (patientId: string, email?: string): Promise<{ success: boolean; message: string; sentTo: string }> => {
+    const response = await api.post(`/api/admin/patients/${patientId}/send-payment-failed-email`, email ? { email } : {});
     return response.data;
   },
 
