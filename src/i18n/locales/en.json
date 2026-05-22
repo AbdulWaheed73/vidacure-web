@@ -51,12 +51,12 @@
     "lifestylePrice": "495",
     "lifestyleOriginalPrice": "695",
     "lifestyleCurrency": "SEK/mo",
-    "lifestyleDescription": "Your all-in-one access to our medical treatment and personal lifestyle coaching team. No obligation — cancel anytime.",
+    "lifestyleDescription": "Your all-in-one access to our medical treatment and personal lifestyle coaching team.",
     "medicalBadge": "Lifestyle Program Membership",
     "medicalPrice": "895",
     "medicalOriginalPrice": "1095",
     "medicalCurrency": "SEK/mo",
-    "medicalDescription": "Your access to medical treatment and support. No obligation — cancel anytime.",
+    "medicalDescription": "Your access to medical treatment and support.",
     "includes": "Includes:",
     "getStarted": "Get Started",
     "promoLabel": "{{discount}} off for 3 months — use code at checkout",
@@ -65,15 +65,15 @@
     "features": {
       "initialAssessment": "Initial Health Assessment & doctor consultation",
       "personalizedPlan": "medication prescription",
-      "personalizedLifestylePlan": "Personalized lifestyle plan",
+      "personalizedLifestylePlan": "Personalized Treatment Plan",
       "medicalCheckins": "Regular Medical Check-ins",
-      "unlimitedMessaging": "Unlimited Care Team Messaging",
+      "unlimitedMessaging": "Unlimited contact with your care team",
       "progressTracking": "Ongoing Progress Tracking",
       "nutritionCoaching": "Nutrition & workout coaching",
-      "doctorConsultation": "Initial Doctor Consultation",
-      "treatmentPlan": "Personalized Treatment Plan",
+      "doctorConsultation": "Initial Health Assessment & doctor consultation",
+      "treatmentPlan": "Personalized lifestyle plan",
       "glp1Medication": "Medication Prescription",
-      "labTestingAndMiniCheck": "Lab testing and mini health check"
+      "labTestingAndMiniCheck": "Lab testing and health check"
     }
   },
   "faq": {
@@ -1773,6 +1773,7 @@
     "save": "Save",
     "back": "Back",
     "next": "Next",
-    "kg": "Kg"
+    "kg": "Kg",
+    "scrollToEnd": "Go to bottom of page"
   }
 }

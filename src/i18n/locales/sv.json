@@ -51,12 +51,12 @@
     "lifestylePrice": "495",
     "lifestyleOriginalPrice": "695",
     "lifestyleCurrency": "SEK/mån",
-    "lifestyleDescription": "Din allt-i-ett tillgång till vår medicinska behandling och personligt livsstilscoachingteam. Ingen bindningstid — avsluta när du vill.",
+    "lifestyleDescription": "Din allt-i-ett-tillgång till vår medicinska behandling och personlig livsstilscoachingteam.",
     "medicalBadge": "Livsstilsprogram medlemskap",
     "medicalPrice": "895",
     "medicalOriginalPrice": "1095",
     "medicalCurrency": "SEK/mån",
-    "medicalDescription": "Din tillgång till medicinsk behandling och stöd. Ingen bindningstid — avsluta när du vill.",
+    "medicalDescription": "Din tillgång till medicinsk behandling och stöd.",
     "includes": "Inkluderar:",
     "getStarted": "Kom igång",
     "promoLabel": "{{discount}} rabatt i 3 månader — använd kod vid betalning",
@@ -64,16 +64,16 @@
     "maintenanceNote": "Underhållsprogrammets pris blir lägre",
     "features": {
       "initialAssessment": "Initial hälsobedömning & läkarkonsultation",
-      "personalizedPlan": "Recept förskrivning",
-      "personalizedLifestylePlan": "Personlig livsstilsplan",
+      "personalizedPlan": "Receptförskrivning",
+      "personalizedLifestylePlan": "Personlig behandlingsplan",
       "medicalCheckins": "Regelbundna medicinska kontroller",
-      "unlimitedMessaging": "Obegränsade vårdteamsmeddelanden",
-      "progressTracking": "Pågående framstegsuppföljning",
+      "unlimitedMessaging": "Obegränsad kontakt med ditt vårdteam",
+      "progressTracking": "Löpande framstegsuppföljning",
       "nutritionCoaching": "Närings- och träningscoaching",
-      "doctorConsultation": "Initial läkarkonsultation",
-      "treatmentPlan": "Personlig behandlingsplan",
-      "glp1Medication": "Recept förskrivning",
-      "labTestingAndMiniCheck": "Provtagning och mini-hälsokontroll"
+      "doctorConsultation": "Initial hälsobedömning & läkarkonsultation",
+      "treatmentPlan": "Personlig livsstilsplan",
+      "glp1Medication": "Receptförskrivning",
+      "labTestingAndMiniCheck": "Provtagning och hälsokontroll"
     }
   },
   "faq": {
@@ -1773,6 +1773,7 @@
     "save": "Spara",
     "back": "Tillbaka",
     "next": "Nästa",
-    "kg": "kg"
+    "kg": "kg",
+    "scrollToEnd": "Gå till slutet av sidan"
   }
 }

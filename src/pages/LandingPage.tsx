@@ -11,6 +11,7 @@ import PricingSection from "@/components/layout/Pricing";
 import HealthJournalSection from "@/components/layout/Journal";
 import FAQSection from "@/components/layout/FAQ";
 import FooterSection from "@/components/layout/Footer";
+import ScrollToEndButton from "@/components/layout/ScrollToEndButton";
 import { SEOHead } from "@/components/seo/SEOHead";
 import { createOrganizationSchema } from "@/utils/structuredData";
 import { useTranslation } from "react-i18next";
@@ -76,10 +77,11 @@ export const LandingPage = () => {
         <div id="faq" className="scroll-mt-16">
           <FAQSection />
         </div>
-        <div>
+        <div id="footer">
           <FooterSection />
         </div>
       </div>
+      <ScrollToEndButton targetId="footer" />
     </>
   );
 };
