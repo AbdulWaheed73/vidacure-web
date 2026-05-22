@@ -43,6 +43,9 @@ const DoctorPrescriptions = () => {
   const pending = data?.pages?.[0]?.data.pendingRequests ?? [];
   const history = (data?.pages ?? []).flatMap((p) => p.data.historyRequests);
 
+  console.log('[DoctorPrescriptions] pages=%s firstPageData=%o pending=%s history=%s',
+    data?.pages?.length, data?.pages?.[0]?.data, pending.length, history.length);
+
   const handleReview = (request: DoctorPrescriptionRequest) => {
     setSelectedRequest(request);
     setModalOpen(true);

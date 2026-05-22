@@ -261,6 +261,9 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
   const pendingCount = firstPage?.pendingCount ?? 0;
   const hasHistory = (firstPage?.totalCount ?? 0) > pendingRequests.length;
 
+  console.log('[DoctorDashboard] firstPage=%o pendingRequests=%s pendingCount=%s hasHistory=%s',
+    firstPage, pendingRequests.length, pendingCount, hasHistory);
+
   const conversations = conversationsData ?? [];
   const { data: unreadCounts } = useChatUnreadCounts(true);
 
