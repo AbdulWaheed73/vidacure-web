@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronsDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 
 type ScrollToEndButtonProps = {
   /** id of the element at the end of the page to scroll to */

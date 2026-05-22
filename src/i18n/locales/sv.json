@@ -965,6 +965,7 @@
     "usageInstructions": "Anteckningar",
     "usagePlaceholder": "Anteckningar till patienten...",
     "dateIssued": "Utfärdat *",
+    "dateIssuedPlaceholder": "Välj ett datum",
     "validTill": "Giltigt till *",
     "medicationNameLabel": "Läkemedelsnamn",
     "dosageLabel": "Dosering",
@@ -1009,6 +1010,8 @@
     "medication": "Läkemedel",
     "dosage": "Dosering",
     "instructions": "Instruktioner",
+    "loadMore": "Ladda fler",
+    "loading": "Laddar...",
     "loadFailed": "Kunde inte ladda receptförfrågningar"
   },
   "doctorAppointments": {

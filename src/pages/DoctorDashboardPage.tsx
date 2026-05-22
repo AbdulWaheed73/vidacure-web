@@ -210,7 +210,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
   const { t } = useTranslation();
 
   const { data: meetingsData, isLoading: meetingsLoading } = useDoctorMeetings();
-  const { data: prescriptionsData, isLoading: prescriptionsLoading } = useDoctorPrescriptions({ limit: 3 });
+  const { data: prescriptionsData, isLoading: prescriptionsLoading } = useDoctorPrescriptions();
   const { data: conversationsData, isLoading: conversationsLoading } = useDoctorConversations();
   const approveMutation = useApprovePrescription();
 
@@ -254,8 +254,12 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
     .filter((m) => m.status !== 'canceled' && new Date(m.startTime) >= startOfToday)
     .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
-  const prescriptionRequests = prescriptionsData?.data?.prescriptionRequests ?? [];
-  const pendingCount = prescriptionsData?.data?.pendingCount ?? 0;
+  // All pending requests come back in full on the first page. History lives on
+  // the dedicated Prescriptions page, so we just link there when any exists.
+  const firstPage = prescriptionsData?.pages?.[0]?.data;
+  const pendingRequests = firstPage?.pendingRequests ?? [];
+  const pendingCount = firstPage?.pendingCount ?? 0;
+  const hasHistory = (firstPage?.totalCount ?? 0) > pendingRequests.length;
 
   const conversations = conversationsData ?? [];
   const { data: unreadCounts } = useChatUnreadCounts(true);
@@ -326,20 +330,22 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
                 </div>
               ))}
             </div>
-          ) : prescriptionRequests.length === 0 ? (
-            <p className="text-[#b0b0b0] font-manrope text-sm">{t('doctorDashboard.noPrescriptionRequests')}</p>
           ) : (
             <div>
-              {prescriptionRequests.map((request) => (
-                <PrescriptionRow
-                  key={request._id}
-                  request={request}
-                  onReview={() => handleReview(request)}
-                  onOpenPatient={() => openPatientProfile(request.patient.id)}
-                  t={t}
-                />
-              ))}
-              {(prescriptionsData?.data?.hasMore) && (
+              {pendingRequests.length === 0 ? (
+                <p className="text-[#b0b0b0] font-manrope text-sm">{t('doctorDashboard.noPrescriptionRequests')}</p>
+              ) : (
+                pendingRequests.map((request) => (
+                  <PrescriptionRow
+                    key={request._id}
+                    request={request}
+                    onReview={() => handleReview(request)}
+                    onOpenPatient={() => openPatientProfile(request.patient.id)}
+                    t={t}
+                  />
+                ))
+              )}
+              {hasHistory && (
                 <button
                   onClick={() => navigate('/dashboard/doctor/prescriptions')}
                   className="w-full py-3 mt-3 text-[#005044] font-sora font-semibold text-sm hover:bg-[#f0f7f4] rounded-2xl transition-colors"

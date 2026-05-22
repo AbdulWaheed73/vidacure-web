@@ -46,16 +46,18 @@ export type DoctorPrescriptionStats = {
 export type DoctorPrescriptionResponse = {
   success: boolean;
   data: {
-    prescriptionRequests: DoctorPrescriptionRequest[];
+    // Pending / under-review requests — always returned in full.
+    pendingRequests: DoctorPrescriptionRequest[];
+    // One page of already-actioned history (loaded incrementally via "Load more").
+    historyRequests: DoctorPrescriptionRequest[];
     totalCount: number;
     pendingCount: number;
     approvedCount: number;
     deniedCount: number;
     underReviewCount: number;
     page: number;
-    limit: number;
-    totalPages: number;
     hasMore: boolean;
+    nextPage: number | null;
   };
 };
 

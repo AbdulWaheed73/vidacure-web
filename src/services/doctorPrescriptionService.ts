@@ -4,9 +4,10 @@ import type { DoctorPrescriptionResponse, UpdatePrescriptionStatusData } from '.
 
 
 export const doctorPrescriptionService = {
-  // Get prescription requests for the doctor's assigned patients
-  getDoctorPrescriptionRequests: async (params?: { page?: number; limit?: number }): Promise<DoctorPrescriptionResponse> => {
-    const response = await api.get('/api/doctor/prescriptions', { params });
+  // Get prescription requests for the doctor's assigned patients.
+  // Pending requests always come back in full; `page` only paginates the history.
+  getDoctorPrescriptionRequests: async (page: number = 1, limit: number = 10): Promise<DoctorPrescriptionResponse> => {
+    const response = await api.get('/api/doctor/prescriptions', { params: { page, limit } });
     return response.data;
   },
 

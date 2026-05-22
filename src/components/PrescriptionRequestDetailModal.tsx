@@ -26,7 +26,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/Alert';
 import type { DoctorPrescriptionRequest, PrescriptionRequestDetailModalProps } from '@/types/doctor-prescription-types';
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
-import { User, Scale, AlertTriangle, Calendar, Pill, AlertCircle } from 'lucide-react';
+import { User, Scale, AlertTriangle, Calendar as CalendarIcon, Pill, AlertCircle } from 'lucide-react';
+import { format } from 'date-fns';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 type PrescriptionFormValues = {
   medicationName: string;
@@ -268,13 +272,37 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xs font-manrope text-[#282828]">{t('doctorPrescriptionModal.dateIssued')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            type="date"
-                            className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
-                          />
-                        </FormControl>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <button
+                                type="button"
+                                className={cn(
+                                  "h-9 w-full text-sm rounded-xl border border-[#e0e0e0] bg-white px-3 font-manrope text-left flex items-center justify-between gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#005044]",
+                                  !field.value && "text-[#999]"
+                                )}
+                              >
+                                <span>
+                                  {field.value
+                                    ? format(new Date(field.value), "yyyy-MM-dd")
+                                    : t('doctorPrescriptionModal.dateIssuedPlaceholder')}
+                                </span>
+                                <CalendarIcon className="h-4 w-4 shrink-0 text-[#666]" />
+                              </button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value ? new Date(field.value) : undefined}
+                              onSelect={(date) => field.onChange(date ? format(date, "yyyy-MM-dd") : "")}
+                              captionLayout="dropdown"
+                              defaultMonth={field.value ? new Date(field.value) : new Date()}
+                              startMonth={new Date(2020, 0, 1)}
+                              endMonth={new Date(2030, 11, 31)}
+                            />
+                          </PopoverContent>
+                        </Popover>
                         <FormMessage className="text-xs" />
                       </FormItem>
                     )}
@@ -337,7 +365,7 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
           {/* Timeline */}
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#b0b0b0] font-manrope">
             <div className="flex items-center gap-1">
-              <Calendar className="w-3 h-3 shrink-0" />
+              <CalendarIcon className="w-3 h-3 shrink-0" />
               <span>{t('doctorPrescriptionModal.submitted')} {formatDate(request.createdAt)}</span>
             </div>
             {request.updatedAt !== request.createdAt && (

@@ -19,10 +19,13 @@ export const useDoctorMeetings = () => {
   });
 };
 
-export const useDoctorPrescriptions = (params?: { page?: number; limit?: number }) => {
-  return useQuery({
-    queryKey: [...queryKeys.doctorPrescriptions, params],
-    queryFn: () => doctorPrescriptionService.getDoctorPrescriptionRequests(params),
+export const useDoctorPrescriptions = () => {
+  return useInfiniteQuery({
+    queryKey: queryKeys.doctorPrescriptions,
+    queryFn: ({ pageParam }) => doctorPrescriptionService.getDoctorPrescriptionRequests(pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.data.hasMore ? lastPage.data.nextPage ?? undefined : undefined,
   });
 };
 

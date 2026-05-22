@@ -965,6 +965,7 @@
     "usageInstructions": "Notes",
     "usagePlaceholder": "Notes for the patient...",
     "dateIssued": "Date Issued *",
+    "dateIssuedPlaceholder": "Pick a date",
     "validTill": "Valid Till *",
     "medicationNameLabel": "Medication Name",
     "dosageLabel": "Dosage",
@@ -1009,6 +1010,8 @@
     "medication": "Medication",
     "dosage": "Dosage",
     "instructions": "Instructions",
+    "loadMore": "Load more",
+    "loading": "Loading...",
     "loadFailed": "Failed to load prescription requests"
   },
   "doctorAppointments": {

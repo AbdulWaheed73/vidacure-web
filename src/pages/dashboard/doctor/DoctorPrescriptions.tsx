@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -12,7 +12,16 @@ import { RefreshCw, ArrowUpRight } from 'lucide-react';
 
 const DoctorPrescriptions = () => {
   const { t } = useTranslation();
-  const { data, isLoading, error, refetch, isRefetching } = useDoctorPrescriptions();
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+    isRefetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useDoctorPrescriptions();
   const approveMutation = useApprovePrescription();
   const [selectedRequest, setSelectedRequest] = useState<DoctorPrescriptionRequest | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -29,20 +38,10 @@ const DoctorPrescriptions = () => {
     if (!open) setProfilePatientId(null);
   };
 
-  const requests = data?.data?.prescriptionRequests ?? [];
-
-  const { pending, history } = useMemo(() => {
-    const p: DoctorPrescriptionRequest[] = [];
-    const h: DoctorPrescriptionRequest[] = [];
-    for (const r of requests) {
-      if (r.status === PrescriptionRequestStatus.PENDING || r.status === PrescriptionRequestStatus.UNDER_REVIEW) {
-        p.push(r);
-      } else {
-        h.push(r);
-      }
-    }
-    return { pending: p, history: h };
-  }, [requests]);
+  // Pending requests always arrive in full on the first page; history accumulates
+  // across pages as the doctor clicks "Load more".
+  const pending = data?.pages?.[0]?.data.pendingRequests ?? [];
+  const history = (data?.pages ?? []).flatMap((p) => p.data.historyRequests);
 
   const handleReview = (request: DoctorPrescriptionRequest) => {
     setSelectedRequest(request);
@@ -260,6 +259,25 @@ const DoctorPrescriptions = () => {
               </div>
             )}
           </div>
+
+          {hasNextPage && (
+            <div className="flex justify-center pt-4">
+              <button
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="bg-[#005044] text-white rounded-full px-8 py-3 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors flex items-center gap-2"
+              >
+                {isFetchingNextPage ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    {t('doctorPrescriptions.loading')}
+                  </>
+                ) : (
+                  t('doctorPrescriptions.loadMore')
+                )}
+              </button>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
 
