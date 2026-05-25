@@ -911,6 +911,7 @@
     "prescriptionRequests": "Prescription requests",
     "prescriptionRequest": "Prescription Request",
     "activePrescription": "Active prescription",
+    "activeBadge": "Active",
     "dosage": "Dosage",
     "weightLabel": "Weight",
     "requested": "Requested",

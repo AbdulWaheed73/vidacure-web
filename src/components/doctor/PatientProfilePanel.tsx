@@ -217,17 +217,24 @@ const statusStyles: Record<string, string> = {
   under_review: 'bg-blue-100 text-blue-800 border-blue-200',
 };
 
-const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry; t: (key: string) => string; dateLocale: string }> = ({ request, t, dateLocale }) => {
+const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry; t: (key: string) => string; dateLocale: string; isActive?: boolean }> = ({ request, t, dateLocale, isActive = false }) => {
   const style = statusStyles[request.status] ?? 'bg-gray-100 text-gray-800 border-gray-200';
   return (
-    <div className="bg-white rounded-xl border border-[#e0e0e0] p-4">
-      <div className="flex items-center justify-between mb-2">
+    <div className={`bg-white rounded-xl border p-4 ${isActive ? 'border-green-300 ring-1 ring-green-200' : 'border-[#e0e0e0]'}`}>
+      <div className="flex items-center justify-between mb-2 gap-2">
         <span className="font-sora font-medium text-sm text-[#282828]">
           {request.medicationName ?? t('doctorPatients.prescriptionRequest')}
         </span>
-        <Badge className={`${style} text-[10px] px-2 py-0.5 capitalize`}>
-          {request.status.replace('_', ' ')}
-        </Badge>
+        <div className="flex items-center gap-1.5 shrink-0">
+          {isActive && (
+            <Badge className="bg-green-100 text-green-800 border-green-200 text-[10px] px-2 py-0.5">
+              {t('doctorPatients.activeBadge')}
+            </Badge>
+          )}
+          <Badge className={`${style} text-[10px] px-2 py-0.5 capitalize`}>
+            {request.status.replace('_', ' ')}
+          </Badge>
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-[#b0b0b0] font-manrope">
         {request.dosage && (
@@ -576,26 +583,38 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                   <WeightChart weightHistory={profile.weightHistory} t={t} dateLocale={dateLocale} />
 
                   {/* Prescriptions */}
-                  {profile.prescriptionRequests.length > 0 && (
-                    <div>
-                      <Button
-                        variant="link"
-                        onClick={() => {
-                          onOpenChange(false);
-                          navigate('/dashboard/doctor/prescriptions');
-                        }}
-                        className="font-sora font-semibold text-sm text-[#1F7A5C] hover:text-[#155c44] mb-3 px-0 h-auto"
-                      >
-                        {t('doctorPatients.prescriptionRequests')}
-                        <ArrowUpRight className="size-4" />
-                      </Button>
-                      <div className="space-y-2">
-                        {profile.prescriptionRequests.map((req, i) => (
-                          <PrescriptionCard key={req.id ?? i} request={req} t={t} dateLocale={dateLocale} />
-                        ))}
+                  {profile.prescriptionRequests.length > 0 && (() => {
+                    // Mirror the patient view: the first approved request is the active one.
+                    const activeRequestId = profile.prescriptionRequests.find(
+                      (r) => r.status === 'approved'
+                    )?.id;
+                    return (
+                      <div>
+                        <Button
+                          variant="link"
+                          onClick={() => {
+                            onOpenChange(false);
+                            navigate('/dashboard/doctor/prescriptions');
+                          }}
+                          className="font-sora font-semibold text-sm text-[#1F7A5C] hover:text-[#155c44] mb-3 px-0 h-auto"
+                        >
+                          {t('doctorPatients.prescriptionRequests')}
+                          <ArrowUpRight className="size-4" />
+                        </Button>
+                        <div className="space-y-2">
+                          {profile.prescriptionRequests.map((req, i) => (
+                            <PrescriptionCard
+                              key={req.id ?? i}
+                              request={req}
+                              t={t}
+                              dateLocale={dateLocale}
+                              isActive={!!req.id && req.id === activeRequestId}
+                            />
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    );
+                  })()}
 
                   {/* Active Prescription */}
                   {profile.prescription && (
