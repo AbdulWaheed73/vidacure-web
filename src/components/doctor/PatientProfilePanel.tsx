@@ -49,6 +49,11 @@ type PatientProfilePanelProps = {
 
 const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[]; t: (key: string) => string; dateLocale: string }> = ({ weightHistory, t, dateLocale }) => {
   const [timeRange, setTimeRange] = useState('8w');
+  const userPickedRangeRef = React.useRef(false);
+  const handleRangeChange = (value: string) => {
+    userPickedRangeRef.current = true;
+    setTimeRange(value);
+  };
 
   const chartConfig = {
     weight: {
@@ -58,18 +63,55 @@ const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[]; t: (key: stri
   } satisfies ChartConfig;
 
   const today = new Date();
-  let daysToSubtract = 56;
-  if (timeRange === '2w') daysToSubtract = 14;
-  else if (timeRange === '4w') daysToSubtract = 28;
+  const rangeDays: Record<string, number> = {
+    '2w': 14, '4w': 28, '8w': 56, '6m': 180, '1y': 365, '2y': 730, '5y': 1825
+  };
+  const rangeLabelKey: Record<string, string> = {
+    '2w': 'last2Weeks',
+    '4w': 'last4Weeks',
+    '8w': 'last2Months',
+    '6m': 'last6Months',
+    '1y': 'lastYear',
+    '2y': 'last2Years',
+    '5y': 'last5Years'
+  };
+
+  const allTimeSorted = [...weightHistory]
+    .filter((e) => !!e.date)
+    .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime());
+  const oldestEntryDate = allTimeSorted.length > 0 ? new Date(allTimeSorted[0].date!) : null;
+  const ageInDays = oldestEntryDate
+    ? Math.floor((today.getTime() - oldestEntryDate.getTime()) / 86400000)
+    : 0;
+  const availableRanges: string[] = ['2w', '4w', '8w'];
+  if (ageInDays > 60) availableRanges.push('6m');
+  if (ageInDays > 180) availableRanges.push('1y');
+  if (ageInDays > 365) availableRanges.push('2y');
+  if (ageInDays > 730) availableRanges.push('5y');
+  const largestAvailableRange = availableRanges[availableRanges.length - 1];
+
+  React.useEffect(() => {
+    if (!userPickedRangeRef.current && allTimeSorted.length > 0) {
+      setTimeRange(largestAvailableRange);
+    }
+  }, [largestAvailableRange, allTimeSorted.length]);
+
+  const effectiveRange = availableRanges.includes(timeRange) ? timeRange : largestAvailableRange;
+  const daysToSubtract = rangeDays[effectiveRange] ?? 56;
 
   const cutoffDate = new Date(today);
   cutoffDate.setDate(cutoffDate.getDate() - daysToSubtract);
+
+  // End-of-day local upper bound so entries dated today (stored at 00:00 UTC)
+  // aren't filtered out when UTC is still on the previous calendar day.
+  const upperBound = new Date(today);
+  upperBound.setHours(23, 59, 59, 999);
 
   const filteredData = weightHistory
     .filter((entry) => {
       if (!entry.date) return false;
       const itemDate = new Date(entry.date);
-      return itemDate >= cutoffDate && itemDate <= today;
+      return itemDate >= cutoffDate && itemDate <= upperBound;
     })
     .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime());
 
@@ -78,7 +120,7 @@ const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[]; t: (key: stri
       ? Math.round((filteredData[0].weight - filteredData[filteredData.length - 1].weight) * 10) / 10
       : 0;
 
-  const weeksLabel = timeRange === '2w' ? t('doctorPatients.2weeks') : timeRange === '4w' ? t('doctorPatients.4weeks') : t('doctorPatients.8weeks');
+  const weeksLabel = t(`doctorPatients.${rangeLabelKey[effectiveRange]}`).replace(/^(Last|Senaste)\s+/i, '').toLowerCase();
 
   const weights = filteredData.map((d) => d.weight);
   const minWeight = weights.length > 0 ? Math.floor(Math.min(...weights) - 2) : 90;
@@ -97,14 +139,16 @@ const WeightChart: React.FC<{ weightHistory: WeightHistoryEntry[]; t: (key: stri
     <div className="bg-white rounded-2xl border border-[#e0e0e0] p-5">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-sora font-semibold text-sm text-[#282828]">{t('doctorPatients.weightProgress')}</h3>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-[130px] h-8 text-xs rounded-lg">
+        <Select value={effectiveRange} onValueChange={handleRangeChange}>
+          <SelectTrigger className="w-[150px] h-8 text-xs rounded-lg">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
-            <SelectItem value="8w" className="rounded-lg text-xs">{t('doctorPatients.last2Months')}</SelectItem>
-            <SelectItem value="4w" className="rounded-lg text-xs">{t('doctorPatients.last4Weeks')}</SelectItem>
-            <SelectItem value="2w" className="rounded-lg text-xs">{t('doctorPatients.last2Weeks')}</SelectItem>
+            {availableRanges.map((range) => (
+              <SelectItem key={range} value={range} className="rounded-lg text-xs">
+                {t(`doctorPatients.${rangeLabelKey[range]}`)}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

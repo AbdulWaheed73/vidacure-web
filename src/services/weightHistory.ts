@@ -16,3 +16,9 @@ export const getWeightHistory = async (): Promise<WeightHistoryResponse> => {
   const response = await api.get('/api/patient/weight-history');
   return response.data;
 };
+
+// Delete weight history entry by date (yyyy-mm-dd)
+export const deleteWeightHistory = async (date: string): Promise<{ message: string }> => {
+  const response = await api.delete(`/api/patient/weight-history/${date}`);
+  return response.data;
+};

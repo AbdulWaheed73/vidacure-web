@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TrendingUp, ShieldAlert, FileText } from 'lucide-react';
+import { TrendingUp, ShieldAlert, FileText, CalendarIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis } from 'recharts';
@@ -12,9 +12,23 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/Button';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { addWeightHistory, getWeightHistory } from '@/services/weightHistory';
+import { addWeightHistory, getWeightHistory, deleteWeightHistory } from '@/services/weightHistory';
 import { treatmentJournalService } from '@/services/treatmentJournalService';
 import { queryKeys } from '@/lib/queryClient';
 import DOMPurify from 'dompurify';
@@ -41,6 +55,11 @@ export const ProgressPage: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [timeRange, setTimeRange] = React.useState("8w");
+  const userPickedRangeRef = React.useRef(false);
+  const handleRangeChange = (value: string) => {
+    userPickedRangeRef.current = true;
+    setTimeRange(value);
+  };
   const [weightHistory, setWeightHistory] = React.useState<WeightHistoryEntry[]>([]);
   const [height, setHeight] = React.useState<number>(0);
   const [loading, setLoading] = React.useState(true);
@@ -48,11 +67,30 @@ export const ProgressPage: React.FC = () => {
   const [consentRequired, setConsentRequired] = React.useState(false);
 
   // Form state
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = React.useState<{
+    weight: string;
+    sideEffects: string;
+    notes: string;
+    date: Date;
+  }>({
     weight: '',
     sideEffects: '',
-    notes: ''
+    notes: '',
+    date: new Date()
   });
+  const [datePickerOpen, setDatePickerOpen] = React.useState(false);
+  const [overwriteConfirm, setOverwriteConfirm] = React.useState<{
+    open: boolean;
+    existingWeight: number | null;
+    dateLabel: string;
+  }>({ open: false, existingWeight: null, dateLabel: '' });
+  const [deleteConfirm, setDeleteConfirm] = React.useState<{
+    open: boolean;
+    dateString: string;
+    dateLabel: string;
+    weight: number | null;
+    deleting: boolean;
+  }>({ open: false, dateString: '', dateLabel: '', weight: null, deleting: false });
 
   // Load weight history on component mount
   React.useEffect(() => {
@@ -76,28 +114,19 @@ export const ProgressPage: React.FC = () => {
     }
   };
 
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.weight || isNaN(Number(formData.weight))) {
-      toast.error(t('progress.weightValidation'));
-      return;
-    }
-
+  const persistWeightEntry = async () => {
+    const pickedDateString = format(formData.date, 'yyyy-MM-dd');
     try {
       setSaving(true);
-      // Convert lbs input to kg for backend
-      
       await addWeightHistory({
         weight: Number(formData.weight),
         sideEffects: formData.sideEffects || undefined,
-        notes: formData.notes || undefined
+        notes: formData.notes || undefined,
+        date: pickedDateString
       });
-      
-      // Reset form and reload data
-      setFormData({ weight: '', sideEffects: '', notes: '' });
+
+      setFormData({ weight: '', sideEffects: '', notes: '', date: new Date() });
       await loadWeightHistory();
-      // Invalidate dashboard queries so they refetch when navigating back
       queryClient.invalidateQueries({ queryKey: queryKeys.weightHistory });
       queryClient.invalidateQueries({ queryKey: queryKeys.patientProfile });
       toast.success(t('progress.updateSuccess'));
@@ -109,31 +138,125 @@ export const ProgressPage: React.FC = () => {
     }
   };
 
-  // Filter data based on selected time range from current date
+  const openDeleteConfirm = (entry: WeightHistoryEntry) => {
+    const dateString = new Date(entry.date).toISOString().split('T')[0];
+    setDeleteConfirm({
+      open: true,
+      dateString,
+      dateLabel: format(new Date(entry.date), 'PPP'),
+      weight: entry.weight,
+      deleting: false
+    });
+  };
+
+  const handleDeleteConfirmed = async () => {
+    if (!deleteConfirm.dateString) return;
+    try {
+      setDeleteConfirm((prev) => ({ ...prev, deleting: true }));
+      await deleteWeightHistory(deleteConfirm.dateString);
+      await loadWeightHistory();
+      queryClient.invalidateQueries({ queryKey: queryKeys.weightHistory });
+      queryClient.invalidateQueries({ queryKey: queryKeys.patientProfile });
+      toast.success(t('progress.deleteSuccess'));
+      setDeleteConfirm({ open: false, dateString: '', dateLabel: '', weight: null, deleting: false });
+    } catch (error) {
+      console.error('Error deleting weight history:', error);
+      toast.error(t('progress.deleteError'));
+      setDeleteConfirm((prev) => ({ ...prev, deleting: false }));
+    }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.weight || isNaN(Number(formData.weight))) {
+      toast.error(t('progress.weightValidation'));
+      return;
+    }
+
+    const pickedDateString = format(formData.date, 'yyyy-MM-dd');
+    const existing = weightHistory.find(
+      (entry) => new Date(entry.date).toISOString().split('T')[0] === pickedDateString
+    );
+
+    if (existing) {
+      setOverwriteConfirm({
+        open: true,
+        existingWeight: existing.weight,
+        dateLabel: format(formData.date, 'PPP')
+      });
+      return;
+    }
+
+    await persistWeightEntry();
+  };
+
+  // Filter data based on selected time range from current date.
   const today = new Date();
-  let daysToSubtract = 56; // 8 weeks (2 months)
-  
-  if (timeRange === "2w") {
-    daysToSubtract = 14; // 2 weeks
-  } else if (timeRange === "4w") {
-    daysToSubtract = 28; // 4 weeks (1 month)
-  }
-  
-  const cutoffDate = new Date(today);
-  cutoffDate.setDate(cutoffDate.getDate() - daysToSubtract);
-  
-  // Filter backend data based on time range and sort chronologically
-  const filteredData = weightHistory
-    .filter((entry) => {
-      const itemDate = new Date(entry.date);
-      return itemDate >= cutoffDate && itemDate <= today;
-    })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const rangeDays: Record<string, number> = {
+    '2w': 14,
+    '4w': 28,
+    '8w': 56,
+    '6m': 180,
+    '1y': 365,
+    '2y': 730,
+    '5y': 1825
+  };
+  const rangeLabelKey: Record<string, string> = {
+    '2w': 'last2Weeks',
+    '4w': 'lastMonth',
+    '8w': 'last2Months',
+    '6m': 'last6Months',
+    '1y': 'lastYear',
+    '2y': 'last2Years',
+    '5y': 'last5Years'
+  };
 
   // Calculate all-time stats from full weight history (not filtered by time range)
   const allTimeSorted = [...weightHistory].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
+
+  // Build the available range options based on the age of the oldest entry.
+  const oldestEntryDate = allTimeSorted.length > 0 ? new Date(allTimeSorted[0].date) : null;
+  const ageInDays = oldestEntryDate
+    ? Math.floor((today.getTime() - oldestEntryDate.getTime()) / 86400000)
+    : 0;
+  const availableRanges: string[] = ['2w', '4w', '8w'];
+  if (ageInDays > 60) availableRanges.push('6m');
+  if (ageInDays > 180) availableRanges.push('1y');
+  if (ageInDays > 365) availableRanges.push('2y');
+  if (ageInDays > 730) availableRanges.push('5y');
+
+  const largestAvailableRange = availableRanges[availableRanges.length - 1];
+
+  // Default to the largest available range when data first loads. As soon as
+  // the user picks a range manually, stop overriding their choice.
+  React.useEffect(() => {
+    if (!userPickedRangeRef.current && allTimeSorted.length > 0) {
+      setTimeRange(largestAvailableRange);
+    }
+  }, [largestAvailableRange, allTimeSorted.length]);
+
+  const effectiveRange = availableRanges.includes(timeRange) ? timeRange : largestAvailableRange;
+  const daysToSubtract = rangeDays[effectiveRange] ?? 56;
+
+  const cutoffDate = new Date(today);
+  cutoffDate.setDate(cutoffDate.getDate() - daysToSubtract);
+
+  // Upper bound is end-of-day local so entries dated "today" in the user's
+  // local timezone (stored at 00:00 UTC) are still <= today when UTC is
+  // still on the previous calendar day.
+  const upperBound = new Date(today);
+  upperBound.setHours(23, 59, 59, 999);
+
+  // Filter backend data based on time range and sort chronologically
+  const filteredData = weightHistory
+    .filter((entry) => {
+      const itemDate = new Date(entry.date);
+      return itemDate >= cutoffDate && itemDate <= upperBound;
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   const currentWeight = allTimeSorted.length > 0
     ? allTimeSorted[allTimeSorted.length - 1].weight : 0;
   const startingWeight = allTimeSorted.length > 0
@@ -148,6 +271,19 @@ export const ProgressPage: React.FC = () => {
   const rangeProgress = filteredData.length > 1
     ? Math.round((filteredData[0].weight - filteredData[filteredData.length - 1].weight) * 10) / 10
     : totalProgress;
+
+  // Formatters: positive totalProgress = weight lost; negative = weight gained.
+  // Display the delta with an explicit sign so "-12" never becomes "--12".
+  const formatDelta = (val: number): string => {
+    if (val === 0) return '0 kg';
+    return val > 0 ? `-${val} kg` : `+${Math.abs(val)} kg`;
+  };
+  const lostOrGainedLabel = totalProgress >= 0
+    ? t('progress.lostSinceStarted')
+    : t('progress.gainedSinceStarted');
+  const bmiDirectionLabel = currentBMI <= startingBMI
+    ? t('progress.downFrom')
+    : t('progress.upFrom');
 
   // Get min and max for Y-axis domain
   const weights = filteredData.map(d => d.weight);
@@ -199,23 +335,19 @@ export const ProgressPage: React.FC = () => {
                 {t('progress.cardDescription')}
               </CardDescription>
             </div>
-            <Select value={timeRange} onValueChange={setTimeRange}>
+            <Select value={effectiveRange} onValueChange={handleRangeChange}>
               <SelectTrigger
-                className="w-[160px] rounded-lg sm:ml-auto"
+                className="w-[180px] rounded-lg sm:ml-auto"
                 aria-label={t('progress.timeRangeLabel')}
               >
                 <SelectValue placeholder={t('progress.last2Months')} />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
-                <SelectItem value="8w" className="rounded-lg">
-                  {t('progress.last2Months')}
-                </SelectItem>
-                <SelectItem value="4w" className="rounded-lg">
-                  {t('progress.lastMonth')}
-                </SelectItem>
-                <SelectItem value="2w" className="rounded-lg">
-                  {t('progress.last2Weeks')}
-                </SelectItem>
+                {availableRanges.map((range) => (
+                  <SelectItem key={range} value={range} className="rounded-lg">
+                    {t(`progress.${rangeLabelKey[range]}`)}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </CardHeader>
@@ -275,7 +407,17 @@ export const ProgressPage: React.FC = () => {
                     strokeWidth={2}
                     fill="url(#progressWeightGradient)"
                     dot={{ fill: "var(--color-weight)", strokeWidth: 2, r: 3 }}
-                    activeDot={{ r: 5, stroke: "var(--color-weight)", strokeWidth: 2, fill: "white" }}
+                    activeDot={{
+                      r: 6,
+                      stroke: "var(--color-weight)",
+                      strokeWidth: 2,
+                      fill: "white",
+                      style: { cursor: 'pointer' },
+                      onClick: ((props: unknown) => {
+                        const payload = (props as { payload?: WeightHistoryEntry })?.payload;
+                        if (payload) openDeleteConfirm(payload);
+                      }) as never
+                    }}
                   />
                 </AreaChart>
               </ChartContainer>
@@ -283,9 +425,9 @@ export const ProgressPage: React.FC = () => {
             </div>
             
             <div className="flex items-center text-sm text-teal-600 font-medium">
-              <span>-{rangeProgress} kg</span>
+              <span>{formatDelta(rangeProgress)}</span>
               <span className="ml-2 text-gray-500">
-                {t('progress.progressInTime')} {timeRange === "2w" ? `2 ${t('progress.weeks')}` : timeRange === "4w" ? `4 ${t('progress.weeks')}` : `8 ${t('progress.weeks')}`}
+                {t('progress.progressInTime')} {t(`progress.${rangeLabelKey[effectiveRange]}`).replace(/^(Last|Senaste)\s+/i, '').toLowerCase()}
               </span>
             </div>
           </CardContent>
@@ -299,12 +441,12 @@ export const ProgressPage: React.FC = () => {
               <div className="flex-1 min-w-0">
                 <div className="text-base md:text-lg font-bold text-gray-800">{t('progress.totalProgress')}</div>
                 <div className="text-xs md:text-sm text-gray-500 mt-1">
-                  {allTimeSorted.length > 0 ? `${progressPercentage}${t('progress.ofTotalBodyWeight')}` : '--'}
+                  {allTimeSorted.length > 0 ? `${Math.abs(progressPercentage)}${t('progress.ofTotalBodyWeight')}` : '--'}
                 </div>
               </div>
               <div className="bg-gray-100/80 rounded-2xl px-4 py-3 flex items-center justify-center shrink-0">
                 <span className="text-xl md:text-2xl font-bold text-gray-800 whitespace-nowrap">
-                  {allTimeSorted.length > 0 ? `${totalProgress > 0 ? '-' : ''}${totalProgress} kg` : '--'}
+                  {allTimeSorted.length > 0 ? formatDelta(totalProgress) : '--'}
                 </span>
               </div>
             </CardContent>
@@ -316,7 +458,7 @@ export const ProgressPage: React.FC = () => {
               <div className="flex-1 min-w-0">
                 <div className="text-base md:text-lg font-bold text-gray-800">{t('progress.bmi')}</div>
                 <div className="text-xs md:text-sm text-gray-500 mt-1">
-                  {currentBMI > 0 ? `${t('progress.downFrom')} ${startingBMI}` : '--'}
+                  {currentBMI > 0 ? `${bmiDirectionLabel} ${startingBMI}` : '--'}
                 </div>
               </div>
               <div className="bg-gray-100/80 rounded-2xl px-4 py-3 flex items-center justify-center shrink-0">
@@ -333,7 +475,7 @@ export const ProgressPage: React.FC = () => {
               <div className="flex-1 min-w-0">
                 <div className="text-base md:text-lg font-bold text-gray-800">{t('progress.currentWeight')}</div>
                 <div className="text-xs md:text-sm text-gray-500 mt-1">
-                  {allTimeSorted.length > 0 ? `${totalProgress} ${t('progress.lostSinceStarted')}` : '--'}
+                  {allTimeSorted.length > 0 ? `${Math.abs(totalProgress)} ${lostOrGainedLabel}` : '--'}
                 </div>
               </div>
               <div className="bg-gray-100/80 rounded-2xl px-4 py-3 flex items-center justify-center shrink-0">
@@ -373,6 +515,43 @@ export const ProgressPage: React.FC = () => {
                       {t('common.kg')}
                     </span>
                   </div>
+                </div>
+
+                {/* Date */}
+                <div className="space-y-2">
+                  <Label htmlFor="entry-date" className="text-base font-medium text-gray-700">
+                    {t('progress.dateLabel')} <span className="text-red-500">*</span>
+                  </Label>
+                  <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        id="entry-date"
+                        type="button"
+                        variant="outline"
+                        className={cn(
+                          'w-full h-12 justify-start text-left font-normal',
+                          !formData.date && 'text-muted-foreground'
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {formData.date ? format(formData.date, 'PPP') : t('progress.pickDate')}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={formData.date}
+                        onSelect={(d) => {
+                          if (d) {
+                            setFormData({ ...formData, date: d });
+                            setDatePickerOpen(false);
+                          }
+                        }}
+                        disabled={{ after: new Date() }}
+                        autoFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 {/* Side Effects */}
@@ -427,6 +606,66 @@ export const ProgressPage: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+
+        <AlertDialog
+          open={overwriteConfirm.open}
+          onOpenChange={(open) => setOverwriteConfirm((prev) => ({ ...prev, open }))}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('progress.overwriteTitle')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('progress.overwriteMessage', {
+                  weight: overwriteConfirm.existingWeight ?? '',
+                  date: overwriteConfirm.dateLabel
+                })}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t('progress.overwriteCancel')}</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={async () => {
+                  setOverwriteConfirm({ open: false, existingWeight: null, dateLabel: '' });
+                  await persistWeightEntry();
+                }}
+              >
+                {t('progress.overwriteConfirm')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog
+          open={deleteConfirm.open}
+          onOpenChange={(open) => setDeleteConfirm((prev) => ({ ...prev, open }))}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('progress.deleteTitle')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('progress.deleteMessage', {
+                  weight: deleteConfirm.weight ?? '',
+                  date: deleteConfirm.dateLabel
+                })}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={deleteConfirm.deleting}>
+                {t('progress.deleteCancel')}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDeleteConfirmed();
+                }}
+                disabled={deleteConfirm.deleting}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {t('progress.deleteConfirm')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
     </div>
   );

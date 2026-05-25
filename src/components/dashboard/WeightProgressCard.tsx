@@ -14,6 +14,11 @@ export const WeightProgressCard: React.FC = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [timeRange, setTimeRange] = useState("8w");
+  const userPickedRangeRef = React.useRef(false);
+  const handleRangeChange = (value: string) => {
+    userPickedRangeRef.current = true;
+    setTimeRange(value);
+  };
   const { data, isLoading, error } = useWeightHistory();
 
   const chartConfig = {
@@ -26,17 +31,54 @@ export const WeightProgressCard: React.FC = () => {
   const weightHistory = data?.weightHistory ?? [];
 
   const today = new Date();
-  let daysToSubtract = 56;
-  if (timeRange === "2w") daysToSubtract = 14;
-  else if (timeRange === "4w") daysToSubtract = 28;
+  const rangeDays: Record<string, number> = {
+    '2w': 14, '4w': 28, '8w': 56, '6m': 180, '1y': 365, '2y': 730, '5y': 1825
+  };
+  const rangeLabelKey: Record<string, string> = {
+    '2w': 'last2Weeks',
+    '4w': 'last4Weeks',
+    '8w': 'last2Months',
+    '6m': 'last6Months',
+    '1y': 'lastYear',
+    '2y': 'last2Years',
+    '5y': 'last5Years'
+  };
+
+  const allTimeSorted = [...weightHistory].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+  const oldestEntryDate = allTimeSorted.length > 0 ? new Date(allTimeSorted[0].date) : null;
+  const ageInDays = oldestEntryDate
+    ? Math.floor((today.getTime() - oldestEntryDate.getTime()) / 86400000)
+    : 0;
+  const availableRanges: string[] = ['2w', '4w', '8w'];
+  if (ageInDays > 60) availableRanges.push('6m');
+  if (ageInDays > 180) availableRanges.push('1y');
+  if (ageInDays > 365) availableRanges.push('2y');
+  if (ageInDays > 730) availableRanges.push('5y');
+  const largestAvailableRange = availableRanges[availableRanges.length - 1];
+
+  React.useEffect(() => {
+    if (!userPickedRangeRef.current && allTimeSorted.length > 0) {
+      setTimeRange(largestAvailableRange);
+    }
+  }, [largestAvailableRange, allTimeSorted.length]);
+
+  const effectiveRange = availableRanges.includes(timeRange) ? timeRange : largestAvailableRange;
+  const daysToSubtract = rangeDays[effectiveRange] ?? 56;
 
   const cutoffDate = new Date(today);
   cutoffDate.setDate(cutoffDate.getDate() - daysToSubtract);
 
+  // End-of-day local upper bound so entries dated today (stored at 00:00 UTC)
+  // aren't filtered out when UTC is still on the previous calendar day.
+  const upperBound = new Date(today);
+  upperBound.setHours(23, 59, 59, 999);
+
   const filteredData = weightHistory
     .filter((entry) => {
       const itemDate = new Date(entry.date);
-      return itemDate >= cutoffDate && itemDate <= today;
+      return itemDate >= cutoffDate && itemDate <= upperBound;
     })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -44,7 +86,7 @@ export const WeightProgressCard: React.FC = () => {
     ? Math.round((filteredData[0].weight - filteredData[filteredData.length - 1].weight) * 10) / 10
     : 0;
 
-  const weeksLabel = timeRange === "2w" ? t('dashboard.2weeks') : timeRange === "4w" ? t('dashboard.4weeks') : t('dashboard.8weeks');
+  const weeksLabel = t(`dashboard.${rangeLabelKey[effectiveRange]}`).replace(/^(Last|Senaste)\s+/i, '').toLowerCase();
 
   const weights = filteredData.map(d => d.weight);
   const minWeight = weights.length > 0 ? Math.floor(Math.min(...weights) - 2) : 90;
@@ -89,14 +131,16 @@ export const WeightProgressCard: React.FC = () => {
     <Card className="bg-white/95 backdrop-blur-md shadow-lg col-span-1 md:col-span-2 pt-0">
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-4 sm:flex-row">
         <CardTitle className="text-lg font-manrope">{t('dashboard.myProgress')}</CardTitle>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-[160px] rounded-lg sm:ml-auto" aria-label="Select time range">
+        <Select value={effectiveRange} onValueChange={handleRangeChange}>
+          <SelectTrigger className="w-[180px] rounded-lg sm:ml-auto" aria-label="Select time range">
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
-            <SelectItem value="8w" className="rounded-lg">{t('dashboard.last2Months')}</SelectItem>
-            <SelectItem value="4w" className="rounded-lg">{t('dashboard.last4Weeks')}</SelectItem>
-            <SelectItem value="2w" className="rounded-lg">{t('dashboard.last2Weeks')}</SelectItem>
+            {availableRanges.map((range) => (
+              <SelectItem key={range} value={range} className="rounded-lg">
+                {t(`dashboard.${rangeLabelKey[range]}`)}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </CardHeader>
