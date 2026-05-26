@@ -55,6 +55,27 @@ export const useApprovePrescription = () => {
   });
 };
 
+export const useDenyPrescription = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      requestId,
+      rejectionNote,
+    }: {
+      requestId: string;
+      rejectionNote: string;
+    }) =>
+      doctorPrescriptionService.updatePrescriptionRequestStatus(
+        requestId,
+        PrescriptionRequestStatus.DENIED,
+        { rejectionNote }
+      ),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.doctorPrescriptions });
+    },
+  });
+};
+
 export const useDoctorConversations = () => {
   return useQuery({
     queryKey: queryKeys.doctorConversations,

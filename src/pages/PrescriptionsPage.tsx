@@ -522,6 +522,15 @@ export const PrescriptionsPage: React.FC = () => {
                   </div>
                 )}
 
+                {selectedRequest.status === PrescriptionRequestStatus.DENIED && selectedRequest.rejectionNote && (
+                  <div>
+                    <p className="text-xs font-semibold text-red-700 mb-0.5">{t('prescriptions.requests.rejectionReason')}</p>
+                    <p className="text-sm text-red-700 bg-red-50 border border-red-100 p-3 rounded-lg whitespace-pre-wrap break-words">
+                      {selectedRequest.rejectionNote}
+                    </p>
+                  </div>
+                )}
+
                 <div>
                   <p className="text-xs text-gray-400 mb-0.5">{t('prescriptions.submittedOn')}</p>
                   <p className="text-sm font-medium text-gray-800">{formatDate(selectedRequest.createdAt)}</p>

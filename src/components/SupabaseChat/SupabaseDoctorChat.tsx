@@ -1,5 +1,4 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, MessageSquare, Search, ArrowLeft } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
@@ -23,6 +22,7 @@ import { Button } from '../ui/Button';
 import { Badge } from '../ui/badge';
 import { MessageList } from './MessageList';
 import { MessageInput } from './MessageInput';
+import { PatientProfilePanel } from '../doctor/PatientProfilePanel';
 import type { ConversationWithDetails } from '../../types/chat-types';
 
 const formatTimeAgo = (dateString: string | null | undefined, t: (key: string) => string) => {
@@ -56,7 +56,18 @@ export const SupabaseDoctorChat: React.FC = () => {
   const [isInitializing, setIsInitializing] = useState(true);
   const [hasLoadedConversations, setHasLoadedConversations] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const navigate = useNavigate();
+  const [profilePatientId, setProfilePatientId] = useState<string | null>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const openPatientProfile = (patientId: string) => {
+    setProfilePatientId(patientId);
+    setProfileOpen(true);
+  };
+
+  const handleProfileOpenChange = (open: boolean) => {
+    setProfileOpen(open);
+    if (!open) setProfilePatientId(null);
+  };
 
   const connectionStatus = useChatStore(selectConnectionStatus);
   const conversation = useChatStore(selectConversation);
@@ -318,20 +329,13 @@ export const SupabaseDoctorChat: React.FC = () => {
                 >
                   <ArrowLeft className="h-5 w-5 text-foreground" />
                 </button>
-                <h2 className="text-lg md:text-xl font-bold text-foreground truncate">{selectedPatientName}</h2>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
                 <Button
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full px-5 border-foreground/20 hover:bg-white hidden md:inline-flex"
-                  onClick={() => {
-                    if (conversation?.patientId) {
-                      navigate(`/dashboard/doctor/patients?patientId=${conversation.patientId}`);
-                    }
-                  }}
+                  variant="ghost"
+                  onClick={() => openPatientProfile(conversation.patientId)}
+                  title={t('chat.viewProfile')}
+                  className="h-auto p-0 text-lg md:text-xl font-bold text-foreground truncate hover:bg-transparent hover:underline underline-offset-2 decoration-[#c0ebe5] decoration-2"
                 >
-                  {t('chat.viewProfile')}
+                  {selectedPatientName}
                 </Button>
               </div>
             </div>
@@ -364,6 +368,12 @@ export const SupabaseDoctorChat: React.FC = () => {
           </div>
         )}
       </div>
+
+      <PatientProfilePanel
+        patientId={profilePatientId}
+        open={profileOpen}
+        onOpenChange={handleProfileOpenChange}
+      />
     </div>
   );
 };

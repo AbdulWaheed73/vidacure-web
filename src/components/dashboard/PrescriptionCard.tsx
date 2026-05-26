@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, Pill } from 'lucide-react';
@@ -25,6 +25,14 @@ export const PrescriptionCard: React.FC = () => {
   const prescriptions = [...(data?.prescriptionRequests ?? [])].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
+
+  const [hasInitialized, setHasInitialized] = useState(false);
+  useEffect(() => {
+    if (hasInitialized || prescriptions.length === 0) return;
+    const activeIndex = prescriptions.findIndex((p) => p.status === 'approved');
+    if (activeIndex > 0) setCurrentIndex(activeIndex);
+    setHasInitialized(true);
+  }, [prescriptions, hasInitialized]);
 
   const handlePrev = () => {
     setCurrentIndex(prev => Math.max(0, prev - 1));
@@ -115,6 +123,17 @@ export const PrescriptionCard: React.FC = () => {
 
         {current.dosage && (
           <p className="text-sm text-gray-600">{t('dashboard.dosage')} {current.dosage}</p>
+        )}
+
+        {current.status === 'denied' && current.rejectionNote && (
+          <div className="bg-red-50 border border-red-100 rounded-md p-2">
+            <p className="text-xs font-semibold text-red-700 mb-0.5">
+              {t('dashboard.rejectionReason')}
+            </p>
+            <p className="text-xs text-red-700 whitespace-pre-wrap break-words line-clamp-3">
+              {current.rejectionNote}
+            </p>
+          </div>
         )}
 
         <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">

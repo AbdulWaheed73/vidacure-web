@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
-import { useDoctorPrescriptions, useApprovePrescription } from '@/hooks/useDoctorDashboardQueries';
+import { useDoctorPrescriptions, useApprovePrescription, useDenyPrescription } from '@/hooks/useDoctorDashboardQueries';
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
 import type { DoctorPrescriptionRequest } from '@/types/doctor-prescription-types';
 import { PrescriptionRequestDetailModal } from '@/components/PrescriptionRequestDetailModal';
@@ -23,6 +23,7 @@ const DoctorPrescriptions = () => {
     isFetchingNextPage,
   } = useDoctorPrescriptions();
   const approveMutation = useApprovePrescription();
+  const denyMutation = useDenyPrescription();
   const [selectedRequest, setSelectedRequest] = useState<DoctorPrescriptionRequest | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [profilePatientId, setProfilePatientId] = useState<string | null>(null);
@@ -61,6 +62,10 @@ const DoctorPrescriptions = () => {
     }
   ) => {
     await approveMutation.mutateAsync({ requestId, prescriptionData });
+  };
+
+  const handleDeny = async (requestId: string, data: { rejectionNote: string }) => {
+    await denyMutation.mutateAsync({ requestId, rejectionNote: data.rejectionNote });
   };
 
   if (isLoading) {
@@ -231,6 +236,18 @@ const DoctorPrescriptions = () => {
                       )}
                     </div>
 
+                    {/* Inline rejection note for denied items */}
+                    {request.status === PrescriptionRequestStatus.DENIED && request.rejectionNote && (
+                      <div className="bg-red-50 border border-red-100 rounded-2xl px-4 md:px-6 py-3 md:py-4 mt-3 md:mt-4">
+                        <p className="text-xs text-red-700/80 font-manrope mb-1 font-semibold">
+                          {t('doctorPrescriptions.rejectionReason')}
+                        </p>
+                        <p className="text-sm text-red-700 font-manrope whitespace-pre-wrap break-words">
+                          {request.rejectionNote}
+                        </p>
+                      </div>
+                    )}
+
                     {/* Inline prescription details for approved items */}
                     {request.status === PrescriptionRequestStatus.APPROVED &&
                       (request.medicationName || request.dosage || request.usageInstructions) && (
@@ -289,6 +306,7 @@ const DoctorPrescriptions = () => {
         onOpenChange={setModalOpen}
         request={selectedRequest}
         onApprove={handleApprove}
+        onDeny={handleDeny}
       />
 
       <PatientProfilePanel

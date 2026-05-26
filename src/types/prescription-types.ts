@@ -18,6 +18,7 @@ export type PrescriptionRequest = {
   usageInstructions?: string;
   dateIssued?: string;
   validTill?: string;
+  rejectionNote?: string;
   createdAt: string;
   updatedAt: string;
 };

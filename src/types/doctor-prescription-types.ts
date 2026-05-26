@@ -12,6 +12,7 @@ export type DoctorPrescriptionRequest = {
   usageInstructions?: string;
   dateIssued?: string;
   validTill?: string;
+  rejectionNote?: string;
   createdAt: string;
   updatedAt: string;
   patient: {
@@ -30,6 +31,7 @@ export type PrescriptionRequestDetailModalProps = {
     usageInstructions?: string;
     dateIssued: string;
   }) => Promise<void>;
+  onDeny: (requestId: string, data: { rejectionNote: string }) => Promise<void>;
 };
 
 
@@ -68,4 +70,5 @@ export type UpdatePrescriptionStatusData = {
   usageInstructions?: string;
   dateIssued?: string;
   validTill?: string;
+  rejectionNote?: string;
 };

@@ -44,10 +44,14 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
   onOpenChange,
   request,
   onApprove,
+  onDeny,
 }) => {
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [denyMode, setDenyMode] = useState(false);
+  const [rejectionNote, setRejectionNote] = useState('');
+  const [rejectionNoteError, setRejectionNoteError] = useState<string | null>(null);
 
   const prescriptionFormSchema = z.object({
     medicationName: z.string().min(1, t('doctorPrescriptionModal.validationMedicationName')),
@@ -103,7 +107,33 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
   const handleClose = () => {
     form.reset();
     setSubmitError(null);
+    setDenyMode(false);
+    setRejectionNote('');
+    setRejectionNoteError(null);
     onOpenChange(false);
+  };
+
+  const handleDenyClick = async () => {
+    const trimmed = rejectionNote.trim();
+    if (!trimmed) {
+      setRejectionNoteError(t('doctorPrescriptionModal.validationRejectionNote'));
+      return;
+    }
+    setSubmitError(null);
+    setRejectionNoteError(null);
+    try {
+      setLoading(true);
+      await onDeny(request._id, { rejectionNote: trimmed });
+      form.reset();
+      setDenyMode(false);
+      setRejectionNote('');
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error denying prescription request:', error);
+      setSubmitError(t('doctorPrescriptionModal.denyFailed'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -203,8 +233,42 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
             )}
           </div>
 
-          {/* Prescription Details - Show form for pending or existing details */}
-          {request.status === PrescriptionRequestStatus.PENDING ? (
+          {/* Rejection note (read-only) for already-denied requests */}
+          {request.status === PrescriptionRequestStatus.DENIED && request.rejectionNote && (
+            <div className="border border-red-200 bg-red-50 rounded-2xl p-4">
+              <p className="text-xs font-sora font-semibold text-red-700 mb-1">
+                {t('doctorPrescriptionModal.rejectionNoteLabel')}
+              </p>
+              <p className="text-sm text-red-700 font-manrope whitespace-pre-wrap">
+                {request.rejectionNote}
+              </p>
+            </div>
+          )}
+
+          {/* Deny mode: rejection note input */}
+          {request.status === PrescriptionRequestStatus.PENDING && denyMode && (
+            <div className="border border-red-200 bg-red-50 rounded-2xl p-4">
+              <label className="text-xs font-sora font-semibold text-red-700 mb-2 block">
+                {t('doctorPrescriptionModal.rejectionNoteLabel')}
+              </label>
+              <Textarea
+                value={rejectionNote}
+                onChange={(e) => {
+                  setRejectionNote(e.target.value);
+                  if (rejectionNoteError) setRejectionNoteError(null);
+                }}
+                placeholder={t('doctorPrescriptionModal.rejectionNotePlaceholder')}
+                rows={4}
+                className="text-sm rounded-xl border-red-200 bg-white font-manrope focus-visible:ring-red-400"
+              />
+              {rejectionNoteError && (
+                <p className="text-xs text-red-700 font-manrope mt-2">{rejectionNoteError}</p>
+              )}
+            </div>
+          )}
+
+          {/* Prescription Details - Show form for pending (approve) or existing details */}
+          {request.status === PrescriptionRequestStatus.PENDING && !denyMode ? (
             <Form {...form}>
               <div className="border border-[#e0e0e0] rounded-2xl p-4">
                 <div className="flex items-center gap-2 mb-4">
@@ -375,25 +439,67 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
         </div>
 
         <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
-          {request.status === PrescriptionRequestStatus.PENDING && (
+          {request.status === PrescriptionRequestStatus.PENDING && !denyMode && (
+            <>
+              <Button
+                type="button"
+                onClick={handleApproveClick}
+                disabled={loading}
+                className="bg-[#005044] hover:bg-[#004038] text-white rounded-full font-sora w-full sm:w-auto"
+              >
+                {loading ? t('doctorPrescriptionModal.approving') : t('doctorPrescriptionModal.approveRequest')}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setSubmitError(null);
+                  setDenyMode(true);
+                }}
+                disabled={loading}
+                className="rounded-full border-red-300 text-red-600 hover:bg-red-50 hover:text-red-700 font-sora w-full sm:w-auto"
+              >
+                {t('doctorPrescriptionModal.denyRequest')}
+              </Button>
+            </>
+          )}
+          {request.status === PrescriptionRequestStatus.PENDING && denyMode && (
+            <>
+              <Button
+                type="button"
+                onClick={handleDenyClick}
+                disabled={loading}
+                className="bg-red-600 hover:bg-red-700 text-white rounded-full font-sora w-full sm:w-auto"
+              >
+                {loading ? t('doctorPrescriptionModal.denying') : t('doctorPrescriptionModal.confirmDeny')}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setDenyMode(false);
+                  setRejectionNote('');
+                  setRejectionNoteError(null);
+                  setSubmitError(null);
+                }}
+                disabled={loading}
+                className="rounded-full border-[#e0e0e0] text-[#282828] font-sora w-full sm:w-auto"
+              >
+                {t('doctorPrescriptionModal.cancelDeny')}
+              </Button>
+            </>
+          )}
+          {!(request.status === PrescriptionRequestStatus.PENDING && denyMode) && (
             <Button
               type="button"
-              onClick={handleApproveClick}
+              variant="outline"
+              onClick={handleClose}
               disabled={loading}
-              className="bg-[#005044] hover:bg-[#004038] text-white rounded-full font-sora w-full sm:w-auto"
+              className="rounded-full border-[#e0e0e0] text-[#282828] font-sora w-full sm:w-auto"
             >
-              {loading ? t('doctorPrescriptionModal.approving') : t('doctorPrescriptionModal.approveRequest')}
+              {t('doctorPrescriptionModal.close')}
             </Button>
           )}
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handleClose}
-            disabled={loading}
-            className="rounded-full border-[#e0e0e0] text-[#282828] font-sora w-full sm:w-auto"
-          >
-            {t('doctorPrescriptionModal.close')}
-          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -163,6 +163,17 @@ export const PrescriptionRequestsList: React.FC<PrescriptionRequestsListProps> =
               </div>
             </div>
 
+            {request.status === PrescriptionRequestStatus.DENIED && request.rejectionNote && (
+              <div className="bg-red-50 border border-red-100 rounded-md p-3">
+                <p className="text-sm font-semibold text-red-700 font-manrope mb-1">
+                  {t('prescriptions.requests.rejectionReason')}
+                </p>
+                <p className="text-sm text-red-700 font-manrope whitespace-pre-wrap">
+                  {request.rejectionNote}
+                </p>
+              </div>
+            )}
+
             {request.hasSideEffects && request.sideEffectsDescription && (
               <div>
                 <p className="text-sm font-medium text-gray-600 font-manrope mb-1">

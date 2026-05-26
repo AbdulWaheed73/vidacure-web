@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Video, ArrowUpRight } from 'lucide-react';
-import { useDoctorMeetings, useDoctorPrescriptions, useDoctorConversations, useApprovePrescription } from '@/hooks/useDoctorDashboardQueries';
+import { useDoctorMeetings, useDoctorPrescriptions, useDoctorConversations, useApprovePrescription, useDenyPrescription } from '@/hooks/useDoctorDashboardQueries';
 import { useChatUnreadCounts } from '@/hooks/useChatQueries';
 import { PrescriptionRequestDetailModal } from '@/components/PrescriptionRequestDetailModal';
 import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
@@ -213,6 +213,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
   const { data: prescriptionsData, isLoading: prescriptionsLoading } = useDoctorPrescriptions();
   const { data: conversationsData, isLoading: conversationsLoading } = useDoctorConversations();
   const approveMutation = useApprovePrescription();
+  const denyMutation = useDenyPrescription();
 
   const [selectedRequest, setSelectedRequest] = useState<DoctorPrescriptionRequest | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -244,6 +245,10 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
     }
   ) => {
     await approveMutation.mutateAsync({ requestId, prescriptionData });
+  };
+
+  const handleDeny = async (requestId: string, data: { rejectionNote: string }) => {
+    await denyMutation.mutateAsync({ requestId, rejectionNote: data.rejectionNote });
   };
 
   const now = new Date();
@@ -406,6 +411,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
         onOpenChange={setModalOpen}
         request={selectedRequest}
         onApprove={handleApprove}
+        onDeny={handleDeny}
       />
 
       <PatientProfilePanel
