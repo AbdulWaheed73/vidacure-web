@@ -29,7 +29,18 @@ import { cn } from '@/lib/utils';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { addWeightHistory, getWeightHistory, deleteWeightHistory } from '@/services/weightHistory';
+import { patientService } from '@/services/patientService';
+import { usePatientProfile } from '@/hooks/useDashboardQueries';
+import { GoalProgressCard } from '@/components/GoalProgressCard';
 import { treatmentJournalService } from '@/services/treatmentJournalService';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { queryKeys } from '@/lib/queryClient';
 import DOMPurify from 'dompurify';
 import type { WeightHistoryEntry } from '@/types/weight-types';
@@ -92,6 +103,37 @@ export const ProgressPage: React.FC = () => {
     deleting: boolean;
   }>({ open: false, dateString: '', dateLabel: '', weight: null, deleting: false });
 
+  const { data: profileData } = usePatientProfile();
+  const goalWeight = profileData?.profile?.goalWeight ?? null;
+  const [goalDialogOpen, setGoalDialogOpen] = React.useState(false);
+  const [goalInput, setGoalInput] = React.useState('');
+  const [savingGoal, setSavingGoal] = React.useState(false);
+
+  const openGoalDialog = () => {
+    setGoalInput(goalWeight != null ? String(goalWeight) : '');
+    setGoalDialogOpen(true);
+  };
+
+  const handleSaveGoalWeight = async () => {
+    const num = parseFloat(goalInput);
+    if (isNaN(num) || num <= 0 || num > 500) {
+      toast.error(t('progress.goalWeightInvalid'));
+      return;
+    }
+    try {
+      setSavingGoal(true);
+      await patientService.updatePatientProfile({ goalWeight: num });
+      await queryClient.invalidateQueries({ queryKey: queryKeys.patientProfile });
+      toast.success(t('progress.goalWeightSaveSuccess'));
+      setGoalDialogOpen(false);
+    } catch (error) {
+      console.error('Error updating goal weight:', error);
+      toast.error(t('progress.goalWeightSaveError'));
+    } finally {
+      setSavingGoal(false);
+    }
+  };
+
   // Load weight history on component mount
   React.useEffect(() => {
     loadWeightHistory();
@@ -103,8 +145,9 @@ export const ProgressPage: React.FC = () => {
       const response = await getWeightHistory();
       setWeightHistory(response.weightHistory);
       setHeight(response.height);
-    } catch (error: any) {
-      if (error.response?.status === 451) {
+    } catch (error: unknown) {
+      const status = (error as { response?: { status?: number } })?.response?.status;
+      if (status === 451) {
         setConsentRequired(true);
       } else {
         console.error('Error loading weight history:', error);
@@ -485,7 +528,18 @@ export const ProgressPage: React.FC = () => {
               </div>
             </CardContent>
           </Card>
+
         </div>
+      </div>
+
+      {/* My Goals — full-width progress card under the chart */}
+      <div className="mb-4 md:mb-6">
+        <GoalProgressCard
+          goalWeight={goalWeight}
+          currentWeight={allTimeSorted.length > 0 ? currentWeight : null}
+          startingWeight={allTimeSorted.length > 0 ? allTimeSorted[0].weight : null}
+          onEditGoal={openGoalDialog}
+        />
       </div>
 
       {/* Bottom Section: Log Your Progress Form */}
@@ -666,6 +720,42 @@ export const ProgressPage: React.FC = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        <Dialog open={goalDialogOpen} onOpenChange={setGoalDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{t('progress.goalWeightDialogTitle')}</DialogTitle>
+              <DialogDescription>{t('progress.goalWeightDialogDescription')}</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <Label htmlFor="goal-weight-input">{t('progress.goalWeightTitle')}</Label>
+              <div className="relative">
+                <Input
+                  id="goal-weight-input"
+                  type="number"
+                  min={1}
+                  max={500}
+                  step="0.1"
+                  className="pr-12 h-12"
+                  placeholder={t('progress.goalWeightPlaceholder')}
+                  value={goalInput}
+                  onChange={(e) => setGoalInput(e.target.value)}
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+                  {t('common.kg')}
+                </span>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setGoalDialogOpen(false)} disabled={savingGoal}>
+                {t('progress.goalWeightCancel')}
+              </Button>
+              <Button type="button" onClick={handleSaveGoalWeight} disabled={savingGoal}>
+                {savingGoal ? t('progress.goalWeightSaving') : t('progress.goalWeightSave')}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
     </div>
   );

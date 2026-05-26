@@ -35,6 +35,7 @@ import { PatientChatTab } from '@/components/SupabaseChat/PatientChatTab';
 import { QUESTION_LABELS } from '@/components/onboarding/questionMapping';
 import { LabTestOrderStatusBadge } from '@/components/LabTestOrderStatus';
 import { LabTestResults } from '@/components/LabTestResults';
+import { GoalProgressCard } from '@/components/GoalProgressCard';
 import type { WeightHistoryEntry, PrescriptionRequestEntry } from '@/types/doctor-patient-types';
 import type { LabTestOrder } from '@/types/lab-test-types';
 
@@ -581,6 +582,24 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
 
                   {/* Weight Progress */}
                   <WeightChart weightHistory={profile.weightHistory} t={t} dateLocale={dateLocale} />
+
+                  {/* Goal Progress */}
+                  {(() => {
+                    const sorted = [...profile.weightHistory]
+                      .filter((e) => e.date)
+                      .sort(
+                        (a, b) => new Date(a.date as string).getTime() - new Date(b.date as string).getTime()
+                      );
+                    const currentWeight = sorted.length > 0 ? sorted[sorted.length - 1].weight : null;
+                    const startingWeight = sorted.length > 0 ? sorted[0].weight : null;
+                    return (
+                      <GoalProgressCard
+                        goalWeight={profile.goalWeight}
+                        currentWeight={currentWeight}
+                        startingWeight={startingWeight}
+                      />
+                    );
+                  })()}
 
                   {/* Prescriptions */}
                   {profile.prescriptionRequests.length > 0 && (() => {

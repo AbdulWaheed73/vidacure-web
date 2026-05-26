@@ -71,6 +71,7 @@ export type DoctorPatientProfile = {
   gender: string | null;
   height: number | null;
   bmi: number | null;
+  goalWeight: number | null;
   weightHistory: WeightHistoryEntry[];
   prescription: PatientPrescription | null;
   prescriptionRequests: PrescriptionRequestEntry[];

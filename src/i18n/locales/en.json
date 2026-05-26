@@ -1118,7 +1118,20 @@
     "deleteConfirm": "Delete",
     "deleteCancel": "Cancel",
     "deleteSuccess": "Weight entry deleted",
-    "deleteError": "Error deleting weight entry. Please try again."
+    "deleteError": "Error deleting weight entry. Please try again.",
+    "goalWeightTitle": "Goal Weight",
+    "goalWeightNotSet": "Not set",
+    "goalWeightEdit": "Edit",
+    "goalWeightSet": "Set goal",
+    "goalWeightDialogTitle": "Set goal weight",
+    "goalWeightDialogDescription": "Enter the weight you want to reach. You can update this anytime.",
+    "goalWeightPlaceholder": "e.g. 75",
+    "goalWeightSave": "Save",
+    "goalWeightSaving": "Saving...",
+    "goalWeightCancel": "Cancel",
+    "goalWeightSaveSuccess": "Goal weight updated",
+    "goalWeightSaveError": "Error updating goal weight. Please try again.",
+    "goalWeightInvalid": "Goal weight must be between 1 and 500 kg"
   },
   "appointments": {
     "title": "Appointments",

@@ -1118,7 +1118,20 @@
     "deleteConfirm": "Ta bort",
     "deleteCancel": "Avbryt",
     "deleteSuccess": "Viktpost borttagen",
-    "deleteError": "Fel vid borttagning av viktpost. Försök igen."
+    "deleteError": "Fel vid borttagning av viktpost. Försök igen.",
+    "goalWeightTitle": "Målvikt",
+    "goalWeightNotSet": "Inte angiven",
+    "goalWeightEdit": "Ändra",
+    "goalWeightSet": "Ange mål",
+    "goalWeightDialogTitle": "Ange målvikt",
+    "goalWeightDialogDescription": "Ange vikten du vill uppnå. Du kan uppdatera den när som helst.",
+    "goalWeightPlaceholder": "t.ex. 75",
+    "goalWeightSave": "Spara",
+    "goalWeightSaving": "Sparar...",
+    "goalWeightCancel": "Avbryt",
+    "goalWeightSaveSuccess": "Målvikt uppdaterad",
+    "goalWeightSaveError": "Fel vid uppdatering av målvikt. Försök igen.",
+    "goalWeightInvalid": "Målvikt måste vara mellan 1 och 500 kg"
   },
   "appointments": {
     "title": "Bokningar",
