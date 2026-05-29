@@ -9,6 +9,7 @@ import {
   Bell,
   FileText,
   Shield,
+  ClipboardCheck,
   Tag,
   Lightbulb,
 } from 'lucide-react';
@@ -100,6 +101,11 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
       title: 'Audit Logs',
       value: 'audit-logs',
       icon: Shield,
+    },
+    {
+      title: 'Log Reviews',
+      value: 'log-reviews',
+      icon: ClipboardCheck,
     },
     {
       title: 'Deletion Logs',

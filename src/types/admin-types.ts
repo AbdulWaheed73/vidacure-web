@@ -160,6 +160,8 @@ export type AuditLog = {
   timestamp: string;
   metadata?: Record<string, unknown>;
   integrityHash?: string;
+  userName?: string;
+  targetName?: string;
 };
 
 export type AuditLogsResponse = {
@@ -182,17 +184,97 @@ export type AuditAnomaliesResponse = {
       userId: string;
       uniqueTargetCount: number;
       totalAccess: number;
+      userName?: string;
     }[];
     failedAccessClusters: {
       _id: { userId: string; action: string };
       count: number;
       latestAttempt: string;
+      userName?: string;
     }[];
     afterHoursAccess: {
       _id: string;
       afterHoursCount: number;
+      userName?: string;
+    }[];
+    singlePatientFrequency: {
+      _id: { userId: string; targetId: string };
+      count: number;
+      latestAccess: string;
+      userName?: string;
+      targetName?: string;
     }[];
   };
+};
+
+// Log Review (PDL loggkontroll — documented review records)
+export type LogReviewOutcome = 'clean' | 'flagged' | 'escalated';
+export type LogReviewStatus = 'open' | 'resolved';
+export type LogReviewParameter =
+  | 'high_volume'
+  | 'failed_clusters'
+  | 'after_hours'
+  | 'single_patient'
+  | 'protected_identity'
+  | 'cross_unit'
+  | 'break_glass';
+
+export type LogReview = {
+  _id: string;
+  reviewedBy: string;
+  reviewerName: string;
+  periodFrom: string;
+  periodTo: string;
+  parametersReviewed: LogReviewParameter[];
+  outcome: LogReviewOutcome;
+  notes?: string;
+  flaggedEntries?: string[];
+  anomalySnapshot?: AuditAnomaliesResponse['anomalies'];
+  status: LogReviewStatus;
+  resolvedBy?: string;
+  resolvedAt?: string;
+  resolutionNotes?: string;
+  createdAt: string;
+  integrityHash?: string;
+};
+
+export type LogReviewsResponse = {
+  reviews: LogReview[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+  };
+};
+
+export type CreateLogReviewRequest = {
+  periodFrom: string;
+  periodTo: string;
+  parametersReviewed: LogReviewParameter[];
+  outcome: LogReviewOutcome;
+  notes?: string;
+  flaggedEntries?: string[];
+  anomalySnapshot?: AuditAnomaliesResponse['anomalies'];
+};
+
+export type AuditLogsQueryParams = {
+  page?: number;
+  limit?: number;
+  userId?: string;
+  targetId?: string;
+  action?: string;
+  role?: string;
+  success?: string;
+  dateFrom?: string;
+  dateTo?: string;
+};
+
+export type LogReviewsQueryParams = {
+  page?: number;
+  limit?: number;
+  outcome?: string;
+  status?: string;
 };
 
 // Admin Login/2FA Response Types

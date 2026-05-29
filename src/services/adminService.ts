@@ -13,6 +13,11 @@ import type {
   DeletionLog,
   AuditLogsResponse,
   AuditAnomaliesResponse,
+  LogReview,
+  LogReviewsResponse,
+  CreateLogReviewRequest,
+  AuditLogsQueryParams,
+  LogReviewsQueryParams,
 } from '../types/admin-types';
 import type {
   CreatePromotionRequest,
@@ -361,17 +366,7 @@ export const adminService = {
   /**
    * Get audit logs with filters and pagination
    */
-  getAuditLogs: async (params: {
-    page?: number;
-    limit?: number;
-    userId?: string;
-    targetId?: string;
-    action?: string;
-    role?: string;
-    success?: string;
-    dateFrom?: string;
-    dateTo?: string;
-  } = {}): Promise<AuditLogsResponse> => {
+  getAuditLogs: async (params: AuditLogsQueryParams = {}): Promise<AuditLogsResponse> => {
     const response = await api.get('/api/admin/audit-logs', { params });
     return response.data;
   },
@@ -381,6 +376,40 @@ export const adminService = {
    */
   getAuditAnomalies: async (): Promise<AuditAnomaliesResponse> => {
     const response = await api.get('/api/admin/audit-logs/anomalies');
+    return response.data;
+  },
+
+  // ============ Log Review (PDL loggkontroll) ============
+
+  /**
+   * Record a completed systematic log review
+   */
+  createLogReview: async (data: CreateLogReviewRequest): Promise<{ review: LogReview }> => {
+    const response = await api.post('/api/admin/audit-logs/reviews', data);
+    return response.data;
+  },
+
+  /**
+   * List recorded log reviews with pagination
+   */
+  getLogReviews: async (params: LogReviewsQueryParams = {}): Promise<LogReviewsResponse> => {
+    const response = await api.get('/api/admin/audit-logs/reviews', { params });
+    return response.data;
+  },
+
+  /**
+   * Get a single log review by id
+   */
+  getLogReviewById: async (id: string): Promise<{ review: LogReview }> => {
+    const response = await api.get(`/api/admin/audit-logs/reviews/${id}`);
+    return response.data;
+  },
+
+  /**
+   * Resolve an escalated/open log review
+   */
+  resolveLogReview: async (id: string, resolutionNotes?: string): Promise<{ review: LogReview }> => {
+    const response = await api.patch(`/api/admin/audit-logs/reviews/${id}/resolve`, { resolutionNotes });
     return response.data;
   },
 

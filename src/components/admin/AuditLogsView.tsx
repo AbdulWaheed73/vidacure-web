@@ -1,7 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Table,
   TableBody,
@@ -15,6 +19,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from '@/components/ui/dialog';
 import {
   Select,
@@ -33,22 +38,28 @@ import {
   Clock,
   Users,
   Search,
+  ClipboardCheck,
+  UserSearch,
 } from 'lucide-react';
-import { adminService } from '@/services/adminService';
-import type { AuditLog, AuditAnomaliesResponse } from '@/types/admin-types';
+import { useAuditLogs, useAuditAnomalies, useCreateLogReview } from '@/hooks/useAuditQueries';
+import type { AuditLog, AuditLogsQueryParams, LogReviewOutcome, LogReviewParameter } from '@/types/admin-types';
 import { cn } from '@/lib/utils';
 
+const REVIEW_PARAMETERS: { value: LogReviewParameter; label: string }[] = [
+  { value: 'high_volume', label: 'High-volume access (many patients)' },
+  { value: 'failed_clusters', label: 'Failed access clusters' },
+  { value: 'after_hours', label: 'After-hours access' },
+  { value: 'single_patient', label: 'High-frequency single-patient access' },
+  { value: 'protected_identity', label: 'Protected/sensitive identity access' },
+  { value: 'cross_unit', label: 'Cross-unit / cross-process access' },
+  { value: 'break_glass', label: 'Forced overrides (nödöppning)' },
+];
+
+const LIMIT = 30;
+
 export const AuditLogsView = () => {
-  // Logs state
-  const [logs, setLogs] = useState<AuditLog[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 30,
-    totalCount: 0,
-    totalPages: 0,
-  });
 
   // Filters
   const [actionFilter, setActionFilter] = useState('all');
@@ -56,49 +67,66 @@ export const AuditLogsView = () => {
   const [successFilter, setSuccessFilter] = useState('all');
   const [searchUserId, setSearchUserId] = useState('');
 
-  // Anomalies
-  const [anomalies, setAnomalies] = useState<AuditAnomaliesResponse | null>(null);
-  const [anomaliesLoading, setAnomaliesLoading] = useState(false);
+  // Record Review dialog
   const [showAnomalies, setShowAnomalies] = useState(false);
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [reviewParams, setReviewParams] = useState<LogReviewParameter[]>([]);
+  const [reviewOutcome, setReviewOutcome] = useState<LogReviewOutcome>('clean');
+  const [reviewNotes, setReviewNotes] = useState('');
 
-  const fetchLogs = useCallback(async () => {
-    try {
-      setLoading(true);
-      const params: Record<string, string | number> = {
-        page: pagination.page,
-        limit: pagination.limit,
-      };
-      if (actionFilter !== 'all') params.action = actionFilter;
-      if (roleFilter !== 'all') params.role = roleFilter;
-      if (successFilter !== 'all') params.success = successFilter;
-      if (searchUserId.trim()) params.userId = searchUserId.trim();
+  const params = useMemo<AuditLogsQueryParams>(() => ({
+    page,
+    limit: LIMIT,
+    ...(actionFilter !== 'all' && { action: actionFilter }),
+    ...(roleFilter !== 'all' && { role: roleFilter }),
+    ...(successFilter !== 'all' && { success: successFilter }),
+    ...(searchUserId.trim() && { userId: searchUserId.trim() }),
+  }), [page, actionFilter, roleFilter, successFilter, searchUserId]);
 
-      const data = await adminService.getAuditLogs(params);
-      setLogs(data.logs);
-      setPagination(data.pagination);
-    } catch (error) {
-      console.error('Failed to fetch audit logs:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [pagination.page, pagination.limit, actionFilter, roleFilter, successFilter, searchUserId]);
+  const { data: logsData, isLoading: loading, refetch: refetchLogs } = useAuditLogs(params);
+  const logs = logsData?.logs ?? [];
+  const pagination = logsData?.pagination ?? { page, limit: LIMIT, totalCount: 0, totalPages: 0 };
 
-  const fetchAnomalies = async () => {
-    try {
-      setAnomaliesLoading(true);
-      const data = await adminService.getAuditAnomalies();
-      setAnomalies(data);
-      setShowAnomalies(true);
-    } catch (error) {
-      console.error('Failed to fetch anomalies:', error);
-    } finally {
-      setAnomaliesLoading(false);
-    }
+  const { data: anomalies, isFetching: anomaliesLoading, refetch: refetchAnomalies } = useAuditAnomalies();
+  const createReview = useCreateLogReview();
+
+  const toggleReviewParam = (param: LogReviewParameter) => {
+    setReviewParams((prev) =>
+      prev.includes(param) ? prev.filter((p) => p !== param) : [...prev, param]
+    );
   };
 
-  useEffect(() => {
-    fetchLogs();
-  }, [fetchLogs]);
+  const fetchAnomalies = () => {
+    setShowAnomalies(true);
+    refetchAnomalies();
+  };
+
+  const submitReview = () => {
+    if (!anomalies) return;
+    createReview.mutate(
+      {
+        periodFrom: anomalies.period.from,
+        periodTo: anomalies.period.to,
+        parametersReviewed: reviewParams,
+        outcome: reviewOutcome,
+        notes: reviewNotes.trim() || undefined,
+        anomalySnapshot: anomalies.anomalies,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Log review recorded');
+          setReviewDialogOpen(false);
+          setReviewParams([]);
+          setReviewOutcome('clean');
+          setReviewNotes('');
+        },
+        onError: (error) => {
+          console.error('Failed to record log review:', error);
+          toast.error('Failed to record log review');
+        },
+      }
+    );
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -142,7 +170,8 @@ export const AuditLogsView = () => {
   const totalAnomalies = anomalies
     ? anomalies.anomalies.highVolumeAccessors.length +
       anomalies.anomalies.failedAccessClusters.length +
-      anomalies.anomalies.afterHoursAccess.length
+      anomalies.anomalies.afterHoursAccess.length +
+      anomalies.anomalies.singlePatientFrequency.length
     : 0;
 
   const resetFilters = () => {
@@ -150,7 +179,7 @@ export const AuditLogsView = () => {
     setRoleFilter('all');
     setSuccessFilter('all');
     setSearchUserId('');
-    setPagination(p => ({ ...p, page: 1 }));
+    setPage(1);
   };
 
   return (
@@ -177,7 +206,7 @@ export const AuditLogsView = () => {
             )}
             Anomaly Scan
           </Button>
-          <Button variant="outline" size="sm" onClick={fetchLogs}>
+          <Button variant="outline" size="sm" onClick={() => refetchLogs()}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
           </Button>
@@ -192,9 +221,15 @@ export const AuditLogsView = () => {
               <Shield className="h-5 w-5 text-amber-600" />
               Anomaly Detection — Last 7 Days
             </h3>
-            <Button variant="ghost" size="sm" onClick={() => setShowAnomalies(false)}>
-              Dismiss
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => setReviewDialogOpen(true)}>
+                <ClipboardCheck className="h-4 w-4 mr-2" />
+                Record Review
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => setShowAnomalies(false)}>
+                Dismiss
+              </Button>
+            </div>
           </div>
 
           {totalAnomalies === 0 ? (
@@ -205,7 +240,7 @@ export const AuditLogsView = () => {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {/* High Volume Accessors */}
               <Card className={cn(
                 'border',
@@ -226,8 +261,8 @@ export const AuditLogsView = () => {
                     <div className="space-y-2">
                       {anomalies.anomalies.highVolumeAccessors.map((a, i) => (
                         <div key={i} className="text-sm">
-                          <p className="font-mono text-xs text-red-800 truncate" title={a.userId}>
-                            {a.userId}
+                          <p className="text-xs font-semibold text-red-800 truncate" title={a.userId}>
+                            {a.userName || a.userId}
                           </p>
                           <p className="text-red-600">
                             {a.uniqueTargetCount} unique patients, {a.totalAccess} total accesses
@@ -259,8 +294,8 @@ export const AuditLogsView = () => {
                     <div className="space-y-2">
                       {anomalies.anomalies.failedAccessClusters.map((c, i) => (
                         <div key={i} className="text-sm">
-                          <p className="font-mono text-xs text-amber-800 truncate" title={c._id.userId}>
-                            {c._id.userId}
+                          <p className="text-xs font-semibold text-amber-800 truncate" title={c._id.userId}>
+                            {c.userName || c._id.userId}
                           </p>
                           <p className="text-amber-600">
                             {c.count} failed "{c._id.action}" attempts
@@ -292,11 +327,47 @@ export const AuditLogsView = () => {
                     <div className="space-y-2">
                       {anomalies.anomalies.afterHoursAccess.map((a, i) => (
                         <div key={i} className="text-sm">
-                          <p className="font-mono text-xs text-purple-800 truncate" title={a._id}>
-                            {a._id}
+                          <p className="text-xs font-semibold text-purple-800 truncate" title={a._id}>
+                            {a.userName || a._id}
                           </p>
                           <p className="text-purple-600">
                             {a.afterHoursCount} accesses outside 07:00–19:00 CET
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Single-Patient High Frequency */}
+              <Card className={cn(
+                'border',
+                anomalies.anomalies.singlePatientFrequency.length > 0
+                  ? 'border-red-200 bg-red-50'
+                  : 'border-green-200 bg-green-50'
+              )}>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    <UserSearch className="h-4 w-4" />
+                    Single-Patient Frequency
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {anomalies.anomalies.singlePatientFrequency.length === 0 ? (
+                    <p className="text-sm text-green-700">None detected</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {anomalies.anomalies.singlePatientFrequency.map((s, i) => (
+                        <div key={i} className="text-sm">
+                          <p className="text-xs font-semibold text-red-800 truncate" title={s._id.userId}>
+                            {s.userName || s._id.userId}
+                          </p>
+                          <p className="text-red-600">
+                            {s.count} accesses to one patient
+                            <span className="text-xs text-red-500 truncate block" title={s._id.targetId}>
+                              → {s.targetName || s._id.targetId}
+                            </span>
                           </p>
                         </div>
                       ))}
@@ -319,13 +390,13 @@ export const AuditLogsView = () => {
             value={searchUserId}
             onChange={(e) => {
               setSearchUserId(e.target.value);
-              setPagination(p => ({ ...p, page: 1 }));
+              setPage(1);
             }}
             className="h-9 w-52 rounded-md border border-zinc-300 bg-white px-3 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           />
         </div>
 
-        <Select value={roleFilter} onValueChange={(v) => { setRoleFilter(v); setPagination(p => ({ ...p, page: 1 })); }}>
+        <Select value={roleFilter} onValueChange={(v) => { setRoleFilter(v); setPage(1); }}>
           <SelectTrigger className="w-36">
             <SelectValue placeholder="Role" />
           </SelectTrigger>
@@ -337,7 +408,7 @@ export const AuditLogsView = () => {
           </SelectContent>
         </Select>
 
-        <Select value={successFilter} onValueChange={(v) => { setSuccessFilter(v); setPagination(p => ({ ...p, page: 1 })); }}>
+        <Select value={successFilter} onValueChange={(v) => { setSuccessFilter(v); setPage(1); }}>
           <SelectTrigger className="w-36">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
@@ -348,7 +419,7 @@ export const AuditLogsView = () => {
           </SelectContent>
         </Select>
 
-        <Select value={actionFilter} onValueChange={(v) => { setActionFilter(v); setPagination(p => ({ ...p, page: 1 })); }}>
+        <Select value={actionFilter} onValueChange={(v) => { setActionFilter(v); setPage(1); }}>
           <SelectTrigger className="w-48">
             <SelectValue placeholder="Action" />
           </SelectTrigger>
@@ -423,8 +494,8 @@ export const AuditLogsView = () => {
                   </TableCell>
                   <TableCell>
                     {log.targetId ? (
-                      <span className="font-mono text-xs text-zinc-500 truncate block max-w-[120px]" title={log.targetId}>
-                        {log.targetId}
+                      <span className="text-xs text-zinc-600 truncate block max-w-[140px]" title={log.targetId}>
+                        {log.targetName || log.targetId}
                       </span>
                     ) : (
                       <span className="text-zinc-300">—</span>
@@ -458,7 +529,7 @@ export const AuditLogsView = () => {
               variant="outline"
               size="sm"
               disabled={pagination.page === 1}
-              onClick={() => setPagination((p) => ({ ...p, page: p.page - 1 }))}
+              onClick={() => setPage((p) => p - 1)}
             >
               Previous
             </Button>
@@ -466,7 +537,7 @@ export const AuditLogsView = () => {
               variant="outline"
               size="sm"
               disabled={pagination.page >= pagination.totalPages}
-              onClick={() => setPagination((p) => ({ ...p, page: p.page + 1 }))}
+              onClick={() => setPage((p) => p + 1)}
             >
               Next
             </Button>
@@ -515,13 +586,15 @@ export const AuditLogsView = () => {
                   <p className="font-medium">{formatDate(selectedLog.timestamp)}</p>
                 </div>
                 <div>
-                  <p className="text-zinc-500">User ID</p>
-                  <p className="font-mono text-xs break-all">{selectedLog.userId}</p>
+                  <p className="text-zinc-500">User</p>
+                  <p className="font-medium">{selectedLog.userName || '—'}</p>
+                  <p className="font-mono text-xs text-zinc-400 break-all">{selectedLog.userId}</p>
                 </div>
                 {selectedLog.targetId && (
                   <div>
-                    <p className="text-zinc-500">Target ID</p>
-                    <p className="font-mono text-xs break-all">{selectedLog.targetId}</p>
+                    <p className="text-zinc-500">Target</p>
+                    <p className="font-medium">{selectedLog.targetName || '—'}</p>
+                    <p className="font-mono text-xs text-zinc-400 break-all">{selectedLog.targetId}</p>
                   </div>
                 )}
                 {selectedLog.ipAddress && (
@@ -571,6 +644,85 @@ export const AuditLogsView = () => {
           </DialogContent>
         </Dialog>
       )}
+
+      {/* Record Review Dialog */}
+      <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Record Log Review (Loggkontroll)</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <p className="text-sm text-zinc-500">
+              Documents that a systematic log review was performed, per Patientdatalagen Ch. 4 §3 and HSLF-FS 2016:40.
+              {anomalies && (
+                <>
+                  {' '}Period: {new Date(anomalies.period.from).toLocaleDateString()} – {new Date(anomalies.period.to).toLocaleDateString()}.
+                </>
+              )}
+            </p>
+
+            <div className="space-y-2">
+              <Label>Parameters reviewed</Label>
+              <div className="space-y-2">
+                {REVIEW_PARAMETERS.map((p) => (
+                  <label key={p.value} className="flex items-center gap-2 text-sm cursor-pointer">
+                    <Checkbox
+                      checked={reviewParams.includes(p.value)}
+                      onCheckedChange={() => toggleReviewParam(p.value)}
+                    />
+                    {p.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Outcome</Label>
+              <Select value={reviewOutcome} onValueChange={(v) => setReviewOutcome(v as LogReviewOutcome)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="clean">Clean — no unauthorized access found</SelectItem>
+                  <SelectItem value="flagged">Flagged — items noted for attention</SelectItem>
+                  <SelectItem value="escalated">Escalated — suspected unauthorized access</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Notes (written assessment)</Label>
+              <Textarea
+                value={reviewNotes}
+                onChange={(e) => setReviewNotes(e.target.value)}
+                placeholder="Describe what was reviewed, findings, and any follow-up actions…"
+                rows={4}
+              />
+            </div>
+
+            {!anomalies && (
+              <p className="text-sm text-amber-600">
+                Run an Anomaly Scan first so the review captures a snapshot of the period.
+              </p>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setReviewDialogOpen(false)} disabled={createReview.isPending}>
+              Cancel
+            </Button>
+            <Button onClick={submitReview} disabled={createReview.isPending || !anomalies}>
+              {createReview.isPending ? (
+                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <ClipboardCheck className="h-4 w-4 mr-2" />
+              )}
+              Save Review
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
