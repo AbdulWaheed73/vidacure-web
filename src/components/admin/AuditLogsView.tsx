@@ -369,6 +369,16 @@ export const AuditLogsView = () => {
                               → {s.targetName || s._id.targetId}
                             </span>
                           </p>
+                          <Badge
+                            className={cn(
+                              'mt-1 text-[10px] px-1.5 py-0',
+                              s.assignedToAccessor
+                                ? 'bg-zinc-100 text-zinc-600 border-zinc-200'
+                                : 'bg-red-200 text-red-900 border-red-300'
+                            )}
+                          >
+                            {s.assignedToAccessor ? 'Assigned patient' : 'NOT assigned'}
+                          </Badge>
                         </div>
                       ))}
                     </div>

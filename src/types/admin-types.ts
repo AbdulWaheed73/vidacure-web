@@ -203,6 +203,7 @@ export type AuditAnomaliesResponse = {
       latestAccess: string;
       userName?: string;
       targetName?: string;
+      assignedToAccessor: boolean;
     }[];
   };
 };
