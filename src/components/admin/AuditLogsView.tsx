@@ -174,6 +174,10 @@ export const AuditLogsView = () => {
       anomalies.anomalies.singlePatientFrequency.length
     : 0;
 
+  const singlePatient = anomalies?.anomalies.singlePatientFrequency ?? [];
+  const spfNotAssigned = singlePatient.filter((s) => !s.assignedToAccessor).length;
+  const spfAssigned = singlePatient.length - spfNotAssigned;
+
   const resetFilters = () => {
     setActionFilter('all');
     setRoleFilter('all');
@@ -340,12 +344,15 @@ export const AuditLogsView = () => {
                 </CardContent>
               </Card>
 
-              {/* Single-Patient High Frequency */}
+              {/* Single-Patient High Frequency — red only when access is OUTSIDE a care
+                  relationship; routine access to a doctor's own panel stays calm/grey. */}
               <Card className={cn(
                 'border',
-                anomalies.anomalies.singlePatientFrequency.length > 0
-                  ? 'border-red-200 bg-red-50'
-                  : 'border-green-200 bg-green-50'
+                singlePatient.length === 0
+                  ? 'border-green-200 bg-green-50'
+                  : spfNotAssigned > 0
+                    ? 'border-red-200 bg-red-50'
+                    : 'border-zinc-200 bg-zinc-50'
               )}>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium flex items-center gap-2">
@@ -354,34 +361,45 @@ export const AuditLogsView = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {anomalies.anomalies.singlePatientFrequency.length === 0 ? (
+                  {singlePatient.length === 0 ? (
                     <p className="text-sm text-green-700">None detected</p>
                   ) : (
-                    <div className="space-y-2">
-                      {anomalies.anomalies.singlePatientFrequency.map((s, i) => (
-                        <div key={i} className="text-sm">
-                          <p className="text-xs font-semibold text-red-800 truncate" title={s._id.userId}>
-                            {s.userName || s._id.userId}
-                          </p>
-                          <p className="text-red-600">
-                            {s.count} accesses to one patient
-                            <span className="text-xs text-red-500 truncate block" title={s._id.targetId}>
-                              → {s.targetName || s._id.targetId}
-                            </span>
-                          </p>
-                          <Badge
-                            className={cn(
-                              'mt-1 text-[10px] px-1.5 py-0',
-                              s.assignedToAccessor
-                                ? 'bg-zinc-100 text-zinc-600 border-zinc-200'
-                                : 'bg-red-200 text-red-900 border-red-300'
-                            )}
-                          >
-                            {s.assignedToAccessor ? 'Assigned patient' : 'NOT assigned'}
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
+                    <>
+                      <p className="text-xs text-zinc-500 mb-2">
+                        <span className={cn('font-semibold', spfNotAssigned > 0 ? 'text-red-700' : 'text-zinc-500')}>
+                          {spfNotAssigned} outside care relationship
+                        </span>
+                        {' · '}{spfAssigned} routine
+                      </p>
+                      <div className="space-y-2">
+                        {singlePatient.map((s, i) => {
+                          const flagged = !s.assignedToAccessor;
+                          return (
+                            <div key={i} className="text-sm">
+                              <p className={cn('text-xs font-semibold truncate', flagged ? 'text-red-800' : 'text-zinc-700')} title={s._id.userId}>
+                                {s.userName || s._id.userId}
+                              </p>
+                              <p className={flagged ? 'text-red-600' : 'text-zinc-600'}>
+                                {s.count} accesses to one patient
+                                <span className={cn('text-xs truncate block', flagged ? 'text-red-500' : 'text-zinc-400')} title={s._id.targetId}>
+                                  → {s.targetName || s._id.targetId}
+                                </span>
+                              </p>
+                              <Badge
+                                className={cn(
+                                  'mt-1 text-[10px] px-1.5 py-0',
+                                  flagged
+                                    ? 'bg-red-200 text-red-900 border-red-300'
+                                    : 'bg-zinc-100 text-zinc-600 border-zinc-200'
+                                )}
+                              >
+                                {flagged ? 'NOT assigned' : 'Assigned patient'}
+                              </Badge>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </>
                   )}
                 </CardContent>
               </Card>
