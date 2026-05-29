@@ -13,6 +13,16 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   Form,
   FormControl,
   FormField,
@@ -52,6 +62,7 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
   const [denyMode, setDenyMode] = useState(false);
   const [rejectionNote, setRejectionNote] = useState('');
   const [rejectionNoteError, setRejectionNoteError] = useState<string | null>(null);
+  const [confirmDiscard, setConfirmDiscard] = useState(false);
 
   const prescriptionFormSchema = z.object({
     medicationName: z.string().min(1, t('doctorPrescriptionModal.validationMedicationName')),
@@ -110,7 +121,22 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
     setDenyMode(false);
     setRejectionNote('');
     setRejectionNoteError(null);
+    setConfirmDiscard(false);
     onOpenChange(false);
+  };
+
+  // True when the doctor has typed prescription details or a rejection note.
+  const hasUnsavedInput = form.formState.isDirty || rejectionNote.trim().length > 0;
+
+  // Intercept every dismiss path (✕, backdrop, Esc). Guard only when there's
+  // unsaved input on a still-actionable (pending) request.
+  const attemptClose = () => {
+    if (loading) return;
+    if (request?.status === PrescriptionRequestStatus.PENDING && hasUnsavedInput) {
+      setConfirmDiscard(true);
+      return;
+    }
+    handleClose();
   };
 
   const handleDenyClick = async () => {
@@ -175,7 +201,7 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={(next) => { if (!next) attemptClose(); }}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col rounded-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between font-sora text-[#282828]">
@@ -489,7 +515,9 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
               </Button>
             </>
           )}
-          {!(request.status === PrescriptionRequestStatus.PENDING && denyMode) && (
+          {/* Read-only states: a Close button is harmless (no data to lose). While a
+              prescription is being written, the ✕ (with discard guard) is the only dismiss. */}
+          {request.status !== PrescriptionRequestStatus.PENDING && (
             <Button
               type="button"
               variant="outline"
@@ -501,6 +529,30 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
             </Button>
           )}
         </DialogFooter>
+
+        <AlertDialog open={confirmDiscard} onOpenChange={setConfirmDiscard}>
+          <AlertDialogContent className="rounded-2xl">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="font-sora text-[#282828]">
+                {t('doctorPrescriptionModal.discardTitle')}
+              </AlertDialogTitle>
+              <AlertDialogDescription className="font-manrope text-[#666]">
+                {t('doctorPrescriptionModal.discardDescription')}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="flex-col-reverse sm:flex-row gap-2">
+              <AlertDialogCancel className="rounded-full font-sora mt-0">
+                {t('doctorPrescriptionModal.keepEditing')}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleClose}
+                className="rounded-full bg-red-600 hover:bg-red-700 text-white font-sora"
+              >
+                {t('doctorPrescriptionModal.discardConfirm')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </DialogContent>
     </Dialog>
   );
