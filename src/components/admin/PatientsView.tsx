@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { isAxiosError } from 'axios';
 import {
   Table,
   TableBody,
@@ -26,7 +27,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RefreshCw, Eye, Trash2, CheckCircle, Clock, XCircle, Stethoscope, MailWarning } from 'lucide-react';
+import { RefreshCw, Eye, Trash2, CheckCircle, Clock, XCircle, Stethoscope, MailWarning, CreditCard } from 'lucide-react';
 import type { Patient, Doctor } from '@/services/adminService';
 import { adminService } from '@/services/adminService';
 import { SubscriptionDetailsModal } from './SubscriptionDetailsModal';
@@ -131,10 +132,37 @@ export const PatientsView = ({
       const result = await adminService.sendPaymentFailedEmail(emailDialogPatient._id, recipient);
       setEmailFeedback({ type: 'success', message: `Email sent to ${result.sentTo}` });
       closeEmailDialog();
-    } catch (err: any) {
-      setEmailDialogError(err.response?.data?.error || 'Failed to send email');
+    } catch (err) {
+      const message = isAxiosError(err)
+        ? err.response?.data?.error ?? 'Failed to send email'
+        : 'Failed to send email';
+      setEmailDialogError(message);
     } finally {
       setIsSendingEmail(false);
+    }
+  };
+
+  const [retryingPatientId, setRetryingPatientId] = useState<string | null>(null);
+
+  const handleRetryPayment = async (patient: Patient) => {
+    if (!confirm(`Retry payment for ${patient.name}? This will re-charge their card on file for the outstanding invoice.`)) {
+      return;
+    }
+    setRetryingPatientId(patient._id);
+    try {
+      const result = await adminService.retryPayment(patient._id);
+      setEmailFeedback({
+        type: result.success ? 'success' : 'error',
+        message: result.message,
+      });
+      if (result.success) onRefresh?.();
+    } catch (err) {
+      const message = isAxiosError(err)
+        ? err.response?.data?.error ?? 'Failed to retry payment'
+        : 'Failed to retry payment';
+      setEmailFeedback({ type: 'error', message });
+    } finally {
+      setRetryingPatientId(null);
     }
   };
 
@@ -158,9 +186,12 @@ export const PatientsView = ({
       await adminService.approveMeeting(patient._id);
       // Refresh the patients list to show updated status
       onRefresh?.();
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error approving meeting:', err);
-      setApprovalError(err.response?.data?.error || 'Failed to approve meeting');
+      const message = isAxiosError(err)
+        ? err.response?.data?.error ?? 'Failed to approve meeting'
+        : 'Failed to approve meeting';
+      setApprovalError(message);
     } finally {
       setApprovingPatientId(null);
     }
@@ -394,6 +425,22 @@ export const PatientsView = ({
                       >
                         <MailWarning className="h-4 w-4" />
                       </Button>
+                      {patient.subscription?.status === 'past_due' && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRetryPayment(patient)}
+                          disabled={retryingPatientId === patient._id}
+                          className="text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50"
+                          title="Retry payment (re-charge card for outstanding invoice)"
+                        >
+                          {retryingPatientId === patient._id ? (
+                            <RefreshCw className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <CreditCard className="h-4 w-4" />
+                          )}
+                        </Button>
+                      )}
                       {onDelete && (
                         <Button
                           variant="ghost"

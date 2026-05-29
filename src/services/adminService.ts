@@ -181,6 +181,14 @@ export const adminService = {
   },
 
   /**
+   * Retry payment for a past_due patient by re-charging their latest open invoice.
+   */
+  retryPayment: async (patientId: string): Promise<{ success: boolean; message: string; invoiceStatus: string; hostedInvoiceUrl: string | null }> => {
+    const response = await api.post(`/api/admin/patients/${patientId}/retry-payment`);
+    return response.data;
+  },
+
+  /**
    * Check if SSN exists in Doctor or Patient collections
    */
   checkSSN: async (ssn: string): Promise<SSNCheckResponse> => {
