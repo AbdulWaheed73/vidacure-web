@@ -267,6 +267,7 @@ export const PatientsView = ({
               <TableHead className="whitespace-nowrap">Patient Name</TableHead>
               <TableHead className="whitespace-nowrap">Email</TableHead>
               <TableHead className="whitespace-nowrap">Meeting Status</TableHead>
+              <TableHead className="whitespace-nowrap">Onboarding</TableHead>
               <TableHead className="whitespace-nowrap">Assigned Doctor</TableHead>
               <TableHead className="whitespace-nowrap">Subscription</TableHead>
               <TableHead className="whitespace-nowrap">Plan Type</TableHead>
@@ -278,7 +279,7 @@ export const PatientsView = ({
           <TableBody>
             {patients.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="h-24 text-center">
+                <TableCell colSpan={10} className="h-24 text-center">
                   No patients found.
                 </TableCell>
               </TableRow>
@@ -307,6 +308,13 @@ export const PatientsView = ({
                         </Button>
                       )}
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    {patient.hasCompletedOnboarding ? (
+                      <Badge variant="default">Completed</Badge>
+                    ) : (
+                      <Badge variant="outline">Pending</Badge>
+                    )}
                   </TableCell>
                   <TableCell>
                     {patient.doctor ? (

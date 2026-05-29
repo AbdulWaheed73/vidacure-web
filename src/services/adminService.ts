@@ -53,6 +53,7 @@ export type Patient = {
   stripeData?: PatientStripeData;
   lastLogin: string;
   createdAt: string;
+  hasCompletedOnboarding?: boolean;
   // Calendly meeting data - grouped in nested object
   calendly?: {
     meetingStatus?: 'none' | 'scheduled' | 'completed';
