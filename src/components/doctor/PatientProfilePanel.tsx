@@ -26,6 +26,7 @@ import { MessageCircle, FlaskConical, Copy, Check, ArrowUpRight } from 'lucide-r
 import { toast } from 'sonner';
 import {
   useDoctorPatientProfile,
+  useDoctorUnassignedPatientProfile,
   useDoctorPatientQuestionnaire,
   useDoctorPatientLabOrders,
   useDoctorUnassignedPatientQuestionnaire,
@@ -424,14 +425,19 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(isUnassigned ? 'questionnaire' : 'overview');
+  const [activeTab, setActiveTab] = useState('overview');
   const [ssnCopied, setSsnCopied] = useState(false);
   const [phoneCopied, setPhoneCopied] = useState(false);
-  const { data, isLoading } = useDoctorPatientProfile(isUnassigned ? null : patientId);
+  const assignedProfile = useDoctorPatientProfile(isUnassigned ? null : patientId);
+  const unassignedProfile = useDoctorUnassignedPatientProfile(
+    isUnassigned ? patientId : null,
+    isUnassigned && activeTab === 'overview'
+  );
+  const { data, isLoading } = isUnassigned ? unassignedProfile : assignedProfile;
 
   useEffect(() => {
-    setActiveTab(isUnassigned ? 'questionnaire' : 'overview');
-  }, [isUnassigned]);
+    setActiveTab('overview');
+  }, [isUnassigned, patientId]);
 
   const profile = data?.patientProfile;
   const dateLocale = i18n.language === 'sv' ? 'sv-SE' : 'en-US';
@@ -461,14 +467,12 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
         <div className="px-3 sm:px-5 pt-3">
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="!bg-transparent w-full justify-start gap-1 sm:gap-2 border-b border-[#e0e0e0] rounded-none p-0 h-auto overflow-x-auto flex-nowrap [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
-              {!isUnassigned && (
-                <TabsTrigger
-                  value="overview"
-                  className="shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-2 sm:px-3 pb-2 text-xs sm:text-sm font-sora font-medium"
-                >
-                  {t('doctorPatients.tabOverview')}
-                </TabsTrigger>
-              )}
+              <TabsTrigger
+                value="overview"
+                className="shrink-0 whitespace-nowrap rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-2 sm:px-3 pb-2 text-xs sm:text-sm font-sora font-medium"
+              >
+                {t('doctorPatients.tabOverview')}
+              </TabsTrigger>
               <TabsTrigger
                 value="questionnaire"
                 className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#005044] data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:text-[#005044] px-3 pb-2 text-sm font-sora font-medium"
@@ -670,14 +674,16 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                     </div>
                   )}
 
-                  {/* Send Message Button — opens the in-sheet Chat tab */}
-                  <button
-                    onClick={() => setActiveTab('chat')}
-                    className="w-full bg-[#005044] text-white rounded-xl px-6 py-3 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors flex items-center justify-center gap-2"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    {t('doctorPatients.sendMessage')}
-                  </button>
+                  {/* Send Message Button — opens the in-sheet Chat tab (assigned only) */}
+                  {!isUnassigned && (
+                    <button
+                      onClick={() => setActiveTab('chat')}
+                      className="w-full bg-[#005044] text-white rounded-xl px-6 py-3 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      {t('doctorPatients.sendMessage')}
+                    </button>
+                  )}
                 </>
               )}
             </TabsContent>

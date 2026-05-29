@@ -41,4 +41,14 @@ export const doctorPatientService = {
     const response = await api.get(`/api/doctor/unassigned-patient-questionnaire/${patientId}`);
     return response.data;
   },
+
+  getUnassignedPatientProfile: async (
+    patientId: string,
+    limit: number = 50
+  ): Promise<DoctorPatientProfileResponse> => {
+    const response = await api.get(`/api/doctor/unassigned-patient-profile/${patientId}`, {
+      params: { limit },
+    });
+    return response.data;
+  },
 };

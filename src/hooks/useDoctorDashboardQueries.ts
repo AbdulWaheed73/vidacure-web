@@ -113,6 +113,14 @@ export const useDoctorPatientProfile = (patientId: string | null) => {
   });
 };
 
+export const useDoctorUnassignedPatientProfile = (patientId: string | null, enabled: boolean) => {
+  return useQuery({
+    queryKey: queryKeys.doctorUnassignedPatientProfile(patientId ?? ''),
+    queryFn: () => doctorPatientService.getUnassignedPatientProfile(patientId!),
+    enabled: !!patientId && enabled,
+  });
+};
+
 export const useDoctorProfile = () => {
   return useQuery({
     queryKey: queryKeys.doctorProfile,
