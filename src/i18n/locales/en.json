@@ -450,6 +450,7 @@
     "validTill": "Valid Till",
     "statusPendingReview": "Pending Review",
     "statusActive": "Active",
+    "statusExpired": "Expired",
     "statusDenied": "Denied",
     "statusUnderReview": "Under Review",
     "rejectionReason": "Reason for rejection",

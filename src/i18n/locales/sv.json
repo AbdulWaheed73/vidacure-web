@@ -450,6 +450,7 @@
     "validTill": "Giltigt till",
     "statusPendingReview": "Väntar på granskning",
     "statusActive": "Aktiv",
+    "statusExpired": "Utgången",
     "statusDenied": "Nekad",
     "statusUnderReview": "Under granskning",
     "rejectionReason": "Anledning till nekande",

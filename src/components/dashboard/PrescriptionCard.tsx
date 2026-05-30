@@ -18,6 +18,7 @@ export const PrescriptionCard: React.FC = () => {
   const statusConfig: Record<string, { label: string; className: string }> = {
     pending: { label: t('dashboard.statusPendingReview'), className: "bg-yellow-100 text-yellow-800 border-yellow-200" },
     approved: { label: t('dashboard.statusActive'), className: "bg-green-100 text-green-800 border-green-200" },
+    expired: { label: t('dashboard.statusExpired'), className: "bg-red-100 text-red-800 border-red-200" },
     denied: { label: t('dashboard.statusDenied'), className: "bg-red-100 text-red-800 border-red-200" },
     under_review: { label: t('dashboard.statusUnderReview'), className: "bg-orange-100 text-orange-800 border-orange-200" },
   };
@@ -25,6 +26,12 @@ export const PrescriptionCard: React.FC = () => {
   const prescriptions = [...(data?.prescriptionRequests ?? [])].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
+
+  // Active = first (newest) approved request; any other approved request is expired.
+  // Matches the logic on the Prescriptions tab (PrescriptionsPage).
+  const activeRequestId = prescriptions.find((p) => p.status === 'approved')?._id;
+  const getStatusKey = (p: { _id: string; status: string }) =>
+    p.status === 'approved' && p._id !== activeRequestId ? 'expired' : p.status;
 
   const [hasInitialized, setHasInitialized] = useState(false);
   useEffect(() => {
@@ -80,7 +87,7 @@ export const PrescriptionCard: React.FC = () => {
 
   const safeIndex = Math.min(currentIndex, prescriptions.length - 1);
   const current = prescriptions[safeIndex];
-  const status = statusConfig[current.status] || statusConfig.pending;
+  const status = statusConfig[getStatusKey(current)] || statusConfig.pending;
 
   const dateLocale = i18n.language === 'sv' ? 'sv-SE' : 'en-US';
 
