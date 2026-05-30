@@ -298,4 +298,6 @@ export type Admin2FAVerifyResponse = {
     role: "admin" | "superadmin";
     isAdmin: true;
   };
+  // Double-submit CSRF token; echoed back in the x-admin-csrf header on admin requests.
+  csrfToken?: string;
 };

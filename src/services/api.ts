@@ -20,10 +20,22 @@ export const api = axios.create({
   timeout: 10000, // 10 second timeout
 });
 
+// Attach the admin double-submit CSRF token on every request when present.
+// Only set after an admin logs in (stored as 'adminCsrfToken'); a no-op for
+// patient sessions. The server validates it via requireAdminCSRF on admin routes.
+api.interceptors.request.use((config) => {
+  const adminCsrf = localStorage.getItem('adminCsrfToken');
+  if (adminCsrf) {
+    config.headers['x-admin-csrf'] = adminCsrf;
+  }
+  return config;
+});
+
 // Auth cleanup function
 const clearAuthData = () => {
   // Clear localStorage
   localStorage.removeItem('csrfToken');
+  localStorage.removeItem('adminCsrfToken');
   localStorage.removeItem('auth-storage'); // Zustand persisted auth data
   
   // Clear session storage

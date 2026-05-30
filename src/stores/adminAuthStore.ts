@@ -102,6 +102,10 @@ export const useAdminAuthStore = create<AdminAuthStore>()(
             isBackupCode
           );
 
+          if (response.csrfToken) {
+            localStorage.setItem('adminCsrfToken', response.csrfToken);
+          }
+
           set({
             isAdminAuthenticated: true,
             adminUser: response.user,
@@ -161,6 +165,10 @@ export const useAdminAuthStore = create<AdminAuthStore>()(
             backupCodes
           );
 
+          if (response.csrfToken) {
+            localStorage.setItem('adminCsrfToken', response.csrfToken);
+          }
+
           set({
             isAdminAuthenticated: true,
             adminUser: response.user,
@@ -218,6 +226,7 @@ export const useAdminAuthStore = create<AdminAuthStore>()(
 
         try {
           await adminAuthService.logout();
+          localStorage.removeItem('adminCsrfToken');
 
           set({
             isAdminAuthenticated: false,
