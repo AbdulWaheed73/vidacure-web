@@ -118,6 +118,7 @@ export default function WeightLossSteps() {
                       className="w-full h-full object-cover rounded-3xl"
                       src={step.image}
                       alt={step.title}
+                      loading="lazy"
                     />
                   </div>
                   <div className="flex-1 px-8 py-16 flex flex-col justify-start gap-4">

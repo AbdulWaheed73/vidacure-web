@@ -5,9 +5,7 @@ import { ArrowLeft, Clock, Stethoscope } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { ROUTES } from '@/constants/routes';
 import { localePath, useLocale } from '@/utils/localePath';
-import whatIsObesityImg from '@/assets/what-is-obesity.jpg';
-import treatingObesityImg from '@/assets/Treating-Obesity.jpg';
-import girlsImg from '@/assets/girls.jpg';
+import { articleCovers } from '@/constants/articleImages';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { createArticleSchema, createMedicalWebPageSchema } from '@/utils/structuredData';
 
@@ -17,6 +15,8 @@ const ARTICLE_META: Record<string, { published: string; modified: string }> = {
   'what-is-obesity': { published: '2025-02-01', modified: '2026-05-01' },
   'treating-obesity': { published: '2025-02-15', modified: '2026-05-01' },
   'women-health-obesity': { published: '2025-03-01', modified: '2026-05-01' },
+  'nutrition-obesity': { published: '2026-06-01', modified: '2026-06-01' },
+  'exercise-obesity': { published: '2026-06-01', modified: '2026-06-01' },
 };
 
 export default function Article() {
@@ -28,13 +28,6 @@ export default function Article() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [articleId]);
-
-  // Article image mapping
-  const articleImages: Record<string, string> = {
-    'what-is-obesity': whatIsObesityImg,
-    'treating-obesity': treatingObesityImg,
-    'women-health-obesity': girlsImg
-  };
 
   // Find the article data
   const articles = [
@@ -55,30 +48,40 @@ export default function Article() {
       title: t('journal.articles.article3.title'),
       readTime: t('journal.articles.article3.readTime'),
       content: t('journal.articles.article3.content')
+    },
+    {
+      id: t('journal.articles.article4.id'),
+      title: t('journal.articles.article4.title'),
+      readTime: t('journal.articles.article4.readTime'),
+      content: t('journal.articles.article4.content')
+    },
+    {
+      id: t('journal.articles.article5.id'),
+      title: t('journal.articles.article5.title'),
+      readTime: t('journal.articles.article5.readTime'),
+      content: t('journal.articles.article5.content')
     }
   ];
 
   const article = articles.find(a => a.id === articleId);
 
-  // Get SEO title and description based on article ID
+  // Get SEO title/description/keywords based on article ID
+  const seoKeyByArticle: Record<string, string> = {
+    'what-is-obesity': 'whatIsObesity',
+    'treating-obesity': 'treatingObesity',
+    'women-health-obesity': 'womenHealth',
+    'nutrition-obesity': 'nutrition',
+    'exercise-obesity': 'exercise',
+  };
+
   const getSEOData = () => {
-    if (articleId === 'what-is-obesity') {
-      return {
-        title: t('seo.articles.whatIsObesity.title'),
-        description: t('seo.articles.whatIsObesity.description')
-      };
-    } else if (articleId === 'treating-obesity') {
-      return {
-        title: t('seo.articles.treatingObesity.title'),
-        description: t('seo.articles.treatingObesity.description')
-      };
-    } else if (articleId === 'women-health-obesity') {
-      return {
-        title: t('seo.articles.womenHealth.title'),
-        description: t('seo.articles.womenHealth.description')
-      };
-    }
-    return { title: '', description: '' };
+    const key = articleId ? seoKeyByArticle[articleId] : undefined;
+    if (!key) return { title: '', description: '', keywords: '' };
+    return {
+      title: t(`seo.articles.${key}.title`),
+      description: t(`seo.articles.${key}.description`),
+      keywords: t(`seo.articles.${key}.keywords`),
+    };
   };
 
   const seoData = getSEOData();
@@ -98,7 +101,7 @@ export default function Article() {
       createArticleSchema({
         title: article.title,
         description,
-        imageUrl: `https://vidacure.se${articleImages[articleId]}`,
+        imageUrl: `https://vidacure.se${articleCovers[articleId]?.jpg ?? ''}`,
         url: pageUrl,
         lang: locale,
         author,
@@ -245,8 +248,8 @@ export default function Article() {
         <SEOHead
           title={seoData.title || article.title}
           description={seoData.description || article.content.substring(0, 160)}
-          keywords={t('seo.defaultKeywords')}
-          ogImage={`https://vidacure.se${articleImages[articleId]}`}
+          keywords={seoData.keywords || t('seo.defaultKeywords')}
+          ogImage={`https://vidacure.se${articleCovers[articleId]?.jpg ?? ''}`}
           structuredData={structuredData}
         />
       )}
@@ -297,13 +300,17 @@ export default function Article() {
               </div>
 
               {/* Article Image */}
-              {articleId && articleImages[articleId] && (
+              {articleId && articleCovers[articleId] && (
                 <div className="w-full h-64 sm:h-96 rounded-2xl mb-8 overflow-hidden">
-                  <img
-                    src={articleImages[articleId]}
-                    alt={article.title}
-                    className="w-full h-full object-cover"
-                  />
+                  <picture>
+                    <source srcSet={articleCovers[articleId].webp} type="image/webp" />
+                    <img
+                      src={articleCovers[articleId].jpg}
+                      alt={article.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  </picture>
                 </div>
               )}
 

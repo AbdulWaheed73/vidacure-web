@@ -18,6 +18,8 @@ Key facts:
 - [What is obesity?](https://vidacure.se/article/what-is-obesity): Obesity as a chronic medical condition — how it is measured (BMI), why it matters, and treatment options.
 - [Treating obesity](https://vidacure.se/article/treating-obesity): How obesity changes hormones and metabolism, and how medications and lifestyle support long-term weight management.
 - [Women's health and obesity](https://vidacure.se/article/women-health-obesity): How overweight and obesity affect fertility, pregnancy, long-term health, and mental well-being in women.
+- [Nutrition and obesity](https://vidacure.se/article/nutrition-obesity): What research says about diet in obesity — regular meals, protein, fibre and slow-release carbohydrates for blood sugar, satiety and sustainable weight loss.
+- [Exercise and obesity](https://vidacure.se/article/exercise-obesity): How physical activity affects weight, insulin sensitivity and metabolic health, and how to find a sustainable form of exercise as part of treatment.
 
 ## English versions
 - [Home (EN)](https://vidacure.se/en)
@@ -26,6 +28,8 @@ Key facts:
 - [What is obesity? (EN)](https://vidacure.se/en/article/what-is-obesity)
 - [Treating obesity (EN)](https://vidacure.se/en/article/treating-obesity)
 - [Women's health and obesity (EN)](https://vidacure.se/en/article/women-health-obesity)
+- [Nutrition and obesity (EN)](https://vidacure.se/en/article/nutrition-obesity)
+- [Exercise and obesity (EN)](https://vidacure.se/en/article/exercise-obesity)
 
 ## Notes
 - Educational content is for general information and is not a substitute for individual medical advice.

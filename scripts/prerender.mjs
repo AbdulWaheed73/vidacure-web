@@ -26,12 +26,16 @@ const ROUTES = [
   '/article/what-is-obesity',
   '/article/treating-obesity',
   '/article/women-health-obesity',
+  '/article/nutrition-obesity',
+  '/article/exercise-obesity',
   '/en',
   '/en/aboutus',
   '/en/privacy',
   '/en/article/what-is-obesity',
   '/en/article/treating-obesity',
   '/en/article/women-health-obesity',
+  '/en/article/nutrition-obesity',
+  '/en/article/exercise-obesity',
 ];
 
 const MIME = {

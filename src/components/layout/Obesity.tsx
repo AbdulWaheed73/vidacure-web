@@ -59,6 +59,7 @@ export const Obesity = () => {
                   className="w-full h-auto max-h-[550px] rounded-3xl object-cover"
                   src={cloudinaryImages.injections}
                   alt="Medical injections"
+                  loading="lazy"
                 />
               </div>
             </div>

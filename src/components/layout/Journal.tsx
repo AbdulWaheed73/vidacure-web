@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { cloudinaryImages, cloudinaryImagesMobile } from '@/constants/cloudinary';
 import { localePath, useLocale } from '@/utils/localePath';
 import TestimonialSection from './Testimonial';
+import { articleCovers } from '@/constants/articleImages';
 
 const HealthJournalSection = () => {
   const { t } = useTranslation();
@@ -25,32 +26,57 @@ const HealthJournalSection = () => {
       id: t('journal.articles.article3.id'),
       title: t('journal.articles.article3.title'),
       readTime: t('journal.articles.article3.readTime')
+    },
+    {
+      id: t('journal.articles.article4.id'),
+      title: t('journal.articles.article4.title'),
+      readTime: t('journal.articles.article4.readTime')
+    },
+    {
+      id: t('journal.articles.article5.id'),
+      title: t('journal.articles.article5.title'),
+      readTime: t('journal.articles.article5.readTime')
     }
   ];
 
   const ArticleCard = ({ article, className = "" }: { article: { id: string; title: string; readTime: string }; className?: string }) => (
-    <Link to={localePath(`/article/${article.id}`, locale)} className="block">
+    <Link to={localePath(`/article/${article.id}`, locale)} className="block h-full">
       <Card
-        className={`bg-teal-800 rounded-[20px] shadow-md hover:shadow-lg transition-all duration-300 group ${className}`}
+        className={`bg-teal-800 rounded-[20px] shadow-md hover:shadow-lg transition-all duration-300 group h-full py-0 gap-0 border-0 ${className}`}
       >
-        <CardContent className="p-0 h-full flex flex-col">
-          {/* Title Section */}
-          <div className="p-6 flex-1 flex items-center">
-            <h2 className="text-white text-2xl lg:text-3xl font-bold font-sora leading-snug group-hover:text-emerald-100 transition-colors duration-300 line-clamp-4">
+        <CardContent className="p-0 h-full flex flex-col overflow-hidden rounded-[20px]">
+          {/* Cover Image */}
+          {articleCovers[article.id] && (
+            <div className="w-full h-44 overflow-hidden flex-shrink-0">
+              <picture>
+                <source srcSet={articleCovers[article.id].webp} type="image/webp" />
+                <img
+                  src={articleCovers[article.id].jpg}
+                  alt={article.title}
+                  loading="lazy"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </picture>
+            </div>
+          )}
+
+          {/* Text Section */}
+          <div className="p-6 flex flex-col flex-1">
+            <h2 className="text-white text-xl lg:text-2xl font-bold font-sora leading-snug group-hover:text-emerald-100 transition-colors duration-300 line-clamp-2">
               {article.title}
             </h2>
-          </div>
 
-          {/* Footer Section */}
-          <div className="p-6 pt-0 flex justify-between items-center">
-            <div className="px-3 py-1 bg-white rounded-full flex items-center gap-2.5">
-              <Clock className="w-4 h-4 text-zinc-600" />
-              <span className="text-zinc-800 text-base font-normal font-manrope leading-snug">
-                {article.readTime}
-              </span>
-            </div>
-            <div className="w-6 h-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <ArrowUpRight className="w-4 h-4 text-white group-hover:text-emerald-100 transition-colors duration-300" />
+            {/* Footer */}
+            <div className="mt-auto pt-5 flex justify-between items-center">
+              <div className="px-3 py-1 bg-white rounded-full flex items-center gap-2.5">
+                <Clock className="w-4 h-4 text-zinc-600" />
+                <span className="text-zinc-800 text-base font-normal font-manrope leading-snug">
+                  {article.readTime}
+                </span>
+              </div>
+              <div className="w-6 h-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <ArrowUpRight className="w-4 h-4 text-white group-hover:text-emerald-100 transition-colors duration-300" />
+              </div>
             </div>
           </div>
         </CardContent>
@@ -125,39 +151,21 @@ const HealthJournalSection = () => {
           {/* Desktop Layout - 3 columns */}
           <div className="hidden lg:grid grid-cols-3 gap-8">
             {articles.map((article) => (
-              <ArticleCard
-                key={article.id}
-                article={article}
-                className="h-80"
-              />
+              <ArticleCard key={article.id} article={article} />
             ))}
           </div>
 
           {/* Tablet Layout - 2 columns */}
-          <div className="hidden sm:grid lg:hidden grid-cols-2 gap-6 mb-6">
-            {articles.slice(0, 2).map((article) => (
-              <ArticleCard 
-                key={article.id} 
-                article={article}
-                className="h-72"
-              />
+          <div className="hidden sm:grid lg:hidden grid-cols-2 gap-6">
+            {articles.map((article) => (
+              <ArticleCard key={article.id} article={article} />
             ))}
-          </div>
-          <div className="hidden sm:block lg:hidden">
-            <ArticleCard 
-              article={articles[2]} 
-              className="h-72 max-w-md mx-auto"
-            />
           </div>
 
           {/* Mobile Layout - 1 column */}
           <div className="sm:hidden flex flex-col gap-6">
             {articles.map((article) => (
-              <ArticleCard
-                key={article.id}
-                article={article}
-                className="min-h-[280px]"
-              />
+              <ArticleCard key={article.id} article={article} />
             ))}
           </div>
 

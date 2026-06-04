@@ -171,6 +171,7 @@ const FooterSection = () => {
             className="w-36 h-6"
             src={footer}
             alt="Vidacure Logo"
+            loading="lazy"
           />
         </Link>
       </div>

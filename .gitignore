@@ -25,3 +25,6 @@ dist-ssr
 
 .env
 .env.production
+
+# Source article documents (Word docs provided by the clinical team)
+*.docx
