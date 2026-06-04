@@ -1,0 +1,33 @@
+# Vidacure
+
+> Vidacure is a Swedish digital healthcare provider for sustainable, medically-supervised weight loss. The program combines approved weight-loss medication (such as GLP-1 agonists) with personal coaching, lab tests, and continuous follow-up from licensed clinicians. Care is delivered in Swedish and English to patients in Sweden.
+
+Key facts:
+- Company: Vidacure (Albafides Care AB)
+- Country served: Sweden (SE)
+- Languages: Swedish (default), English
+- Focus: obesity medicine, medical weight management
+- Medical content is reviewed by licensed clinicians (e.g. Selma Mehr, specialist physician in family medicine).
+
+## Main pages (Swedish)
+- [Home](https://vidacure.se/): Program overview, how it works, pricing, and FAQ.
+- [About us](https://vidacure.se/aboutus): The clinical and coaching team behind Vidacure.
+- [Privacy policy](https://vidacure.se/privacy): How Albafides Care AB (Vidacure) processes personal data (GDPR).
+
+## Educational articles (Swedish)
+- [What is obesity?](https://vidacure.se/article/what-is-obesity): Obesity as a chronic medical condition — how it is measured (BMI), why it matters, and treatment options.
+- [Treating obesity](https://vidacure.se/article/treating-obesity): How obesity changes hormones and metabolism, and how medications and lifestyle support long-term weight management.
+- [Women's health and obesity](https://vidacure.se/article/women-health-obesity): How overweight and obesity affect fertility, pregnancy, long-term health, and mental well-being in women.
+
+## English versions
+- [Home (EN)](https://vidacure.se/en)
+- [About us (EN)](https://vidacure.se/en/aboutus)
+- [Privacy policy (EN)](https://vidacure.se/en/privacy)
+- [What is obesity? (EN)](https://vidacure.se/en/article/what-is-obesity)
+- [Treating obesity (EN)](https://vidacure.se/en/article/treating-obesity)
+- [Women's health and obesity (EN)](https://vidacure.se/en/article/women-health-obesity)
+
+## Notes
+- Educational content is for general information and is not a substitute for individual medical advice.
+- Sources cited in articles include the World Health Organization and 1177 Vårdguiden.
+- Contact: info@vidacure.se

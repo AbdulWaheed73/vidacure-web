@@ -3,10 +3,12 @@ import { Clock, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { cloudinaryImages, cloudinaryImagesMobile } from '@/constants/cloudinary';
+import { localePath, useLocale } from '@/utils/localePath';
 import TestimonialSection from './Testimonial';
 
 const HealthJournalSection = () => {
   const { t } = useTranslation();
+  const locale = useLocale();
 
   const articles = [
     {
@@ -26,8 +28,8 @@ const HealthJournalSection = () => {
     }
   ];
 
-  const ArticleCard = ({ article, className = "" }: { article: any; className?: string }) => (
-    <Link to={`/article/${article.id}`} className="block">
+  const ArticleCard = ({ article, className = "" }: { article: { id: string; title: string; readTime: string }; className?: string }) => (
+    <Link to={localePath(`/article/${article.id}`, locale)} className="block">
       <Card
         className={`bg-teal-800 rounded-[20px] shadow-md hover:shadow-lg transition-all duration-300 group ${className}`}
       >

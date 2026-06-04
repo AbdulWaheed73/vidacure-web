@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 
 import Logo from "../../assets/vidacure_png.png";
 import { darkTealText, ROUTES } from "@/constants";
+import { localePath, stripLocale, useLocale } from "@/utils/localePath";
 import { useAuthStore } from "@/stores/authStore";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
@@ -22,6 +23,7 @@ export const Navbar = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const locale = useLocale();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const userName = useAuthStore((s) => s.user?.name);
 
@@ -36,7 +38,7 @@ export const Navbar = () => {
   };
 
   const scrollToSection = (sectionId: string) => {
-    const isHomePage = location.pathname === '/' || location.pathname === ROUTES.HOME;
+    const isHomePage = stripLocale(location.pathname) === '/';
 
     if (isHomePage) {
       // Already on home page, just scroll
@@ -45,8 +47,8 @@ export const Navbar = () => {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     } else {
-      // Navigate to home page with hash
-      navigate(`${ROUTES.HOME}#${sectionId}`);
+      // Navigate to home page with hash, preserving the active locale
+      navigate(localePath(`/#${sectionId}`, locale));
     }
     setIsOpen(false); // Close mobile menu after clicking
   };
@@ -65,7 +67,7 @@ export const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to={ROUTES.HOME} className="inline-block">
+            <Link to={localePath(ROUTES.HOME, locale)} className="inline-block">
               <img
                 src={Logo}
                 alt="VIDACURE"
@@ -91,7 +93,7 @@ export const Navbar = () => {
 
                 <NavigationMenuItem>
                   <Link
-                    to={ROUTES.ABOUT_US}
+                    to={localePath(ROUTES.ABOUT_US, locale)}
                     className={`${darkTealText} font-normal inline-flex items-center justify-center px-2 xl:px-4 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-sm whitespace-nowrap`}
                   >
                     {t("navbar.ourStory")}
@@ -295,7 +297,7 @@ export const Navbar = () => {
                   <NavigationMenuItem className="w-full">
                     <NavigationMenuLink asChild>
                       <Link
-                        to={ROUTES.ABOUT_US}
+                        to={localePath(ROUTES.ABOUT_US, locale)}
                         className="block w-full justify-center text-teal-700 hover:text-teal-900 py-3 px-4 text-center"
                         onClick={() => setIsOpen(false)}
                       >

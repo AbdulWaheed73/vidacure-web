@@ -52,11 +52,20 @@ export default defineConfig({
     Sitemap({
       hostname: 'https://vidacure.se',
       dynamicRoutes: [
+        // Swedish (default, root paths)
         '/',
         '/aboutus',
+        '/privacy',
         '/article/what-is-obesity',
         '/article/treating-obesity',
-        '/article/women-health-obesity'
+        '/article/women-health-obesity',
+        // English (/en prefix)
+        '/en',
+        '/en/aboutus',
+        '/en/privacy',
+        '/en/article/what-is-obesity',
+        '/en/article/treating-obesity',
+        '/en/article/women-health-obesity'
       ],
       exclude: [
         '/login',

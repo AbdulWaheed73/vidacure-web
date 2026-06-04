@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { Shield, FileText, Users, Clock, Globe, UserCheck, ArrowLeft } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { SEOHead } from '@/components/seo/SEOHead';
+import { createWebPageSchema } from '@/utils/structuredData';
+import { localePath, useLocale } from '@/utils/localePath';
 import Navbar from '@/components/layout/Navbar';
 
 type PrivacyPolicyProps = {
@@ -13,16 +15,25 @@ type PrivacyPolicyProps = {
 export default function PrivacyPolicy({ embedded = false }: PrivacyPolicyProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const locale = useLocale();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const webPageSchema = createWebPageSchema(
+    t('privacyPolicy.seoTitle'),
+    t('privacyPolicy.seoDescription'),
+    `https://vidacure.se${localePath('/privacy', locale)}`,
+    locale
+  );
 
   return (
     <>
       <SEOHead
         title={t('privacyPolicy.seoTitle')}
         description={t('privacyPolicy.seoDescription')}
+        structuredData={webPageSchema}
       />
       {!embedded && (
         <div className="w-full shadow-2xs fixed z-50">

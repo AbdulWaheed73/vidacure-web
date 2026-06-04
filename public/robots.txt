@@ -1,5 +1,74 @@
 # Vidacure Robots Configuration
+
+# Default — allow public pages, keep the app/admin/API private
 User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /api/
+Crawl-delay: 10
+
+# --- AI / answer-engine crawlers ---
+# Explicitly welcomed for public content so Vidacure can be cited in AI answers.
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /api/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /api/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /api/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /api/
+
+User-agent: Bingbot
 Allow: /
 Disallow: /admin/
 Disallow: /dashboard/
@@ -8,6 +77,3 @@ Disallow: /api/
 
 # Sitemap
 Sitemap: https://vidacure.se/sitemap.xml
-
-# Crawl delay
-Crawl-delay: 10

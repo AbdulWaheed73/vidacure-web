@@ -10,10 +10,11 @@ import Partner from "@/components/layout/Partner";
 import PricingSection from "@/components/layout/Pricing";
 import HealthJournalSection from "@/components/layout/Journal";
 import FAQSection from "@/components/layout/FAQ";
+import { buildFaqCategories } from "@/components/layout/faqData";
 import FooterSection from "@/components/layout/Footer";
 import ScrollToEndButton from "@/components/layout/ScrollToEndButton";
 import { SEOHead } from "@/components/seo/SEOHead";
-import { createOrganizationSchema } from "@/utils/structuredData";
+import { createFAQSchema, createOrganizationSchema } from "@/utils/structuredData";
 import { useTranslation } from "react-i18next";
 // import { PromoBanner } from "@/components/dashboard";
 
@@ -35,8 +36,11 @@ export const LandingPage = () => {
     }
   }, [location.hash]);
 
-  // Organization schema for home page
+  // Organization + FAQ schema for home page
   const organizationSchema = createOrganizationSchema(t('seo.defaultDescription'));
+  const faqSchema = createFAQSchema(
+    buildFaqCategories(t).flatMap((category) => category.questions)
+  );
 
   return (
     <>
@@ -44,7 +48,7 @@ export const LandingPage = () => {
         title={t('seo.home.title')}
         description={t('seo.home.description')}
         keywords={t('seo.defaultKeywords')}
-        structuredData={organizationSchema}
+        structuredData={[organizationSchema, faqSchema]}
       />
       <div className="w-full shadow-2xs fixed z-50">
         <Navbar />

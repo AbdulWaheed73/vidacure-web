@@ -12,6 +12,7 @@ import { useAdminAuthStore } from "./stores/adminAuthStore";
 import { AdminTopBar } from "./components/admin/AdminTopBar";
 import { AdminProtectedRoute } from "./components/admin/AdminProtectedRoute";
 import { setNavigateRef } from "./lib/navigation";
+import { LocaleSync } from "./components/LocaleSync";
 import i18n from "./i18n";
 
 // Lazy load all pages for code splitting
@@ -172,6 +173,8 @@ function App() {
   return (
     <BrowserRouter>
       <NavigateRefSetter />
+      {/* Sync language to URL locale prefix on public pages */}
+      <LocaleSync />
       {/* Cookie Consent Banner */}
       <CookieBanner />
       {/* Privacy Policy Consent Modal (GDPR) */}
@@ -362,6 +365,12 @@ function App() {
 
         {/* Article Route - Public */}
         <Route path="/article/:articleId" element={<Article />} />
+
+        {/* English locale variants of the public pages (Swedish stays at root) */}
+        <Route path="/en" element={<LandingPage />} />
+        <Route path="/en/aboutus" element={<AboutUs />} />
+        <Route path="/en/privacy" element={<PrivacyPolicy embedded={isAuthenticated} />} />
+        <Route path="/en/article/:articleId" element={<Article />} />
 
         {/* 404 Not Found Page */}
         <Route path="*" element={<NotFoundPage />} />

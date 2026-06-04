@@ -1,18 +1,27 @@
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from './Button';
 import { Globe } from 'lucide-react';
+import { isPublicLocalePath, localePath, stripLocale, toLocale } from '@/utils/localePath';
 
 const LanguageToggle = () => {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const toggleLanguage = () => {
-    // Use startsWith to handle locale codes like 'en-US' or 'sv-SE'
-    const isEnglish = i18n.language.startsWith('en');
-    const newLang = isEnglish ? 'sv' : 'en';
+    const newLang = toLocale(i18n.language) === 'en' ? 'sv' : 'en';
     i18n.changeLanguage(newLang);
+
+    // On public pages the URL encodes the language, so reflect the switch there.
+    // (Dashboard togglers use other components and never reach this branch.)
+    if (isPublicLocalePath(location.pathname)) {
+      const canonical = stripLocale(location.pathname);
+      navigate(`${localePath(canonical, newLang)}${location.search}${location.hash}`);
+    }
   };
 
-  const currentLang = i18n.language.startsWith('sv') ? 'SV' : 'EN';
+  const currentLang = toLocale(i18n.language) === 'sv' ? 'SV' : 'EN';
 
   return (
     <Button
@@ -28,4 +37,3 @@ const LanguageToggle = () => {
 };
 
 export default LanguageToggle;
-

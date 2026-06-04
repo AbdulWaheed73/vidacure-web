@@ -8,12 +8,14 @@ const TikTokIcon = ({ className }: { className?: string }) => (
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
+import { localePath, useLocale } from '@/utils/localePath';
 import footer from "../../assets/footer_logo.png";
 import { useCookieConsentStore } from '@/stores/cookieConsentStore';
 
 const FooterSection = () => {
   const { t } = useTranslation();
   const { openPreferences } = useCookieConsentStore();
+  const locale = useLocale();
 
   const footerSections = [
     {
@@ -50,7 +52,7 @@ const FooterSection = () => {
 
   const socialIcons = [
     { icon: Facebook, href: "https://facebook.com/vidacure", label: "Facebook" },
-    { icon: Instagram, href: "https://instagram.com/vidacure", label: "Instagram" },
+    { icon: Instagram, href: "https://www.instagram.com/vidacure.se/", label: "Instagram" },
     { icon: TikTokIcon, href: "https://tiktok.com/@vidacure", label: "TikTok" }
   ];
 
@@ -118,10 +120,10 @@ const FooterSection = () => {
       );
     }
 
-    // Internal route
+    // Internal route (locale-aware)
     return (
       <Link
-        to={href}
+        to={localePath(href, locale)}
         className={`text-emerald-50 text-base font-normal font-inter leading-normal hover:text-white transition-colors duration-200 ${className}`}
       >
         {children}
@@ -164,7 +166,7 @@ const FooterSection = () => {
     <footer className="bg-teal-800 text-white">
       {/* Logo - Desktop only, positioned absolutely */}
       <div className="hidden lg:block relative">
-        <Link to={ROUTES.HOME} className="absolute top-10 left-1/2 transform -translate-x-1/2 z-10">
+        <Link to={localePath(ROUTES.HOME, locale)} className="absolute top-10 left-1/2 transform -translate-x-1/2 z-10">
           <img
             className="w-36 h-6"
             src={footer}

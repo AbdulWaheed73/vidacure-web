@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
+import { localeFromPath, localePath, stripLocale } from '@/utils/localePath';
 
 type SEOHeadProps = {
   title?: string;
@@ -20,8 +21,7 @@ export const SEOHead = ({
   structuredData,
   noindex = false
 }: SEOHeadProps) => {
-  const { t, i18n } = useTranslation();
-  const currentLang = i18n.language;
+  const { t } = useTranslation();
 
   // Build full title with site name
   const fullTitle = title
@@ -32,7 +32,14 @@ export const SEOHead = ({
   const finalDescription = description || t('seo.defaultDescription');
   const finalKeywords = keywords || t('seo.defaultKeywords');
   const baseUrl = 'https://vidacure.se';
-  const finalCanonical = canonicalUrl || `${baseUrl}${typeof window !== 'undefined' ? window.location.pathname : ''}`;
+
+  // Locale-aware canonical + hreflang alternates, derived from the current path.
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const canonicalPath = stripLocale(currentPath); // unprefixed (Swedish) in-app path
+  const svUrl = `${baseUrl}${canonicalPath}`;
+  const enUrl = `${baseUrl}${localePath(canonicalPath, 'en')}`;
+  const pageLocale = localeFromPath(currentPath);
+  const finalCanonical = canonicalUrl || (pageLocale === 'en' ? enUrl : svUrl);
   const finalOgImage = ogImage || `${baseUrl}/og-image.png`;
 
   // Handle multiple structured data objects
@@ -41,7 +48,7 @@ export const SEOHead = ({
   return (
     <Helmet>
       {/* Basic Meta Tags */}
-      <html lang={currentLang} />
+      <html lang={pageLocale} />
       <title>{fullTitle}</title>
       <meta name="description" content={finalDescription} />
       <meta name="keywords" content={finalKeywords} />
@@ -49,13 +56,19 @@ export const SEOHead = ({
       {/* Canonical URL */}
       <link rel="canonical" href={finalCanonical} />
 
+      {/* hreflang alternates (Swedish is x-default) */}
+      <link rel="alternate" hrefLang="sv" href={svUrl} />
+      <link rel="alternate" hrefLang="en" href={enUrl} />
+      <link rel="alternate" hrefLang="x-default" href={svUrl} />
+
       {/* Open Graph Tags */}
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={finalDescription} />
       <meta property="og:image" content={finalOgImage} />
       <meta property="og:url" content={finalCanonical} />
       <meta property="og:type" content="website" />
-      <meta property="og:locale" content={currentLang === 'sv' ? 'sv_SE' : 'en_US'} />
+      <meta property="og:locale" content={pageLocale === 'en' ? 'en_US' : 'sv_SE'} />
+      <meta property="og:locale:alternate" content={pageLocale === 'en' ? 'sv_SE' : 'en_US'} />
       <meta property="og:site_name" content="Vidacure" />
 
       {/* Twitter Card Tags */}
