@@ -36,6 +36,11 @@ const HealthJournalSection = () => {
       id: t('journal.articles.article5.id'),
       title: t('journal.articles.article5.title'),
       readTime: t('journal.articles.article5.readTime')
+    },
+    {
+      id: t('journal.articles.article6.id'),
+      title: t('journal.articles.article6.title'),
+      readTime: t('journal.articles.article6.readTime')
     }
   ];
 

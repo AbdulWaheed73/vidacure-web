@@ -20,6 +20,7 @@ Key facts:
 - [Women's health and obesity](https://vidacure.se/article/women-health-obesity): How overweight and obesity affect fertility, pregnancy, long-term health, and mental well-being in women.
 - [Nutrition and obesity](https://vidacure.se/article/nutrition-obesity): What research says about diet in obesity — regular meals, protein, fibre and slow-release carbohydrates for blood sugar, satiety and sustainable weight loss.
 - [Exercise and obesity](https://vidacure.se/article/exercise-obesity): How physical activity affects weight, insulin sensitivity and metabolic health, and how to find a sustainable form of exercise as part of treatment.
+- [Semaglutide vs tirzepatide (Ozempic, Wegovy, Mounjaro)](https://vidacure.se/article/semaglutide-vs-tirzepatide): Evidence-based comparison of the GLP-1 medication semaglutide (Ozempic, Wegovy) and the dual GIP/GLP-1 medication tirzepatide (Mounjaro) for weight loss — mechanisms, expected weight loss, side effects and price differences.
 
 ## English versions
 - [Home (EN)](https://vidacure.se/en)
@@ -30,6 +31,7 @@ Key facts:
 - [Women's health and obesity (EN)](https://vidacure.se/en/article/women-health-obesity)
 - [Nutrition and obesity (EN)](https://vidacure.se/en/article/nutrition-obesity)
 - [Exercise and obesity (EN)](https://vidacure.se/en/article/exercise-obesity)
+- [Semaglutide vs tirzepatide (EN)](https://vidacure.se/en/article/semaglutide-vs-tirzepatide)
 
 ## Notes
 - Educational content is for general information and is not a substitute for individual medical advice.

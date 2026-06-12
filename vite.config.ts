@@ -61,6 +61,7 @@ export default defineConfig({
         '/article/women-health-obesity',
         '/article/nutrition-obesity',
         '/article/exercise-obesity',
+        '/article/semaglutide-vs-tirzepatide',
         // English (/en prefix)
         '/en',
         '/en/aboutus',
@@ -69,7 +70,8 @@ export default defineConfig({
         '/en/article/treating-obesity',
         '/en/article/women-health-obesity',
         '/en/article/nutrition-obesity',
-        '/en/article/exercise-obesity'
+        '/en/article/exercise-obesity',
+        '/en/article/semaglutide-vs-tirzepatide'
       ],
       exclude: [
         '/login',

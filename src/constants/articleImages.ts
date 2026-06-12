@@ -10,6 +10,8 @@ import nutritionObesityJpg from '@/assets/nutrition-obesity.jpg';
 import nutritionObesityWebp from '@/assets/nutrition-obesity.webp';
 import exerciseObesityJpg from '@/assets/exercise-obesity.jpg';
 import exerciseObesityWebp from '@/assets/exercise-obesity.webp';
+import semaglutideTirzepatideJpg from '@/assets/semaglutide-vs-tirzepatide.jpg';
+import semaglutideTirzepatideWebp from '@/assets/semaglutide-vs-tirzepatide.webp';
 
 export type ArticleCover = { webp: string; jpg: string };
 
@@ -19,4 +21,5 @@ export const articleCovers: Record<string, ArticleCover> = {
   'women-health-obesity': { webp: girlsWebp, jpg: girlsJpg },
   'nutrition-obesity': { webp: nutritionObesityWebp, jpg: nutritionObesityJpg },
   'exercise-obesity': { webp: exerciseObesityWebp, jpg: exerciseObesityJpg },
+  'semaglutide-vs-tirzepatide': { webp: semaglutideTirzepatideWebp, jpg: semaglutideTirzepatideJpg },
 };

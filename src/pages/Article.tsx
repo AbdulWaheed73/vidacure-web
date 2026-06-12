@@ -17,6 +17,7 @@ const ARTICLE_META: Record<string, { published: string; modified: string }> = {
   'women-health-obesity': { published: '2025-03-01', modified: '2026-05-01' },
   'nutrition-obesity': { published: '2026-06-01', modified: '2026-06-01' },
   'exercise-obesity': { published: '2026-06-01', modified: '2026-06-01' },
+  'semaglutide-vs-tirzepatide': { published: '2026-06-12', modified: '2026-06-12' },
 };
 
 export default function Article() {
@@ -60,6 +61,12 @@ export default function Article() {
       title: t('journal.articles.article5.title'),
       readTime: t('journal.articles.article5.readTime'),
       content: t('journal.articles.article5.content')
+    },
+    {
+      id: t('journal.articles.article6.id'),
+      title: t('journal.articles.article6.title'),
+      readTime: t('journal.articles.article6.readTime'),
+      content: t('journal.articles.article6.content')
     }
   ];
 
@@ -72,6 +79,7 @@ export default function Article() {
     'women-health-obesity': 'womenHealth',
     'nutrition-obesity': 'nutrition',
     'exercise-obesity': 'exercise',
+    'semaglutide-vs-tirzepatide': 'glp1',
   };
 
   const getSEOData = () => {
@@ -174,12 +182,65 @@ export default function Article() {
     return nodes;
   };
 
+  // Render a pipe-delimited markdown table block (first row = header).
+  const renderTable = (rows: string[], key: number) => {
+    const cells = (row: string) =>
+      row.replace(/^\s*\|/, '').replace(/\|\s*$/, '').split('|').map((c) => c.trim());
+    const [header, ...body] = rows;
+    return (
+      <div key={key} className="my-6 overflow-x-auto">
+        <table className="w-full border-collapse text-left">
+          <thead>
+            <tr className="bg-teal-50">
+              {cells(header).map((cell, i) => (
+                <th
+                  key={i}
+                  className="border border-teal-100 px-4 py-3 text-zinc-800 text-sm font-bold font-sora"
+                >
+                  {renderInline(cell)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {body.map((row, r) => (
+              <tr key={r} className={r % 2 === 0 ? 'bg-white' : 'bg-zinc-50/60'}>
+                {cells(row).map((cell, c) => (
+                  <td
+                    key={c}
+                    className="border border-teal-100 px-4 py-3 text-zinc-800 text-sm font-normal font-manrope leading-relaxed align-top"
+                  >
+                    {renderInline(cell)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
   // Helper function to render markdown-like content
   const renderContent = (content: string) => {
     const lines = content.split('\n');
     const elements: React.ReactElement[] = [];
 
-    lines.forEach((line, index) => {
+    for (let index = 0; index < lines.length; index++) {
+      const line = lines[index];
+
+      // Table block: consecutive lines starting with "|". Skips the --- separator row.
+      if (line.trim().startsWith('|')) {
+        const rows: string[] = [];
+        while (index < lines.length && lines[index].trim().startsWith('|')) {
+          if (!/^\s*\|[\s|:-]+\|?\s*$/.test(lines[index])) rows.push(lines[index]);
+          index++;
+        }
+        index--; // step back; for-loop will advance past the last table line
+        if (rows.length) elements.push(renderTable(rows, index));
+        continue;
+      }
+
       // Headers
       if (line.startsWith('### ')) {
         elements.push(
@@ -237,7 +298,7 @@ export default function Article() {
       else if (!line.trim()) {
         elements.push(<div key={index} className="h-2" />);
       }
-    });
+    }
 
     return elements;
   };

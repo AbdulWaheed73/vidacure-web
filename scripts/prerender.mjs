@@ -28,6 +28,7 @@ const ROUTES = [
   '/article/women-health-obesity',
   '/article/nutrition-obesity',
   '/article/exercise-obesity',
+  '/article/semaglutide-vs-tirzepatide',
   '/en',
   '/en/aboutus',
   '/en/privacy',
@@ -36,6 +37,7 @@ const ROUTES = [
   '/en/article/women-health-obesity',
   '/en/article/nutrition-obesity',
   '/en/article/exercise-obesity',
+  '/en/article/semaglutide-vs-tirzepatide',
 ];
 
 const MIME = {
