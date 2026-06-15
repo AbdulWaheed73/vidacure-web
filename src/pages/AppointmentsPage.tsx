@@ -45,6 +45,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { PopupModal } from 'react-calendly';
 import { calendlyService } from '../services/calendlyService';
 import { providerService } from '../services/providerService';
+import { MeetingCountdown } from '@/components/common/MeetingCountdown';
 import { usePatientMeetings, useMyProviders, useProviderMeetings } from '@/hooks/useDashboardQueries';
 import type { PatientMeeting } from '../types/calendly-types';
 import type { ProviderMeeting } from '../types/provider-types';
@@ -181,6 +182,13 @@ const UpcomingAppointmentsCarousel: React.FC<{
                 <p className="text-sm font-medium text-gray-800">{meeting.type}</p>
               </div>
             </div>
+
+            {/* Countdown */}
+            <MeetingCountdown
+              startTime={meeting.startTime}
+              endTime={meeting.endTime}
+              className="text-xs text-teal-700 font-medium mt-3"
+            />
 
             {/* Action button */}
             <div className="mt-4">
@@ -826,6 +834,12 @@ export const AppointmentsPage: React.FC = () => {
                   <p className="text-sm font-medium text-gray-800">{selectedMeeting.eventType}</p>
                 </div>
               </div>
+
+              <MeetingCountdown
+                startTime={selectedMeeting.startTime}
+                endTime={selectedMeeting.endTime}
+                className="text-sm text-teal-700 font-medium"
+              />
 
               {selectedMeeting.status === 'canceled' && (
                 <p className="text-sm text-red-500 font-medium">{t('appointments.canceled')}</p>

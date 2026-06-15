@@ -1857,6 +1857,18 @@
     "joinMeeting": "Join Meeting",
     "loadMore": "Load More Appointments"
   },
+  "countdown": {
+    "startsIn": "Starts in",
+    "liveNow": "Live now",
+    "daysHours": "{{days}}d {{hours}}h",
+    "hoursMinutes": "{{hours}}h {{minutes}}m",
+    "minutesSeconds": "{{minutes}}m {{seconds}}s",
+    "copyLink": "Copy meeting link",
+    "copied": "Copied!",
+    "sms": "SMS",
+    "whatsapp": "WhatsApp",
+    "noPhone": "No phone number on file"
+  },
   "subscribeCard": {
     "currentPlan": "Current Plan",
     "includes": "Includes:",

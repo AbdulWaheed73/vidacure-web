@@ -31,6 +31,8 @@ export type PatientMeeting = {
   rescheduleUrl: string | null;
   calendlyHostName?: string | null;
   calendlyHostEmail?: string | null;
+  // Patient phone (doctor-only response) for messaging the patient directly
+  patientPhone?: string | null;
   // New fields for meeting history
   source?: 'pre-login' | 'post-login';
   completedAt?: string;

@@ -5,6 +5,7 @@ import { Calendar, Clock, Video } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { MeetingCountdown } from '@/components/common/MeetingCountdown';
 import { usePatientMeetings } from '@/hooks/useDashboardQueries';
 
 export const NextAppointmentCard: React.FC = () => {
@@ -84,6 +85,11 @@ export const NextAppointmentCard: React.FC = () => {
         {doctorName && (
           <p className="text-sm text-gray-500">{t('dashboard.withDr')} {doctorName}</p>
         )}
+        <MeetingCountdown
+          startTime={nextMeeting.startTime}
+          endTime={nextMeeting.endTime}
+          className="text-sm text-teal-700 font-medium"
+        />
         <Button
           variant="outline"
           size="sm"

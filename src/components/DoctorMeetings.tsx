@@ -6,6 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/Alert';
 import { calendlyService } from '../services/calendlyService';
+import { MeetingCountdown } from '@/components/common/MeetingCountdown';
+import { CopyMeetingLinkButton } from '@/components/common/CopyMeetingLinkButton';
+import { MessagePatientButtons } from '@/components/common/MessagePatientButtons';
 import type { PatientMeeting } from '../types/calendly-types';
 
 export const DoctorMeetings: React.FC = () => {
@@ -200,6 +203,11 @@ export const DoctorMeetings: React.FC = () => {
                         Upcoming
                       </Badge>
                     )}
+                    <MeetingCountdown
+                      startTime={meeting.startTime}
+                      endTime={meeting.endTime}
+                      className="text-xs text-gray-600"
+                    />
                   </div>
                 </div>
               </CardHeader>
@@ -248,6 +256,15 @@ export const DoctorMeetings: React.FC = () => {
                           <Video className="w-3 h-3 mr-1" />
                           {meeting.endTime && isCurrent(meeting.startTime, meeting.endTime) ? t('doctorMeetings.startCall') : t('doctorMeetings.joinMeeting')}
                         </Button>
+                      )}
+                      {meeting.meetingUrl && (
+                        <CopyMeetingLinkButton url={meeting.meetingUrl} />
+                      )}
+                      {meeting.meetingUrl && (
+                        <MessagePatientButtons
+                          phone={meeting.patientPhone}
+                          url={meeting.meetingUrl}
+                        />
                       )}
                     </div>
                   </div>

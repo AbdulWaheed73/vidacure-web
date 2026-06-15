@@ -7,6 +7,9 @@ import { useChatUnreadCounts } from '@/hooks/useChatQueries';
 import { PrescriptionRequestDetailModal } from '@/components/PrescriptionRequestDetailModal';
 import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
 import { Button } from '@/components/ui/Button';
+import { MeetingCountdown } from '@/components/common/MeetingCountdown';
+import { CopyMeetingLinkButton } from '@/components/common/CopyMeetingLinkButton';
+import { MessagePatientButtons } from '@/components/common/MessagePatientButtons';
 import type { DashboardPageProps } from '../types';
 import type { PatientMeeting } from '@/types/calendly-types';
 import type { DoctorPrescriptionRequest } from '@/types/doctor-prescription-types';
@@ -81,14 +84,30 @@ const AppointmentCardHighlighted: React.FC<{ meeting: PatientMeeting; t: (key: s
         </span>
       </div>
     </div>
-    <p className="text-white/80 text-sm mb-4 font-manrope">{meeting.eventType}</p>
+    <p className="text-white/80 text-sm mb-2 font-manrope">{meeting.eventType}</p>
+    <MeetingCountdown
+      startTime={meeting.startTime}
+      endTime={meeting.endTime}
+      className="text-white/90 text-sm font-sora mb-4"
+    />
     {meeting.meetingUrl && (
-      <button
-        onClick={() => window.open(meeting.meetingUrl!, '_blank')}
-        className="bg-white text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-white/90 transition-colors"
-      >
-        {t('doctorDashboard.startCall')}
-      </button>
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          onClick={() => window.open(meeting.meetingUrl!, '_blank')}
+          className="bg-white text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-white/90 transition-colors"
+        >
+          {t('doctorDashboard.startCall')}
+        </button>
+        <CopyMeetingLinkButton
+          url={meeting.meetingUrl}
+          className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
+        />
+        <MessagePatientButtons
+          phone={meeting.patientPhone}
+          url={meeting.meetingUrl}
+          className="[&_button]:bg-white/10 [&_button]:border-white/30 [&_button]:text-white [&_button:hover]:bg-white/20 [&_button:hover]:text-white"
+        />
+      </div>
     )}
   </div>
 );

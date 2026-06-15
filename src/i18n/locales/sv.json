@@ -1857,6 +1857,18 @@
     "joinMeeting": "Anslut till möte",
     "loadMore": "Ladda fler bokningar"
   },
+  "countdown": {
+    "startsIn": "Börjar om",
+    "liveNow": "Pågår nu",
+    "daysHours": "{{days}}d {{hours}}h",
+    "hoursMinutes": "{{hours}}h {{minutes}}m",
+    "minutesSeconds": "{{minutes}}m {{seconds}}s",
+    "copyLink": "Kopiera möteslänk",
+    "copied": "Kopierad!",
+    "sms": "SMS",
+    "whatsapp": "WhatsApp",
+    "noPhone": "Inget telefonnummer registrerat"
+  },
   "subscribeCard": {
     "currentPlan": "Nuvarande plan",
     "includes": "Inkluderar:",

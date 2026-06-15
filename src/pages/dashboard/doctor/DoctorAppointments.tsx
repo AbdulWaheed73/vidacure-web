@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Video, RefreshCw, Calendar, Clock, ChevronDown } from 'lucide-react';
 import { useDoctorMeetings } from '@/hooks/useDoctorDashboardQueries';
+import { MeetingCountdown } from '@/components/common/MeetingCountdown';
+import { CopyMeetingLinkButton } from '@/components/common/CopyMeetingLinkButton';
+import { MessagePatientButtons } from '@/components/common/MessagePatientButtons';
 import type { PatientMeeting } from '@/types/calendly-types';
 
 const formatTime = (dateStr: string): string => {
@@ -85,14 +88,30 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean; t: (ke
             {meeting.inviteeEmail && (
               <p className="text-white/50 text-xs font-manrope mt-0.5">{meeting.inviteeEmail}</p>
             )}
+            <MeetingCountdown
+              startTime={meeting.startTime}
+              endTime={meeting.endTime}
+              className="text-white/90 text-sm font-sora mt-1.5"
+            />
           </div>
           {meeting.meetingUrl && meeting.status === 'active' && (
-            <button
-              onClick={() => window.open(meeting.meetingUrl!, '_blank')}
-              className="bg-white text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-white/90 transition-colors self-start md:self-auto"
-            >
-              {live ? t('doctorAppointments.startCall') : t('doctorAppointments.joinMeeting')}
-            </button>
+            <div className="flex flex-wrap items-center gap-2 self-start md:self-auto">
+              <button
+                onClick={() => window.open(meeting.meetingUrl!, '_blank')}
+                className="bg-white text-[#005044] rounded-full px-6 py-2.5 font-sora font-semibold text-sm hover:bg-white/90 transition-colors"
+              >
+                {live ? t('doctorAppointments.startCall') : t('doctorAppointments.joinMeeting')}
+              </button>
+              <CopyMeetingLinkButton
+                url={meeting.meetingUrl}
+                className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:text-white"
+              />
+              <MessagePatientButtons
+                phone={meeting.patientPhone}
+                url={meeting.meetingUrl}
+                className="[&_button]:bg-white/10 [&_button]:border-white/30 [&_button]:text-white [&_button:hover]:bg-white/20 [&_button:hover]:text-white"
+              />
+            </div>
           )}
         </div>
       </div>
@@ -114,6 +133,11 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean; t: (ke
             {meeting.inviteeEmail && (
               <p className="text-[#b0b0b0] text-xs font-manrope mt-0.5 truncate">{meeting.inviteeEmail}</p>
             )}
+            <MeetingCountdown
+              startTime={meeting.startTime}
+              endTime={meeting.endTime}
+              className="text-xs text-[#005044] font-medium mt-1"
+            />
           </div>
         </div>
         <div className="flex items-center gap-2 flex-wrap flex-shrink-0 pl-13 md:pl-0">
@@ -125,12 +149,16 @@ const UpcomingCard: React.FC<{ meeting: PatientMeeting; isFirst: boolean; t: (ke
             {formatTime(meeting.startTime)}
           </span>
           {meeting.meetingUrl && meeting.status === 'active' && (
-            <button
-              onClick={() => window.open(meeting.meetingUrl!, '_blank')}
-              className="bg-[#005044] text-white rounded-full px-5 py-2 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors"
-            >
-              {t('doctorAppointments.joinMeeting')}
-            </button>
+            <>
+              <button
+                onClick={() => window.open(meeting.meetingUrl!, '_blank')}
+                className="bg-[#005044] text-white rounded-full px-5 py-2 font-sora font-semibold text-sm hover:bg-[#004038] transition-colors"
+              >
+                {t('doctorAppointments.joinMeeting')}
+              </button>
+              <CopyMeetingLinkButton url={meeting.meetingUrl} />
+              <MessagePatientButtons phone={meeting.patientPhone} url={meeting.meetingUrl} />
+            </>
           )}
         </div>
       </div>
