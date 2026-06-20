@@ -1392,14 +1392,14 @@
     },
     "articles": {
       "whatIsObesity": {
-        "title": "What is Obesity? Understanding the Medical Condition",
-        "description": "Learn about obesity as a complex medical condition, its biological factors, and how modern medical treatments can help achieve sustainable weight management.",
-        "keywords": "obesity, what is obesity, BMI, overweight, chronic disease, causes of obesity, why people gain weight, hormones and weight, genetics and obesity, obesity treatment, weight loss, lifestyle change, behavior change, digital treatment, maintaining weight loss, weight stability, long-term health, relapse prevention, digital weight loss, digital health service, online weight coaching, digital obesity treatment"
+        "title": "What is Obesity? Definition, BMI and Causes",
+        "description": "What is obesity and when are you classified as obese? Learn about BMI, causes, symptoms and why obesity is a chronic disease.",
+        "keywords": "obesity, what is obesity, BMI, overweight, chronic disease, obesity treatment"
       },
       "treatingObesity": {
-        "title": "Treating Obesity - Modern Medical Approaches",
-        "description": "Discover evidence-based obesity treatments including GLP-1 medications, lifestyle coaching, and comprehensive medical support for lasting results.",
-        "keywords": "obesity, overweight, chronic disease, metabolic health, insulin resistance, PCOS, polycystic ovary syndrome, hormonal imbalance, androgen levels, ovulation disorders, fertility and obesity, pregnancy and obesity, gestational diabetes, hypertension in pregnancy, preeclampsia, weight loss and fertility, lifestyle treatment for obesity, dietary patterns and weight management, physical activity and metabolic health, behavioral support for weight loss, bariatric surgery, gastric bypass, gastric sleeve, BMI thresholds for treatment, metabolic complications, type 2 diabetes risk, improved ovulation, reproductive health, assisted reproduction and obesity, healthy pregnancy, long-term weight maintenance, clinical assessment for obesity treatment"
+        "title": "Obesity Treatment: GLP-1, Lifestyle and Medical Care",
+        "description": "Overview of obesity treatment: lifestyle support, GLP-1 medications and medical follow-up. Evidence-based guide for sustainable weight loss.",
+        "keywords": "obesity treatment, GLP-1, medical weight loss, lifestyle treatment, bariatric surgery"
       },
       "womenHealth": {
         "title": "Women's Health and Obesity - What You Need to Know",
@@ -1407,19 +1407,19 @@
         "keywords": "women's health, obesity, hormonal conditions, obesity and women's health, pregnancy and obesity, fertility and overweight, insulin resistance and PCOS, polycystic ovary syndrome, ovulation disorders, hormonal imbalance, androgen levels, metabolic health, pregnancy complications in obesity, gestational diabetes, high blood pressure in pregnancy, preeclampsia, caesarean section and obesity, PCOS symptoms, PCOS treatment, insulin sensitivity, lifestyle changes for PCOS, weight loss and fertility, signs of insulin resistance, insulin resistance testing, HbA1c, fasting glucose, oral glucose tolerance test, blood sugar regulation, abdominal weight gain, acanthosis nigricans, metabolic risks, type 2 diabetes risk, improved ovulation, regular menstrual cycles, healthy pregnancy"
       },
       "nutrition": {
-        "title": "Nutrition and Obesity: What the Research Says",
-        "description": "Evidence-based nutrition in obesity: regular meals, protein, fibre and slow-release carbohydrates for stable blood sugar, better satiety and sustainable weight loss.",
-        "keywords": "obesity and fertility, diet and ovulation, pregnancy and overweight, behavioral support in obesity, mindful eating, stress and eating, ultra-processed food, eating habits in obesity, healthy choices, slow-release carbohydrates, blood sugar regulation, diet for insulin resistance, protein in obesity, high-fibre diet, satiety, diet for weight loss, regular meals in obesity, blood sugar stability, hunger regulation, dietary advice for overweight"
+        "title": "Diet for Obesity: Evidence-Based Nutrition Advice",
+        "description": "What should you eat when living with obesity? Evidence-based advice on protein, fibre and blood sugar stability for sustainable weight loss.",
+        "keywords": "diet for obesity, nutrition and obesity, dietary advice, protein, fibre, blood sugar stability"
       },
       "exercise": {
-        "title": "Exercise for Overweight and Obesity",
-        "description": "How exercise affects weight, insulin sensitivity and metabolic health in overweight and obesity, and how to find a sustainable form of activity as part of treatment.",
-        "keywords": "cardiometabolic health, exercise for obesity, weight management, resistance training, aerobic exercise, visceral fat reduction, HOMA-IR improvement, metabolic benefits of exercise, obesity treatment, physical activity guidelines, exercise interventions for overweight individuals, long-term weight maintenance, inflammation reduction, cardiometabolic biomarkers, exercise and insulin sensitivity, exercise and blood pressure, exercise and liver fat, HIIT for obesity, strength training benefits, obesity and physical activity, evidence-based obesity treatment"
+        "title": "Exercise for Overweight and Obesity — How to Start",
+        "description": "How exercise affects weight and metabolic health when overweight. Practical advice on strength training and daily activity as part of obesity treatment.",
+        "keywords": "exercise for obesity, physical activity, weight loss exercise, strength training, aerobic exercise, metabolic health"
       },
       "glp1": {
-        "title": "Semaglutide vs Tirzepatide: Ozempic, Wegovy & Mounjaro Compared",
-        "description": "Evidence-based comparison of semaglutide (Ozempic, Wegovy) and tirzepatide (Mounjaro) for weight loss: mechanisms, results, side effects and price differences.",
-        "keywords": "semaglutide vs tirzepatide, Ozempic, Wegovy, Mounjaro, GLP-1 medications, GLP-1 agonist, GIP, dual incretin, weight loss medication, obesity treatment, semaglutide weight loss, tirzepatide weight loss, GLP-1 for obesity, weekly injection, appetite regulation, satiety, blood sugar regulation, SURMOUNT-5, weight management medication, GLP-1 side effects, nausea, gallbladder, pancreatitis, Mounjaro vs Wegovy, Wegovy weight loss, tirzepatide vs semaglutide, GLP-1 cost, obesity medication Sweden"
+        "title": "Semaglutide vs Tirzepatide: Ozempic, Wegovy & Mounjaro",
+        "description": "Comparison of semaglutide and tirzepatide for weight loss. Differences between Ozempic, Wegovy and Mounjaro — effects, side effects and cost.",
+        "keywords": "semaglutide vs tirzepatide, Ozempic, Wegovy, Mounjaro, GLP-1 medications, mounjaro vs semaglutide"
       }
     }
   },

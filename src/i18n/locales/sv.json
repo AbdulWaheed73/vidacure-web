@@ -1379,12 +1379,12 @@
     "submitting": "Skickar..."
   },
   "seo": {
-    "defaultTitle": "Vidacure - Hållbar Viktminskning med Medicinsk Vetenskap",
-    "defaultDescription": "Vidacure kombinerar godkänd medicinering med personlig coaching för att hjälpa dig uppnå hållbar viktminskning. Effektiv, vetenskapsbaserad behandling med medicinsk support.",
-    "defaultKeywords": "viktminskning, medicinsk viktminskning, GLP-1, fetmabehandling, hållbar viktminskning, hälsovård Sverige, vidacure",
+    "defaultTitle": "Vidacure - GLP-1 Viktminskning & Coaching i Sverige",
+    "defaultDescription": "Medicinskt viktminskningsprogram med GLP-1-läkemedel och personlig coaching. Legitimerad läkare, hälsovårdscoach och digitalt stöd i Sverige.",
+    "defaultKeywords": "viktminskning, GLP-1, medicinsk viktminskning, fetmabehandling, coaching sverige, viktminskningsprogram, vidacure",
     "home": {
-      "title": "Hållbart Viktminskningsprogram - Medicinsk Support & Coaching",
-      "description": "Uppnå varaktig viktminskning med Vidacures medicinska program. FDA-godkänd medicinering, personlig coaching och dedikerat vårdteam. Starta din transformation idag."
+      "title": "GLP-1 Viktminskning & Personlig Coaching i Sverige",
+      "description": "Medicinskt viktminskningsprogram med GLP-1-läkemedel och personlig coaching. Legitimerad läkare, hälsovårdscoach och digitalt stöd. Boka fri konsultation."
     },
     "aboutUs": {
       "title": "Om Vidacure - Din Partner för Medicinsk Viktminskning",
@@ -1392,14 +1392,14 @@
     },
     "articles": {
       "whatIsObesity": {
-        "title": "Vad är Fetma? Förstå det Medicinska Tillståndet",
-        "description": "Lär dig om fetma som ett komplext medicinskt tillstånd, dess biologiska faktorer och hur moderna medicinska behandlingar kan hjälpa uppnå hållbar viktkontroll.",
-        "keywords": "fetma, vad är fetma, BMI, övervikt, kronisk sjukdom, orsaker till fetma, varför går man upp i vikt, hormoner och vikt, genetik och fetma, behandling av fetma, viktnedgång, livsstilsförändring, beteendeförändring, digital behandling, behålla viktnedgång, viktstabilitet, långsiktig hälsa, återfallsprevention, digital viktnedgång, digital hälsotjänst, online coaching vikt, digital behandling fetma"
+        "title": "Vad är fetma? Definition, BMI och orsaker",
+        "description": "Vad är fetma och när räknas man som fetma? Läs om BMI, orsaker, symtom och varför fetma är en kronisk sjukdom — medicinskt granskad guide.",
+        "keywords": "fetma, vad är fetma, BMI, övervikt, kronisk sjukdom, orsaker till fetma, när har man fetma, är fetma en sjukdom, fetma definition, fetmabehandling"
       },
       "treatingObesity": {
-        "title": "Behandling av Fetma - Moderna Medicinska Metoder",
-        "description": "Upptäck evidensbaserade fetmabehandlingar inklusive GLP-1-mediciner, livsstilscoaching och omfattande medicinsk support för varaktiga resultat.",
-        "keywords": "fetma, övervikt, kronisk sjukdom, metabol hälsa, insulinresistens, PCOS, polycystiskt ovariesyndrom, hormonell obalans, androgennivåer, ägglossningsrubbningar, fertilitet och övervikt, graviditet vid fetma, graviditetsdiabetes, högt blodtryck under graviditet, preeklampsi, viktnedgång och fertilitet, livsstilsbehandling vid fetma, kostråd vid övervikt, fysisk aktivitet och vikt, beteendestöd vid fetmabehandling, kirurgisk behandling av fetma, bariatrisk kirurgi, gastric bypass, gastric sleeve, BMI-gränser för behandling, metabola komplikationer, typ 2-diabetes risk, förbättrad ägglossning, reproduktiv hälsa, assisterad befruktning och fetma, hälsosam graviditet, långsiktig viktstabilitet, medicinsk bedömning vid fetma"
+        "title": "Fetmabehandling: GLP-1, livsstil och medicinsk vård",
+        "description": "Översikt av fetmabehandling i Sverige: livsstilsstöd, GLP-1-läkemedel och medicinsk uppföljning. Evidensbaserad guide för hållbar viktnedgång.",
+        "keywords": "fetmabehandling, fetma behandling, GLP-1, medicinsk viktminskning, livsstilsbehandling, bariatrisk kirurgi, viktnedgång sverige"
       },
       "womenHealth": {
         "title": "Kvinnors Hälsa och Fetma - Vad Du Behöver Veta",
@@ -1407,19 +1407,19 @@
         "keywords": "kvinnors hälsa, fetma och hormonella tillstånd, fetma och kvinnors hälsa, graviditet och fetma, fertilitet och övervikt, insulinresistens och PCOS, polycystiskt ovariesyndrom, ägglossningsrubbningar, hormonell obalans, androgennivåer, metabol hälsa, graviditetskomplikationer vid fetma, graviditetsdiabetes, högt blodtryck under graviditet, havandeskapsförgiftning, kejsarsnitt och fetma, PCOS-symtom, PCOS-behandling, insulinkänslighet, livsstilsförändringar vid PCOS, viktnedgång och fertilitet, tecken på insulinresistens, utredning av insulinresistens, HbA1c, fasteglukos, glukosbelastning, blodsockerreglering, sötsug och trötthet efter måltider, viktuppgång runt magen, acanthosis nigricans, metabola risker, risk för typ 2-diabetes, förbättrad ägglossning, regelbundna menstruationscykler, hälsosam graviditet"
       },
       "nutrition": {
-        "title": "Kost vid fetma: vad forskningen säger",
-        "description": "Evidensbaserad kost vid fetma: regelbundna måltider, protein, fibrer och långsamma kolhydrater för stabilt blodsocker, bättre mättnad och hållbar viktnedgång.",
-        "keywords": "fetma och fertilitet, kost och ägglossning, graviditet vid övervikt, beteendestöd vid fetma, mindful eating, stress och ätande, ultraprocessad mat, matvanor vid fetma, hälsosamma val, långsamma kolhydrater, blodsockerreglering, kost vid insulinresistens, protein vid fetma, fiberrik kost, mättnadskänsla, kost för viktnedgång, regelbundna måltider vid fetma, blodsockerstabilitet, hungerreglering, kostråd vid övervikt"
+        "title": "Mat vid fetma: kostråd enligt forskning",
+        "description": "Vad ska man äta vid fetma? Evidensbaserade kostråd om protein, fiber och blodsockerstabilitet för hållbar viktnedgång.",
+        "keywords": "mat vid fetma, kost vid fetma, kostråd vid övervikt, protein vid fetma, fiberrik kost, blodsockerstabilitet, kost för viktnedgång"
       },
       "exercise": {
-        "title": "Träning vid övervikt och fetma",
-        "description": "Så påverkar träning vikt, insulinkänslighet och metabol hälsa vid övervikt och fetma – och hur du hittar en hållbar träningsform som en del av behandlingen.",
-        "keywords": "träning vid övervikt, fysisk aktivitet vid fetma, träning för viktminskning, styrketräning vid övervikt, aerob träning, metabol hälsa, insulinresistens"
+        "title": "Träning vid övervikt och fetma — så börjar du",
+        "description": "Hur träning påverkar vikt och metabol hälsa vid övervikt. Praktiska råd om styrketräning och vardagsaktivitet som del av fetmabehandling.",
+        "keywords": "träning vid övervikt, fysisk aktivitet vid fetma, träning för viktminskning, styrketräning vid övervikt, aerob träning, metabol hälsa"
       },
       "glp1": {
-        "title": "Semaglutid vs tirzepatid: Ozempic, Wegovy och Mounjaro jämförda",
-        "description": "Evidensbaserad jämförelse av semaglutid (Ozempic, Wegovy) och tirzepatid (Mounjaro) vid viktnedgång: verkningsmekanism, effekt, biverkningar och prisskillnader.",
-        "keywords": "semaglutid vs tirzepatid, Ozempic, Wegovy, Mounjaro, GLP-1-läkemedel, GLP-1-agonist, GIP, dubbel inkretin, viktläkemedel, fetmabehandling, semaglutid viktnedgång, tirzepatid viktnedgång, GLP-1 vid fetma, veckovis injektion, aptitreglering, mättnadskänsla, blodsockerreglering, SURMOUNT-5, läkemedel för viktkontroll, GLP-1 biverkningar, illamående, gallblåsa, pankreatit, Mounjaro vs Wegovy, tirzepatid vs semaglutid, GLP-1 pris, fetmaläkemedel Sverige, högkostnadsskydd"
+        "title": "Semaglutid vs tirzepatid: Ozempic, Wegovy & Mounjaro",
+        "description": "Jämförelse av semaglutid och tirzepatid vid viktnedgång. Skillnad mellan Ozempic, Wegovy och Mounjaro — effekt, biverkningar och pris i Sverige.",
+        "keywords": "semaglutid vs tirzepatid, tirzepatid vs ozempic, Ozempic, Wegovy, Mounjaro, GLP-1-läkemedel, semaglutid eller tirzepatid, fetmaläkemedel Sverige"
       }
     }
   },
