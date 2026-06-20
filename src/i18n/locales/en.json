@@ -1484,7 +1484,7 @@
     },
     "conditional": {
       "title": "You may qualify — let's confirm",
-      "description": "A consultation with our doctor will confirm eligibility with a quick blood pressure check and blood tests. Book a free consultation to take the next step."
+      "description": "A consultation with our doctor will confirm eligibility with an additional blood test if necessary. Book a free consultation to take the next step."
     },
     "notEligible": {
       "title": "You don't meet the criteria yet.",
