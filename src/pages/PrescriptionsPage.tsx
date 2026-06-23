@@ -23,12 +23,28 @@ import { prescriptionService } from '../services/prescriptionService';
 import { PrescriptionRequestStatus } from '../types/prescription-types';
 import type { PrescriptionRequest } from '../types/prescription-types';
 import { SubscriptionRequired } from '@/components/subscription/SubscriptionRequired';
+import { useSubscriptionStatus } from '@/hooks/useDashboardQueries';
+import { PaymentService } from '@/services';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants';
 
 export const PrescriptionsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { data: subscriptionStatus } = useSubscriptionStatus();
+  const isPastDue = subscriptionStatus?.isPastDue ?? false;
+  const [isRenewing, setIsRenewing] = useState(false);
+
+  const handleRenewSubscription = async () => {
+    setIsRenewing(true);
+    try {
+      const { url } = await PaymentService.createPortalSession();
+      window.location.href = url;
+    } catch (err) {
+      console.error('Error opening billing portal:', err);
+      setIsRenewing(false);
+    }
+  };
   const [requests, setRequests] = useState<PrescriptionRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -273,6 +289,7 @@ export const PrescriptionsPage: React.FC = () => {
           </h1>
           <Button
             onClick={() => setModalOpen(true)}
+            disabled={isPastDue}
             className="bg-teal-600 hover:bg-teal-700 flex items-center gap-2 shrink-0"
           >
             <Plus className="w-4 h-4" />
@@ -280,6 +297,30 @@ export const PrescriptionsPage: React.FC = () => {
             <span className="sm:hidden">{t('prescriptions.requestNewShort', 'Request')}</span>
           </Button>
         </div>
+
+        {/* Past due banner */}
+        {isPastDue && (
+          <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex items-start gap-3 flex-1">
+              <ShieldAlert className="w-6 h-6 text-amber-500 shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-semibold text-amber-900 font-manrope">
+                  {t('prescriptions.pastDueTitle')}
+                </h3>
+                <p className="text-sm text-amber-800 mt-0.5">
+                  {t('prescriptions.pastDueMessage')}
+                </p>
+              </div>
+            </div>
+            <Button
+              onClick={handleRenewSubscription}
+              disabled={isRenewing}
+              className="bg-amber-500 hover:bg-amber-600 text-white shrink-0"
+            >
+              {t('prescriptions.renewSubscription')}
+            </Button>
+          </div>
+        )}
 
         {/* Error */}
         {error && (
@@ -343,6 +384,7 @@ export const PrescriptionsPage: React.FC = () => {
               </p>
               <Button
                 onClick={() => setModalOpen(true)}
+                disabled={isPastDue}
                 className="bg-teal-600 hover:bg-teal-700"
               >
                 <Plus className="w-4 h-4 mr-2" />
@@ -545,6 +587,8 @@ export const PrescriptionsPage: React.FC = () => {
           open={modalOpen}
           onOpenChange={setModalOpen}
           onSuccess={handleRequestSuccess}
+          isPastDue={isPastDue}
+          onRenew={handleRenewSubscription}
         />
       </div>
       )}

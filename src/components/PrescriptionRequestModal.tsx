@@ -19,12 +19,16 @@ type PrescriptionRequestModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
+  isPastDue?: boolean;
+  onRenew?: () => void;
 };
 
 export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> = ({
   open,
   onOpenChange,
   onSuccess,
+  isPastDue = false,
+  onRenew,
 }) => {
   const { t } = useTranslation();
   const [currentWeight, setCurrentWeight] = useState('');
@@ -69,10 +73,14 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
       onOpenChange(false);
       onSuccess?.();
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error && 'response' in error
+      const responseError = error instanceof Error && 'response' in error
         ? (error as { response?: { data?: { error?: string } } }).response?.data?.error
-        : t('prescriptions.requestModal.errorSubmit');
-      setError(errorMessage || t('prescriptions.requestModal.errorSubmit'));
+        : undefined;
+      if (responseError === 'subscription_past_due') {
+        setError(t('prescriptions.pastDueMessage'));
+      } else {
+        setError(responseError || t('prescriptions.requestModal.errorSubmit'));
+      }
     } finally {
       setLoading(false);
     }
@@ -97,6 +105,30 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
           </DialogDescription>
         </DialogHeader>
 
+        {isPastDue ? (
+          <div className="space-y-5">
+            <div className="text-sm text-red-700 bg-red-50 border border-red-200 p-3 rounded-xl font-manrope">
+              {t('prescriptions.pastDueMessage')}
+            </div>
+            <DialogFooter className="gap-2 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleClose}
+                className="rounded-full font-sora font-semibold border-gray-300 text-gray-600 hover:bg-gray-50"
+              >
+                {t('prescriptions.requestModal.cancel')}
+              </Button>
+              <Button
+                type="button"
+                onClick={onRenew}
+                className="rounded-full font-sora font-semibold bg-amber-500 hover:bg-amber-600 text-white"
+              >
+                {t('prescriptions.renewSubscription')}
+              </Button>
+            </DialogFooter>
+          </div>
+        ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
             <div className="text-sm text-red-700 bg-red-50 border border-red-200 p-3 rounded-xl font-manrope">
@@ -174,6 +206,7 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
             </Button>
           </DialogFooter>
         </form>
+        )}
       </DialogContent>
     </Dialog>
   );

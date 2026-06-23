@@ -11,6 +11,7 @@ export type CreateCheckoutSessionResponse = {
 export type SubscriptionStatus = {
   hasSubscription: boolean;
   subscriptionStatus: string | null;
+  isPastDue: boolean;
   planType: 'lifestyle' | 'medical' | null;
   subscription: {
     id: string;

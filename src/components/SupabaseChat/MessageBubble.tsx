@@ -12,12 +12,28 @@ type MessageBubbleProps = {
 };
 
 export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwnMessage, isRead, onRetry }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isSystemMessage = message.senderRole === 'system' || message.messageType === 'system';
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const locale = i18n.language === 'sv' ? 'sv-SE' : 'en-US';
+    const now = new Date();
+    const isToday =
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
+    const time = date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+    if (isToday) {
+      return `${t('chat.today')} ${time}`;
+    }
+    const includeYear = date.getFullYear() !== now.getFullYear();
+    const datePart = date.toLocaleDateString(locale, {
+      day: 'numeric',
+      month: 'short',
+      ...(includeYear ? { year: 'numeric' } : {}),
+    });
+    return `${datePart} ${time}`;
   };
 
   const StatusIndicator = () => {
