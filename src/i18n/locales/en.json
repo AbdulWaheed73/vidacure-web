@@ -892,6 +892,9 @@
     "newPatientsTooltip": "Patients who have booked a meeting but have not been assigned to a doctor yet",
     "subscription": {
       "noSubscription": "No subscription",
+      "inactive": "Inactive",
+      "daysOverdue_one": "{{count}} day overdue",
+      "daysOverdue_other": "{{count}} days overdue",
       "plan": {
         "lifestyle": "Medical",
         "medical": "Lifestyle"

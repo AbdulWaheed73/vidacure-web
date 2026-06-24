@@ -23,6 +23,7 @@ export type DoctorPatientListItem = {
   updatedAt: string | null;
   subscriptionStatus: SubscriptionStatus | null;
   subscriptionPlan: SubscriptionPlan | null;
+  subscriptionCurrentPeriodEnd: string | null;
 };
 
 export type DoctorPatientListResponse = {
@@ -75,6 +76,9 @@ export type DoctorPatientProfile = {
   weightHistory: WeightHistoryEntry[];
   prescription: PatientPrescription | null;
   prescriptionRequests: PrescriptionRequestEntry[];
+  subscriptionStatus: SubscriptionStatus | null;
+  subscriptionPlan: SubscriptionPlan | null;
+  subscriptionCurrentPeriodEnd: string | null;
 };
 
 export type DoctorPatientProfileResponse = {

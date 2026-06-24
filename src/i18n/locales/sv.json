@@ -892,6 +892,9 @@
     "newPatientsTooltip": "Patienter som har bokat ett möte men ännu inte tilldelats en läkare",
     "subscription": {
       "noSubscription": "Ingen prenumeration",
+      "inactive": "Inaktiv",
+      "daysOverdue_one": "{{count}} dag försenad",
+      "daysOverdue_other": "{{count}} dagar försenad",
       "plan": {
         "lifestyle": "Medicinsk",
         "medical": "Livsstil"

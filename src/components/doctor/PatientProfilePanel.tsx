@@ -32,6 +32,7 @@ import {
   useDoctorUnassignedPatientQuestionnaire,
 } from '@/hooks/useDoctorDashboardQueries';
 import { JournalTab } from '@/components/doctor/JournalTab';
+import { SubscriptionBadge } from '@/components/doctor/SubscriptionBadge';
 import { PatientChatTab } from '@/components/SupabaseChat/PatientChatTab';
 import { QUESTION_LABELS } from '@/components/onboarding/questionMapping';
 import { LabTestOrderStatusBadge } from '@/components/LabTestOrderStatus';
@@ -519,9 +520,16 @@ export const PatientProfilePanel: React.FC<PatientProfilePanelProps> = ({
                 <>
                   {/* Patient Details */}
                   <div className="bg-[#f0f7f4] rounded-2xl p-5">
-                    <h3 className="font-sora font-semibold text-sm text-[#282828] mb-3">
-                      {t('doctorPatients.patientDetails')}
-                    </h3>
+                    <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+                      <h3 className="font-sora font-semibold text-sm text-[#282828]">
+                        {t('doctorPatients.patientDetails')}
+                      </h3>
+                      <SubscriptionBadge
+                        status={profile.subscriptionStatus}
+                        plan={profile.subscriptionPlan}
+                        currentPeriodEnd={profile.subscriptionCurrentPeriodEnd}
+                      />
+                    </div>
                     <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm font-manrope">
                       <div>
                         <p className="text-[#b0b0b0] text-xs">{t('doctorPatients.name')}</p>
