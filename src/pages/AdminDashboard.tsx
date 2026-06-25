@@ -9,6 +9,7 @@ import { NotificationsView } from '@/components/admin/NotificationsView';
 import { DeletionLogsView } from '@/components/admin/DeletionLogsView';
 import { AuditLogsView } from '@/components/admin/AuditLogsView';
 import { LogReviewView } from '@/components/admin/LogReviewView';
+import { ErrorLogsView } from '@/components/admin/ErrorLogsView';
 import { DeleteUserDialog } from '@/components/admin/DeleteUserDialog';
 import { ProvidersView } from '@/components/admin/ProvidersView';
 import { PromotionsView } from '@/components/admin/PromotionsView';
@@ -312,6 +313,10 @@ export const AdminDashboard = () => {
 
         <TabsContent value="log-reviews" className="space-y-4">
           <LogReviewView />
+        </TabsContent>
+
+        <TabsContent value="error-logs" className="space-y-4">
+          <ErrorLogsView />
         </TabsContent>
 
         <TabsContent value="deletion-logs" className="space-y-4">

@@ -18,6 +18,11 @@ import type {
   CreateLogReviewRequest,
   AuditLogsQueryParams,
   LogReviewsQueryParams,
+  ErrorLogsResponse,
+  ErrorLogsQueryParams,
+  ErrorLog,
+  ErrorLogSummary,
+  ResolveErrorLogResponse,
 } from '../types/admin-types';
 import type {
   CreatePromotionRequest,
@@ -384,6 +389,40 @@ export const adminService = {
    */
   getAuditAnomalies: async (): Promise<AuditAnomaliesResponse> => {
     const response = await api.get('/api/admin/audit-logs/anomalies');
+    return response.data;
+  },
+
+  // ============ Error / crash logs ============
+
+  /**
+   * Get error logs (lightweight rows) with filters and pagination
+   */
+  getErrorLogs: async (params: ErrorLogsQueryParams = {}): Promise<ErrorLogsResponse> => {
+    const response = await api.get('/api/admin/error-logs', { params });
+    return response.data;
+  },
+
+  /**
+   * Get a single error log with full detail (stack/context)
+   */
+  getErrorLog: async (id: string): Promise<ErrorLog> => {
+    const response = await api.get(`/api/admin/error-logs/${id}`);
+    return response.data;
+  },
+
+  /**
+   * Get aggregated error summary (top errors + unresolved counts, last 7 days)
+   */
+  getErrorLogSummary: async (): Promise<ErrorLogSummary> => {
+    const response = await api.get('/api/admin/error-logs/summary');
+    return response.data;
+  },
+
+  /**
+   * Mark an error log resolved / unresolved
+   */
+  resolveErrorLog: async (id: string, resolved: boolean): Promise<ResolveErrorLogResponse> => {
+    const response = await api.post(`/api/admin/error-logs/${id}/resolve`, { resolved });
     return response.data;
   },
 

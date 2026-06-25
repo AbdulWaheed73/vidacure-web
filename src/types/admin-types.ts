@@ -278,6 +278,111 @@ export type LogReviewsQueryParams = {
   status?: string;
 };
 
+// ---- Error / crash logs ----
+export type ErrorOrigin = 'server' | 'client';
+export type ErrorSource = 'api' | 'web' | 'app';
+export type ErrorLevel = 'warning' | 'error' | 'critical';
+export type ErrorActor = 'patient' | 'doctor' | 'admin' | 'anonymous';
+export type ErrorCategory =
+  | 'auth'
+  | 'payment'
+  | 'prescription'
+  | 'crash'
+  | 'unhandled'
+  | 'render'
+  | 'network'
+  | 'other';
+
+export type ErrorLogContext = {
+  route?: string;
+  method?: string;
+  statusCode?: number;
+  appVersion?: string;
+  componentStack?: string;
+  details?: string;
+};
+
+// Lightweight row returned by the list endpoint (no stack/context).
+export type ErrorLogListItem = {
+  _id: string;
+  origin: ErrorOrigin;
+  source: ErrorSource;
+  level: ErrorLevel;
+  category: ErrorCategory;
+  message: string;
+  route?: string;
+  statusCode?: number;
+  actorType: ErrorActor;
+  userId?: string;
+  resolved: boolean;
+  fingerprint: string;
+  timestamp: string;
+  userName?: string;
+};
+
+// Full record returned by the detail endpoint (adds heavy fields).
+export type ErrorLog = ErrorLogListItem & {
+  stack?: string;
+  method?: string;
+  ipAddress?: string;
+  userAgent?: string;
+  context?: ErrorLogContext;
+  resolvedAt?: string;
+  resolvedBy?: string;
+  resolvedByName?: string;
+};
+
+export type ErrorLogsResponse = {
+  logs: ErrorLogListItem[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+  };
+};
+
+export type ErrorLogsQueryParams = {
+  page?: number;
+  limit?: number;
+  level?: string;
+  category?: string;
+  origin?: string;
+  resolved?: string;
+  dateFrom?: string;
+  dateTo?: string;
+};
+
+export type ErrorLogSummaryItem = {
+  fingerprint: string;
+  count: number;
+  message: string;
+  category: ErrorCategory;
+  level: ErrorLevel;
+  lastSeen: string;
+};
+
+export type ErrorLogSummary = {
+  period: { from: string; to: string };
+  topErrors: ErrorLogSummaryItem[];
+  unresolvedByLevel: { level: ErrorLevel; count: number }[];
+};
+
+export type ResolveErrorLogResponse = {
+  success: boolean;
+  resolved: boolean;
+};
+
+// Body posted by web/mobile clients to /api/client-errors.
+export type ClientErrorPayload = {
+  source: ErrorSource;
+  level: ErrorLevel;
+  category: ErrorCategory;
+  message: string;
+  stack?: string;
+  context?: ErrorLogContext;
+};
+
 // Admin Login/2FA Response Types
 export type AdminLoginResponse = {
   requires2FA?: boolean;

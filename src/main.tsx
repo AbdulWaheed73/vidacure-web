@@ -25,15 +25,43 @@ import './index.css'
 import App from './App.tsx'
 import './i18n'
 import { Toaster } from './components/ui/sonner'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { reportClientError } from './services/clientErrorService'
 
+// Global crash capture — uncaught errors and unhandled promise rejections.
+window.addEventListener('error', (e) => {
+  if (!e.message && !e.error) return // ignore resource-load noise
+  reportClientError({
+    source: 'web',
+    level: 'error',
+    category: 'crash',
+    message: e.message || 'Uncaught error',
+    stack: e.error instanceof Error ? e.error.stack : undefined,
+    context: { route: window.location.pathname },
+  })
+})
+
+window.addEventListener('unhandledrejection', (e) => {
+  const reason: unknown = e.reason
+  reportClientError({
+    source: 'web',
+    level: 'error',
+    category: 'unhandled',
+    message: reason instanceof Error ? reason.message : String(reason),
+    stack: reason instanceof Error ? reason.stack : undefined,
+    context: { route: window.location.pathname },
+  })
+})
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <App />
-        <Toaster richColors position="top-right" />
-      </HelmetProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <App />
+          <Toaster richColors position="top-right" />
+        </HelmetProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   </StrictMode>,
 )

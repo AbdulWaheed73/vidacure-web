@@ -12,6 +12,7 @@ import {
   ClipboardCheck,
   Tag,
   Lightbulb,
+  AlertTriangle,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -106,6 +107,11 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
       title: 'Log Reviews',
       value: 'log-reviews',
       icon: ClipboardCheck,
+    },
+    {
+      title: 'Error Logs',
+      value: 'error-logs',
+      icon: AlertTriangle,
     },
     {
       title: 'Deletion Logs',

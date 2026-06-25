@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import type { AuditLogsQueryParams, LogReviewsQueryParams } from '@/types/admin-types';
+import type { AuditLogsQueryParams, LogReviewsQueryParams, ErrorLogsQueryParams } from '@/types/admin-types';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,5 +42,8 @@ export const queryKeys = {
   adminAuditLogs: (params: AuditLogsQueryParams) => ['admin', 'auditLogs', params] as const,
   adminAuditAnomalies: ['admin', 'auditAnomalies'] as const,
   adminLogReviews: (params: LogReviewsQueryParams) => ['admin', 'logReviews', params] as const,
+  adminErrorLogs: (params: ErrorLogsQueryParams) => ['admin', 'errorLogs', params] as const,
+  adminErrorLog: (id: string) => ['admin', 'errorLog', id] as const,
+  adminErrorLogSummary: ['admin', 'errorLogSummary'] as const,
   labTestOrders: ['labTestOrders'] as const,
 };
