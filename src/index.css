@@ -221,3 +221,21 @@
 .journal-content p {
   margin: 0.35rem 0;
 }
+
+/*
+ * Safari-only fix for the hero image marquee cards.
+ * Chrome correctly collapses the `w-full` cards to ~208px (web) / ~160px (app)
+ * inside the shrink-wrapped marquee column. Safari instead expands them to the
+ * full container width, breaking the layout. `@supports (-webkit-hyphens: none)`
+ * targets ONLY Safari, so Chrome is left completely untouched.
+ */
+@supports (-webkit-hyphens: none) {
+  .hero-card-web {
+    width: 208px;
+    flex-shrink: 0;
+  }
+  .hero-card-app {
+    width: 160px;
+    flex-shrink: 0;
+  }
+}

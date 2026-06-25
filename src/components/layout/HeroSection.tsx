@@ -40,7 +40,7 @@ const ImageCardWeb = ({ src, alt }: ImageCardProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <div className="relative h-72 w-full rounded-3xl overflow-hidden shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)]">
+    <div className="hero-card-web relative h-72 w-full rounded-3xl overflow-hidden shadow-[0px_4px_8px_0px_rgba(0,0,0,0.16)]">
       {!isLoaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-3xl" />
       )}
@@ -60,7 +60,7 @@ const ImageCardApp = ({ src, alt }: ImageCardProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <div className="relative h-56 w-full rounded-[19.60px] overflow-hidden shadow-[0px_2.8px_5.6px_0px_rgba(0,0,0,0.16)]">
+    <div className="hero-card-app relative h-56 w-full rounded-[19.60px] overflow-hidden shadow-[0px_2.8px_5.6px_0px_rgba(0,0,0,0.16)]">
       {!isLoaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-[19.60px]" />
       )}
