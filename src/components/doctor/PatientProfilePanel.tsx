@@ -22,7 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { MessageCircle, FlaskConical, Copy, Check, ArrowUpRight } from 'lucide-react';
+import { MessageCircle, FlaskConical, Copy, Check, ArrowUpRight, Pill } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   useDoctorPatientProfile,
@@ -220,6 +220,24 @@ const statusStyles: Record<string, string> = {
   under_review: 'bg-blue-100 text-blue-800 border-blue-200',
 };
 
+// Compact wrapped pill-chips for a medication list (prescribed / currently taking).
+const MedChipList: React.FC<{ label: string; meds: { name: string; dosage?: string | null }[] }> = ({ label, meds }) => (
+  <div className="mt-3 pt-3 border-t border-[#f0f0f0]">
+    <p className="text-[10px] font-sora font-semibold text-[#005044] uppercase tracking-wide mb-2">{label}</p>
+    <div className="flex flex-wrap gap-1.5">
+      {meds.map((med, i) => (
+        <span key={i} className="inline-flex items-center gap-1.5 bg-[#f0f7f4] rounded-full pl-1.5 pr-2.5 py-1">
+          <span className="flex items-center justify-center w-4 h-4 rounded-full bg-white shrink-0">
+            <Pill className="w-2.5 h-2.5 text-[#005044]" />
+          </span>
+          <span className="text-xs font-semibold text-[#282828] font-manrope break-all">{med.name}</span>
+          {med.dosage && <span className="text-xs text-[#b0b0b0] font-manrope border-l border-[#005044]/15 pl-1.5">{med.dosage}</span>}
+        </span>
+      ))}
+    </div>
+  </div>
+);
+
 const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry; t: (key: string) => string; dateLocale: string; isActive?: boolean }> = ({ request, t, dateLocale, isActive = false }) => {
   const style = statusStyles[request.status] ?? 'bg-gray-100 text-gray-800 border-gray-200';
   return (
@@ -240,12 +258,6 @@ const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry; t: (key: s
         </div>
       </div>
       <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-[#b0b0b0] font-manrope">
-        {request.dosage && (
-          <>
-            <span>{t('doctorPatients.dosage')}</span>
-            <span className="text-[#282828]">{request.dosage}</span>
-          </>
-        )}
         {request.currentWeight && (
           <>
             <span>{t('doctorPatients.weightLabel')}</span>
@@ -261,6 +273,18 @@ const PrescriptionCard: React.FC<{ request: PrescriptionRequestEntry; t: (key: s
           </>
         )}
       </div>
+      {(() => {
+        const prescribed = request.prescribedMedications && request.prescribedMedications.length > 0
+          ? request.prescribedMedications
+          : request.medicationName
+            ? [{ name: request.medicationName, dosage: request.dosage }]
+            : [];
+        if (prescribed.length === 0) return null;
+        return <MedChipList label={t('doctorPatients.prescribedMedications')} meds={prescribed} />;
+      })()}
+      {request.currentMedications && request.currentMedications.length > 0 && (
+        <MedChipList label={t('doctorPatients.currentMedications')} meds={request.currentMedications} />
+      )}
     </div>
   );
 };

@@ -43,6 +43,8 @@ export type PrescriptionRequestEntry = {
   currentWeight: number;
   hasSideEffects: boolean;
   sideEffectsDescription: string | null;
+  currentMedications: { name: string; dosage: string | null }[];
+  prescribedMedications: { name: string; dosage: string | null }[];
   medicationName: string | null;
   dosage: string | null;
   usageInstructions: string | null;

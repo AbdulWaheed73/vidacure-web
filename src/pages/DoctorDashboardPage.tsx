@@ -5,6 +5,7 @@ import { Video, ArrowUpRight } from 'lucide-react';
 import { useDoctorMeetings, useDoctorPrescriptions, useDoctorConversations, useApprovePrescription, useDenyPrescription } from '@/hooks/useDoctorDashboardQueries';
 import { useChatUnreadCounts } from '@/hooks/useChatQueries';
 import { PrescriptionRequestDetailModal } from '@/components/PrescriptionRequestDetailModal';
+import type { CurrentMedication } from '@/types/prescription-types';
 import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
 import { Button } from '@/components/ui/Button';
 import { MeetingCountdown } from '@/components/common/MeetingCountdown';
@@ -257,8 +258,7 @@ export const DoctorDashboardPage: React.FC<DashboardPageProps> = () => {
   const handleApprove = async (
     requestId: string,
     prescriptionData: {
-      medicationName: string;
-      dosage: string;
+      prescribedMedications: CurrentMedication[];
       usageInstructions?: string;
       dateIssued: string;
     }

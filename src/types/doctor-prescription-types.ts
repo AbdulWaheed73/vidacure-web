@@ -1,5 +1,5 @@
 import { PrescriptionRequestStatus } from './prescription-types';
-import type { PrescriptionRequestStatusType } from './prescription-types';
+import type { PrescriptionRequestStatusType, CurrentMedication } from './prescription-types';
 
 export type DoctorPrescriptionRequest = {
   _id: string;
@@ -7,6 +7,8 @@ export type DoctorPrescriptionRequest = {
   currentWeight: number;
   hasSideEffects: boolean;
   sideEffectsDescription?: string;
+  currentMedications?: CurrentMedication[];
+  prescribedMedications?: CurrentMedication[];
   medicationName?: string;
   dosage?: string;
   usageInstructions?: string;
@@ -26,8 +28,7 @@ export type PrescriptionRequestDetailModalProps = {
   onOpenChange: (open: boolean) => void;
   request: DoctorPrescriptionRequest | null;
   onApprove: (requestId: string, prescriptionData: {
-    medicationName: string;
-    dosage: string;
+    prescribedMedications: CurrentMedication[];
     usageInstructions?: string;
     dateIssued: string;
   }) => Promise<void>;
@@ -65,6 +66,7 @@ export type DoctorPrescriptionResponse = {
 
 export type UpdatePrescriptionStatusData = {
   status: string;
+  prescribedMedications?: CurrentMedication[];
   medicationName?: string;
   dosage?: string;
   usageInstructions?: string;

@@ -121,16 +121,36 @@ export const PrescriptionCard: React.FC = () => {
         )}
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-800">
-            {current.medicationName || t('dashboard.pendingMedication')}
-          </span>
-          <Badge className={status.className}>{status.label}</Badge>
-        </div>
+        {(() => {
+          const meds = current.prescribedMedications && current.prescribedMedications.length > 0
+            ? current.prescribedMedications
+            : current.medicationName
+              ? [{ name: current.medicationName, dosage: current.dosage }]
+              : [];
+          const firstMed = meds[0];
+          const extra = Math.max(0, meds.length - 1);
+          return (
+            <>
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="text-sm font-medium text-gray-800 truncate">
+                    {firstMed?.name || t('dashboard.pendingMedication')}
+                  </span>
+                  {extra > 0 && (
+                    <span className="shrink-0 text-xs font-semibold text-teal-700 bg-teal-50 rounded-full px-2 py-0.5">
+                      {t('dashboard.moreMedications', { count: extra })}
+                    </span>
+                  )}
+                </div>
+                <Badge className={`${status.className} shrink-0`}>{status.label}</Badge>
+              </div>
 
-        {current.dosage && (
-          <p className="text-sm text-gray-600">{t('dashboard.dosage')} {current.dosage}</p>
-        )}
+              {firstMed?.dosage && (
+                <p className="text-sm text-gray-600">{t('dashboard.dosage')} {firstMed.dosage}</p>
+              )}
+            </>
+          );
+        })()}
 
         {current.status === 'denied' && current.rejectionNote && (
           <div className="bg-red-50 border border-red-100 rounded-md p-2">

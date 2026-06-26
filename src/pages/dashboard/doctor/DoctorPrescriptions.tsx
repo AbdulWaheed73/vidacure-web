@@ -5,10 +5,11 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useDoctorPrescriptions, useApprovePrescription, useDenyPrescription } from '@/hooks/useDoctorDashboardQueries';
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
 import type { DoctorPrescriptionRequest } from '@/types/doctor-prescription-types';
+import type { CurrentMedication } from '@/types/prescription-types';
 import { PrescriptionRequestDetailModal } from '@/components/PrescriptionRequestDetailModal';
 import { PatientProfilePanel } from '@/components/doctor/PatientProfilePanel';
 import { Button } from '@/components/ui/Button';
-import { RefreshCw, ArrowUpRight } from 'lucide-react';
+import { RefreshCw, ArrowUpRight, Pill } from 'lucide-react';
 
 const DoctorPrescriptions = () => {
   const { t } = useTranslation();
@@ -55,8 +56,7 @@ const DoctorPrescriptions = () => {
   const handleApprove = async (
     requestId: string,
     prescriptionData: {
-      medicationName: string;
-      dosage: string;
+      prescribedMedications: CurrentMedication[];
       usageInstructions?: string;
       dateIssued: string;
     }
@@ -249,31 +249,47 @@ const DoctorPrescriptions = () => {
                     )}
 
                     {/* Inline prescription details for approved items */}
-                    {request.status === PrescriptionRequestStatus.APPROVED &&
-                      (request.medicationName || request.dosage || request.usageInstructions) && (
-                        <div className="bg-[#f0f7f4] rounded-2xl px-4 md:px-6 py-3 md:py-4 mt-3 md:mt-4">
-                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
-                            {request.medicationName && (
-                              <div className="min-w-0">
-                                <p className="text-xs text-[#005044]/60 font-manrope mb-1">{t('doctorPrescriptions.medication')}</p>
-                                <p className="text-sm font-semibold text-[#005044] font-manrope break-words">{request.medicationName}</p>
+                    {request.status === PrescriptionRequestStatus.APPROVED && (() => {
+                      const meds = request.prescribedMedications && request.prescribedMedications.length > 0
+                        ? request.prescribedMedications
+                        : request.medicationName
+                          ? [{ name: request.medicationName, dosage: request.dosage }]
+                          : [];
+                      if (meds.length === 0 && !request.usageInstructions) return null;
+                      return (
+                        <div className="bg-[#f0f7f4] rounded-2xl px-4 md:px-6 py-3 md:py-4 mt-3 md:mt-4 space-y-3">
+                          {meds.length > 0 && (
+                            <div>
+                              <p className="text-xs font-sora font-semibold text-[#005044]/70 uppercase tracking-wide mb-2">
+                                {t('doctorPrescriptions.medication')}{meds.length > 1 ? ` · ${meds.length}` : ''}
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {meds.map((med, i) => (
+                                  <span
+                                    key={i}
+                                    className="inline-flex items-center gap-1.5 bg-white rounded-full border border-[#005044]/10 pl-2 pr-3 py-1"
+                                  >
+                                    <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#f0f7f4] shrink-0">
+                                      <Pill className="w-3 h-3 text-[#005044]" />
+                                    </span>
+                                    <span className="text-sm font-semibold text-[#005044] font-manrope break-all">{med.name}</span>
+                                    {med.dosage && (
+                                      <span className="text-xs text-[#005044]/60 font-manrope border-l border-[#005044]/10 pl-1.5">{med.dosage}</span>
+                                    )}
+                                  </span>
+                                ))}
                               </div>
-                            )}
-                            {request.dosage && (
-                              <div className="min-w-0">
-                                <p className="text-xs text-[#005044]/60 font-manrope mb-1">{t('doctorPrescriptions.dosage')}</p>
-                                <p className="text-sm font-semibold text-[#005044] font-manrope break-words">{request.dosage}</p>
-                              </div>
-                            )}
-                            {request.usageInstructions && (
-                              <div className="min-w-0 col-span-2 sm:col-span-1">
-                                <p className="text-xs text-[#005044]/60 font-manrope mb-1">{t('doctorPrescriptions.instructions')}</p>
-                                <p className="text-sm text-[#005044] font-manrope break-words">{request.usageInstructions}</p>
-                              </div>
-                            )}
-                          </div>
+                            </div>
+                          )}
+                          {request.usageInstructions && (
+                            <div>
+                              <p className="text-xs font-sora font-semibold text-[#005044]/70 uppercase tracking-wide mb-1">{t('doctorPrescriptions.instructions')}</p>
+                              <p className="text-sm text-[#005044] font-manrope break-words">{request.usageInstructions}</p>
+                            </div>
+                          )}
                         </div>
-                      )}
+                      );
+                    })()}
                   </div>
                 ))}
               </div>

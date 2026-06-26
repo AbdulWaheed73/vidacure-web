@@ -7,12 +7,20 @@ export const PrescriptionRequestStatus = {
 
 export type PrescriptionRequestStatusType = typeof PrescriptionRequestStatus[keyof typeof PrescriptionRequestStatus];
 
+// A medication the patient reports currently taking (self-reported at request time).
+export type CurrentMedication = {
+  name: string;
+  dosage?: string;
+};
+
 export type PrescriptionRequest = {
   _id: string;
   status: PrescriptionRequestStatusType;
   currentWeight: number;
   hasSideEffects: boolean;
   sideEffectsDescription?: string;
+  currentMedications?: CurrentMedication[];
+  prescribedMedications?: CurrentMedication[];
   medicationName?: string;
   dosage?: string;
   usageInstructions?: string;
@@ -27,6 +35,7 @@ export type CreatePrescriptionRequestData = {
   currentWeight: number;
   hasSideEffects: boolean;
   sideEffectsDescription?: string;
+  currentMedications?: CurrentMedication[];
 };
 
 export type PrescriptionRequestResponse = {

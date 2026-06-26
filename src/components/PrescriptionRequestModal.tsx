@@ -13,7 +13,13 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Checkbox } from './ui/checkbox';
 import { Textarea } from './ui/textarea';
+import { Plus, Trash2 } from 'lucide-react';
 import { prescriptionService } from '../services/prescriptionService';
+import type { CurrentMedication } from '../types/prescription-types';
+
+type MedicationRow = { name: string; dosage: string };
+
+const emptyMedicationRow = (): MedicationRow => ({ name: '', dosage: '' });
 
 type PrescriptionRequestModalProps = {
   open: boolean;
@@ -34,8 +40,21 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
   const [currentWeight, setCurrentWeight] = useState('');
   const [hasSideEffects, setHasSideEffects] = useState(false);
   const [sideEffectsDescription, setSideEffectsDescription] = useState('');
+  const [medications, setMedications] = useState<MedicationRow[]>([emptyMedicationRow()]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const updateMedication = (index: number, field: keyof MedicationRow, value: string) => {
+    setMedications((prev) => prev.map((med, i) => (i === index ? { ...med, [field]: value } : med)));
+  };
+
+  const addMedicationRow = () => {
+    setMedications((prev) => [...prev, emptyMedicationRow()]);
+  };
+
+  const removeMedicationRow = (index: number) => {
+    setMedications((prev) => (prev.length > 1 ? prev.filter((_, i) => i !== index) : prev));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,18 +77,26 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
       return;
     }
 
+    // Keep only rows where the patient typed a medication name; dosage is optional.
+    const currentMedications: CurrentMedication[] = medications
+      .map((med) => ({ name: med.name.trim(), dosage: med.dosage.trim() }))
+      .filter((med) => med.name.length > 0)
+      .map((med) => ({ name: med.name, dosage: med.dosage || undefined }));
+
     try {
       setLoading(true);
       await prescriptionService.createPrescriptionRequest({
         currentWeight: weight,
         hasSideEffects,
         sideEffectsDescription: hasSideEffects ? sideEffectsDescription.trim() : undefined,
+        currentMedications: currentMedications.length > 0 ? currentMedications : undefined,
       });
 
       // Reset form
       setCurrentWeight('');
       setHasSideEffects(false);
       setSideEffectsDescription('');
+      setMedications([emptyMedicationRow()]);
       onOpenChange(false);
       onSuccess?.();
     } catch (error: unknown) {
@@ -91,13 +118,14 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
     setCurrentWeight('');
     setHasSideEffects(false);
     setSideEffectsDescription('');
+    setMedications([emptyMedicationRow()]);
     setError('');
     onOpenChange(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] rounded-2xl">
+      <DialogContent className="sm:max-w-[425px] rounded-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-sora text-[#005044]">{t('prescriptions.requestModal.title')}</DialogTitle>
           <DialogDescription className="font-manrope text-gray-500">
@@ -150,6 +178,63 @@ export const PrescriptionRequestModal: React.FC<PrescriptionRequestModalProps> =
               disabled={loading}
               className="rounded-xl border-gray-200 focus:border-teal-500 focus:ring-teal-500"
             />
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <Label className="text-sm font-medium font-manrope text-[#005044]">
+                {t('prescriptions.requestModal.currentMedsLabel')}
+              </Label>
+              <p className="text-xs text-gray-500 font-manrope mt-1">
+                {t('prescriptions.requestModal.currentMedsHelp')}
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              {medications.map((med, index) => (
+                <div key={index} className="flex items-start gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-1 min-w-0">
+                    <Input
+                      type="text"
+                      placeholder={t('prescriptions.requestModal.medNamePlaceholder')}
+                      value={med.name}
+                      onChange={(e) => updateMedication(index, 'name', e.target.value)}
+                      disabled={loading}
+                      className="rounded-xl border-gray-200 focus:border-teal-500 focus:ring-teal-500"
+                    />
+                    <Input
+                      type="text"
+                      placeholder={t('prescriptions.requestModal.medDosagePlaceholder')}
+                      value={med.dosage}
+                      onChange={(e) => updateMedication(index, 'dosage', e.target.value)}
+                      disabled={loading}
+                      className="rounded-xl border-gray-200 focus:border-teal-500 focus:ring-teal-500"
+                    />
+                  </div>
+                  {medications.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeMedicationRow(index)}
+                      disabled={loading}
+                      aria-label={t('prescriptions.requestModal.removeMed')}
+                      className="mt-2 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={addMedicationRow}
+              disabled={loading}
+              className="flex items-center gap-1.5 text-sm font-semibold font-manrope text-teal-600 hover:text-teal-700 transition-colors disabled:opacity-50"
+            >
+              <Plus className="w-4 h-4" />
+              {t('prescriptions.requestModal.addAnotherMed')}
+            </button>
           </div>
 
           <div className="space-y-3">

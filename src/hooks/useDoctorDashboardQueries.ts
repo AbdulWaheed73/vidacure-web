@@ -8,6 +8,7 @@ import { doctorLabTestService } from '@/services/doctorLabTestService';
 import { chatService } from '@/services/chatService';
 import { treatmentJournalService } from '@/services/treatmentJournalService';
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
+import type { CurrentMedication } from '@/types/prescription-types';
 
 export const useDoctorMeetings = () => {
   return useInfiniteQuery({
@@ -38,8 +39,7 @@ export const useApprovePrescription = () => {
     }: {
       requestId: string;
       prescriptionData: {
-        medicationName: string;
-        dosage: string;
+        prescribedMedications: CurrentMedication[];
         usageInstructions?: string;
         dateIssued: string;
       };

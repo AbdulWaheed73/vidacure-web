@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ShieldAlert,
+  Pill,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Alert, AlertDescription } from '@/components/ui/Alert';
@@ -27,6 +28,21 @@ import { useSubscriptionStatus } from '@/hooks/useDashboardQueries';
 import { PaymentService } from '@/services';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants';
+
+// Compact wrapped pill-chips for a medication list (prescribed / currently taking).
+const MedChips: React.FC<{ meds: { name: string; dosage?: string | null }[] }> = ({ meds }) => (
+  <div className="flex flex-wrap gap-1.5">
+    {meds.map((med, i) => (
+      <span key={i} className="inline-flex items-center gap-1.5 bg-teal-50 rounded-full pl-1.5 pr-2.5 py-1">
+        <span className="flex items-center justify-center w-4 h-4 rounded-full bg-white shrink-0">
+          <Pill className="w-2.5 h-2.5 text-teal-600" />
+        </span>
+        <span className="text-xs font-semibold text-gray-800 break-all">{med.name}</span>
+        {med.dosage && <span className="text-xs text-teal-700 border-l border-teal-200 pl-1.5">{med.dosage}</span>}
+      </span>
+    ))}
+  </div>
+);
 
 export const PrescriptionsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -186,23 +202,37 @@ export const PrescriptionsPage: React.FC = () => {
     isActive: boolean;
     className?: string;
   }) => {
-    const hasApprovedData = request.medicationName || request.dosage;
+    const meds = request.prescribedMedications && request.prescribedMedications.length > 0
+      ? request.prescribedMedications
+      : request.medicationName
+        ? [{ name: request.medicationName, dosage: request.dosage }]
+        : [];
+    const firstMed = meds[0];
+    const extraMeds = Math.max(0, meds.length - 1);
+    const hasApprovedData = meds.length > 0;
 
     return (
       <div className={`bg-white rounded-2xl border border-gray-100 p-4 sm:p-8 ${className}`}>
         {hasApprovedData ? (
           <div className="grid grid-cols-2 gap-x-6 sm:gap-x-16 gap-y-4 sm:gap-y-8">
-            <div>
+            <div className="min-w-0">
               <p className="text-sm sm:text-base font-semibold text-gray-800 mb-1">
                 {t('prescriptions.medicationName')}
               </p>
-              <p className="text-sm sm:text-base text-gray-600">{request.medicationName || '-'}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm sm:text-base text-gray-600 truncate">{firstMed?.name || '-'}</p>
+                {extraMeds > 0 && (
+                  <span className="shrink-0 text-xs font-semibold text-teal-700 bg-teal-50 rounded-full px-2 py-0.5">
+                    {t('prescriptions.moreMedications', { count: extraMeds })}
+                  </span>
+                )}
+              </div>
             </div>
             <div>
               <p className="text-sm sm:text-base font-semibold text-gray-800 mb-1">
                 {t('prescriptions.dosage')}
               </p>
-              <p className="text-sm sm:text-base text-gray-600">{request.dosage || '-'}</p>
+              <p className="text-sm sm:text-base text-gray-600">{firstMed?.dosage || '-'}</p>
             </div>
             <div>
               <p className="text-sm sm:text-base font-semibold text-gray-800 mb-1">
@@ -485,7 +515,7 @@ export const PrescriptionsPage: React.FC = () => {
 
         {/* Details Dialog */}
         <Dialog open={!!selectedRequest} onOpenChange={(open) => !open && setSelectedRequest(null)}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md rounded-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="font-manrope">
                 {t('prescriptions.details')}
@@ -497,20 +527,23 @@ export const PrescriptionsPage: React.FC = () => {
             {selectedRequest && (
               <div className="space-y-5 pt-2">
                 {/* Medication info (if approved) */}
-                {(selectedRequest.medicationName || selectedRequest.dosage) && (
+                {(() => {
+                  const meds = selectedRequest.prescribedMedications && selectedRequest.prescribedMedications.length > 0
+                    ? selectedRequest.prescribedMedications
+                    : selectedRequest.medicationName
+                      ? [{ name: selectedRequest.medicationName, dosage: selectedRequest.dosage }]
+                      : [];
+                  if (meds.length === 0) return null;
+                  return (
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1.5">{t('prescriptions.prescribedMedications')}</p>
+                      <MedChips meds={meds} />
+                    </div>
+                  );
+                })()}
+
+                {(selectedRequest.dateIssued || selectedRequest.validTill) && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
-                    {selectedRequest.medicationName && (
-                      <div>
-                        <p className="text-xs text-gray-400 mb-0.5">{t('prescriptions.medicationName')}</p>
-                        <p className="text-sm font-medium text-gray-800">{selectedRequest.medicationName}</p>
-                      </div>
-                    )}
-                    {selectedRequest.dosage && (
-                      <div>
-                        <p className="text-xs text-gray-400 mb-0.5">{t('prescriptions.dosage')}</p>
-                        <p className="text-sm font-medium text-gray-800">{selectedRequest.dosage}</p>
-                      </div>
-                    )}
                     {selectedRequest.dateIssued && (
                       <div>
                         <p className="text-xs text-gray-400 mb-0.5">{t('prescriptions.dateIssued')}</p>
@@ -561,6 +594,13 @@ export const PrescriptionsPage: React.FC = () => {
                     <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
                       {selectedRequest.sideEffectsDescription}
                     </p>
+                  </div>
+                )}
+
+                {selectedRequest.currentMedications && selectedRequest.currentMedications.length > 0 && (
+                  <div>
+                    <p className="text-xs text-gray-400 mb-1.5">{t('prescriptions.currentMedications')}</p>
+                    <MedChips meds={selectedRequest.currentMedications} />
                   </div>
                 )}
 

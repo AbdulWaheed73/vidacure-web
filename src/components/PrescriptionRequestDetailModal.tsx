@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
@@ -36,15 +36,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/Alert';
 import type { DoctorPrescriptionRequest, PrescriptionRequestDetailModalProps } from '@/types/doctor-prescription-types';
 import { PrescriptionRequestStatus } from '@/types/doctor-prescription-types';
-import { User, Scale, AlertTriangle, Calendar as CalendarIcon, Pill, AlertCircle } from 'lucide-react';
+import { User, Scale, AlertTriangle, Calendar as CalendarIcon, Pill, AlertCircle, Plus, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
 type PrescriptionFormValues = {
-  medicationName: string;
-  dosage: string;
+  medications: { name: string; dosage: string }[];
   usageInstructions: string;
   dateIssued: string;
 };
@@ -65,8 +64,14 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
   const [confirmDiscard, setConfirmDiscard] = useState(false);
 
   const prescriptionFormSchema = z.object({
-    medicationName: z.string().min(1, t('doctorPrescriptionModal.validationMedicationName')),
-    dosage: z.string().min(1, t('doctorPrescriptionModal.validationDosage')),
+    medications: z
+      .array(
+        z.object({
+          name: z.string().min(1, t('doctorPrescriptionModal.validationMedicationName')),
+          dosage: z.string().min(1, t('doctorPrescriptionModal.validationDosage')),
+        })
+      )
+      .min(1, t('doctorPrescriptionModal.validationMedicationName')),
     usageInstructions: z.string().optional(),
     dateIssued: z.string().min(1, t('doctorPrescriptionModal.validationDateIssued')),
   });
@@ -75,24 +80,39 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
     resolver: zodResolver(prescriptionFormSchema),
     mode: 'onTouched',
     defaultValues: {
-      medicationName: '',
-      dosage: '',
+      medications: [{ name: '', dosage: '' }],
       usageInstructions: '',
       dateIssued: '',
     },
+  });
+
+  const { fields: medicationFields, append: appendMedication, remove: removeMedication } = useFieldArray({
+    control: form.control,
+    name: 'medications',
   });
 
   if (!request) return null;
 
   const dateLocale = i18n.language === 'sv' ? 'sv-SE' : 'en-US';
 
+  // For already-actioned requests, prefer the prescribed-medications array and
+  // fall back to the legacy single medicationName/dosage fields.
+  const approvedMedications =
+    request.prescribedMedications && request.prescribedMedications.length > 0
+      ? request.prescribedMedications
+      : request.medicationName
+        ? [{ name: request.medicationName, dosage: request.dosage }]
+        : [];
+
   const handleApprove = async (values: PrescriptionFormValues) => {
     setSubmitError(null);
     try {
       setLoading(true);
       await onApprove(request._id, {
-        medicationName: values.medicationName.trim(),
-        dosage: values.dosage.trim(),
+        prescribedMedications: values.medications
+          .map((med) => ({ name: med.name.trim(), dosage: med.dosage.trim() }))
+          .filter((med) => med.name.length > 0)
+          .map((med) => ({ name: med.name, dosage: med.dosage || undefined })),
         usageInstructions: values.usageInstructions?.trim() || undefined,
         dateIssued: values.dateIssued,
       });
@@ -259,6 +279,32 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
             )}
           </div>
 
+          {/* Patient-reported medications currently being taken — shown so the
+              doctor can compare against what was previously prescribed. */}
+          {request.currentMedications && request.currentMedications.length > 0 && (
+            <div className="border border-[#e0e0e0] rounded-2xl p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Pill className="w-4 h-4 text-[#005044]" />
+                <h3 className="font-sora font-semibold text-[#282828] text-sm">{t('doctorPrescriptionModal.currentMedications')}</h3>
+              </div>
+              <div className="rounded-xl border border-[#ececec] divide-y divide-[#f0f0f0] overflow-hidden">
+                {request.currentMedications.map((med, i) => (
+                  <div key={i} className="flex items-center justify-between gap-3 px-3 py-2.5">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#f0f7f4] shrink-0">
+                        <Pill className="w-3.5 h-3.5 text-[#005044]" />
+                      </span>
+                      <span className="text-sm font-semibold text-[#282828] font-manrope truncate">{med.name}</span>
+                    </div>
+                    {med.dosage
+                      ? <span className="text-xs font-semibold text-[#005044] bg-[#f0f7f4] rounded-full px-2.5 py-1 font-manrope shrink-0">{med.dosage}</span>
+                      : <span className="text-xs text-[#b0b0b0] font-manrope italic shrink-0">{t('doctorPrescriptionModal.noDosageGiven')}</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Rejection note (read-only) for already-denied requests */}
           {request.status === PrescriptionRequestStatus.DENIED && request.rejectionNote && (
             <div className="border border-red-200 bg-red-50 rounded-2xl p-4">
@@ -302,41 +348,72 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
                   <h3 className="font-sora font-semibold text-[#282828] text-sm">{t('doctorPrescriptionModal.prescriptionDetails')}</h3>
                 </div>
                 <div className="space-y-3">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <FormField
-                      control={form.control}
-                      name="medicationName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-xs font-manrope text-[#282828]">{t('doctorPrescriptionModal.medicationName')}</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder={t('doctorPrescriptionModal.medicationPlaceholder')}
-                              className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="dosage"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-xs font-manrope text-[#282828]">{t('doctorPrescriptionModal.dosage')}</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder={t('doctorPrescriptionModal.dosagePlaceholder')}
-                              className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
+                  <div className="space-y-3">
+                    {medicationFields.map((medField, index) => (
+                      <div key={medField.id} className="flex items-start gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 min-w-0">
+                          <FormField
+                            control={form.control}
+                            name={`medications.${index}.name`}
+                            render={({ field }) => (
+                              <FormItem>
+                                {index === 0 && (
+                                  <FormLabel className="text-xs font-manrope text-[#282828]">{t('doctorPrescriptionModal.medicationName')}</FormLabel>
+                                )}
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder={t('doctorPrescriptionModal.medicationPlaceholder')}
+                                    className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                                  />
+                                </FormControl>
+                                <FormMessage className="text-xs" />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name={`medications.${index}.dosage`}
+                            render={({ field }) => (
+                              <FormItem>
+                                {index === 0 && (
+                                  <FormLabel className="text-xs font-manrope text-[#282828]">{t('doctorPrescriptionModal.dosage')}</FormLabel>
+                                )}
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder={t('doctorPrescriptionModal.dosagePlaceholder')}
+                                    className="h-9 text-sm rounded-xl border-[#e0e0e0] font-manrope focus-visible:ring-[#005044]"
+                                  />
+                                </FormControl>
+                                <FormMessage className="text-xs" />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        {medicationFields.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeMedication(index)}
+                            aria-label={t('doctorPrescriptionModal.removeMedication')}
+                            className={cn(
+                              'text-[#b0b0b0] hover:text-red-500 transition-colors shrink-0',
+                              index === 0 ? 'mt-7' : 'mt-2'
+                            )}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => appendMedication({ name: '', dosage: '' })}
+                      className="flex items-center gap-1.5 text-sm font-sora font-semibold text-[#005044] hover:text-[#004038] transition-colors"
+                    >
+                      <Plus className="w-4 h-4" />
+                      {t('doctorPrescriptionModal.addMedication')}
+                    </button>
                   </div>
                   <FormField
                     control={form.control}
@@ -407,23 +484,26 @@ export const PrescriptionRequestDetailModal: React.FC<PrescriptionRequestDetailM
                 )}
               </div>
             </Form>
-          ) : (request.medicationName || request.dosage || request.usageInstructions) && (
+          ) : (approvedMedications.length > 0 || request.usageInstructions) && (
             <div className="bg-[#f0f7f4] rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-4">
                 <Pill className="w-4 h-4 text-[#005044]" />
                 <h3 className="font-sora font-semibold text-[#005044] text-sm">{t('doctorPrescriptionModal.prescriptionDetails')}</h3>
               </div>
               <div className="space-y-3">
-                {request.medicationName && (
+                {approvedMedications.length > 0 && (
                   <div>
-                    <p className="text-xs text-[#005044]/60 font-manrope">{t('doctorPrescriptionModal.medicationNameLabel')}</p>
-                    <p className="text-sm font-semibold text-[#005044] font-manrope">{request.medicationName}</p>
-                  </div>
-                )}
-                {request.dosage && (
-                  <div>
-                    <p className="text-xs text-[#005044]/60 font-manrope">{t('doctorPrescriptionModal.dosageLabel')}</p>
-                    <p className="text-sm font-semibold text-[#005044] font-manrope">{request.dosage}</p>
+                    <p className="text-xs text-[#005044]/60 font-manrope mb-1.5">{t('doctorPrescriptionModal.medicationNameLabel')}</p>
+                    <div className="rounded-xl bg-white/70 divide-y divide-[#005044]/10 overflow-hidden">
+                      {approvedMedications.map((med, i) => (
+                        <div key={i} className="flex items-center justify-between gap-3 px-3 py-2">
+                          <span className="text-sm font-semibold text-[#005044] font-manrope truncate">{med.name}</span>
+                          {med.dosage && (
+                            <span className="text-xs font-semibold text-[#005044] bg-[#dceee9] rounded-full px-2.5 py-1 font-manrope shrink-0">{med.dosage}</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
                 {request.usageInstructions && (

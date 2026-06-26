@@ -185,30 +185,55 @@ export const PrescriptionRequestsList: React.FC<PrescriptionRequestsListProps> =
               </div>
             )}
 
-            {(request.medicationName || request.dosage || request.usageInstructions) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t">
-                {request.medicationName && (
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 font-manrope">{t('prescriptions.requests.medicationName')}</p>
-                    <p className="text-base text-gray-800 font-manrope">{request.medicationName}</p>
-                  </div>
-                )}
-                {request.dosage && (
-                  <div>
-                    <p className="text-sm font-medium text-gray-600 font-manrope">{t('prescriptions.requests.dosage')}</p>
-                    <p className="text-base text-gray-800 font-manrope">{request.dosage}</p>
-                  </div>
-                )}
-                {request.usageInstructions && (
-                  <div className="md:col-span-2">
-                    <p className="text-sm font-medium text-gray-600 font-manrope mb-1">{t('prescriptions.requests.usageInstructions')}</p>
-                    <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md font-manrope">
-                      {request.usageInstructions}
-                    </p>
-                  </div>
-                )}
+            {request.currentMedications && request.currentMedications.length > 0 && (
+              <div>
+                <p className="text-sm font-medium text-gray-600 font-manrope mb-1">
+                  {t('prescriptions.requests.currentMedications')}
+                </p>
+                <ul className="space-y-1.5 bg-gray-50 p-3 rounded-md">
+                  {request.currentMedications.map((med, i) => (
+                    <li key={i} className="text-sm text-gray-700 font-manrope flex items-baseline justify-between gap-3">
+                      <span className="font-medium text-gray-800">{med.name}</span>
+                      {med.dosage && <span className="text-gray-500">{med.dosage}</span>}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
+
+            {(() => {
+              const meds = request.prescribedMedications && request.prescribedMedications.length > 0
+                ? request.prescribedMedications
+                : request.medicationName
+                  ? [{ name: request.medicationName, dosage: request.dosage }]
+                  : [];
+              if (meds.length === 0 && !request.usageInstructions) return null;
+              return (
+                <div className="pt-2 border-t space-y-3">
+                  {meds.length > 0 && (
+                    <div>
+                      <p className="text-sm font-medium text-gray-600 font-manrope mb-1">{t('prescriptions.requests.prescribedMedications')}</p>
+                      <ul className="space-y-1.5 bg-gray-50 p-3 rounded-md">
+                        {meds.map((med, i) => (
+                          <li key={i} className="text-sm text-gray-700 font-manrope flex items-baseline justify-between gap-3">
+                            <span className="font-medium text-gray-800">{med.name}</span>
+                            {med.dosage && <span className="text-gray-500">{med.dosage}</span>}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {request.usageInstructions && (
+                    <div>
+                      <p className="text-sm font-medium text-gray-600 font-manrope mb-1">{t('prescriptions.requests.usageInstructions')}</p>
+                      <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md font-manrope">
+                        {request.usageInstructions}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             {(request.dateIssued || request.validTill) && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
