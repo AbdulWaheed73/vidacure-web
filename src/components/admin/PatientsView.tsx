@@ -27,11 +27,12 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RefreshCw, Eye, Trash2, CheckCircle, Clock, XCircle, Stethoscope, MailWarning, CreditCard } from 'lucide-react';
+import { RefreshCw, Eye, Trash2, CheckCircle, Clock, XCircle, Stethoscope, MailWarning, CreditCard, Mail } from 'lucide-react';
 import type { Patient, Doctor } from '@/services/adminService';
 import { adminService } from '@/services/adminService';
 import { SubscriptionDetailsModal } from './SubscriptionDetailsModal';
 import { ManageTiersModal } from './ManageTiersModal';
+import { SendPatientEmailDialog } from './SendPatientEmailDialog';
 
 type PatientsViewProps = {
   patients: Patient[];
@@ -101,6 +102,7 @@ export const PatientsView = ({
   const [approvingPatientId, setApprovingPatientId] = useState<string | null>(null);
   const [approvalError, setApprovalError] = useState<string | null>(null);
   const [providerModalPatient, setProviderModalPatient] = useState<Patient | null>(null);
+  const [composeEmailPatient, setComposeEmailPatient] = useState<Patient | null>(null);
   const [emailDialogPatient, setEmailDialogPatient] = useState<Patient | null>(null);
   const [emailRecipient, setEmailRecipient] = useState('');
   const [isSendingEmail, setIsSendingEmail] = useState(false);
@@ -419,6 +421,16 @@ export const PatientsView = ({
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={() => setComposeEmailPatient(patient)}
+                        disabled={!patient.email}
+                        className="text-[#005044] hover:text-[#005044] hover:bg-[#E6F7F5]"
+                        title="Send email (template or custom)"
+                      >
+                        <Mail className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => openEmailDialog(patient)}
                         className="text-amber-700 hover:text-amber-800 hover:bg-amber-50"
                         title="Send 'payment failed' email"
@@ -512,6 +524,14 @@ export const PatientsView = ({
           onSuccess={() => {
             onRefresh?.();
           }}
+        />
+      )}
+
+      {/* Compose / send email (template or custom) */}
+      {composeEmailPatient && (
+        <SendPatientEmailDialog
+          patient={{ id: composeEmailPatient._id, name: composeEmailPatient.name }}
+          onClose={() => setComposeEmailPatient(null)}
         />
       )}
 

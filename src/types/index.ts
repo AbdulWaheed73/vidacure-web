@@ -17,3 +17,5 @@ export * from './provider-types';
 export * from './promotion-types';
 export * from './treatment-journal-types';
 export * from './suggestion-types';
+export * from './email-template-types';
+export * from './email-send-log-types';

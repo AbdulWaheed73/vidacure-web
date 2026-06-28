@@ -13,6 +13,8 @@ import {
   Tag,
   Lightbulb,
   AlertTriangle,
+  Mail,
+  Send,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -90,6 +92,16 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
       title: 'Promotions',
       value: 'promotions',
       icon: Tag,
+    },
+    {
+      title: 'Email Templates',
+      value: 'email-templates',
+      icon: Mail,
+    },
+    {
+      title: 'Email Log',
+      value: 'email-log',
+      icon: Send,
     },
     {
       title: 'Notifications',

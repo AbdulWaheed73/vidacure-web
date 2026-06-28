@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import type { AuditLogsQueryParams, LogReviewsQueryParams, ErrorLogsQueryParams } from '@/types/admin-types';
+import type { EmailLogFilters } from '@/types/email-send-log-types';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,5 +46,8 @@ export const queryKeys = {
   adminErrorLogs: (params: ErrorLogsQueryParams) => ['admin', 'errorLogs', params] as const,
   adminErrorLog: (id: string) => ['admin', 'errorLog', id] as const,
   adminErrorLogSummary: ['admin', 'errorLogSummary'] as const,
+  adminEmailTemplates: ['admin', 'emailTemplates'] as const,
+  adminEmailLog: (filters: EmailLogFilters) => ['admin', 'emailLog', filters] as const,
+  adminPatientEmailStatus: (patientId: string) => ['admin', 'patientEmailStatus', patientId] as const,
   labTestOrders: ['labTestOrders'] as const,
 };

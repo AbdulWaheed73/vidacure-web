@@ -14,6 +14,8 @@ import { DeleteUserDialog } from '@/components/admin/DeleteUserDialog';
 import { ProvidersView } from '@/components/admin/ProvidersView';
 import { PromotionsView } from '@/components/admin/PromotionsView';
 import { SuggestionsView } from '@/components/admin/SuggestionsView';
+import { EmailTemplatesView } from '@/components/admin/EmailTemplatesView';
+import { EmailLogView } from '@/components/admin/EmailLogView';
 import { adminService } from '@/services/adminService';
 import type { Patient, Doctor, DashboardStats } from '@/services/adminService';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
@@ -301,6 +303,14 @@ export const AdminDashboard = () => {
 
         <TabsContent value="promotions" className="space-y-4">
           <PromotionsView />
+        </TabsContent>
+
+        <TabsContent value="email-templates" className="space-y-4">
+          <EmailTemplatesView />
+        </TabsContent>
+
+        <TabsContent value="email-log" className="space-y-4">
+          <EmailLogView />
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-4">
