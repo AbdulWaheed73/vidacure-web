@@ -78,6 +78,22 @@ api.interceptors.response.use(
       }
     }
 
+    // 403 admin CSRF — the admin_csrf_token cookie expired/was purged while the
+    // app still looked logged in. Treat as a stale session: clear admin auth and
+    // send them to re-login (which re-issues the cookie) instead of a cryptic error.
+    if (
+      error.response?.status === 403 &&
+      error.response?.data?.error === 'Missing admin CSRF token' &&
+      window.location.pathname.startsWith('/admin')
+    ) {
+      localStorage.removeItem('adminCsrfToken');
+      localStorage.removeItem('admin-auth-storage');
+      if (window.location.pathname !== '/admin/login') {
+        window.location.href = '/admin/login';
+      }
+      return Promise.reject(error);
+    }
+
     // 451 — Consent required. Show a clear message and redirect to /consent.
     if (error.response?.status === 451) {
       // Only show the toast once (avoid spamming from multiple parallel 451 responses)
