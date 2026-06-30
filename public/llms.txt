@@ -22,6 +22,10 @@ Key facts:
 - [Exercise and obesity](https://vidacure.se/article/exercise-obesity): How physical activity affects weight, insulin sensitivity and metabolic health, and how to find a sustainable form of exercise as part of treatment.
 - [Semaglutide vs tirzepatide (Ozempic, Wegovy, Mounjaro)](https://vidacure.se/article/semaglutide-vs-tirzepatide): Evidence-based comparison of the GLP-1 medication semaglutide (Ozempic, Wegovy) and the dual GIP/GLP-1 medication tirzepatide (Mounjaro) for weight loss — mechanisms, expected weight loss, side effects and price differences.
 
+## Frequently asked questions
+- [FAQ — obesity, GLP-1 medication, side effects, nutrition, exercise (Swedish)](https://vidacure.se/faqs): Clinician-authored answers (Dr. Selma Mehr) to common questions about overweight and obesity, GLP-1/GIP medications (Ozempic, Wegovy, Mounjaro), side effects and safety, women's health and hormones, diet, exercise, and the weight-loss process.
+- [FAQ (EN)](https://vidacure.se/en/faqs): English version of the clinician-authored FAQ knowledge base.
+
 ## English versions
 - [Home (EN)](https://vidacure.se/en)
 - [About us (EN)](https://vidacure.se/en/aboutus)

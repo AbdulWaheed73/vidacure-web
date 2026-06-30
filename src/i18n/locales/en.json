@@ -353,7 +353,8 @@
     "contactUs": "Contact Us",
     "copyright": "© 2025 Vidacure, Inc. All rights reserved",
     "legalCopyright": "© 2026 Vidacure. All rights reserved. Org nr: 5591294888",
-    "legalDisclaimer": "Albafides Care AB is an approved healthcare provider operating in accordance with the Swedish Health and Medical Services Act, the General Data Protection Regulation (GDPR), the Patient Data Act, and the Patient Safety Act. Our in-house developed medical journal system and app are registered with the Health and Social Care Inspectorate (IVO)."
+    "legalDisclaimer": "Albafides Care AB is an approved healthcare provider operating in accordance with the Swedish Health and Medical Services Act, the General Data Protection Regulation (GDPR), the Patient Data Act, and the Patient Safety Act. Our in-house developed medical journal system and app are registered with the Health and Social Care Inspectorate (IVO).",
+    "faq": "FAQ"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -416,7 +417,8 @@
     "backToHome": "Back to Home",
     "reviewedBy": "Medically reviewed by",
     "aboutAuthorTitle": "About the author",
-    "moreAboutTeam": "Meet our medical team"
+    "moreAboutTeam": "Meet our medical team",
+    "back": "Back"
   },
   "dashboard": {
     "completePhone": {
@@ -1446,6 +1448,11 @@
         "description": "Evidence-based comparison of semaglutide (Ozempic, Wegovy) and tirzepatide (Mounjaro) for weight loss: mechanisms, results, side effects and price differences.",
         "keywords": "semaglutide vs tirzepatide, Ozempic, Wegovy, Mounjaro, GLP-1 medications, GLP-1 agonist, GIP, dual incretin, weight loss medication, obesity treatment, semaglutide weight loss, tirzepatide weight loss, GLP-1 for obesity, weekly injection, appetite regulation, satiety, blood sugar regulation, SURMOUNT-5, weight management medication, GLP-1 side effects, nausea, gallbladder, pancreatitis, Mounjaro vs Wegovy, Wegovy weight loss, tirzepatide vs semaglutide, GLP-1 cost, obesity medication Sweden"
       }
+    },
+    "faqs": {
+      "title": "FAQ: obesity & GLP-1 medication (Ozempic, Wegovy, Mounjaro)",
+      "description": "Doctor-answered FAQs about overweight and obesity, GLP-1 medications, side effects, nutrition, exercise, women's health and sustainable weight loss.",
+      "keywords": "obesity faq, GLP-1 faq, Ozempic side effects, Wegovy questions, Mounjaro side effects, weight loss questions, semaglutide faq, tirzepatide faq, obesity treatment, overweight questions, weight loss faq, GLP-1 safety, nutrition obesity, exercise weight loss"
     }
   },
   "cookies": {
@@ -1917,5 +1924,13 @@
     "next": "Next",
     "kg": "Kg",
     "scrollToEnd": "Go to bottom of page"
+  },
+  "faqsPage": {
+    "title": "Frequently asked questions about weight loss and obesity",
+    "intro": "Answers from our doctors to the most common questions about overweight and obesity, GLP-1 medications (Ozempic, Wegovy, Mounjaro), side effects, nutrition, exercise and weight loss.",
+    "articleHeading": "Frequently asked questions",
+    "seeAll": "See all FAQs",
+    "cta": "See if treatment is right for you",
+    "disclaimer": "This content is general information only and is not a substitute for individual medical advice. Always consult licensed healthcare professionals."
   }
 }

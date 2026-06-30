@@ -23,7 +23,8 @@ const FooterSection = () => {
       links: [
         { name: t('footer.aboutUs'), href: ROUTES.ABOUT_US },
         { name: t('footer.ourDoctors'), href: `${ROUTES.ABOUT_US}#team` },
-        { name: t('footer.blogs'), href: '#education' }
+        { name: t('footer.blogs'), href: '#education' },
+        { name: t('footer.faq', 'FAQ'), href: '/faqs' }
       ]
     },
     {

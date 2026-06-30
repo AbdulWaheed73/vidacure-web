@@ -49,7 +49,7 @@ export const localePath = (path: string, lang: string | Locale): string => {
 /** True for the routes that participate in locale routing. */
 export const isPublicLocalePath = (pathname: string): boolean => {
   const p = stripLocale(pathname);
-  return p === '/' || p === '/aboutus' || p === '/privacy' || p.startsWith('/article');
+  return p === '/' || p === '/aboutus' || p === '/privacy' || p === '/faqs' || p.startsWith('/article');
 };
 
 /** Hook returning the current locale derived from the active i18next language. */

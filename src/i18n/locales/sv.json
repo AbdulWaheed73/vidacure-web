@@ -353,7 +353,8 @@
     "contactUs": "Kontakta oss",
     "copyright": "© 2025 Vidacure, Inc. Alla rättigheter förbehållna",
     "legalCopyright": "© 2026 Vidacure. Alla rättigheter förbehållna. Org nr: 5591294888",
-    "legalDisclaimer": "Albafides Care AB är en godkänd vårdgivare och bedriver verksamhet i enlighet med hälso- och sjukvårdslagen, dataskyddsförordningen (GDPR – General Data Protection Regulation), patientdatalagen samt patientsäkerhetslagen. Vårt egenutvecklade journalsystem och app är registrerade hos Inspektionen för vård och omsorg (IVO)."
+    "legalDisclaimer": "Albafides Care AB är en godkänd vårdgivare och bedriver verksamhet i enlighet med hälso- och sjukvårdslagen, dataskyddsförordningen (GDPR – General Data Protection Regulation), patientdatalagen samt patientsäkerhetslagen. Vårt egenutvecklade journalsystem och app är registrerade hos Inspektionen för vård och omsorg (IVO).",
+    "faq": "Vanliga frågor"
   },
   "sidebar": {
     "dashboard": "Instrumentpanel",
@@ -416,7 +417,8 @@
     "backToHome": "Tillbaka till startsidan",
     "reviewedBy": "Medicinskt granskad av",
     "aboutAuthorTitle": "Om författaren",
-    "moreAboutTeam": "Möt vårt medicinska team"
+    "moreAboutTeam": "Möt vårt medicinska team",
+    "back": "Tillbaka"
   },
   "dashboard": {
     "completePhone": {
@@ -1446,6 +1448,11 @@
         "description": "Evidensbaserad jämförelse av semaglutid (Ozempic, Wegovy) och tirzepatid (Mounjaro) vid viktnedgång: verkningsmekanism, effekt, biverkningar och prisskillnader.",
         "keywords": "semaglutid vs tirzepatid, Ozempic, Wegovy, Mounjaro, GLP-1-läkemedel, GLP-1-agonist, GIP, dubbel inkretin, viktläkemedel, fetmabehandling, semaglutid viktnedgång, tirzepatid viktnedgång, GLP-1 vid fetma, veckovis injektion, aptitreglering, mättnadskänsla, blodsockerreglering, SURMOUNT-5, läkemedel för viktkontroll, GLP-1 biverkningar, illamående, gallblåsa, pankreatit, Mounjaro vs Wegovy, tirzepatid vs semaglutid, GLP-1 pris, fetmaläkemedel Sverige, högkostnadsskydd"
       }
+    },
+    "faqs": {
+      "title": "Vanliga frågor om fetma & GLP-1 (Ozempic, Wegovy, Mounjaro)",
+      "description": "Läkarbesvarade vanliga frågor om övervikt och fetma, GLP-1-läkemedel, biverkningar, kost, träning, kvinnohälsa och hållbar viktnedgång.",
+      "keywords": "vanliga frågor fetma, GLP-1 frågor, Ozempic biverkningar, Wegovy frågor, Mounjaro biverkningar, viktminskning frågor, semaglutid frågor, tirzepatid frågor, fetma behandling, övervikt frågor, viktnedgång frågor, GLP-1 säkerhet, kost vid fetma, träning vid övervikt"
     }
   },
   "cookies": {
@@ -1917,5 +1924,13 @@
     "next": "Nästa",
     "kg": "kg",
     "scrollToEnd": "Gå till slutet av sidan"
+  },
+  "faqsPage": {
+    "title": "Vanliga frågor om viktminskning och fetma",
+    "intro": "Svar från våra läkare på de vanligaste frågorna om övervikt och fetma, GLP-1-läkemedel (Ozempic, Wegovy, Mounjaro), biverkningar, kost, träning och viktnedgång.",
+    "articleHeading": "Vanliga frågor",
+    "seeAll": "Se alla vanliga frågor",
+    "cta": "Se om behandling passar dig",
+    "disclaimer": "Innehållet är endast allmän information och ersätter inte individuell medicinsk rådgivning. Rådgör alltid med legitimerad vårdpersonal."
   }
 }

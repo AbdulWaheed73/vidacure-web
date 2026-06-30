@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import { ArrowLeft, Clock, Stethoscope } from 'lucide-react';
@@ -7,7 +7,10 @@ import { ROUTES } from '@/constants/routes';
 import { localePath, useLocale } from '@/utils/localePath';
 import { articleCovers } from '@/constants/articleImages';
 import { SEOHead } from '@/components/seo/SEOHead';
-import { createArticleSchema, createMedicalWebPageSchema } from '@/utils/structuredData';
+import { createArticleSchema, createMedicalWebPageSchema, createFAQSchema } from '@/utils/structuredData';
+import { FaqAccordion } from '@/components/faq/FaqAccordion';
+import { articleFaqIds, faqItemsById } from '@/constants/faqContent';
+import type { FaqItem } from '@/types/faq-types';
 
 // Static per-article publication metadata (no CMS; edited in code).
 // Fixed dates keep prerendered JSON-LD deterministic across builds.
@@ -24,11 +27,22 @@ export default function Article() {
   const { articleId } = useParams<{ articleId: string }>();
   const { t } = useTranslation();
   const locale = useLocale();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Scroll to top when component mounts or articleId changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [articleId]);
+
+  // Prefer returning to where the user came from (restores scroll position);
+  // fall back to Home only on a direct/first-entry load (e.g. from search).
+  const handleBack = (e: React.MouseEvent) => {
+    if (location.key !== 'default') {
+      e.preventDefault();
+      navigate(-1);
+    }
+  };
 
   // Find the article data
   const articles = [
@@ -94,6 +108,15 @@ export default function Article() {
 
   const seoData = getSEOData();
 
+  // Relevant clinician-authored FAQs for this article (4–8 per the GEO sweet
+  // spot). Same Q&A render visibly AND as FAQPage JSON-LD below.
+  const faqMap = faqItemsById(locale);
+  const faqItems: FaqItem[] = articleId
+    ? (articleFaqIds[articleId] ?? [])
+        .map((id) => faqMap.get(id))
+        .filter((x): x is FaqItem => Boolean(x))
+    : [];
+
   // Named, credentialed medical author/reviewer (E-E-A-T for YMYL content).
   const author = {
     name: t('partner.teamMembers.selma.name'),
@@ -105,7 +128,7 @@ export default function Article() {
     const meta = ARTICLE_META[articleId] ?? { published: '2025-02-01', modified: '2026-05-01' };
     const description = seoData.description || article.content.substring(0, 160);
     const pageUrl = `https://vidacure.se${localePath(`/article/${articleId}`, locale)}`;
-    return [
+    const schemas: object[] = [
       createArticleSchema({
         title: article.title,
         description,
@@ -126,6 +149,12 @@ export default function Article() {
         reviewer: author,
       }),
     ];
+    if (faqItems.length) {
+      schemas.push(
+        createFAQSchema(faqItems.map((i) => ({ question: i.q, answer: i.a })))
+      );
+    }
+    return schemas;
   })() : undefined;
 
   if (!article) {
@@ -320,10 +349,11 @@ export default function Article() {
           {/* Back Button */}
           <Link
             to={localePath(ROUTES.HOME, locale)}
+            onClick={handleBack}
             className="inline-flex items-center gap-2 text-teal-600 hover:text-teal-700 mb-8 font-semibold font-sora transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            {t('article.backToHome', 'Back to Home')}
+            {t('article.back', 'Back')}
           </Link>
 
           {/* Article Card */}
@@ -379,6 +409,23 @@ export default function Article() {
               <div className="prose prose-lg max-w-none">
                 {renderContent(article.content)}
               </div>
+
+              {/* Relevant FAQs (clinician-authored) — visible + FAQPage schema */}
+              {faqItems.length > 0 && (
+                <div className="mt-12 pt-8 border-t border-zinc-100">
+                  <h2 className="text-2xl font-bold font-sora text-teal-600 mb-4">
+                    {t('faqsPage.articleHeading', 'Vanliga frågor')}
+                  </h2>
+                  <FaqAccordion items={faqItems} idPrefix={`article-${articleId}`} />
+                  <Link
+                    to={localePath('/faqs', locale)}
+                    className="inline-flex items-center gap-2 mt-5 text-sm font-semibold text-teal-600 hover:underline"
+                  >
+                    {t('faqsPage.seeAll', 'Se alla vanliga frågor')}
+                    <ArrowLeft className="w-4 h-4 rotate-180" />
+                  </Link>
+                </div>
+              )}
 
               {/* Author bio (E-E-A-T: named, credentialed clinician) */}
               <div className="mt-10 pt-8 border-t border-zinc-100 flex items-start gap-4">

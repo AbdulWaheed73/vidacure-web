@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ROUTES } from "@/constants";
+import { localePath, useLocale } from "@/utils/localePath";
 import {
   Accordion,
   AccordionContent,
@@ -13,6 +14,7 @@ import { buildFaqCategories } from "./faqData";
 
 const FAQSection = () => {
   const { t } = useTranslation();
+  const locale = useLocale();
 
   const faqCategories = buildFaqCategories(t);
 
@@ -72,10 +74,10 @@ const FAQSection = () => {
                 <h3 className="text-white text-lg font-semibold font-sora mb-4">
                   {category.title}
                 </h3>
-                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 items-start">
                   {category.questions.map((item, questionIndex) => (
-                    <Card key={`${categoryIndex}-${questionIndex}`} className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                      <CardContent className="p-6">
+                    <Card key={`${categoryIndex}-${questionIndex}`} className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow py-0 gap-0">
+                      <CardContent className="px-6 py-4">
                         <Accordion type="single" collapsible className="w-full">
                           <AccordionItem value={`item-${categoryIndex}-${questionIndex}`} className="border-0">
                             <AccordionTrigger className="text-black text-base font-semibold font-manrope leading-snug hover:text-teal-600 [&[data-state=open]>svg]:rotate-180 hover:no-underline pb-3">
@@ -92,6 +94,19 @@ const FAQSection = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* View all FAQs -> dedicated page */}
+          <div className="flex justify-center mt-12">
+            <Link
+              to={localePath('/faqs', locale)}
+              className="h-11 px-6 py-2.5 bg-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 hover:bg-teal-700 transition-colors duration-200 group border border-white/30"
+            >
+              <span className="text-white text-sm font-semibold font-sora leading-tight">
+                {t('faqsPage.seeAll')}
+              </span>
+              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform duration-200" />
+            </Link>
           </div>
         </div>
 
@@ -128,8 +143,8 @@ const FAQSection = () => {
                   </h3>
                   <div className="space-y-3">
                     {category.questions.map((item, questionIndex) => (
-                      <Card key={`${categoryIndex}-${questionIndex}`} className="bg-white rounded-2xl shadow-sm border border-gray-100">
-                        <CardContent className="p-4">
+                      <Card key={`${categoryIndex}-${questionIndex}`} className="bg-white rounded-2xl shadow-sm border border-gray-100 py-0 gap-0">
+                        <CardContent className="px-4 py-3">
                           <Accordion type="single" collapsible className="w-full">
                             <AccordionItem value={`item-${categoryIndex}-${questionIndex}`} className="border-0">
                               <AccordionTrigger className="text-black text-sm font-semibold font-manrope leading-snug hover:text-teal-600 [&[data-state=open]>svg]:rotate-180 hover:no-underline pb-2">
@@ -147,6 +162,17 @@ const FAQSection = () => {
                 </div>
               ))}
             </div>
+
+            {/* View all FAQs -> dedicated page */}
+            <Link
+              to={localePath('/faqs', locale)}
+              className="h-11 px-6 py-2.5 bg-teal-600 rounded-full flex justify-center items-center gap-2.5 hover:bg-teal-700 transition-colors duration-200 group self-center border border-white/30"
+            >
+              <span className="text-white text-sm font-semibold font-sora leading-tight">
+                {t('faqsPage.seeAll')}
+              </span>
+              <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform duration-200" />
+            </Link>
           </div>
         </div>
       </div>

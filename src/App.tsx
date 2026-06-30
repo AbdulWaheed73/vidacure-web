@@ -21,6 +21,7 @@ const LandingPage = lazy(() => import("./pages/LandingPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const Article = lazy(() => import("./pages/Article"));
+const Faqs = lazy(() => import("./pages/Faqs"));
 const PreLoginBMI = lazy(() => import("./pages/PreLoginBMI"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const SubscriptionSuccess = lazy(() => import("./pages/SubscriptionSuccess").then(m => ({ default: m.SubscriptionSuccess })));
@@ -366,11 +367,15 @@ function App() {
         {/* Article Route - Public */}
         <Route path="/article/:articleId" element={<Article />} />
 
+        {/* FAQ hub - Public */}
+        <Route path="/faqs" element={<Faqs />} />
+
         {/* English locale variants of the public pages (Swedish stays at root) */}
         <Route path="/en" element={<LandingPage />} />
         <Route path="/en/aboutus" element={<AboutUs />} />
         <Route path="/en/privacy" element={<PrivacyPolicy embedded={isAuthenticated} />} />
         <Route path="/en/article/:articleId" element={<Article />} />
+        <Route path="/en/faqs" element={<Faqs />} />
 
         {/* 404 Not Found Page */}
         <Route path="*" element={<NotFoundPage />} />
