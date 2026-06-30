@@ -109,7 +109,7 @@ export default function Faqs() {
             {/* CTA */}
             <div className="mt-10 flex justify-center">
               <Link
-                to={localePath(ROUTES.PRE_LOGIN_BMI, locale)}
+                to={ROUTES.PRE_LOGIN_BMI}
                 className="h-11 px-6 py-2.5 bg-teal-600 rounded-full inline-flex justify-center items-center gap-2.5 hover:bg-teal-700 transition-colors duration-200 group"
               >
                 <span className="text-white text-sm font-semibold font-sora leading-tight">
