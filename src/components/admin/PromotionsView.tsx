@@ -151,7 +151,14 @@ export const PromotionsView = () => {
               <TableBody>
                 {promotions.map((promo) => (
                   <TableRow key={promo.id}>
-                    <TableCell className="font-mono font-semibold">{promo.code}</TableCell>
+                    <TableCell>
+                      <div className="font-mono font-semibold">{promo.code}</div>
+                      {promo.coupon.name && (
+                        <div className="text-xs text-muted-foreground font-normal mt-0.5">
+                          {promo.coupon.name}
+                        </div>
+                      )}
+                    </TableCell>
                     <TableCell>
                       <Badge variant="outline">{formatAppliesTo(promo.appliesTo)}</Badge>
                     </TableCell>
