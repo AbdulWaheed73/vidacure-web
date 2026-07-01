@@ -41,8 +41,6 @@ export const SEOHead = ({
   const pageLocale = localeFromPath(currentPath);
   const finalCanonical = canonicalUrl || (pageLocale === 'en' ? enUrl : svUrl);
   const finalOgImage = ogImage || `${baseUrl}/og-image.png`;
-  // English pages are not actively marketed — focus crawl budget on Swedish (sv) URLs.
-  const shouldNoindex = noindex || pageLocale === 'en';
 
   // Handle multiple structured data objects
   const structuredDataArray = Array.isArray(structuredData) ? structuredData : structuredData ? [structuredData] : [];
@@ -79,8 +77,8 @@ export const SEOHead = ({
       <meta name="twitter:description" content={finalDescription} />
       <meta name="twitter:image" content={finalOgImage} />
 
-      {/* Noindex for protected routes and English locale pages */}
-      {shouldNoindex && <meta name="robots" content="noindex, nofollow" />}
+      {/* Noindex for protected routes only (public EN + SV pages stay indexable) */}
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
 
       {/* Structured Data */}
       {structuredDataArray.map((data, index) => (
