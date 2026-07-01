@@ -23,6 +23,7 @@ import type {
   ErrorLog,
   ErrorLogSummary,
   ResolveErrorLogResponse,
+  ErrorLogExportResponse,
 } from '../types/admin-types';
 import type {
   CreatePromotionRequest,
@@ -415,6 +416,14 @@ export const adminService = {
    */
   getErrorLogSummary: async (): Promise<ErrorLogSummary> => {
     const response = await api.get('/api/admin/error-logs/summary');
+    return response.data;
+  },
+
+  /**
+   * Export ALL matching error logs with full details (stack + context) in one call
+   */
+  exportErrorLogs: async (params: ErrorLogsQueryParams = {}): Promise<ErrorLogExportResponse> => {
+    const response = await api.get('/api/admin/error-logs/export', { params });
     return response.data;
   },
 

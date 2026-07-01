@@ -26,6 +26,12 @@ export const useErrorLogSummary = () => {
   });
 };
 
+export const useExportErrorLogs = () => {
+  return useMutation({
+    mutationFn: (params: ErrorLogsQueryParams) => adminService.exportErrorLogs(params),
+  });
+};
+
 export const useResolveErrorLog = () => {
   const qc = useQueryClient();
   return useMutation({

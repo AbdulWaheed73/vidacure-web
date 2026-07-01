@@ -373,6 +373,13 @@ export type ResolveErrorLogResponse = {
   resolved: boolean;
 };
 
+export type ErrorLogExportResponse = {
+  count: number;
+  capped: boolean;
+  exportedAt: string;
+  logs: ErrorLog[];
+};
+
 // Body posted by web/mobile clients to /api/client-errors.
 export type ClientErrorPayload = {
   source: ErrorSource;

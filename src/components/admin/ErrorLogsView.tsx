@@ -31,11 +31,13 @@ import {
   CheckCircle,
   RotateCcw,
   Search,
+  Copy,
 } from 'lucide-react';
 import {
   useErrorLogs,
   useErrorLog,
   useErrorLogSummary,
+  useExportErrorLogs,
   useResolveErrorLog,
 } from '@/hooks/useErrorLogQueries';
 import type {
@@ -102,6 +104,7 @@ export const ErrorLogsView = () => {
   const { data: summary } = useErrorLogSummary();
   const { data: detail, isLoading: detailLoading } = useErrorLog(selectedId);
   const resolveMutation = useResolveErrorLog();
+  const exportMutation = useExportErrorLogs();
 
   const handleResolve = async (id: string, resolved: boolean) => {
     try {
@@ -109,6 +112,25 @@ export const ErrorLogsView = () => {
       toast.success(resolved ? 'Marked as resolved' : 'Reopened');
     } catch {
       toast.error('Failed to update error log');
+    }
+  };
+
+  // Fetch ALL matching logs with full details (stack + context) and copy them at once.
+  const handleCopyAll = async () => {
+    try {
+      const data = await exportMutation.mutateAsync(params);
+      if (data.logs.length === 0) {
+        toast.info('No errors to copy for the current filters');
+        return;
+      }
+      await navigator.clipboard.writeText(JSON.stringify(data.logs, null, 2));
+      toast.success(
+        `Copied ${data.count} error${data.count === 1 ? '' : 's'} with full details${
+          data.capped ? ' (capped at 10,000)' : ''
+        }`
+      );
+    } catch {
+      toast.error('Failed to copy error details');
     }
   };
 
@@ -245,7 +267,17 @@ export const ErrorLogsView = () => {
             </SelectContent>
           </Select>
 
-          <Button variant="outline" size="sm" onClick={() => refetch()} className="ml-auto">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleCopyAll}
+            disabled={exportMutation.isPending}
+            className="ml-auto"
+          >
+            <Copy className="mr-2 h-4 w-4" />
+            {exportMutation.isPending ? 'Copying…' : 'Copy all details'}
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => refetch()}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Refresh
           </Button>
