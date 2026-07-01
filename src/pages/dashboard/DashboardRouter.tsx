@@ -1,4 +1,5 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
+import { lazyWithReload as lazy } from '../../lib/lazyWithReload';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ROUTES } from '../../constants';
 import { DashboardPage } from '../DashboardPage';
